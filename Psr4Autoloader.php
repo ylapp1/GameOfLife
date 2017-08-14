@@ -14,6 +14,9 @@ class Psr4Autoloader
     private $prefixes = array();
 
 
+    /**
+     * register all prefixes that are saved in the object
+     */
     public function register()
     {
         spl_autoload_register(
@@ -41,7 +44,13 @@ class Psr4Autoloader
     }
 
 
-    public function addNamespace($_prefix, $_base_dir)
+    /**
+     * add a namespace to the list
+     *
+     * @param string $_prefix       namespace prefix
+     * @param string $_baseDir     filepath prefix
+     */
+    public function addNamespace($_prefix, $_baseDir)
     {
         // initialize the namespace prefix array
         if (isset($this->prefixes[$_prefix]) === false)
@@ -49,6 +58,6 @@ class Psr4Autoloader
             $this->prefixes[$_prefix] = array();
         }
 
-        $this->prefixes[$_prefix] = $_base_dir;
+        $this->prefixes[$_prefix] = $_baseDir;
     }
 }
