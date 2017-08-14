@@ -21,8 +21,7 @@ namespace CN_Consult\GameOfLife\Classes;
 class Board
 {
     private $board = array(array());
-    private $previousBoard = array(array());
-    private $secondLastBoard = array(array());
+    private $historyOfBoards = array();
     private $hasBorder;
     private $height;
     private $maxSteps;
@@ -145,7 +144,7 @@ class Board
      */
     public function calculateStep()
     {
-        $newBoard = new Board($this->width, $this->height, $this->maxSteps, $this->hasBorder, $this->rules);
+        $newBoard = $this->initializeEmptyBoard();
 
         // Go through each row
         for ($y = 0; $y < $this->height; $y++)
@@ -185,13 +184,12 @@ class Board
                 }
 
 
-                $newBoard->setField($x, $y, $newCellState);
+                $newBoard[$y][$x] = $newCellState;
             }
         }
 
-        $this->secondLastBoard = $this->previousBoard;
-        $this->previousBoard = $this->board;
-        $this->board = $newBoard->board;
+        $this->historyOfBoards[] = $this->board;
+        $this->board = $newBoard;
     }
 
 
@@ -288,9 +286,12 @@ class Board
         }
         else
         {
-            if ($this->previousBoard == $this->board) return true;
-            elseif ($this->secondLastBoard == $this->board) return true;
-            else return false;
+            foreach ($this->historyOfBoards as $board)
+            {
+                if ($this->board == $board) return true;
+            }
+
+            return false;
         }
     }
 
