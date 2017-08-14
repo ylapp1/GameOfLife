@@ -7,7 +7,7 @@
  */
 
 
-namespace CN_Consult\GameOfLife\Classes;
+namespace GameOfLife;
 
 
 /**
@@ -181,74 +181,6 @@ class Board
         }
 
         return $board;
-    }
-
-
-
-    /**
-     * Initializes a board with random set cells
-     */
-    public function initializeRandomBoard ()
-    {
-        $board = $this->initializeEmptyBoard();
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                $board[$y][$x] = rand(0, 1);
-            }
-        }
-
-
-        $this->currentBoard = $board;
-    }
-
-
-    /**
-     * Initializes a board with one glider in the top left corner
-     */
-    public function initializeGliderBoard ()
-    {
-        $this->currentBoard = $this->initializeEmptyBoard();
-
-        $this->setField(1, 0, true);
-        $this->setField(2, 1, true);
-        $this->setField(0, 2, true);
-        $this->setField(1, 2, true);
-        $this->setField(2, 2, true);
-    }
-
-
-    /**
-     * Initializes a board with one spaceship in the top left corner
-     */
-    public function initializeSpaceShipBoard ()
-    {
-        $this->currentBoard = $this->initializeEmptyBoard();
-
-        $this->setField(1, 4, true);
-        $this->setField(2, 4, true);
-        $this->setField(3, 4, true);
-        $this->setField(4, 4, true);
-        $this->setField(0, 5, true);
-        $this->setField(4, 5, true);
-        $this->setField(4, 6, true);
-        $this->setField(0, 7, true);
-        $this->setField(3, 7, true);
-    }
-
-
-    /**
-     * Initializes a board with a blinking 3x1 tile in the top left corner
-     */
-    public function initializeBlinkBoard ()
-    {
-        $this->currentBoard = $this->initializeEmptyBoard();
-
-        $this->setField(1,0, true);
-        $this->setField(1,1,true);
-        $this->setField(1,2,true);
     }
 
 
@@ -456,5 +388,19 @@ class Board
     public function setField ($_x, $_y, $_isAlive)
     {
         $this->currentBoard[$_y][$_x] = $_isAlive;
+    }
+
+
+    /**
+     * Returns the status of a specific field
+     *
+     * @param int $_x   X-Coordinate of the field
+     * @param int $_y   Y-Coordinate of the field
+     *
+     * @return boolean
+     */
+    public function getField ($_x, $_y)
+    {
+        return $this->currentBoard[$_y][$_x];
     }
 }

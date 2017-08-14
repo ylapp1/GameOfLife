@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace CN_Consult\GameOfLife\Classes;
+namespace GameOfLife;
 
 
 /**
@@ -67,5 +67,4 @@ class RuleSet
     {
         $this->death = $_death;
     }
-
 }
