@@ -20,7 +20,7 @@ namespace CN_Consult\GameOfLife\Classes;
  */
 class Board
 {
-    private $board = array(array());
+    private $currentBoard = array(array());
     private $historyOfBoards = array();
     private $hasBorder;
     private $height;
@@ -48,7 +48,120 @@ class Board
         $this->rules = $_rules;
         $this->width = $_width;
 
-        $this->board = $this->initializeEmptyBoard();
+        $this->currentBoard = $this->initializeEmptyBoard();
+    }
+
+
+    /**
+     * @return array
+     */
+    public function currentBoard()
+    {
+        return $this->currentBoard;
+    }
+
+    /**
+     * @param array $currentBoard
+     */
+    public function setCurrentBoard($currentBoard)
+    {
+        $this->currentBoard = $currentBoard;
+    }
+
+    /**
+     * @return array
+     */
+    public function historyOfBoards()
+    {
+        return $this->historyOfBoards;
+    }
+
+    /**
+     * @param array $historyOfBoards
+     */
+    public function setHistoryOfBoards($historyOfBoards)
+    {
+        $this->historyOfBoards = $historyOfBoards;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasBorder()
+    {
+        return $this->hasBorder;
+    }
+
+    /**
+     * @param bool $hasBorder
+     */
+    public function setHasBorder($hasBorder)
+    {
+        $this->hasBorder = $hasBorder;
+    }
+
+    /**
+     * @return int
+     */
+    public function height()
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param int $height
+     */
+    public function setHeight( $height)
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * @return int
+     */
+    public function maxSteps()
+    {
+        return $this->maxSteps;
+    }
+
+    /**
+     * @param int $maxSteps
+     */
+    public function setMaxSteps($maxSteps)
+    {
+        $this->maxSteps = $maxSteps;
+    }
+
+    /**
+     * @return int
+     */
+    public function width()
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param int $width
+     */
+    public function setWidth($width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * @return RuleSet
+     */
+    public function rules()
+    {
+        return $this->rules;
+    }
+
+    /**
+     * @param RuleSet $rules
+     */
+    public function setRules($rules)
+    {
+        $this->rules = $rules;
     }
 
 
@@ -88,7 +201,7 @@ class Board
         }
 
 
-        $this->board = $board;
+        $this->currentBoard = $board;
     }
 
 
@@ -97,7 +210,7 @@ class Board
      */
     public function initializeGliderBoard ()
     {
-        $this->board = $this->initializeEmptyBoard();
+        $this->currentBoard = $this->initializeEmptyBoard();
 
         $this->setField(1, 0, true);
         $this->setField(2, 1, true);
@@ -112,7 +225,7 @@ class Board
      */
     public function initializeSpaceShipBoard ()
     {
-        $this->board = $this->initializeEmptyBoard();
+        $this->currentBoard = $this->initializeEmptyBoard();
 
         $this->setField(1, 4, true);
         $this->setField(2, 4, true);
@@ -131,7 +244,7 @@ class Board
      */
     public function initializeBlinkBoard ()
     {
-        $this->board = $this->initializeEmptyBoard();
+        $this->currentBoard = $this->initializeEmptyBoard();
 
         $this->setField(1,0, true);
         $this->setField(1,1,true);
@@ -152,7 +265,7 @@ class Board
             // Go through each column of the row
             for ($x = 0; $x < $this->width; $x++)
             {
-                $currentCellState = $this->board[$y][$x];
+                $currentCellState = $this->currentBoard[$y][$x];
                 $amountNeighboursAlive = $this->checkAmountNeighboursAlive($x, $y);
 
 
@@ -188,8 +301,8 @@ class Board
             }
         }
 
-        $this->historyOfBoards[] = $this->board;
-        $this->board = $newBoard;
+        $this->historyOfBoards[] = $this->currentBoard;
+        $this->currentBoard = $newBoard;
     }
 
 
@@ -256,11 +369,11 @@ class Board
         {
             foreach ($columns as $column)
             {
-                if ($this->board[$row][$column] == 1) $amountLivingNeighbours++;
+                if ($this->currentBoard[$row][$column] == 1) $amountLivingNeighbours++;
             }
         }
 
-        if ($this->board[$_y][$_x] == true)
+        if ($this->currentBoard[$_y][$_x] == true)
         {
             $amountLivingNeighbours -= 1;
         }
@@ -288,7 +401,7 @@ class Board
         {
             foreach ($this->historyOfBoards as $board)
             {
-                if ($this->board == $board) return true;
+                if ($this->currentBoard == $board) return true;
             }
 
             return false;
@@ -308,7 +421,7 @@ class Board
             echo "-";
         }
 
-        foreach ($this->board as $line)
+        foreach ($this->currentBoard as $line)
         {
             echo "\n|";
 
@@ -342,6 +455,6 @@ class Board
      */
     public function setField ($_x, $_y, $_isAlive)
     {
-        $this->board[$_y][$_x] = $_isAlive;
+        $this->currentBoard[$_y][$_x] = $_isAlive;
     }
 }
