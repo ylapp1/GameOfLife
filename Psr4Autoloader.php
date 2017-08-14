@@ -24,18 +24,16 @@ class Psr4Autoloader
                     // check whether class uses the namespace prefix
                     $len = strlen($prefix);
 
-                    if (strncmp($prefix, $_class, $len) !== 0)
+                    if (strncmp($prefix, $_class, $len) === 0)
                     {
-                        return;
-                    }
+                        $relativeClass = substr($_class, $len);
 
-                    $relativeClass = substr($_class, $len);
+                        $file = $baseDirectory . str_replace('\\', '/', $relativeClass) . '.php';
 
-                    $file = $baseDirectory . str_replace('\\', '/', $relativeClass) . '.php';
-
-                    if (file_exists($file))
-                    {
-                        require_once $file;
+                        if (file_exists($file))
+                        {
+                            require_once $file;
+                        }
                     }
                 }
             }
