@@ -11,12 +11,13 @@ require_once("Psr4Autoloader.php");
 
 $loader = new Psr4Autoloader();
 $loader->addNamespace("CN_Consult\\GameOfLife\\", __DIR__ . "/src/");
+$loader->addNamespace("Ulrichsg", __DIR__ . "/src/Ulrichsg/");
 $loader->register();
 
 
 use CN_Consult\GameOfLife\Classes\Board;
 use CN_Consult\GameOfLife\Classes\RuleSet;
-use CN_Consult\GameOfLife\Ulrichsg\Getopt;
+use Ulrichsg\Getopt;
 
 
 

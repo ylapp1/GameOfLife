@@ -1,5 +1,5 @@
 <?php
-namespace CN_Consult\GameofLife\Ulrichsg;
+namespace Ulrichsg;
 /*
  * Copyright (c) 2011 Ulrich Schmidt-Goertz <ulrich at schmidt-goertz.de>
  *
