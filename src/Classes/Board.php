@@ -12,25 +12,42 @@ namespace CN_Consult\GameOfLife\Classes;
 
 /**
  * Class Board
+ *
+ * call initializeRandomBoard(), initializeGliderBoard() or initializeSpaceShipBoard() to create a new board
+ * call printBoard() to print the current board to the console
+ * call calculateStep() to calculate one game step for the entire board
+ * call isFinished() to check whether the board is finished
  */
 class Board
 {
-    private $width;
-    private $height;
     private $board = array(array());
     private $previousBoard = array(array());
-    private $hasBorder;                 /** @var Boolean $hasBorder */
-    private $rules = array(array());    // ruleset (array structure:
-                                        // "Birth" => amount of neighbours which will cause a dead cell to be reborn
-                                        // "Death" => amount of neighbours which will cause a living cell to die
+    private $secondLastBoard = array(array());
+    private $hasBorder;
+    private $height;
+    private $maxSteps;
+    private $width;
+    private $rules;
 
 
-    public function __construct($_width, $_height, $_hasBorder, $_rules)
+    /**
+     * Board constructor.
+     *
+     * @param int $_width       Width of the field
+     * @param int $_height      Height of the field
+     * @param int $_maxSteps    Maximum amount of game steps that will be calculated before the board stops
+     * @param bool $_hasBorder  defines the field border type
+     *                              false: borders are dead cells
+     *                              true: borders link to the opposite side of the field
+     * @param RuleSet $_rules   contains Birth/Death rules of the board
+     */
+    public function __construct($_width, $_height, $_maxSteps, $_hasBorder, $_rules)
     {
-        $this->width = $_width;
-        $this->height = $_height;
         $this->hasBorder = $_hasBorder;
+        $this->height = $_height;
+        $this->maxSteps = $_maxSteps;
         $this->rules = $_rules;
+        $this->width = $_width;
 
         $this->board = $this->initializeEmptyBoard();
     }
@@ -57,17 +74,17 @@ class Board
 
 
     /**
-     * Creates a board with random cells
+     * Initializes a board with random set cells
      */
-    public function createRandomBoard ()
+    public function initializeRandomBoard ()
     {
         $board = $this->initializeEmptyBoard();
 
-        for ($i = 0; $i < $this->height; $i++)
+        for ($y = 0; $y < $this->height; $y++)
         {
-            for ($j = 0; $j < $this->width; $j++)
+            for ($x = 0; $x < $this->width; $x++)
             {
-                $board[$i][$j] = rand(0, 1);
+                $board[$y][$x] = rand(0, 1);
             }
         }
 
@@ -77,50 +94,63 @@ class Board
 
 
     /**
-     * Creates a board with one glider
+     * Initializes a board with one glider in the top left corner
      */
-    public function createGliderBoard ()
+    public function initializeGliderBoard ()
     {
         $this->board = $this->initializeEmptyBoard();
 
-        $this->setField(0, 1, true);
-        $this->setField(1, 2, true);
-        $this->setField(2, 0, true);
+        $this->setField(1, 0, true);
         $this->setField(2, 1, true);
+        $this->setField(0, 2, true);
+        $this->setField(1, 2, true);
         $this->setField(2, 2, true);
     }
 
 
     /**
-     * Creates a board with one spaceship
+     * Initializes a board with one spaceship in the top left corner
      */
-    public function createSpaceShipBoard ()
+    public function initializeSpaceShipBoard ()
     {
-        $board = $this->initializeEmptyBoard();
+        $this->board = $this->initializeEmptyBoard();
 
-        $board[4][1] = true;
-        $board[4][2] = true;
-        $board[4][3] = true;
-        $board[4][4] = true;
-        $board[5][0] = true;
-        $board[5][4] = true;
-        $board[6][4] = true;
-        $board[7][0] = true;
-        $board[7][3] = true;
-
-        $this->board = $board;
+        $this->setField(1, 4, true);
+        $this->setField(2, 4, true);
+        $this->setField(3, 4, true);
+        $this->setField(4, 4, true);
+        $this->setField(0, 5, true);
+        $this->setField(4, 5, true);
+        $this->setField(4, 6, true);
+        $this->setField(0, 7, true);
+        $this->setField(3, 7, true);
     }
 
 
-
-    public function calculateCells()
+    /**
+     * Initializes a board with a blinking 3x1 tile in the top left corner
+     */
+    public function initializeBlinkBoard ()
     {
-        $newBoard = new Board($this->width, $this->height, $this->hasBorder, $this->rules);
+        $this->board = $this->initializeEmptyBoard();
 
-        // Go through each row (y)
+        $this->setField(1,0, true);
+        $this->setField(1,1,true);
+        $this->setField(1,2,true);
+    }
+
+
+    /**
+     * Calculates a single step of the board
+     */
+    public function calculateStep()
+    {
+        $newBoard = new Board($this->width, $this->height, $this->maxSteps, $this->hasBorder, $this->rules);
+
+        // Go through each row
         for ($y = 0; $y < $this->height; $y++)
         {
-            // Go through each column of the row (x)
+            // Go through each column of the row
             for ($x = 0; $x < $this->width; $x++)
             {
                 $currentCellState = $this->board[$y][$x];
@@ -133,7 +163,7 @@ class Board
                 // if current cell is dead
                 if ($currentCellState == false)
                 {
-                    foreach ($this->rules["Birth"] as $amountBirth)
+                    foreach ($this->rules->birth() as $amountBirth)
                     {
                         if ($amountNeighboursAlive == $amountBirth)
                         {
@@ -145,7 +175,7 @@ class Board
                 // if current cell is alive
                 else
                 {
-                    foreach ($this->rules["Death"] as $amountDeath)
+                    foreach ($this->rules->death() as $amountDeath)
                     {
                         if ($amountNeighboursAlive == $amountDeath)
                         {
@@ -159,11 +189,19 @@ class Board
             }
         }
 
+        $this->secondLastBoard = $this->previousBoard;
         $this->previousBoard = $this->board;
         $this->board = $newBoard->board;
     }
 
 
+    /**
+     * Returns the amount of living neighbour cells of a cell
+     *
+     * @param int $_x   X-Coordinate of the cell that is inspected
+     * @param int $_y   Y-Coordinate of the cell that is inspected
+     * @return int      Amount of living neighbour cells
+     */
     public function checkAmountNeighboursAlive($_x, $_y)
     {
         // find row above
@@ -234,29 +272,35 @@ class Board
     }
 
 
-    public function checkBoardFinish()
+    /**
+     * Checks whether the board is finished (only static or blinking tiles remaining).
+     * Returns true if board is finished and false if board is not finished yet
+     *
+     * @param int $_curStep     current game step
+     *
+     * @return bool
+     */
+    public function isFinished($_curStep)
     {
-        /*
-        $sum = 0;
-
-        foreach ($this->board as $line)
+        if ($_curStep >= $this->maxSteps)
         {
-            $sum = $sum + array_sum($line);
+            return true;
         }
-
-
-        if ($sum == 0) return false;
-        else return true;
-        */
-
-        if ($this->previousBoard == $this->board) return false;
-        else return true;
+        else
+        {
+            if ($this->previousBoard == $this->board) return true;
+            elseif ($this->secondLastBoard == $this->board) return true;
+            else return false;
+        }
     }
 
 
+    /**
+     * Print the current board to the console
+     */
     public function printBoard()
     {
-        echo "\n\n ";
+        echo "\n ";
 
         for ($i = 0; $i < $this->width; $i++)
         {
@@ -286,9 +330,17 @@ class Board
     }
 
 
-
-    public function setField ($_x, $_y, $_value)
+    /**
+     * Sets a field on the board.
+     *
+     * @param int $_x   X-Coordinate of the cell which shall be set
+     * @param int $_y   Y-Coordinate of the cell which shall be set
+     * @param boolean $_isAlive     State which the cell shall be set to
+     *                                  true: alive
+     *                                  false: dead
+     */
+    public function setField ($_x, $_y, $_isAlive)
     {
-        $this->board[$_y][$_x] = $_value;
+        $this->board[$_y][$_x] = $_isAlive;
     }
 }
