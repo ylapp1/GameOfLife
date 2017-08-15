@@ -13,7 +13,9 @@ class Psr4Autoloader
 {
     private $prefixes = array();
 
-
+    /**
+     * register all prefixes that are saved in the object
+     */
     public function register()
     {
         spl_autoload_register(
@@ -21,34 +23,29 @@ class Psr4Autoloader
             {
                 foreach ($this->prefixes as $prefix=>$baseDirectory)
                 {
-                    // check whether class uses the namespace prefix
+                    // check whether class uses one of the namespace prefixes
                     $len = strlen($prefix);
 
                     if (strncmp($prefix, $_class, $len) === 0)
                     {
                         $relativeClass = substr($_class, $len);
-
                         $file = $baseDirectory . str_replace('\\', '/', $relativeClass) . '.php';
 
-                        if (file_exists($file))
-                        {
-                            require_once $file;
-                        }
+                        if (file_exists($file)) require_once $file;
                     }
                 }
             }
         );
     }
 
-
-    public function addNamespace($_prefix, $_base_dir)
+    /**
+     * add a namespace to the list
+     *
+     * @param string $_prefix      namespace prefix
+     * @param string $_baseDir     filepath prefix
+     */
+    public function addNamespace($_prefix, $_baseDir)
     {
-        // initialize the namespace prefix array
-        if (isset($this->prefixes[$_prefix]) === false)
-        {
-            $this->prefixes[$_prefix] = array();
-        }
-
-        $this->prefixes[$_prefix] = $_base_dir;
+        if (isset($this->prefixes[$_prefix]) === false) $this->prefixes[$_prefix] = $_baseDir;
     }
 }

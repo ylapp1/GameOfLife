@@ -6,19 +6,18 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-
 require_once("Psr4Autoloader.php");
 
 $loader = new Psr4Autoloader();
-$loader->addNamespace("CN_Consult\\GameOfLife\\", __DIR__ . "/src/");
+$loader->addNamespace("GameOfLife\\", __DIR__ . "/src/Classes/");
 $loader->addNamespace("Ulrichsg", __DIR__ . "/src/Ulrichsg/");
+$loader->addnameSpace("Input", __DIR__ . "/src/Classes/Inputs");
 $loader->register();
 
 
-use CN_Consult\GameOfLife\Classes\Board;
-use CN_Consult\GameOfLife\Classes\RuleSet;
+use GameOfLife\Board;
+use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
-
 
 
 // Create command line options
@@ -30,22 +29,56 @@ $options = new Getopt(
         array(null, "maxSteps", Getopt::REQUIRED_ARGUMENT, "Set the maximum amount of steps that are calculated before the simulation stops (Default: 50)"),
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
 
-        // start of board options
-        array(null, "startRandom", Getopt::NO_ARGUMENT, "Fill the board with random cells and start the simulation"),
-        array(null, "startGlider", Getopt::NO_ARGUMENT, "Place one glider on the board and start the simulation"),
-        array(null, "startBlinker", Getopt::NO_ARGUMENT, "Place one blinker on the board and start the simulation"),
-
-        // other
+        // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
         array("h", "help", Getopt::NO_ARGUMENT)
     )
 );
 
 
+// save which options refer to which input type
+$inputOptions = array();
+
+// find every input class
+foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
+{
+    // get class name with namespace prefix
+    $className = "Input\\" . basename($inputClass, ".php");
+
+    // get options before class adds its options
+    $previousOptions = $options->getOptionList();
+
+    // initialize the class
+    $input = new $className;
+    $input->addOptions($options);
+
+    // get options after the class added its options
+    $newOptions = $options->getOptionList();
+
+    // save new options in $inputOptions
+    foreach ($newOptions as $newOption)
+    {
+        $isNewOption = true;
+
+        foreach ($previousOptions as $previousOption)
+        {
+            if ($previousOption == $newOption)
+            {
+                $isNewOption = false;
+                break;
+            }
+        }
+
+        if ($isNewOption)
+        {
+            $optionName = $newOption[1];
+            $inputOptions[$optionName] = $input;
+        }
+    }
+}
+
 // parse options
 $options->parse();
-
-
 
 if ($options->getOption("version"))
 {
@@ -62,19 +95,17 @@ elseif ($options->getOption("help"))
 }
 else
 {
-    // Start the simulation
+    // Fetch game options
     $width = $options->getOption("width");
     $height = $options->getOption("height");
     $maxSteps = $options->getOption("maxSteps");
     $border = $options->getOption("border");
 
-
+    // Fill with default values if options not set
     if ($width == null) $width = 20;
     if ($height == null) $height = 10;
     if ($maxSteps == null) $maxSteps = 50;
 
-
-    $hasBorder = true;
     if ($border == null or $border == "solid") $hasBorder = true;
     elseif ($border == "passthrough") $hasBorder = false;
     else
@@ -83,45 +114,42 @@ else
         return;
     }
 
-
+    // define rules for conways game of life
     $rulesConway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
 
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
+    // initialize new input
+    $input = null;
 
-
-    if ($options->getOption("startRandom"))
+    // find out whether any input specific option is set
+    foreach ($inputOptions as $inputOption=>$className)
     {
-        $board->initializeRandomBoard();
-    }
-    elseif ($options->getOption("startGlider"))
-    {
-        $board->initializeGliderBoard();
-    }
-    elseif ($options->getOption("startBlinker"))
-    {
-        $board->initializeBlinkBoard();
-    }
-    else
-    {
-        echo "Error: You have to specify which kind of board you want to initialize.\n";
-        return;
+        // if input specific option is set initialize new input of the class which the input refers to
+        if ($options->getOption($inputOption) !== null)
+        {
+            $input = new $className;
+        }
     }
 
+    // If no input specific option is set use default input (random board)
+    if ($input == null) $input = new Input\RandomInput();
 
+    $input->fillBoard($board, $options);
 
+    // Game loop
     $curStep = 0;
 
-    while ($board->isFinished($curStep) != true)
+    while ($board->isFinished($curStep) == false)
     {
         $curStep++;
-
         echo "\n\nGame Step: " . $curStep;
 
         $board->printBoard();
         $board->calculateStep();
 
+        // wait for 0.1 seconds before printing the next board
         usleep(10000);
     }
 }

@@ -6,9 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-
-namespace CN_Consult\GameOfLife\Classes;
-
+namespace GameOfLife;
 
 /**
  * Class Board
@@ -20,7 +18,7 @@ namespace CN_Consult\GameOfLife\Classes;
  */
 class Board
 {
-    private $board = array(array());
+    private $currentBoard = array(array());
     private $historyOfBoards = array();
     private $hasBorder;
     private $height;
@@ -48,9 +46,153 @@ class Board
         $this->rules = $_rules;
         $this->width = $_width;
 
-        $this->board = $this->initializeEmptyBoard();
+        $this->currentBoard = $this->initializeEmptyBoard();
     }
 
+
+    /**
+     * Returns current Board
+     *
+     * @return array   Current board
+     */
+    public function currentBoard(): array
+    {
+        return $this->currentBoard;
+    }
+
+    /**
+     * Sets current board
+     *
+     * @param array $currentBoard   Current board
+     */
+    public function setCurrentBoard(array $currentBoard)
+    {
+        $this->currentBoard = $currentBoard;
+    }
+
+    /**
+     * Returns the history of boards
+     *
+     * @return array   History of boards
+     */
+    public function historyOfBoards(): array
+    {
+        return $this->historyOfBoards;
+    }
+
+    /**
+     * Set the history of boards
+     *
+     * @param array $historyOfBoards    History of boards
+     */
+    public function setHistoryOfBoards(array $historyOfBoards)
+    {
+        $this->historyOfBoards = $historyOfBoards;
+    }
+
+    /**
+     * Returns the border type
+     *
+     * @return bool     Border type
+     *                      true: The border is made of cells that are constantly dead
+     *                      false: Each border links to the opposite site of the board
+     */
+    public function hasBorder(): bool
+    {
+        return $this->hasBorder;
+    }
+
+    /**
+     * Sets the border type
+     *
+     * @param bool $hasBorder   Border type
+     *                              true: The border is made of cells that are constantly dead
+     *                              false: Each border links to the opposite site of the board
+     */
+    public function setHasBorder(bool $hasBorder)
+    {
+        $this->hasBorder = $hasBorder;
+    }
+
+    /**
+     * Returns the board height
+     *
+     * @return int  Board height
+     */
+    public function height(): int
+    {
+        return $this->height;
+    }
+
+    /**
+     * Sets the board height
+     *
+     * @param int $height   Board height
+     */
+    public function setHeight(int $height)
+    {
+        $this->height = $height;
+    }
+
+    /**
+     * Return the maximum amount of steps which are calculated before the board stops calculating more steps
+     *
+     * @return int   Maximum amount of game steps
+     */
+    public function maxSteps(): int
+    {
+        return $this->maxSteps;
+    }
+
+    /**
+     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps
+     *
+     * @param int $maxSteps     Maximum amount of game steps
+     */
+    public function setMaxSteps(int $maxSteps)
+    {
+        $this->maxSteps = $maxSteps;
+    }
+
+    /**
+     * Returns the board width
+     *
+     * @return int  Board width
+     */
+    public function width(): int
+    {
+        return $this->width;
+    }
+
+    /**
+     * Set the board width
+     *
+     * @param int $width    Board width
+     */
+    public function setWidth(int $width)
+    {
+        $this->width = $width;
+    }
+
+    /**
+     * Returns the rule set
+     *
+     * @return RuleSet  Death/Birth rules of the current board
+     */
+    public function rules(): RuleSet
+    {
+        return $this->rules;
+    }
+
+    /**
+     * Set the rule set
+     *
+     * @param RuleSet $rules    Death/Birth rules of the current board
+     */
+    public function setRules(RuleSet $rules)
+    {
+        $this->rules = $rules;
+    }
 
 
     /**
@@ -60,7 +202,6 @@ class Board
     {
         $board = array();
 
-
         for ($i = 0; $i < $this->height; $i++)
         {
             $board[$i] = array();
@@ -69,75 +210,6 @@ class Board
 
         return $board;
     }
-
-
-
-    /**
-     * Initializes a board with random set cells
-     */
-    public function initializeRandomBoard ()
-    {
-        $board = $this->initializeEmptyBoard();
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                $board[$y][$x] = rand(0, 1);
-            }
-        }
-
-
-        $this->board = $board;
-    }
-
-
-    /**
-     * Initializes a board with one glider in the top left corner
-     */
-    public function initializeGliderBoard ()
-    {
-        $this->board = $this->initializeEmptyBoard();
-
-        $this->setField(1, 0, true);
-        $this->setField(2, 1, true);
-        $this->setField(0, 2, true);
-        $this->setField(1, 2, true);
-        $this->setField(2, 2, true);
-    }
-
-
-    /**
-     * Initializes a board with one spaceship in the top left corner
-     */
-    public function initializeSpaceShipBoard ()
-    {
-        $this->board = $this->initializeEmptyBoard();
-
-        $this->setField(1, 4, true);
-        $this->setField(2, 4, true);
-        $this->setField(3, 4, true);
-        $this->setField(4, 4, true);
-        $this->setField(0, 5, true);
-        $this->setField(4, 5, true);
-        $this->setField(4, 6, true);
-        $this->setField(0, 7, true);
-        $this->setField(3, 7, true);
-    }
-
-
-    /**
-     * Initializes a board with a blinking 3x1 tile in the top left corner
-     */
-    public function initializeBlinkBoard ()
-    {
-        $this->board = $this->initializeEmptyBoard();
-
-        $this->setField(1,0, true);
-        $this->setField(1,1,true);
-        $this->setField(1,2,true);
-    }
-
 
     /**
      * Calculates a single step of the board
@@ -152,9 +224,8 @@ class Board
             // Go through each column of the row
             for ($x = 0; $x < $this->width; $x++)
             {
-                $currentCellState = $this->board[$y][$x];
+                $currentCellState = $this->currentBoard[$y][$x];
                 $amountNeighboursAlive = $this->checkAmountNeighboursAlive($x, $y);
-
 
                 // check whether cell dies, is reborn or stays alive
                 $newCellState = $currentCellState;
@@ -164,10 +235,7 @@ class Board
                 {
                     foreach ($this->rules->birth() as $amountBirth)
                     {
-                        if ($amountNeighboursAlive == $amountBirth)
-                        {
-                            $newCellState = true;
-                        }
+                        if ($amountNeighboursAlive == $amountBirth) $newCellState = true;
                     }
                 }
 
@@ -183,13 +251,12 @@ class Board
                     }
                 }
 
-
                 $newBoard[$y][$x] = $newCellState;
             }
         }
 
-        $this->historyOfBoards[] = $this->board;
-        $this->board = $newBoard;
+        $this->historyOfBoards[] = $this->currentBoard;
+        $this->currentBoard = $newBoard;
     }
 
 
@@ -256,11 +323,11 @@ class Board
         {
             foreach ($columns as $column)
             {
-                if ($this->board[$row][$column] == 1) $amountLivingNeighbours++;
+                if ($this->currentBoard[$row][$column] == 1) $amountLivingNeighbours++;
             }
         }
 
-        if ($this->board[$_y][$_x] == true)
+        if ($this->currentBoard[$_y][$_x] == true)
         {
             $amountLivingNeighbours -= 1;
         }
@@ -288,7 +355,7 @@ class Board
         {
             foreach ($this->historyOfBoards as $board)
             {
-                if ($this->board == $board) return true;
+                if ($this->currentBoard == $board) return true;
             }
 
             return false;
@@ -308,7 +375,7 @@ class Board
             echo "-";
         }
 
-        foreach ($this->board as $line)
+        foreach ($this->currentBoard as $line)
         {
             echo "\n|";
 
@@ -342,6 +409,20 @@ class Board
      */
     public function setField ($_x, $_y, $_isAlive)
     {
-        $this->board[$_y][$_x] = $_isAlive;
+        $this->currentBoard[$_y][$_x] = $_isAlive;
+    }
+
+
+    /**
+     * Returns the status of a specific field
+     *
+     * @param int $_x   X-Coordinate of the field
+     * @param int $_y   Y-Coordinate of the field
+     *
+     * @return boolean
+     */
+    public function getField ($_x, $_y)
+    {
+        return $this->currentBoard[$_y][$_x];
     }
 }
