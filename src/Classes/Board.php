@@ -395,6 +395,7 @@ class Board
         {
             echo "-";
         }
+        echo "\n";
     }
 
 
