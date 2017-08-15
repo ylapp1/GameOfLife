@@ -32,7 +32,7 @@ $options = new Getopt(
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
 
         // start of board options
-        array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells"),
+        //array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells"),
 
         // other
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
@@ -45,6 +45,8 @@ $options = new Getopt(
 // save input names for error message
 $inputNames = array();
 
+// save which options belong to which input type
+$inputOptions = array();
 
 // find every input class
 foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
@@ -54,10 +56,32 @@ foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
     $className = "Input\\" . basename($inputClass, ".php");
 
 
+    $previousOptions = $options->getOptionList();
+
+
     $input = new $className;
     $input->addOptions($options);
-}
 
+
+    $newOptions = $options->getOptionList();
+
+    foreach ($newOptions as $newOption)
+    {
+        $isNewOption = true;
+
+        foreach ($previousOptions as $previousOption)
+        {
+            if ($previousOption == $newOption) $isNewOption = false;
+        }
+
+
+        if ($isNewOption)
+        {
+            $optionName = $newOption[1];
+            $inputOptions[$optionName] = $input;
+        }
+    }
+}
 
 
 // parse options
@@ -78,7 +102,7 @@ elseif ($options->getOption("help"))
     $options->showHelp();
     return;
 }
-elseif ($options->getOption("input"))
+else
 {
     // Fetch game options
     $width = $options->getOption("width");
@@ -108,6 +132,7 @@ elseif ($options->getOption("input"))
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
 
+    /*
     // try to load specified input
     $className = "Input\\". $options->getOption("input") . "Input";
 
@@ -122,26 +147,46 @@ elseif ($options->getOption("input"))
         }
         return;
     }
+
     else
     {
         $input = new $className;
 
         $input->fillBoard($board, $options);
+    }
+    */
 
 
-        // Game loop
-        $curStep = 0;
+    $input = null;
 
-        while ($board->isFinished($curStep) == false)
+    foreach ($inputOptions as $inputOption=>$className)
+    {
+        if ($options->getOption($inputOption) !== null)
         {
-            $curStep++;
-
-            echo "\n\nGame Step: " . $curStep;
-
-            $board->printBoard();
-            $board->calculateStep();
-
-            usleep(10000);
+            $input = new $className;
         }
+    }
+
+    if ($input == null) $input = new Input\RandomInput();
+
+
+    $input->fillBoard($board, $options);
+
+
+
+
+    // Game loop
+    $curStep = 0;
+
+    while ($board->isFinished($curStep) == false)
+    {
+        $curStep++;
+
+        echo "\n\nGame Step: " . $curStep;
+
+        $board->printBoard();
+        $board->calculateStep();
+
+        usleep(10000);
     }
 }
