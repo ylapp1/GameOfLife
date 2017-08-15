@@ -30,13 +30,13 @@ class BlinkerInput extends BaseInput
      */
     public function fillBoard ($_board, $_options)
     {
-        $posX = $_options->getOption("posX");
+        $posX = $_options->getOption("blinkerPosX");
 
         if ($posX == null) $posX = ceil($_board->width() / 2) - 1;
         else $posX -= 1;
 
 
-        $posY = $_options->getOption("posY");
+        $posY = $_options->getOption("blinkerPosY");
 
         if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
         else $posY -= 1;
@@ -67,11 +67,11 @@ class BlinkerInput extends BaseInput
      */
     public function addOptions($_options)
     {
-        /*$_options->addOptions(
+        $_options->addOptions(
             array(
-                array(null, "posX", Getopt::REQUIRED_ARGUMENT, "X position of the blinker"),
-                array(null, "posY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker")
+                array(null, "blinkerPosX", Getopt::REQUIRED_ARGUMENT, "X position of the blinker"),
+                array(null, "blinkerPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker")
             )
-        );*/
+        );
     }
 }

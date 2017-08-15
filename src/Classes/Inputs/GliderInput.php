@@ -29,13 +29,13 @@ class GliderInput extends BaseInput
      */
     public function fillBoard($_board, $_options)
     {
-        $posX = $_options->getOption("posX");
+        $posX = $_options->getOption("gliderPosX");
 
         if ($posX == null) $posX = ceil($_board->width() / 2) - 1;
         else $posX -= 1;
 
 
-        $posY = $_options->getOption("posY");
+        $posY = $_options->getOption("gliderPosY");
 
         if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
         else $posY -= 1;
@@ -69,8 +69,8 @@ class GliderInput extends BaseInput
     {
         $_options->addOptions(
             array(
-                array(null, "posX", Getopt::REQUIRED_ARGUMENT, "X position of the object (blinker, glider etc.)"),
-                array(null, "posY", Getopt::REQUIRED_ARGUMENT, "Y position of the object (blinker, glider, etc.)")
+                array(null, "gliderPosX", Getopt::REQUIRED_ARGUMENT, "X position of the glider"),
+                array(null, "gliderPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the glider")
             )
         );
     }
