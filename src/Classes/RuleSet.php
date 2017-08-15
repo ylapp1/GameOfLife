@@ -8,7 +8,6 @@
 
 namespace GameOfLife;
 
-
 /**
  * Class RuleSet
  *
@@ -18,7 +17,6 @@ class RuleSet
 {
     private $birth = array();
     private $death = array();
-
 
     /**
      * RuleSet constructor.
@@ -34,24 +32,18 @@ class RuleSet
 
 
     /**
-     * @return array
+     * Returns the birth rules
+     *
+     * @return array    Birth rules
      */
     public function birth()
     {
         return $this->birth;
     }
 
-
     /**
-     * @return array
-     */
-    public function death()
-    {
-        return $this->death;
-    }
-
-
-    /**
+     * Set the birth rules
+     *
      * @param array $_birth   Amount of living neighbours which will rebirth a dead cell
      */
     public function setBirth($_birth)
@@ -59,8 +51,19 @@ class RuleSet
         $this->birth = $_birth;
     }
 
+    /**
+     * Returns the death rules
+     *
+     * @return array    Death rules
+     */
+    public function death()
+    {
+        return $this->death;
+    }
 
     /**
+     * Set the death rules
+     *
      * @param array $_death  Amount of living neighbours which will kill a living cell
      */
     public function setDeath($_death)

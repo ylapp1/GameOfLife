@@ -202,7 +202,6 @@ class Board
     {
         $board = array();
 
-
         for ($i = 0; $i < $this->height; $i++)
         {
             $board[$i] = array();
@@ -236,10 +235,7 @@ class Board
                 {
                     foreach ($this->rules->birth() as $amountBirth)
                     {
-                        if ($amountNeighboursAlive == $amountBirth)
-                        {
-                            $newCellState = true;
-                        }
+                        if ($amountNeighboursAlive == $amountBirth) $newCellState = true;
                     }
                 }
 
@@ -254,7 +250,6 @@ class Board
                         }
                     }
                 }
-
 
                 $newBoard[$y][$x] = $newCellState;
             }

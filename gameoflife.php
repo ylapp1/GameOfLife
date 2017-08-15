@@ -6,7 +6,6 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-
 require_once("Psr4Autoloader.php");
 
 $loader = new Psr4Autoloader();
@@ -21,7 +20,6 @@ use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
 
 
-
 // Create command line options
 $options = new Getopt(
     array(
@@ -31,49 +29,45 @@ $options = new Getopt(
         array(null, "maxSteps", Getopt::REQUIRED_ARGUMENT, "Set the maximum amount of steps that are calculated before the simulation stops (Default: 50)"),
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
 
-        // start of board options
-        //array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells"),
-
-        // other
+        // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
         array("h", "help", Getopt::NO_ARGUMENT)
     )
 );
 
 
-
-// save input names for error message
-$inputNames = array();
-
-// save which options belong to which input type
+// save which options refer to which input type
 $inputOptions = array();
 
 // find every input class
 foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
 {
-    // initialize each class
-    $inputNames[] = basename($inputClass, ".php");
+    // get class name with namespace prefix
     $className = "Input\\" . basename($inputClass, ".php");
 
-
+    // get options before class adds its options
     $previousOptions = $options->getOptionList();
 
-
+    // initialize the class
     $input = new $className;
     $input->addOptions($options);
 
-
+    // get options after the class added its options
     $newOptions = $options->getOptionList();
 
+    // save new options in $inputOptions
     foreach ($newOptions as $newOption)
     {
         $isNewOption = true;
 
         foreach ($previousOptions as $previousOption)
         {
-            if ($previousOption == $newOption) $isNewOption = false;
+            if ($previousOption == $newOption)
+            {
+                $isNewOption = false;
+                break;
+            }
         }
-
 
         if ($isNewOption)
         {
@@ -83,11 +77,8 @@ foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
     }
 }
 
-
 // parse options
 $options->parse();
-
-
 
 if ($options->getOption("version"))
 {
@@ -110,11 +101,10 @@ else
     $maxSteps = $options->getOption("maxSteps");
     $border = $options->getOption("border");
 
-
+    // Fill with default values if options not set
     if ($width == null) $width = 20;
     if ($height == null) $height = 10;
     if ($maxSteps == null) $maxSteps = 50;
-
 
     if ($border == null or $border == "solid") $hasBorder = true;
     elseif ($border == "passthrough") $hasBorder = false;
@@ -124,56 +114,29 @@ else
         return;
     }
 
-
     // define rules for conways game of life
     $rulesConway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
 
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
-
-    /*
-    // try to load specified input
-    $className = "Input\\". $options->getOption("input") . "Input";
-
-    if (class_exists($className) == false)
-    {
-        echo "Error: Invalid input type specified.\n";
-        echo "Allowed options are:\n\n";
-
-        foreach ($inputNames as $inputname)
-        {
-            echo $inputname . "\n";
-        }
-        return;
-    }
-
-    else
-    {
-        $input = new $className;
-
-        $input->fillBoard($board, $options);
-    }
-    */
-
-
+    // initialize new input
     $input = null;
 
+    // find out whether any input specific option is set
     foreach ($inputOptions as $inputOption=>$className)
     {
+        // if input specific option is set initialize new input of the class which the input refers to
         if ($options->getOption($inputOption) !== null)
         {
             $input = new $className;
         }
     }
 
+    // If no input specific option is set use default input (random board)
     if ($input == null) $input = new Input\RandomInput();
 
-
     $input->fillBoard($board, $options);
-
-
-
 
     // Game loop
     $curStep = 0;
@@ -181,12 +144,12 @@ else
     while ($board->isFinished($curStep) == false)
     {
         $curStep++;
-
         echo "\n\nGame Step: " . $curStep;
 
         $board->printBoard();
         $board->calculateStep();
 
+        // wait for 0.1 seconds before printing the next board
         usleep(10000);
     }
 }

@@ -13,7 +13,6 @@ class Psr4Autoloader
 {
     private $prefixes = array();
 
-
     /**
      * register all prefixes that are saved in the object
      */
@@ -30,7 +29,6 @@ class Psr4Autoloader
                     if (strncmp($prefix, $_class, $len) === 0)
                     {
                         $relativeClass = substr($_class, $len);
-
                         $file = $baseDirectory . str_replace('\\', '/', $relativeClass) . '.php';
 
                         if (file_exists($file)) require_once $file;
@@ -40,7 +38,6 @@ class Psr4Autoloader
         );
     }
 
-
     /**
      * add a namespace to the list
      *
@@ -49,9 +46,6 @@ class Psr4Autoloader
      */
     public function addNamespace($_prefix, $_baseDir)
     {
-        if (isset($this->prefixes[$_prefix]) === false)
-        {
-            $this->prefixes[$_prefix] = $_baseDir;
-        }
+        if (isset($this->prefixes[$_prefix]) === false) $this->prefixes[$_prefix] = $_baseDir;
     }
 }
