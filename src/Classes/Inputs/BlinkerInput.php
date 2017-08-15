@@ -18,8 +18,8 @@ use Ulrichsg\Getopt;
  */
 class BlinkerInput extends BaseInput
 {
-    private const blinkerWidth = 1;
-    private const blinkerHeight = 3;
+    private $blinkerWidth = 1;
+    private $blinkerHeight = 3;
 
 
     /**
@@ -44,8 +44,8 @@ class BlinkerInput extends BaseInput
 
         if ($posX < 0 ||
             $posY < 0 ||
-            $posX + self::blinkerWidth > $_board->width() ||
-            $posY + self::blinkerHeight > $_board->height()
+            $posX + $this->blinkerWidth > $_board->width() ||
+            $posY + $this->blinkerHeight > $_board->height()
            )
         {
             echo "Error: Blinker exceeds field borders.";

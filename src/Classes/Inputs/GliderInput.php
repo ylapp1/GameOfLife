@@ -17,8 +17,8 @@ use Ulrichsg\Getopt;
  */
 class GliderInput extends BaseInput
 {
-    private const gliderWidth = 3;
-    private const gliderHeight = 3;
+    private $gliderWidth = 3;
+    private $gliderHeight = 3;
 
 
     /**
@@ -43,8 +43,8 @@ class GliderInput extends BaseInput
 
         if ($posX < 0 ||
             $posY < 0 ||
-            $posX + self::gliderWidth > $_board->width() ||
-            $posY + self::gliderHeight > $_board->height()
+            $posX + $this->gliderWidth > $_board->width() ||
+            $posY + $this->gliderHeight > $_board->height()
            )
         {
             echo "Error: Glider exceeds field borders.";

@@ -18,8 +18,8 @@ use Ulrichsg\Getopt;
  */
 class SpaceShipInput extends BaseInput
 {
-    private const spaceShipWidth = 5;
-    private const spaceShipHeight = 4;
+    private $spaceShipWidth = 5;
+    private $spaceShipHeight = 4;
 
 
     /**
@@ -44,8 +44,8 @@ class SpaceShipInput extends BaseInput
 
         if ($posX < 0 ||
             $posY < 0 ||
-            $posX + self::spaceShipWidth > $_board->width() ||
-            $posY + self::spaceShipHeight > $_board->height()
+            $posX + $this->spaceShipWidth > $_board->width() ||
+            $posY + $this->spaceShipHeight > $_board->height()
            )
         {
             echo "Error: Spaceship exceeds field borders.";
