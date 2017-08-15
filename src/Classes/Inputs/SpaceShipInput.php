@@ -18,24 +18,40 @@ use Ulrichsg\Getopt;
  */
 class SpaceShipInput extends BaseInput
 {
+    private const spaceShipWidth = 5;
+    private const spaceShipHeight = 4;
+
+
     /**
-     * @param Board $_board
-     * @param Getopt $_options
+     * Place one spaceship on the board
+     *
+     * @param Board $_board     The Board
+     * @param Getopt $_options  Options (posX, posY)
      */
     public function fillBoard($_board, $_options)
     {
         $posX = $_options->getOption("posX");
-        $posY = $_options->getOption("posY");
 
         if ($posX == null) $posX = ceil($_board->width() / 2) - 1;
+        else $posX -= 1;
+
+
+        $posY = $_options->getOption("posY");
+
         if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
+        else $posY -= 1;
 
 
-        if ($posX + 4 >= $_board->width() || $posY + 3 >= $_board->height())
+        if ($posX < 0 ||
+            $posY < 0 ||
+            $posX + self::spaceShipWidth > $_board->width() ||
+            $posY + self::spaceShipHeight > $_board->height()
+           )
         {
             echo "Error: Spaceship exceeds field borders.";
             return;
         }
+
 
 
         $_board->setField($posX + 1, $posY, true);
@@ -53,7 +69,7 @@ class SpaceShipInput extends BaseInput
     /**
      * Adds its own specific options to the option list
      *
-     * @param Getopt $_options
+     * @param Getopt $_options  Options to which the object shall add its specific options
      */
     public function addOptions($_options)
     {

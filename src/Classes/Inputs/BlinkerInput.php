@@ -18,38 +18,52 @@ use Ulrichsg\Getopt;
  */
 class BlinkerInput extends BaseInput
 {
+    private const blinkerWidth = 1;
+    private const blinkerHeight = 3;
+
+
     /**
-     * @param Board $_board
-     * @param Getopt $_options
+     * Place one 3x1 Blinker on the board
+     *
+     * @param Board $_board     The Board
+     * @param Getopt $_options  Options (posX, posY)
      */
     public function fillBoard ($_board, $_options)
     {
         $posX = $_options->getOption("posX");
-        $posY = $_options->getOption("posY");
 
         if ($posX == null) $posX = ceil($_board->width() / 2) - 1;
-        if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
+        else $posX -= 1;
 
-        if ($posX + 2 >= $_board->width() || $posY + 2 >= $_board->height())
+
+        $posY = $_options->getOption("posY");
+
+        if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
+        else $posY -= 1;
+
+
+        if ($posX < 0 ||
+            $posY < 0 ||
+            $posX + self::blinkerWidth > $_board->width() ||
+            $posY + self::blinkerHeight > $_board->height()
+           )
         {
             echo "Error: Blinker exceeds field borders.";
             return;
         }
 
 
+
         $_board->setField($posX,$posY, true);
         $_board->setField($posX,$posY + 1,true);
         $_board->setField($posX,$posY + 2,true);
-
-        //echo "Board dimensions: " . $_board->width() . " x " . $_board->height() . "\n";
-        //echo "Blinker Position: " . $posX . " | " . $posY . "\n";
     }
 
 
     /**
      * Adds BlinkeInputs specific options to the option list
      *
-     * @param Getopt $_options
+     * @param Getopt $_options  Options to which the object shall add its specific options
      */
     public function addOptions($_options)
     {
