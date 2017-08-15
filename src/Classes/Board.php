@@ -6,9 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-
 namespace GameOfLife;
-
 
 /**
  * Class Board
@@ -53,117 +51,148 @@ class Board
 
 
     /**
-     * @return array
+     * Returns current Board
+     *
+     * @return array   Current board
      */
-    public function currentBoard()
+    public function currentBoard(): array
     {
         return $this->currentBoard;
     }
 
     /**
-     * @param array $currentBoard
+     * Sets current board
+     *
+     * @param array $currentBoard   Current board
      */
-    public function setCurrentBoard($currentBoard)
+    public function setCurrentBoard(array $currentBoard)
     {
         $this->currentBoard = $currentBoard;
     }
 
     /**
-     * @return array
+     * Returns the history of boards
+     *
+     * @return array   History of boards
      */
-    public function historyOfBoards()
+    public function historyOfBoards(): array
     {
         return $this->historyOfBoards;
     }
 
     /**
-     * @param array $historyOfBoards
+     * Set the history of boards
+     *
+     * @param array $historyOfBoards    History of boards
      */
-    public function setHistoryOfBoards($historyOfBoards)
+    public function setHistoryOfBoards(array $historyOfBoards)
     {
         $this->historyOfBoards = $historyOfBoards;
     }
 
     /**
-     * @return bool
+     * Returns the border type
+     *
+     * @return bool     Border type
+     *                      true: The border is made of cells that are constantly dead
+     *                      false: Each border links to the opposite site of the board
      */
-    public function hasBorder()
+    public function hasBorder(): bool
     {
         return $this->hasBorder;
     }
 
     /**
-     * @param bool $hasBorder
+     * Sets the border type
+     *
+     * @param bool $hasBorder   Border type
+     *                              true: The border is made of cells that are constantly dead
+     *                              false: Each border links to the opposite site of the board
      */
-    public function setHasBorder($hasBorder)
+    public function setHasBorder(bool $hasBorder)
     {
         $this->hasBorder = $hasBorder;
     }
 
     /**
-     * @return int
+     * Returns the board height
+     *
+     * @return int  Board height
      */
-    public function height()
+    public function height(): int
     {
         return $this->height;
     }
 
     /**
-     * @param int $height
+     * Sets the board height
+     *
+     * @param int $height   Board height
      */
-    public function setHeight( $height)
+    public function setHeight(int $height)
     {
         $this->height = $height;
     }
 
     /**
-     * @return int
+     * Return the maximum amount of steps which are calculated before the board stops calculating more steps
+     *
+     * @return int   Maximum amount of game steps
      */
-    public function maxSteps()
+    public function maxSteps(): int
     {
         return $this->maxSteps;
     }
 
     /**
-     * @param int $maxSteps
+     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps
+     *
+     * @param int $maxSteps     Maximum amount of game steps
      */
-    public function setMaxSteps($maxSteps)
+    public function setMaxSteps(int $maxSteps)
     {
         $this->maxSteps = $maxSteps;
     }
 
     /**
-     * @return int
+     * Returns the board width
+     *
+     * @return int  Board width
      */
-    public function width()
+    public function width(): int
     {
         return $this->width;
     }
 
     /**
-     * @param int $width
+     * Set the board width
+     *
+     * @param int $width    Board width
      */
-    public function setWidth($width)
+    public function setWidth(int $width)
     {
         $this->width = $width;
     }
 
     /**
-     * @return RuleSet
+     * Returns the rule set
+     *
+     * @return RuleSet  Death/Birth rules of the current board
      */
-    public function rules()
+    public function rules(): RuleSet
     {
         return $this->rules;
     }
 
     /**
-     * @param RuleSet $rules
+     * Set the rule set
+     *
+     * @param RuleSet $rules    Death/Birth rules of the current board
      */
-    public function setRules($rules)
+    public function setRules(RuleSet $rules)
     {
         $this->rules = $rules;
     }
-
 
 
     /**
@@ -183,7 +212,6 @@ class Board
         return $board;
     }
 
-
     /**
      * Calculates a single step of the board
      */
@@ -199,7 +227,6 @@ class Board
             {
                 $currentCellState = $this->currentBoard[$y][$x];
                 $amountNeighboursAlive = $this->checkAmountNeighboursAlive($x, $y);
-
 
                 // check whether cell dies, is reborn or stays alive
                 $newCellState = $currentCellState;
