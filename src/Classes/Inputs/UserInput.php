@@ -19,6 +19,8 @@ class UserInput extends BaseInput
 {
     /**
      * Catches input from keyboard to create an own generation
+     * Put Numbers in like 5,5 to set to true
+     * or -5,-5 to set to false
      *
      * @param \GameOfLife\Board $_board
      * @param Getopt $_options
@@ -26,7 +28,8 @@ class UserInput extends BaseInput
     function fillBoard($_board, $_options)
     {
         echo "Set the coordinates for the living fields as below:\n";
-        echo "<"."number>,<number".">\n";
+        echo "<"."number>,<number".">\n<"."-number>,<-number".">\n";
+        echo "The stroke before the number sets a wrongly set field to false\n";
         echo "and after that press <"."Enter>. The first number stands for X and the second number for Y\n";
         echo "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
         echo "Let's Go:\n";
@@ -49,12 +52,30 @@ class UserInput extends BaseInput
                     $inputSplits = explode(",", $nextLine);
                     if (count($inputSplits) == 2)
                     {
-                        if ($inputSplits[0] > $_board->width() - 1 || $inputSplits[1] > $_board->height() - 1)
+                        if (stristr($inputSplits[0], "-") && stristr($inputSplits[1], "-"))
                         {
-                            echo "The numbers may not be larger than the field!";
-                        }else
-                        {
-                            $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
+                            $trimX = trim($inputSplits[0], "-");
+                            $trimY = trim($inputSplits[1], "-");
+
+                            if ($trimX > $_board->width() - 1 || $trimY > $_board->height() - 1)
+                            {
+                                echo "The numbers may not be larger than the field!";
+                            }
+                            else
+                            {
+                                $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
+                            }
+                        }
+                        else
+                            {
+                            if ($inputSplits[0] > $_board->width() - 1 || $inputSplits[1] > $_board->height() - 1)
+                            {
+                                echo "The numbers may not be larger than the field!";
+                            }
+                            else
+                            {
+                                $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
+                            }
                         }
                     }
                     else
