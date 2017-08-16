@@ -9,7 +9,7 @@
 require_once("Psr4Autoloader.php");
 
 $loader = new Psr4Autoloader();
-$loader->addNamespace("GameOfLife\\", __DIR__ . "/src/Classes/");
+$loader->addNamespace("GameOfLife", __DIR__ . "/src/Classes/");
 $loader->addNamespace("Ulrichsg", __DIR__ . "/src/Ulrichsg/");
 $loader->addnameSpace("Input", __DIR__ . "/src/Classes/Inputs");
 $loader->register();
@@ -28,6 +28,7 @@ $options = new Getopt(
         array(null, "height", Getopt::REQUIRED_ARGUMENT, "Set the board height (Default: 10)"),
         array(null, "maxSteps", Getopt::REQUIRED_ARGUMENT, "Set the maximum amount of steps that are calculated before the simulation stops (Default: 50)"),
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
+        array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
 
         // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
@@ -56,6 +57,7 @@ foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
     $newOptions = $options->getOptionList();
 
     // save new options in $inputOptions
+    // cannot use array_diff because it doesn't work with multidimensional arrays
     foreach ($newOptions as $newOption)
     {
         $isNewOption = true;
@@ -120,8 +122,16 @@ else
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
-    // initialize new input
-    $input = null;
+    // initialize new input with default value
+    $input = new Input\RandomInput;
+
+    // find out whether user used the --input option
+    if ($options->getOption("input"))
+    {
+        $className = "Input\\" . $options->getOption("input") . "Input";
+
+        if (class_exists($className)) $input = new $className;
+    }
 
     // find out whether any input specific option is set
     foreach ($inputOptions as $inputOption=>$className)
@@ -132,9 +142,6 @@ else
             $input = new $className;
         }
     }
-
-    // If no input specific option is set use default input (random board)
-    if ($input == null) $input = new Input\RandomInput();
 
     $input->fillBoard($board, $options);
 
