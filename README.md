@@ -9,6 +9,7 @@ Options:  <br />
 | --height <arg>      | Set the board height    | Integer | Default: 10  |
 | --maxSteps <arg>    | Set the maximum amount of steps that are calculated before the simulation stops | Integer | Default: 50 |
 | --border <arg>      | Set the border type     | String | solid (Default), passthrough |
+| --input <arg>       | Fill the board with cells  | String | Blinker, Glider, Random, Spaceship |
 | --version           | Print script version  | - | - |
 | -h, --help          | Show help  | - | - |
 | --blinkerPosX <arg> | X position of the blinker  | Integer | Default: Center |
