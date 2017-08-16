@@ -63,7 +63,7 @@ class UserInput extends BaseInput
                             }
                             else
                             {
-                                $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
+                                $_board->setField((int)$trimX, (int)$trimY, false);
                             }
                         }
                         else
