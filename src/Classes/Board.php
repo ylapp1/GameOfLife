@@ -198,7 +198,7 @@ class Board
     /**
      * Returns an empty board
      */
-    private function initializeEmptyBoard ()
+    public function initializeEmptyBoard ()
     {
         $board = array();
 
