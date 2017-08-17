@@ -9,6 +9,7 @@
 namespace Input;
 
 use Ulrichsg\Getopt;
+use Input\FileInput;
 
 /**
  * Class UserInput
@@ -27,6 +28,15 @@ class UserInput extends BaseInput
      */
     function fillBoard($_board, $_options)
     {
+        $isEdit = $_options->getOption("edit");
+
+        if ($isEdit == true)
+        {
+            $fileInput = new FileInput();
+            $fileInput->fillBoard($_board, $_options);
+            $_board->printBoard();
+        }
+
         echo "Set the coordinates for the living fields as below:\n";
         echo "<"."number>,<number".">\n<"."-number>,<-number".">\n";
         echo "The stroke before the number sets a wrongly set field to false\n";
@@ -122,6 +132,10 @@ class UserInput extends BaseInput
      */
     function addOptions($_options)
     {
-
+        $_options->addOptions(
+            array(
+                array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template")
+            )
+        );
     }
 }
