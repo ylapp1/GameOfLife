@@ -9,6 +9,7 @@
 namespace Input;
 
 use Ulrichsg\Getopt;
+use Input\FileInput;
 
 /**
  * Class UserInput
@@ -27,11 +28,21 @@ class UserInput extends BaseInput
      */
     function fillBoard($_board, $_options)
     {
+        $isEdit = $_options->getOption("edit");
+
+        if ($isEdit == true)
+        {
+            $fileInput = new FileInput();
+            $fileInput->fillBoard($_board, $_options);
+            $_board->printBoard();
+        }
+
         echo "Set the coordinates for the living fields as below:\n";
         echo "<"."number>,<number".">\n<"."-number>,<-number".">\n";
         echo "The stroke before the number sets a wrongly set field to false\n";
         echo "and after that press <"."Enter>. The first number stands for X and the second number for Y\n";
         echo "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
+        echo "You can save your board configuration before starting the simulation by typing \"save\"\n";
         echo "Let's Go:\n";
 
         $fileOpen = fopen('php://stdin','r') or die($php_errormsg);
@@ -45,6 +56,23 @@ class UserInput extends BaseInput
             if (stristr($nextLine, "start"))
             {
                 $lastLine = true;
+            }
+            elseif (stristr($nextLine, "save"))
+            {
+                // fetch config name
+                $config = explode(" ", $nextLine);
+
+                if (count($config) == 2)
+                {
+                    $config[1] = rtrim($config[1], "\n\r");
+
+                    $fileName = __DIR__ . "\\..\\..\\Templates\\" . $config[1] . ".txt";
+
+                    file_put_contents($fileName, $_board);
+
+                    $lastLine = true;
+                }
+                else echo "Error: No filename specified!";
             }
             else
             {
@@ -104,6 +132,10 @@ class UserInput extends BaseInput
      */
     function addOptions($_options)
     {
-
+        $_options->addOptions(
+            array(
+                array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template")
+            )
+        );
     }
 }
