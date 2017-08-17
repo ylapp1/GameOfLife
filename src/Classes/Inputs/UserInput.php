@@ -48,7 +48,6 @@ class UserInput extends BaseInput
                 if (stristr($nextLine, "exit")) die();
                 if (stristr($nextLine, ","))
                 {
-
                     $inputSplits = explode(",", $nextLine);
                     if (count($inputSplits) == 2)
                     {
@@ -59,7 +58,7 @@ class UserInput extends BaseInput
 
                             if ($trimX > $_board->width() - 1 || $trimY > $_board->height() - 1)
                             {
-                                echo "The numbers may not be larger than the field!";
+                                echo "The numbers may not exceed the field borders!";
                             }
                             else
                             {
@@ -68,9 +67,12 @@ class UserInput extends BaseInput
                         }
                         else
                             {
-                            if ($inputSplits[0] > $_board->width() - 1 || $inputSplits[1] > $_board->height() - 1)
+                            if ($inputSplits[0] > $_board->width() - 1 ||
+                                $inputSplits[0] < 0 ||
+                                $inputSplits[1] > $_board->height() - 1 ||
+                                $inputSplits[1] < 0)
                             {
-                                echo "The numbers may not be larger than the field!";
+                                echo "The numbers may not exceed the field borders!";
                             }
                             else
                             {
@@ -89,16 +91,12 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Add the parameter --startUserInput to start the UserInput
+     * Add input specific options
      *
      * @param Getopt $_options
      */
     function addOptions($_options)
     {
-        $_options->addOptions(
-            array(
-                array(null, "startUserInput", Getopt::NO_ARGUMENT, "Starts the User Input"),
-            )
-        );
+
     }
 }
