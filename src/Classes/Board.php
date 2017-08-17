@@ -353,9 +353,10 @@ class Board
         }
         else
         {
-            foreach ($this->historyOfBoards as $board)
+            for ($i = count($this->historyOfBoards()) - 1; $i > count($this->historyOfBoards()) - 15 && $i > 0; $i--)
+            //foreach ($this->historyOfBoards as $board)
             {
-                if ($this->currentBoard == $board) return true;
+                if ($this->currentBoard == $this->historyOfBoards()[$i]) return true;
             }
 
             return false;
@@ -489,5 +490,29 @@ class Board
     public function getField ($_x, $_y)
     {
         return $this->currentBoard[$_y][$_x];
+    }
+
+
+    /**
+     * Convert board to string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $string = "";
+
+        for ($y = 0; $y < $this->height(); $y++)
+        {
+            for ($x = 0; $x < $this->width(); $x++)
+            {
+                if ($this->getField($x, $y) == true) $string .= "o";
+                else $string .= "_";
+            }
+
+            if ($y != $this->height() - 1) $string .= "\r\n";
+        }
+
+        return $string;
     }
 }

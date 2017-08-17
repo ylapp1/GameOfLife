@@ -58,12 +58,7 @@ class FileInput extends BaseInput
 
                 $_board->setHeight(count($configLines));
                 $_board->setWidth(count(str_split($configLines[0])) - 1);
-
-
-                echo "Field dimensions: " . $_board->height() . " x " . $_board->width();
-
                 $_board->setCurrentBoard($_board->initializeEmptyBoard());
-
 
                 for ($y = 0; $y < $_board->height(); $y++)
                 {
@@ -71,7 +66,7 @@ class FileInput extends BaseInput
 
                     for ($x = 0; $x < $_board->width(); $x++)
                     {
-                        if ($cells[$x] == "*") $_board->setField($x, $y, true);
+                        if ($cells[$x] == "o") $_board->setField($x, $y, true);
                         else $_board->setField($x, $y, false);
                     }
                 }
