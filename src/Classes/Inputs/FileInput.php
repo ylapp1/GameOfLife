@@ -53,16 +53,15 @@ class FileInput extends BaseInput
 
             if (file_exists($fileName))
             {
-                $config = file_get_contents($fileName);
-                $configLines = explode("\n", $config);
+                $lines = file($fileName, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
 
-                $_board->setHeight(count($configLines));
-                $_board->setWidth(count(str_split($configLines[0])) - 1);
+                $_board->setHeight(count($lines));
+                $_board->setWidth(count(str_split($lines[0])));
                 $_board->setCurrentBoard($_board->initializeEmptyBoard());
 
                 for ($y = 0; $y < $_board->height(); $y++)
                 {
-                    $cells = str_split($configLines[$y]);
+                    $cells = str_split($lines[$y]);
 
                     for ($x = 0; $x < $_board->width(); $x++)
                     {
