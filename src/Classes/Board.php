@@ -381,7 +381,7 @@ class Board
 
             foreach ($line as $cell)
             {
-                if ($cell === true) echo "*";
+                if ($cell === true) echo "o";
                 else echo " ";
             }
 
@@ -392,6 +392,70 @@ class Board
         echo "\n ";
 
         for ($i = 0; $i < $this->width; $i++)
+        {
+            echo "-";
+        }
+        echo "\n";
+    }
+
+
+    public function printBoardEditor($_curX, $_curY)
+    {
+        // Output last set cell x-coordinate
+        echo "\n  ";
+        for ($i = 0; $i < $this->width + 2; $i++)
+        {
+            if ($i == $_curX) echo $_curX;
+            else echo " ";
+        }
+
+        // Output upper border
+        echo "\n ";
+        for ($i = 0; $i < $this->width + 2; $i++)
+        {
+            echo "-";
+        }
+
+        for ($y = 0; $y < $this->height; $y++)
+        {
+            echo "\n|";
+
+            // Output lines above and below the last set cell
+            if ($y == $_curY || $y == $_curY + 1)
+            {
+                for ($i = 0; $i < $this->width() + 2; $i++)
+                {
+                    echo "-";
+                }
+                echo "|\n|";
+            }
+
+            for ($x= 0; $x < $this->width; $x++)
+            {
+                // Output lines left and right from the last set cell
+                if ($x == $_curX || $x == $_curX + 1)
+                {
+                    echo "|";
+                }
+
+                // Output the cells
+                if ($this->getField($x, $y) == true)
+                {
+                    if ($x == $_curX && $y == $_curY) echo "X";
+                    else    echo "o";
+                }
+                else echo " ";
+            }
+
+            echo "|";
+
+            // Output last set cell y-coordinate
+            if ($y == $_curY) echo $_curY;
+        }
+
+        // Output bottom border
+        echo "\n ";
+        for ($i = 0; $i < $this->width + 2; $i++)
         {
             echo "-";
         }

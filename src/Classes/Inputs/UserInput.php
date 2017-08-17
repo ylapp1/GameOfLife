@@ -37,6 +37,9 @@ class UserInput extends BaseInput
         $fileOpen = fopen('php://stdin','r') or die($php_errormsg);
         $lastLine = false;
 
+        $inputX = null;
+        $inputY = null;
+
         while (! $lastLine) {
             $nextLine = fgets($fileOpen,1024);
             if (stristr($nextLine, "start"))
@@ -63,6 +66,8 @@ class UserInput extends BaseInput
                             else
                             {
                                 $_board->setField((int)$trimX, (int)$trimY, false);
+                                $inputX = (int)$trimX;
+                                $inputY = (int)$trimY;
                             }
                         }
                         else
@@ -77,6 +82,8 @@ class UserInput extends BaseInput
                             else
                             {
                                 $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
+                                $inputX = (int)$inputSplits[0];
+                                $inputY = (int)$inputSplits[1];
                             }
                         }
                     }
@@ -85,7 +92,7 @@ class UserInput extends BaseInput
                         echo "Don't give me more than two numbers!";
                     }
                 }
-                $_board->printBoard();
+                $_board->printBoardEditor($inputX, $inputY);
             }
         }
     }
