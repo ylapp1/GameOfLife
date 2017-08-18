@@ -11,14 +11,14 @@ require_once("Psr4Autoloader.php");
 $loader = new Psr4Autoloader();
 $loader->addNamespace("GameOfLife", __DIR__ . "/src/Classes/");
 $loader->addNamespace("Ulrichsg", __DIR__ . "/src/Ulrichsg/");
-$loader->addnameSpace("Input", __DIR__ . "/src/Classes/Inputs");
+$loader->addNameSpace("Input", __DIR__ . "/src/Classes/Inputs");
+$loader->addnameSpace("Output", __DIR__ . "/src/Classes/Outputs");
 $loader->register();
 
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
-
 
 // Create command line options
 $options = new Getopt(
@@ -29,6 +29,7 @@ $options = new Getopt(
         array(null, "maxSteps", Getopt::REQUIRED_ARGUMENT, "Set the maximum amount of steps that are calculated before the simulation stops (Default: 50)"),
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
         array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
+        array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: Consoleoutput"),
 
         // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
@@ -145,18 +146,26 @@ else
 
     $input->fillBoard($board, $options);
 
-    // Game loop
-    $curStep = 0;
 
-    while ($board->isFinished($curStep) == false)
+    $output = new Output\ConsoleOutput;
+
+    // find out whether user used the --output option
+    if ($options->getOption("output"))
     {
-        $curStep++;
-        echo "\n\nGame Step: " . $curStep;
+        $className = "Output\\" . $options->getOption("output") . "Output";
 
-        $board->printBoard();
-        $board->calculateStep();
-
-        // wait for 0.1 seconds before printing the next board
-        usleep(10000);
+        if (class_exists($className)) $output = new $className;
     }
+
+
+    $output->startOutput($options);
+
+    // Game loop
+    while ($board->isFinished() == false)
+    {
+        $output->outputBoard($board);
+        $board->calculateStep();
+    }
+
+    $output->finishOutput();
 }

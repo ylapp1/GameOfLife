@@ -25,6 +25,7 @@ class Board
     private $maxSteps;
     private $width;
     private $rules;
+    private $gameStep;
 
 
     /**
@@ -47,6 +48,7 @@ class Board
         $this->width = $_width;
 
         $this->currentBoard = $this->initializeEmptyBoard();
+        $this->gameStep = 0;
     }
 
 
@@ -194,6 +196,26 @@ class Board
         $this->rules = $rules;
     }
 
+    /**
+     * Returns the current game step
+     *
+     * @return int
+     */
+    public function gameStep(): int
+    {
+        return $this->gameStep;
+    }
+
+    /**
+     * Set the current game step
+     *
+     * @param int $gameStep
+     */
+    public function setGameStep(int $gameStep)
+    {
+        $this->gameStep = $gameStep;
+    }
+
 
     /**
      * Returns an empty board
@@ -257,6 +279,7 @@ class Board
 
         $this->historyOfBoards[] = $this->currentBoard;
         $this->currentBoard = $newBoard;
+        $this->gameStep ++;
     }
 
 
@@ -345,9 +368,9 @@ class Board
      *
      * @return bool
      */
-    public function isFinished($_curStep)
+    public function isFinished()
     {
-        if ($_curStep >= $this->maxSteps)
+        if ($this->gameStep >= $this->maxSteps)
         {
             return true;
         }
