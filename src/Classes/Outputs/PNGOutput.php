@@ -73,41 +73,45 @@ class PNGOutput
 
         // Set background of image to white
         $colorWhite = imagecolorallocate($image, 255, 255,255);
+        $colorBlack = imagecolorallocate($image, 0, 0, 0);
         imagefill($image, 0, 0, $colorWhite);
 
-        // color alive = black
-        $colorAlive = imagecolorallocate($image, 0, 0, 0);
-
-        // color dead = white
+        $colorAlive = $colorBlack;
         $colorDead = $colorWhite;
 
-        for ($y = 0; $y < $_board->height(); $y++)
+        // Draw the cells
+        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
         {
-            for ($x = 0; $x < $_board->width(); $x++)
+            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
             {
-                if ($_board->getField($x, $y) == true)
+                if ($_board->getField($x / $this->cellSize, $y / $this->cellSize) == true)
                 {
-                    imagefilledrectangle($image,
-                                        $x * $this->cellSize,
-                                        $y * $this->cellSize,
-                                        $x * $this->cellSize + $this->cellSize,
-                                        $y * $this->cellSize + $this->cellSize,
-                                        $colorAlive);
+                    //imagefilledrectangle($image, $x, $y,$x + $this->cellSize,$y + $this->cellSize, $colorAlive);
+
+                    //imagefilledarc ($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize, $this->cellSize, 0 , 360, $colorAlive, IMG_ARC_EDGED);
+                    imagefilledellipse($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize - 5, $this->cellSize - 5, $colorAlive);
                 }
-                else
+                /*else
                 {
-                    imagefilledrectangle($image,
-                        $x * $this->cellSize,
-                        $y * $this->cellSize,
-                        $x * $this->cellSize + $this->cellSize,
-                        $y * $this->cellSize + $this->cellSize,
-                        $colorDead);
-                }
+                    imagefilledrectangle($image, $x, $y,$x + $this->cellSize,$y + $this->cellSize, $colorDead);
+                }*/
+            }
+        }
+
+        // Draw a grid
+        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
+        {
+            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
+            {
+                // vertical
+                imageline($image, $x, 0, $x, imagesy($image), $colorBlack);
+
+                // horizontal
+                imageline($image, 0, $y, imagesx($image), $y, $colorBlack);
             }
         }
 
         imagepng($image, $this->gameFolder . "/" . ($_board->gameStep() + 1) . ".png");
-
         imagedestroy($image);
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);

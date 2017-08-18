@@ -146,7 +146,6 @@ else
 
     $input->fillBoard($board, $options);
 
-
     $output = new Output\ConsoleOutput;
 
     // find out whether user used the --output option
@@ -157,7 +156,7 @@ else
         if (class_exists($className)) $output = new $className;
     }
 
-
+    
     $output->startOutput($options);
 
     // Game loop
