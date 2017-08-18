@@ -29,7 +29,7 @@ $options = new Getopt(
         array(null, "maxSteps", Getopt::REQUIRED_ARGUMENT, "Set the maximum amount of steps that are calculated before the simulation stops (Default: 50)"),
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
         array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
-        array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: Consoleoutput"),
+        array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: console, png)"),
 
         // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
