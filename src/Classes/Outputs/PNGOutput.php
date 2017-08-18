@@ -39,14 +39,20 @@ class PNGOutput
      */
     public function startOutput($_options)
     {
-        $files = glob(__DIR__ . "/../../../Output/PNG/Game_*");
+        $fileNames = glob(__DIR__ . "/../../../Output/PNG/Game_*");
 
-        if (count($files) == 0) $lastGameId = 0;
+        if (count($fileNames) == 0) $lastGameId = 0;
         else
         {
-            $lastGameName = basename($files[count($files) - 1]);
-            $lastGameData = explode("_", $lastGameName);
-            $lastGameId = intval($lastGameData[1]);
+            $fileIds = array();
+            foreach ($fileNames as $fileName)
+            {
+                $fileData = explode("_", basename($fileName));
+                $fileIds[] = intval($fileData[1]);
+            }
+
+            sort($fileIds, SORT_NUMERIC);
+            $lastGameId = $fileIds[count($fileIds) - 1];
         }
 
         // Create new folder for current game
