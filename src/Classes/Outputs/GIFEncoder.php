@@ -29,6 +29,8 @@
  *
  */
 
+namespace Output;
+
 /**
  * Class GIFEncoder
  */

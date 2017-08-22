@@ -11,8 +11,6 @@ namespace Output;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 
-require __DIR__ . "/../../../GIFEncoder.php";
-
 /**
  * Class GIFOutput
  *
@@ -112,7 +110,7 @@ class GIFOutput extends BaseOutput
             $framed[] = $this->frameTime + 200;
         }
 
-        $gif = new \GIFEncoder($frames, $framed, 0, 2, 1, 0, 0, "url");
+        $gif = new GIFEncoder($frames, $framed, 0, 2, 1, 0, 0, "url");
         $fileNameCount = 0;
         do
         {
@@ -139,7 +137,5 @@ class GIFOutput extends BaseOutput
 
     function addOptions($_options)
     {
-
     }
-
 }
