@@ -21,6 +21,7 @@ class GIFOutput extends BaseOutput
     private $cellSize = 100;
     private $frameTime = 20;
     private $framePath = __DIR__ . "/../../../Output/GIF/Frames/";
+    private $frames = array();
     private $removeFramesAfterCreation = true;
 
     /**
@@ -75,8 +76,13 @@ class GIFOutput extends BaseOutput
             }
         }
 
-        imagegif($image, $this->framePath . "/" . ($_board->gameStep() + 1) . ".gif");
+
+        $framePath = $this->framePath . "/" . ($_board->gameStep() + 1) . ".gif";
+
+        imagegif($image, $framePath);
         imagedestroy($image);
+
+        $this->frames[] = $framePath;
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 
@@ -92,25 +98,16 @@ class GIFOutput extends BaseOutput
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting GIF creation. One moment please...";
 
-        $frames = array();
-        $framed = array();
+        $frameDuration = array();
 
-        if ($framesDir = opendir($this->framePath))
+        for ($i = 0; $i < count($this->frames) - 1; $i++)
         {
-            while (false !== ($entries = readdir($framesDir)))
-            {
-                if ($entries != "." && $entries != "..")
-                {
-                    $frames[] = $this->framePath . $entries;
-                    $framed[] = $this->frameTime;
-                }
-            }
-            closedir($framesDir);
-            array_pop($framed);
-            $framed[] = $this->frameTime + 200;
+            $frameDuration[] = $this->frameTime;
         }
 
-        $gif = new GIFEncoder($frames, $framed, 0, 2, 1, 0, 0, "url");
+        $frameDuration[] = $this->frameTime + 200;
+
+        $gif = new GIFEncoder($this->frames, $frameDuration, 0, 2, 1, 0, 0, "url");
         $fileNameCount = 0;
         do
         {
@@ -125,9 +122,9 @@ class GIFOutput extends BaseOutput
 
         if ($this->removeFramesAfterCreation == true)
         {
-            for ($f = 0; $f < count($frames); $f++)
+            for ($f = 0; $f < count($this->frames); $f++)
             {
-                unlink($frames[$f]);
+                unlink($this->frames[$f]);
             }
             rmdir($this->framePath);
         }
