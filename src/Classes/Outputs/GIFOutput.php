@@ -18,7 +18,7 @@ require __DIR__ . "/../../../GIFEncoder.php";
  *
  * @package Output
  */
-class GIFOutput
+class GIFOutput extends BaseOutput
 {
     private $cellSize = 100;
     private $frameTime = 20;
