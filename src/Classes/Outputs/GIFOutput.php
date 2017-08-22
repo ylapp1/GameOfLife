@@ -32,7 +32,7 @@ class GIFOutput
      */
     function startOutput($_options)
     {
-        if (!file_exists($this->framePath)) mkdir($this->framePath);
+        if (!file_exists($this->framePath)) mkdir($this->framePath, 0777, true);
         echo "Starting GIF Output...";
     }
 
