@@ -8,13 +8,20 @@
 
 /**
  * Class Psr4Autoloader
+ *
+ * Automatically require class files in registered namespaces
+ *
+ * Usage:
+ * - Create a new instance
+ * - Use addNamespace($_prefix, $_baseDir) to add the projects namespaces to the list
+ * - Use register() to register all of the previously added namespaces
  */
 class Psr4Autoloader
 {
     private $prefixes = array();
 
     /**
-     * register all prefixes that are saved in the object
+     * Registers all prefixes in the objects list of namespaces
      */
     public function register()
     {
@@ -39,7 +46,7 @@ class Psr4Autoloader
     }
 
     /**
-     * add a namespace to the list
+     * Adds a namespace to the objects list of namespaces
      *
      * @param string $_prefix      namespace prefix
      * @param string $_baseDir     filepath prefix
