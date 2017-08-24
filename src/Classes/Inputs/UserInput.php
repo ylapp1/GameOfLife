@@ -9,7 +9,6 @@
 namespace Input;
 
 use Ulrichsg\Getopt;
-use Input\FileInput;
 
 /**
  * Class UserInput
@@ -18,6 +17,19 @@ use Input\FileInput;
  */
 class UserInput extends BaseInput
 {
+    /**
+     * Adds UserInputs specific options to the option list
+     *
+     * @param Getopt $_options  Option list to which the objects options are added
+     */
+    function addOptions($_options)
+    {
+        $_options->addOptions(
+            array(
+                array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template"))
+        );
+    }
+
     /**
      * Catches input from keyboard to create an own generation
      * Put Numbers in like 5,5 to set to true
@@ -66,7 +78,11 @@ class UserInput extends BaseInput
                 {
                     $config[1] = rtrim($config[1], "\n\r");
 
-                    $fileName = __DIR__ . "\\..\\..\\Templates\\" . $config[1] . ".txt";
+                    $fileDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+                    $fileName = $fileDirectory . $config[1] . ".txt";
+
+                    // Create directory if it doesn't exist
+                    if (! file_exists($fileDirectory)) mkdir($fileDirectory, 0777);
 
                     file_put_contents($fileName, $_board);
 
@@ -123,19 +139,5 @@ class UserInput extends BaseInput
                 $_board->printBoardEditor($inputX, $inputY);
             }
         }
-    }
-
-    /**
-     * Add input specific options
-     *
-     * @param Getopt $_options
-     */
-    function addOptions($_options)
-    {
-        $_options->addOptions(
-            array(
-                array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template")
-            )
-        );
     }
 }

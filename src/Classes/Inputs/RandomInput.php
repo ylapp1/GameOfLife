@@ -8,10 +8,8 @@
 
 namespace Input;
 
-
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
-
 
 /**
  * Class RandomInput
@@ -19,24 +17,40 @@ use Ulrichsg\Getopt;
 class RandomInput extends BaseInput
 {
     /**
-     * Fills the board with random cells until specific percentage of the field is filled
+     * Adds RandomInputs specific options to the option list
+     *
+     * @param Getopt $_options  Option list to which the objects options are added
+     */
+    public function addOptions($_options)
+    {
+        $_options->addOptions(
+            array(
+                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board"))
+        );
+    }
+
+    /**
+     * Fills the board with random cells until a specific percentage of the field is filled
      *
      * @param Board $_board     The Board
-     * @param Getopt $_options  The Options (fill Percent)
+     * @param Getopt $_options  Options (fillPercent)
      */
     public function fillBoard($_board, $_options)
     {
+        // fetch options
         $fillPercent = $_options->getOption("fillPercent");
 
-        if ($fillPercent == null) $fillPercent = rand(1, 70);
+        // fill with default value if option is not set
+        if ($fillPercent == null) $fillPercent = rand(15, 70);
 
+        // return error if fill percentage is hhigher than 100%
         if ($fillPercent > 100)
         {
             echo "Error: There can't be more living cells than 100% of the boards fields.\n";
             return;
         }
 
-
+        // Fill random cells
         $amountSetCells = 0;
         $amountFields = $_board->width() * $_board->height();
 
@@ -51,20 +65,5 @@ class RandomInput extends BaseInput
                 $amountSetCells++;
             }
         }
-    }
-
-
-    /**
-     * Adds its own specific options to the option list
-     *
-     * @param Getopt $_options  Options to which the object shall add its specific options
-     */
-    public function addOptions($_options)
-    {
-        $_options->addOptions(
-            array(
-                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board"),
-            )
-        );
     }
 }

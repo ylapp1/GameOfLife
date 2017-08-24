@@ -30,7 +30,6 @@ class RuleSet
         $this->death = $_death;
     }
 
-
     /**
      * Returns the birth rules
      *
@@ -42,7 +41,7 @@ class RuleSet
     }
 
     /**
-     * Set the birth rules
+     * Sets the birth rules
      *
      * @param array $_birth   Amount of living neighbours which will rebirth a dead cell
      */
@@ -62,7 +61,7 @@ class RuleSet
     }
 
     /**
-     * Set the death rules
+     * Sets the death rules
      *
      * @param array $_death  Amount of living neighbours which will kill a living cell
      */

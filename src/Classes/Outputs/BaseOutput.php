@@ -25,7 +25,6 @@ class BaseOutput
      */
     public function addOptions($_options)
     {
-
     }
 
     /**
@@ -35,7 +34,6 @@ class BaseOutput
      */
     public function startOutput($_options)
     {
-
     }
 
     /**
@@ -45,7 +43,6 @@ class BaseOutput
      */
     public function outputBoard($_board)
     {
-
     }
 
     /**
@@ -53,6 +50,5 @@ class BaseOutput
      */
     public function finishOutput()
     {
-
     }
 }

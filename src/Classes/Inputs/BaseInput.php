@@ -8,26 +8,25 @@
 
 namespace Input;
 
-
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 
-
 /**
  * Class BaseInput
+ *
+ * Fills the board with cells
+ * Used as base for child classes which fill the board with specific sets of cells
  */
 class BaseInput
 {
     /**
      * Adds object specific options
      *
-     * @param Getopt $_options     Options to which the object specific options shall be added
+     * @param Getopt $_options     Option list to which the objects options are added
      */
     public function addOptions($_options)
     {
-
     }
-
 
     /**
      * Fills a given board with cells
@@ -37,6 +36,5 @@ class BaseInput
      */
     public function fillBoard($_board, $_options)
     {
-
     }
 }
