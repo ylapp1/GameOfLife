@@ -18,9 +18,7 @@ Use GameOfLife\Board;
  */
 class PNGOutput
 {
-    private $cellSize = 100;
     private $gameFolder;
-
 
     /**
      * add output specific options to the option list
@@ -57,7 +55,7 @@ class PNGOutput
 
         // Create new folder for current game
         $this->gameFolder = __DIR__ . "/../../../Output/PNG/Game_" . ($lastGameId + 1);
-        mkdir($this->gameFolder);
+        mkdir($this->gameFolder, 0777, true);
 
         echo "Starting simulation ...\n\n";
     }
@@ -69,50 +67,8 @@ class PNGOutput
      */
     public function outputBoard($_board)
     {
-        $image = imagecreate($_board->width() * $this->cellSize, $_board->height() * $this->cellSize);
-
-        // Set background of image to white
-        $colorWhite = imagecolorallocate($image, 255, 255,255);
-        $colorBlack = imagecolorallocate($image, 0, 0, 0);
-        imagefill($image, 0, 0, $colorWhite);
-
-        $colorAlive = $colorBlack;
-        $colorDead = $colorWhite;
-
-        // Draw the cells
-        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
-        {
-            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
-            {
-                if ($_board->getField($x / $this->cellSize, $y / $this->cellSize) == true)
-                {
-                    //imagefilledrectangle($image, $x, $y,$x + $this->cellSize,$y + $this->cellSize, $colorAlive);
-
-                    //imagefilledarc ($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize, $this->cellSize, 0 , 360, $colorAlive, IMG_ARC_EDGED);
-                    imagefilledellipse($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize - 5, $this->cellSize - 5, $colorAlive);
-                }
-                /*else
-                {
-                    imagefilledrectangle($image, $x, $y,$x + $this->cellSize,$y + $this->cellSize, $colorDead);
-                }*/
-            }
-        }
-
-        // Draw a grid
-        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
-        {
-            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
-            {
-                // vertical
-                imageline($image, $x, 0, $x, imagesy($image), $colorBlack);
-
-                // horizontal
-                imageline($image, 0, $y, imagesx($image), $y, $colorBlack);
-            }
-        }
-
-        imagepng($image, $this->gameFolder . "/" . ($_board->gameStep() + 1) . ".png");
-        imagedestroy($image);
+        $imageCreator = new ImageCreator($_board, $this->gameFolder);
+        $imageCreator->createImage($_board, "png");
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
     }
