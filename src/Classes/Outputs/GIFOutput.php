@@ -18,7 +18,6 @@ use GameOfLife\Board;
  */
 class GIFOutput extends BaseOutput
 {
-    private $cellSize = 100;
     private $frameTime = 20;
     private $framePath = __DIR__ . "/../../../Output/GIF/Frames/";
     private $frames = array();
@@ -31,8 +30,9 @@ class GIFOutput extends BaseOutput
      */
     function startOutput($_options)
     {
-        if (!file_exists($this->framePath)) mkdir($this->framePath, 0777, true);
         echo "Starting GIF Output...";
+
+        if (! file_exists($this->framePath)) mkdir($this->framePath, 0777, true);
     }
 
     /**
@@ -42,50 +42,11 @@ class GIFOutput extends BaseOutput
      */
     function outputBoard($_board)
     {
-        $image = imagecreate($_board->width() * $this->cellSize, $_board->height() * $this->cellSize);
+        $imageCreator = new ImageCreator($_board);
 
-        // Set background of image to white
-        $colorWhite = imagecolorallocate($image, 255, 255, 255);
-        $colorBlack = imagecolorallocate($image, 0, 0, 0);
-        imagefill($image, 0, 0, $colorWhite);
-
-        $colorAlive = $colorBlack;
-
-        // Draw the cells
-        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
-        {
-            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
-            {
-                if ($_board->getField($x / $this->cellSize, $y / $this->cellSize) == true)
-                {
-                    imagefilledellipse($image, $x + $this->cellSize / 2, $y + $this->cellSize / 2, $this->cellSize - 5, $this->cellSize - 5, $colorAlive);
-                }
-            }
-        }
-
-        // Draw a grid
-        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
-        {
-            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
-            {
-                // vertical
-                imageline($image, $x, 0, $x, imagesy($image), $colorBlack);
-
-                // horizontal
-                imageline($image, 0, $y, imagesx($image), $y, $colorBlack);
-            }
-        }
-
-
-        $framePath = $this->framePath . "/" . ($_board->gameStep() + 1) . ".gif";
-
-        imagegif($image, $framePath);
-        imagedestroy($image);
-
-        $this->frames[] = $framePath;
+        $this->frames[] = $imageCreator->createImage($_board, "gif");
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
-
     }
 
     /**
@@ -98,16 +59,16 @@ class GIFOutput extends BaseOutput
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting GIF creation. One moment please...";
 
-        $frameDuration = array();
+        $frameDurations = array();
 
         for ($i = 0; $i < count($this->frames) - 1; $i++)
         {
-            $frameDuration[] = $this->frameTime;
+            $frameDurations[] = $this->frameTime;
         }
 
-        $frameDuration[] = $this->frameTime + 200;
+        $frameDurations[] = $this->frameTime + 200;
 
-        $gif = new GIFEncoder($this->frames, $frameDuration, 0, 2, 1, 0, 0, "url");
+        $gif = new GIFEncoder($this->frames, $frameDurations, 0, 2, 1, 0, 0, "url");
         $fileNameCount = 0;
         do
         {
@@ -122,10 +83,12 @@ class GIFOutput extends BaseOutput
 
         if ($this->removeFramesAfterCreation == true)
         {
-            for ($f = 0; $f < count($this->frames); $f++)
+            // Delete all frames
+            foreach ($this->frames as $frame)
             {
-                unlink($this->frames[$f]);
+                unlink($frame);
             }
+            // Delete frames directory
             rmdir($this->framePath);
         }
 
