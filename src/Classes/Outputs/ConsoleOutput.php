@@ -25,7 +25,6 @@ class ConsoleOutput extends BaseOutput
      */
     public function addOptions($_options)
     {
-
     }
 
     /**
