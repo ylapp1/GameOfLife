@@ -37,7 +37,7 @@ class GIFOutput extends BaseOutput
                 array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for gif outputs"),
                 array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for gif outputs"),
                 array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for gif outputs"),
-                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Time for which each frame of a gif is displayed (in milliseconds * 10)")));
+                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")));
     }
 
     /**
@@ -76,10 +76,7 @@ class GIFOutput extends BaseOutput
 
         if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
 
-
         if (! file_exists($this->tmpPath)) mkdir($this->tmpPath, 0777, true);
-
-
         $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
     }
 
