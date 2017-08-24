@@ -38,14 +38,19 @@ $options = new Getopt(
 );
 
 
-// save which options refer to which input type
-$inputOptions = array();
+// save which options refer to which input/output type
+$linkedOptions = array();
+
+$classes = array_merge(glob(__DIR__ . "/src/Classes/Inputs/*Input.php"), glob(__DIR__ . "/src/Classes/Outputs/*Output.php"));
 
 // find every input class
-foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
+foreach ($classes as $class)
 {
     // get class name with namespace prefix
-    $className = "Input\\" . basename($inputClass, ".php");
+    if (stristr($class, "Input") != false) $className = "Input\\";
+    elseif (stristr($class, "Output") != false) $className = "Output\\";
+
+    $className .= basename($class, ".php");
 
     // get options before class adds its options
     $previousOptions = $options->getOptionList();
@@ -75,7 +80,7 @@ foreach (glob(__DIR__ . "/src/Classes/Inputs/*Input.php") as $inputClass)
         if ($isNewOption)
         {
             $optionName = $newOption[1];
-            $inputOptions[$optionName] = $input;
+            $linkedOptions[$optionName] = $input;
         }
     }
 }
@@ -125,6 +130,7 @@ else
 
     // initialize new input with default value
     $input = new Input\RandomInput;
+    $output = new Output\ConsoleOutput;
 
     // find out whether user used the --input option
     if ($options->getOption("input"))
@@ -134,20 +140,6 @@ else
         if (class_exists($className)) $input = new $className;
     }
 
-    // find out whether any input specific option is set
-    foreach ($inputOptions as $inputOption=>$className)
-    {
-        // if input specific option is set initialize new input of the class which the input refers to
-        if ($options->getOption($inputOption) !== null)
-        {
-            $input = new $className;
-        }
-    }
-
-    $input->fillBoard($board, $options);
-
-    $output = new Output\ConsoleOutput;
-
     // find out whether user used the --output option
     if ($options->getOption("output"))
     {
@@ -156,7 +148,18 @@ else
         if (class_exists($className)) $output = new $className;
     }
 
-    
+    // find out whether any input/output specific option is set
+    foreach ($linkedOptions as $option=> $className)
+    {
+        // if input specific option is set initialize new input of the class which the input refers to
+        if ($options->getOption($option) !== null)
+        {
+            if (stristr($option, "Input") != false) $input = new $className;
+            elseif (stristr($option, "Output") != false) $output = new $className;
+        }
+    }
+
+    $input->fillBoard($board, $options);
     $output->startOutput($options);
 
     // Game loop

@@ -18,8 +18,8 @@ Use GameOfLife\Board;
  */
 class PNGOutput
 {
-    private $gameFolder;
-
+    private $gameFolderName;
+    private $imageCreator;
     /**
      * add output specific options to the option list
      *
@@ -27,7 +27,12 @@ class PNGOutput
      */
     public function addOptions($_options)
     {
-
+        $_options->addOptions(
+            array(
+                array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for PNG outputs"),
+                array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for PNG outputs"),
+                array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Color of the background for PNG outputs"),
+                array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Color of the grid for PNG outputs")));
     }
 
     /**
@@ -37,6 +42,32 @@ class PNGOutput
      */
     public function startOutput($_options)
     {
+        // get board dimensions
+        if ($_options->getOption("width")) $boardWidth = intval($_options->getOption("width"));
+        else $boardWidth = 20;
+
+        if ($_options->getOption("height")) $boardHeight = intval($_options->getOption("height"));
+        else $boardHeight = 10;
+
+
+        $colorSelector = new ColorSelector();
+
+        // fetch options
+        if ($_options->getOption("pngOutputSize")) $cellSize = intval($_options->getOption("pngOutputSize"));
+        else $cellSize = 100;
+
+        $inputCellColor = $_options->getOption("pngOutputCellColor");
+        if ($inputCellColor != false) $cellColor = $colorSelector->getColor($inputCellColor);
+        else $cellColor = new ImageColor(0,0,0);
+
+        $inputBackgroundColor = $_options->getoption("pngOutputBackgroundColor");
+        if ($inputBackgroundColor != false) $backgroundColor = $colorSelector->getColor($inputBackgroundColor);
+        else $backgroundColor = new ImageColor(255, 255,255);
+
+        $inputGridColor = $_options->getoption("pngOutputGridColor");
+        if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
+        else $gridColor = new ImageColor(0, 0, 0);
+
         $fileNames = glob(__DIR__ . "/../../../Output/PNG/Game_*");
 
         if (count($fileNames) == 0) $lastGameId = 0;
@@ -54,8 +85,11 @@ class PNGOutput
         }
 
         // Create new folder for current game
-        $this->gameFolder = __DIR__ . "/../../../Output/PNG/Game_" . ($lastGameId + 1);
-        mkdir($this->gameFolder, 0777, true);
+        $this->gameFolderName = "Game_" . ($lastGameId + 1);
+        mkdir(__DIR__ . "/../../../Output/PNG/" . $this->gameFolderName, 0777, true);
+
+        // initialize ImageCreator for this PNGOutput
+        $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/PNG/" . $this->gameFolderName);
 
         echo "Starting simulation ...\n\n";
     }
@@ -67,8 +101,7 @@ class PNGOutput
      */
     public function outputBoard($_board)
     {
-        $imageCreator = new ImageCreator($_board, $this->gameFolder);
-        $imageCreator->createImage($_board, "png");
+        $this->imageCreator->createImage($_board, "png");
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
     }
@@ -78,6 +111,7 @@ class PNGOutput
      */
     public function finishOutput()
     {
+        unset($this->imageCreator);
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
     }
 }

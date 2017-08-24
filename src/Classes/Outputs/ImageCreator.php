@@ -19,61 +19,58 @@ use GameOfLife\Board;
  */
 class ImageCreator
 {
-    private $baseImage;
     private $basePath = __DIR__ . "/../../../Output/";
     private $backgroundColor;
     private $gridColor;
     private $cellAliveColor;
-    private $cellSize = 100;
+    private $cellSize;
     private $gameFolder;
 
     /**
      * ImageCreator constructor.
-     *
-     * @param Board $_board                 The board which will be printed with create image
-     * @param String $_gameFolder           The complete game folder path of a png output
+     * @param $_boardHeight
+     * @param $_boardWidth
      * @param Integer $_cellSize            Width and Height of a single cell
+     * @param ImageColor $_cellAliveColor   Cell color of the images
      * @param ImageColor $_backgroundColor  Background Color of the images
      * @param ImageColor $_gridColor        Grid color of the images
-     * @param ImageColor $_cellAliveColor   Cell color of the images
+     * @param String $_gameFolder           The complete game folder path of a png output
      */
-    public function __construct($_board, $_gameFolder = null, $_cellSize = null, $_backgroundColor = null, $_gridColor = null, $_cellAliveColor = null)
+    public function __construct($_boardHeight, $_boardWidth, $_cellSize, $_cellAliveColor, $_backgroundColor, $_gridColor, $_gameFolder = null)
     {
-        // Check values of parameters and use default values if they are not set
-        if ($_cellSize != null) $this->cellSize = $_cellSize;
-        if ($_backgroundColor == null) $_backgroundColor = new ImageColor(255, 255, 255);
-        if ($_gridColor == null) $_gridColor = new ImageColor(0,0,0);
-        if ($_cellAliveColor == null) $_cellAliveColor = new ImageColor(0,0,0);
+        // Create temporary directory if it doesn't exist
+        if (! file_exists($this->basePath . "tmp")) mkdir($this->basePath . "tmp");
 
-        // Create a base Image on which all the other images will be based on
-        $this->baseImage = imagecreate($_board->width() * $this->cellSize, $_board->height() * $this->cellSize);
+        // Create a base Image on which all the other images will be based
+        $this->cellSize = $_cellSize;
         $this->gameFolder = $_gameFolder;
 
+        $baseImage = imagecreate($_boardWidth * $this->cellSize, $_boardHeight * $this->cellSize);
+
         // set colors
-        $this->backgroundColor = $_backgroundColor->getColor($this->baseImage);
-        $this->gridColor = $_gridColor->getColor($this->baseImage);
-        $this->cellAliveColor = $_cellAliveColor->getColor($this->baseImage);
+        $this->backgroundColor = $_backgroundColor->getColor($baseImage);
+        $this->gridColor = $_gridColor->getColor($baseImage);
+        $this->cellAliveColor = $_cellAliveColor->getColor($baseImage);
+        $this->gridColor = $_gridColor->getColor($baseImage);
 
-        // Create directories if they don't exist
-        if (! file_exists($this->basePath . "PNG")) mkdir($this->basePath . "PNG", 0777, true);
-        if (! file_exists($this->basePath . "Gif")) mkdir($this->basePath . "Gif", 0777, true);
-
-        imagefill($this->baseImage, 0, 0, $this->backgroundColor);
+        imagefill($baseImage, 0, 0, $this->backgroundColor);
 
         // draw grid
-        imagesetthickness($this->baseImage, 1);
+        imagesetthickness($baseImage, 1);
 
-        for ($x = 0; $x < $_board->width() * $this->cellSize; $x += $this->cellSize)
+        for ($x = 0; $x < $_boardWidth * $this->cellSize; $x += $this->cellSize)
         {
-            imageline($this->baseImage, $x, 0, $x, imagesy($this->baseImage), $this->gridColor);
+            imageline($baseImage, $x, 0, $x, imagesy($baseImage), $this->gridColor);
         }
 
-        for ($y = 0; $y < $_board->height() * $this->cellSize; $y += $this->cellSize)
+        for ($y = 0; $y < $_boardHeight * $this->cellSize; $y += $this->cellSize)
         {
-            imageline($this->baseImage, 0, $y, imagesx($this->baseImage), $y, $this->gridColor);
+            imageline($baseImage, 0, $y, imagesx($baseImage), $y, $this->gridColor);
         }
 
-        imagesetthickness($this->baseImage, 1);
+        imagesetthickness($baseImage, 1);
+
+        imagepng($baseImage, $this->basePath . "/tmp/base.png");
     }
 
     /**
@@ -85,7 +82,7 @@ class ImageCreator
      */
     public function createImage ($_board, $_imageType)
     {
-        $image = $this->baseImage;
+        $image = imagecreatefrompng($this->basePath . "/tmp/base.png");
 
         // Draw the cells
         for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
@@ -107,11 +104,19 @@ class ImageCreator
         switch ($_imageType)
         {
             case "png":
-                $filePath = $this->gameFolder . "/" . $fileName . ".png";
+                $filePath .= $this->gameFolder . "/";
+
+                if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
+
+                $filePath .= $fileName . ".png";
                 imagepng($image, $filePath);
                 break;
             case "gif":
-                $filePath .= "Gif/Frames/" . $fileName . ".gif";
+                $filePath .= "tmp/Frames/";
+
+                if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
+
+                $filePath .= $fileName . ".gif";
                 imagegif($image, $filePath);
                 break;
             default:
@@ -121,5 +126,19 @@ class ImageCreator
         imagedestroy($image);
 
         return $filePath;
+    }
+
+    /**
+     * Class destructor
+     *
+     * Deletes remaining tmp files
+     */
+    public function __destruct()
+    {
+        $tmpDirectory = $this->basePath . "/tmp";
+        unlink($tmpDirectory  . "/base.png");
+
+        if (count(glob($tmpDirectory . "/*")) === 0) rmdir($this->basePath . "/tmp/");
+        else echo count(glob($tmpDirectory . "/*")) . " files left in tmp directory";
     }
 }
