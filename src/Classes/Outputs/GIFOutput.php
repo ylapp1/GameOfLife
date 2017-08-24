@@ -19,12 +19,10 @@ use GameOfLife\Board;
 class GIFOutput extends BaseOutput
 {
     private $frameTime = 20;
-    private $framePath = __DIR__ . "/../../../Output/GIF/Frames/";
+    private $tmpPath = __DIR__ . "/../../../Output/tmp/Frames";
+    private $outputPath = __DIR__ . "/../../../Output/Gif/";
     private $frames = array();
-    private $removeFramesAfterCreation = true;
-    private $cellSize = 100;
-    private $cellAliveColor;
-    private $backgroundColor;
+    private $imageCreator;
 
     /**
      * Adds GIFOutputs specific option to an option list
@@ -38,6 +36,7 @@ class GIFOutput extends BaseOutput
                 array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for gif outputs"),
                 array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for gif outputs"),
                 array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for gif outputs"),
+                array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for gif outputs"),
                 array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Time for which each frame of a gif is displayed (in milliseconds * 10)")));
     }
 
@@ -48,25 +47,40 @@ class GIFOutput extends BaseOutput
      */
     function startOutput($_options)
     {
-        echo "Starting GIF Output...";
+        echo "Starting GIF Output...\n";
+
+        // get board dimensions
+        if ($_options->getOption("width")) $boardWidth = intval($_options->getOption("width"));
+        else $boardWidth = 20;
+
+        if ($_options->getOption("height")) $boardHeight = intval($_options->getOption("height"));
+        else $boardHeight = 10;
 
         $colorSelector = new ColorSelector();
 
         // fetch options
-        if ($_options->getOption("gifOutputSize")) $this->cellSize = intval($_options->getOption("gifOutputSize"));
+        if ($_options->getOption("gifOutputSize")) $cellSize = intval($_options->getOption("gifOutputSize"));
+        else $cellSize = 100;
 
-        $cellColor = $_options->getOption("gifOutputCellColor");
-        if ($cellColor != false) $this->cellAliveColor = $colorSelector->getColor($cellColor);
-        else $this->cellAliveColor = new ImageColor(0, 0, 0);
+        $inputCellColor = $_options->getOption("gifOutputCellColor");
+        if ($inputCellColor != false) $cellColor = $colorSelector->getColor($inputCellColor);
+        else $cellColor = new ImageColor(0, 0, 0);
 
-        $backgroundColor = $_options->getOption("gifOutputBackgroundColor");
-        if ($backgroundColor != false) $this->backgroundColor = $colorSelector->getColor($backgroundColor);
-        else $this->backgroundColor = new ImageColor(255, 255,255);
+        $inputBackgroundColor = $_options->getOption("gifOutputBackgroundColor");
+        if ($inputBackgroundColor != false) $backgroundColor = $colorSelector->getColor($inputBackgroundColor);
+        else $backgroundColor = new ImageColor(255, 255,255);
+
+        $inputGridColor = $_options->getOption("gifOutputGridColor");
+        if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
+        else $gridColor = new ImageColor(0,0,0);
 
         if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
 
 
-        if (! file_exists($this->framePath)) mkdir($this->framePath, 0777, true);
+        if (! file_exists($this->tmpPath)) mkdir($this->tmpPath, 0777, true);
+
+
+        $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
     }
 
     /**
@@ -76,9 +90,7 @@ class GIFOutput extends BaseOutput
      */
     function outputBoard($_board)
     {
-        $imageCreator = new ImageCreator($_board, $this->cellSize, $this->cellAliveColor, $this->backgroundColor);
-
-        $this->frames[] = $imageCreator->createImage($_board, "gif");
+        $this->frames[] = $this->imageCreator->createImage($_board, "gif");
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
     }
@@ -107,24 +119,23 @@ class GIFOutput extends BaseOutput
         do
         {
             $fileNameCount++;
-        } while (file_exists($this->framePath . "../Gif_$fileNameCount.gif"));
+        } while (file_exists($this->outputPath . "Gif_$fileNameCount.gif"));
 
-        if (fwrite(fopen($this->framePath . "../Gif_$fileNameCount.gif", "wb"), $gif->GetAnimation()) == false)
+        if (fwrite(fopen($this->outputPath . "Gif_$fileNameCount.gif", "wb"), $gif->GetAnimation()) == false)
         {
             echo "An error occurred during the gif creation. Stopping...";
             die();
         };
 
-        if ($this->removeFramesAfterCreation == true)
+        // Delete all frames
+        foreach ($this->frames as $frame)
         {
-            // Delete all frames
-            foreach ($this->frames as $frame)
-            {
-                unlink($frame);
-            }
-            // Delete frames directory
-            rmdir($this->framePath);
+            unlink($frame);
         }
+        // Delete frames directory
+        rmdir($this->tmpPath);
+
+        unset($this->imageCreator);
 
         echo "\nGIF creation complete.";
     }

@@ -160,11 +160,6 @@ else
     }
 
     $input->fillBoard($board, $options);
-
-
-
-
-    
     $output->startOutput($options);
 
     // Game loop
