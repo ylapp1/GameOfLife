@@ -19,6 +19,9 @@ Use GameOfLife\Board;
 class PNGOutput
 {
     private $gameFolder;
+    private $cellSize = 100;
+    private $cellAliveColor;
+    private $backgroundColor;
 
     /**
      * add output specific options to the option list
@@ -27,7 +30,11 @@ class PNGOutput
      */
     public function addOptions($_options)
     {
-
+        $_options->addOptions(
+            array(
+                array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for PNG outputs"),
+                array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for PNG outputs"),
+                array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Color of the background for PNG outputs")));
     }
 
     /**
@@ -37,6 +44,19 @@ class PNGOutput
      */
     public function startOutput($_options)
     {
+        $colorSelector = new ColorSelector();
+
+        // fetch options
+        if ($_options->getOption("pngOutputSize")) $this->cellSize = intval($_options->getOption("pngOutputSize"));
+
+        $color = $_options->getOption("pngOutputCellColor");
+        if ($color != false) $this->cellAliveColor = $colorSelector->getColor($color);
+        else $this->cellAliveColor = new ImageColor(0,0,0);
+
+        $backgroundColor = $_options->getoption("pngOutputBackgroundColor");
+        if ($backgroundColor != false) $this->backgroundColor = $colorSelector->getColor($backgroundColor);
+        else $this->backgroundColor = new ImageColor(255, 255,255);
+
         $fileNames = glob(__DIR__ . "/../../../Output/PNG/Game_*");
 
         if (count($fileNames) == 0) $lastGameId = 0;
@@ -67,7 +87,7 @@ class PNGOutput
      */
     public function outputBoard($_board)
     {
-        $imageCreator = new ImageCreator($_board, $this->gameFolder);
+        $imageCreator = new ImageCreator($_board, $this->cellSize, $this->cellAliveColor, $this->backgroundColor, $this->gameFolder);
         $imageCreator->createImage($_board, "png");
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);

@@ -24,7 +24,7 @@ class ImageCreator
     private $backgroundColor;
     private $gridColor;
     private $cellAliveColor;
-    private $cellSize = 100;
+    private $cellSize;
     private $gameFolder;
 
     /**
@@ -37,15 +37,13 @@ class ImageCreator
      * @param ImageColor $_gridColor        Grid color of the images
      * @param ImageColor $_cellAliveColor   Cell color of the images
      */
-    public function __construct($_board, $_gameFolder = null, $_cellSize = null, $_backgroundColor = null, $_gridColor = null, $_cellAliveColor = null)
+    public function __construct($_board, $_cellSize, $_cellAliveColor, $_backgroundColor, $_gameFolder = null, $_gridColor = null)
     {
         // Check values of parameters and use default values if they are not set
-        if ($_cellSize != null) $this->cellSize = $_cellSize;
-        if ($_backgroundColor == null) $_backgroundColor = new ImageColor(255, 255, 255);
         if ($_gridColor == null) $_gridColor = new ImageColor(0,0,0);
-        if ($_cellAliveColor == null) $_cellAliveColor = new ImageColor(0,0,0);
 
         // Create a base Image on which all the other images will be based on
+        $this->cellSize = $_cellSize;
         $this->baseImage = imagecreate($_board->width() * $this->cellSize, $_board->height() * $this->cellSize);
         $this->gameFolder = $_gameFolder;
 
