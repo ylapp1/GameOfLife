@@ -77,6 +77,7 @@ class GIFOutput extends BaseOutput
         if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
 
         if (! file_exists($this->tmpPath)) mkdir($this->tmpPath, 0777, true);
+        if (! file_exists($this->outputPath)) mkdir($this->outputPath, 0777, true);
         $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
     }
 
