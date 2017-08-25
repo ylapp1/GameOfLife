@@ -22,6 +22,7 @@ class GIFOutput extends BaseOutput
     private $tmpPath = __DIR__ . "/../../../Output/tmp/Frames";
     private $outputPath = __DIR__ . "/../../../Output/Gif/";
     private $frames = array();
+    /** @var ImageCreator $imageCreator */
     private $imageCreator;
 
     /**

@@ -111,13 +111,15 @@ class ImageCreator
                 $filePath .= $fileName . ".png";
                 imagepng($image, $filePath);
                 break;
+
             case "gif":
+            case "video":
                 $filePath .= "tmp/Frames/";
 
                 if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
 
-                $filePath .= $fileName . ".gif";
-                imagegif($image, $filePath);
+                $filePath .= $fileName . ".png";
+                imagepng($image, $filePath);
                 break;
             default:
                 echo "Error: Invalid image type specified!\n";

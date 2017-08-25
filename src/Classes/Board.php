@@ -517,6 +517,22 @@ class Board
 
 
     /**
+     * Returns the total amount of living cells on the board
+     *
+     * @return int      Amount of living cells
+     */
+    public function getAmountCellsAlive()
+    {
+        $amountCellsAlive = 0;
+        foreach ($this->currentBoard as $line)
+        {
+            $amountCellsAlive += array_sum($line);
+        }
+        return $amountCellsAlive;
+    }
+
+
+    /**
      * Convert board to string
      *
      * @return string

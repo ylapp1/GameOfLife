@@ -44,13 +44,13 @@ $linkedOptions = array();
 $classes = array_merge(glob(__DIR__ . "/src/Classes/Inputs/*Input.php"), glob(__DIR__ . "/src/Classes/Outputs/*Output.php"));
 
 // find every input class
-foreach ($classes as $class)
+foreach ($classes as $inputClass)
 {
     // get class name with namespace prefix
-    if (stristr($class, "Input") != false) $className = "Input\\";
-    elseif (stristr($class, "Output") != false) $className = "Output\\";
+    if (stristr($inputClass, "Input") != false) $className = "Input\\";
+    elseif (stristr($inputClass, "Output") != false) $className = "Output\\";
 
-    $className .= basename($class, ".php");
+    $className .= basename($inputClass, ".php");
 
     // get options before class adds its options
     $previousOptions = $options->getOptionList();
@@ -80,7 +80,7 @@ foreach ($classes as $class)
         if ($isNewOption)
         {
             $optionName = $newOption[1];
-            $linkedOptions[$optionName] = $input;
+            $linkedOptions[$optionName] = $className;
         }
     }
 }
@@ -149,13 +149,13 @@ else
     }
 
     // find out whether any input/output specific option is set
-    foreach ($linkedOptions as $option=> $className)
+    foreach ($linkedOptions as $option => $className)
     {
         // if input specific option is set initialize new input of the class which the input refers to
-        if ($options->getOption($option) !== null)
+        if ($options->getOption($option))
         {
-            if (stristr($option, "Input") != false) $input = new $className;
-            elseif (stristr($option, "Output") != false) $output = new $className;
+            if (stristr($className, "Input") != false) $input = new $className;
+            elseif (stristr($className, "Output") != false) $output = new $className;
         }
     }
 
