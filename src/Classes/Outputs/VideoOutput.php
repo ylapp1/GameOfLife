@@ -23,7 +23,6 @@ class VideoOutput
     private $fps = 1;
     private $secondsPerFrame;
     private $tmpPaths = array(__DIR__ . "/../../../Output/tmp/Frames",
-                              __DIR__ . "/../../../Output/tmp/Video",
                               __DIR__ . "/../../../Output/tmp/Audio");
     private $outputPath = __DIR__ . "/../../../Output/Video/";
     private $frames = array();
@@ -136,20 +135,12 @@ class VideoOutput
         // Initialize ffmpeg helper
         $ffmpegHelper = new FfmpegHelper("Tools/ffmpeg/bin/ffmpeg.exe");
 
-        // Generate video without sound
-        $ffmpegHelper->addOption("-r " . $this->fps);                       // Input Frames per second
-        $ffmpegHelper->addOption("-framerate " . $this->fps);
-        $ffmpegHelper->addOption("-i \"Output\\tmp\\Frames\\%d.png\""); // Input Images
-        $ffmpegHelper->addOption("-vcodec libx264");                    // Video Codec
-        $ffmpegHelper->addOption("-pix_fmt yuv420p");                   // Pixel format
-        $ffmpegHelper->executeCommand("Output/tmp/Video/tmp.mp4");
-
         // generate Audio files for each frame
         $audioFiles = array();
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
-            $outputPath = "Output/tmp/Audio/" . $i . ".m4a";
+            $outputPath = "Output/tmp/Audio/" . $i . ".wav";
 
             // Generate random beep sound
             $ffmpegHelper->resetOptions();
@@ -160,20 +151,23 @@ class VideoOutput
 
             $audioFiles[] = $outputPath;
 
-            file_put_contents("Output\\tmp\\Audio\\list.txt", "file '" . $outputPath . "'\r\nduration " . $this->secondsPerFrame . "\r\n", FILE_APPEND);
+            file_put_contents("Output\\tmp\\Audio\\list.txt", "file '" . $outputPath . "'\r\n", FILE_APPEND);
         }
 
-        // Create one sound file from the frame sounds
+        // Create video with sound
         $ffmpegHelper->resetOptions();
+
+        // Create single sound from sound frames
         $ffmpegHelper->addOption("-f concat");
         $ffmpegHelper->addOption("-safe 0");
         $ffmpegHelper->addOption("-i \"Output\\tmp\\Audio\\list.txt\"");
-        $ffmpegHelper->executeCommand("Output/tmp/Audio/sound.m4a");
 
-        // Combine video and sound file
-        $ffmpegHelper->resetOptions();
-        $ffmpegHelper->addOption("-i \"Output\\tmp\\Audio\\sound.m4a\"");
-        $ffmpegHelper->addOption("-i \"Output\\tmp\\Video\\tmp.mp4\"");
+        // Create video from image frames
+        $ffmpegHelper->addOption("-framerate " . $this->fps);
+        $ffmpegHelper->addOption("-i \"Output\\tmp\\Frames\\%d.png\""); // Input Images
+        $ffmpegHelper->addOption("-pix_fmt yuv420p");
+
+        // Save video in output folder
         $ffmpegHelper->executeCommand("\"Output\\Video\\" . $fileName . "\"");
 
 
@@ -188,9 +182,7 @@ class VideoOutput
             unlink($audioFile);
         }
         // Delete other temporary files created by VideoOutput
-        unlink("Output/tmp/Audio/sound.m4a");
         unlink("Output/tmp/Audio/list.txt");
-        unlink("Output/tmp/Video/tmp.mp4");
 
         // Delete directories
         foreach ($this->tmpPaths as $tmpPath)
