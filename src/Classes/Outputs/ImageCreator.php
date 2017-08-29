@@ -76,7 +76,7 @@ class ImageCreator
     /**
      * Creates and returns an image of the current board
      *
-     * @param \GameOfLife\Board $_board     Current board
+     * @param Board $_board     Current board
      * @param String $_imageType            Type of Image that shall be returned
      * @return String                       Path to image
      */

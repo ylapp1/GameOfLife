@@ -19,6 +19,7 @@ Use GameOfLife\Board;
 class PNGOutput
 {
     private $gameFolderName;
+    /** @var  ImageCreator $imageCreator */
     private $imageCreator;
     /**
      * add output specific options to the option list

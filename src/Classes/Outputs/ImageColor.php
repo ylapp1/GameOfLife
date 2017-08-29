@@ -37,7 +37,7 @@ class ImageColor
     }
 
     /**
-     * @param mixed $red
+     * @param mixed $_red
      */
     public function setRed($_red)
     {
@@ -53,7 +53,7 @@ class ImageColor
     }
 
     /**
-     * @param mixed $green
+     * @param mixed $_green
      */
     public function setGreen($_green)
     {
@@ -69,7 +69,7 @@ class ImageColor
     }
 
     /**
-     * @param mixed $blue
+     * @param mixed $_blue
      */
     public function setBlue($_blue)
     {
