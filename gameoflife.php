@@ -160,7 +160,7 @@ else
     }
 
     $input->fillBoard($board, $options);
-    $output->startOutput($options);
+    $output->startOutput($options, $board);
 
     // Game loop
     while ($board->isFinished() == false)

@@ -42,20 +42,14 @@ class GIFOutput extends BaseOutput
     }
 
     /**
-     * Initializes the Gif output
+     * Start output
      *
-     * @param Getopt $_options
+     * @param Getopt $_options  User inputted option list
+     * @param Board $_board     Initial board
      */
-    function startOutput($_options)
+    public function startOutput($_options, $_board)
     {
         echo "Starting GIF Output...\n";
-
-        // get board dimensions
-        if ($_options->getOption("width")) $boardWidth = intval($_options->getOption("width"));
-        else $boardWidth = 20;
-
-        if ($_options->getOption("height")) $boardHeight = intval($_options->getOption("height"));
-        else $boardHeight = 10;
 
         $colorSelector = new ColorSelector();
 
@@ -79,7 +73,7 @@ class GIFOutput extends BaseOutput
 
         if (! file_exists($this->tmpPath)) mkdir($this->tmpPath, 0777, true);
         if (! file_exists($this->outputPath)) mkdir($this->outputPath, 0777, true);
-        $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
     }
 
     /**
