@@ -364,8 +364,6 @@ class Board
      * Checks whether the board is finished (only static or blinking tiles remaining).
      * Returns true if board is finished and false if board is not finished yet
      *
-     * @param int $_curStep     current game step
-     *
      * @return bool
      */
     public function isFinished()
@@ -376,8 +374,8 @@ class Board
         }
         else
         {
+            // Check last 15 boards for repeating patterns
             for ($i = count($this->historyOfBoards()) - 1; $i > count($this->historyOfBoards()) - 15 && $i > 0; $i--)
-            //foreach ($this->historyOfBoards as $board)
             {
                 if ($this->currentBoard == $this->historyOfBoards()[$i]) return true;
             }
@@ -513,6 +511,22 @@ class Board
     public function getField ($_x, $_y)
     {
         return $this->currentBoard[$_y][$_x];
+    }
+
+
+    /**
+     * Returns the total amount of living cells on the board
+     *
+     * @return int      Amount of living cells
+     */
+    public function getAmountCellsAlive()
+    {
+        $amountCellsAlive = 0;
+        foreach ($this->currentBoard as $line)
+        {
+            $amountCellsAlive += array_sum($line);
+        }
+        return $amountCellsAlive;
     }
 
 

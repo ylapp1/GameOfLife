@@ -19,6 +19,7 @@ Use GameOfLife\Board;
 class PNGOutput
 {
     private $gameFolderName;
+    /** @var  ImageCreator $imageCreator */
     private $imageCreator;
     /**
      * add output specific options to the option list
@@ -39,17 +40,10 @@ class PNGOutput
      * Start output
      *
      * @param Getopt $_options  User inputted option list
+     * @param Board $_board     Initial board
      */
-    public function startOutput($_options)
+    public function startOutput($_options, $_board)
     {
-        // get board dimensions
-        if ($_options->getOption("width")) $boardWidth = intval($_options->getOption("width"));
-        else $boardWidth = 20;
-
-        if ($_options->getOption("height")) $boardHeight = intval($_options->getOption("height"));
-        else $boardHeight = 10;
-
-
         $colorSelector = new ColorSelector();
 
         // fetch options
@@ -89,7 +83,7 @@ class PNGOutput
         mkdir(__DIR__ . "/../../../Output/PNG/" . $this->gameFolderName, 0777, true);
 
         // initialize ImageCreator for this PNGOutput
-        $this->imageCreator = new ImageCreator($boardHeight, $boardWidth, $cellSize, $cellColor, $backgroundColor, $gridColor, "/PNG/" . $this->gameFolderName);
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/PNG/" . $this->gameFolderName);
 
         echo "Starting simulation ...\n\n";
     }

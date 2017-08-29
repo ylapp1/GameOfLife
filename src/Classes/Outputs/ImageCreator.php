@@ -48,24 +48,24 @@ class ImageCreator
         $baseImage = imagecreate($_boardWidth * $this->cellSize, $_boardHeight * $this->cellSize);
 
         // set colors
-        $this->backgroundColor = $_backgroundColor->getColor($baseImage);
-        $this->gridColor = $_gridColor->getColor($baseImage);
-        $this->cellAliveColor = $_cellAliveColor->getColor($baseImage);
-        $this->gridColor = $_gridColor->getColor($baseImage);
+        $this->backgroundColor = $_backgroundColor;
+        $this->gridColor = $_gridColor;
+        $this->cellAliveColor = $_cellAliveColor;
+        $this->gridColor = $_gridColor;
 
-        imagefill($baseImage, 0, 0, $this->backgroundColor);
+        imagefill($baseImage, 0, 0, $this->backgroundColor->getColor($baseImage));
 
         // draw grid
         imagesetthickness($baseImage, 1);
 
         for ($x = 0; $x < $_boardWidth * $this->cellSize; $x += $this->cellSize)
         {
-            imageline($baseImage, $x, 0, $x, imagesy($baseImage), $this->gridColor);
+            imageline($baseImage, $x, 0, $x, imagesy($baseImage), $this->gridColor->getColor($baseImage));
         }
 
         for ($y = 0; $y < $_boardHeight * $this->cellSize; $y += $this->cellSize)
         {
-            imageline($baseImage, 0, $y, imagesx($baseImage), $y, $this->gridColor);
+            imageline($baseImage, 0, $y, imagesx($baseImage), $y, $this->gridColor->getColor($baseImage));
         }
 
         imagesetthickness($baseImage, 1);
@@ -76,7 +76,7 @@ class ImageCreator
     /**
      * Creates and returns an image of the current board
      *
-     * @param \GameOfLife\Board $_board     Current board
+     * @param Board $_board     Current board
      * @param String $_imageType            Type of Image that shall be returned
      * @return String                       Path to image
      */
@@ -91,7 +91,7 @@ class ImageCreator
             {
                 if ($_board->getField($x / $this->cellSize, $y / $this->cellSize) == true)
                 {
-                  imagefilledellipse($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize - 5, $this->cellSize - 5, $this->cellAliveColor);
+                  imagefilledellipse($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize - 5, $this->cellSize - 5, $this->cellAliveColor->getColor($image));
                 }
             }
         }
@@ -104,6 +104,7 @@ class ImageCreator
         switch ($_imageType)
         {
             case "png":
+            case "video":
                 $filePath .= $this->gameFolder . "/";
 
                 if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
@@ -111,6 +112,7 @@ class ImageCreator
                 $filePath .= $fileName . ".png";
                 imagepng($image, $filePath);
                 break;
+
             case "gif":
                 $filePath .= "tmp/Frames/";
 

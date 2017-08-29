@@ -31,8 +31,9 @@ class BaseOutput
      * Start output
      *
      * @param Getopt $_options  User inputted option list
+     * @param Board $_board     Initial board
      */
-    public function startOutput($_options)
+    public function startOutput($_options, $_board)
     {
     }
 
