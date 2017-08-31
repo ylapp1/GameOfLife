@@ -20,6 +20,44 @@ use GameOfLife\Board;
  */
 class FileInput extends BaseInput
 {
+    private $newBoardHeight;
+    private $newBoardWidth;
+    private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
+
+
+    /**
+     * @return mixed
+     */
+    public function newBoardHeight()
+    {
+        return $this->newBoardHeight;
+    }
+
+    /**
+     * @param mixed $_newBoardHeight
+     */
+    public function setNewBoardHeight($_newBoardHeight)
+    {
+        $this->newBoardHeight = $_newBoardHeight;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function newBoardWidth()
+    {
+        return $this->newBoardWidth;
+    }
+
+    /**
+     * @param mixed $_newBoardWidth
+     */
+    public function setNewBoardWidth($_newBoardWidth)
+    {
+        $this->newBoardWidth = $_newBoardWidth;
+    }
+
+
     /**
      * Adds FileInputs specific options to the option list
      *
@@ -48,35 +86,56 @@ class FileInput extends BaseInput
         if ($template == null) echo "Error: No template file specified\n";
         else
         {
-            $templateDirectory = __DIR__ . "/../../../Input/Templates/";
-            $fileNameOfficial =  $templateDirectory . $template . ".txt";
-            $fileNameCustom = $templateDirectory . "/Custom/" . $template . ".txt";
-            $fileName = "";
-
-            // check whether template exists
-            if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
-            elseif (file_exists($fileNameCustom)) $fileName = $fileNameCustom;
-            else echo "Error: Template file not found!\n";
-
-
-            // Read template
-            $lines = file($fileName, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+            $board = $this->loadTemplate($template);
 
             // Reconfigure the board dimensions
-            $_board->setHeight(count($lines));
-            $_board->setWidth(count(str_split($lines[0])));
-            $_board->setCurrentBoard($_board->initializeEmptyBoard());
+            $_board->setHeight($this->newBoardHeight);
+            $_board->setWidth($this->newBoardWidth);
 
-            // Set the cells
-            for ($y = 0; $y < $_board->height(); $y++)
+            $_board->setCurrentBoard($board);
+        }
+    }
+
+
+    /**
+     * Load cell configuration from txt file
+     *
+     * @param string $_template     Template name
+     *
+     * @return array                The board array
+     */
+    public function loadTemplate($_template)
+    {
+        $fileNameOfficial =  $this->templateDirectory . $_template . ".txt";
+        $fileNameCustom = $this->templateDirectory . "/Custom/" . $_template . ".txt";
+        $fileName = "";
+
+        // check whether template exists
+        if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
+        elseif (file_exists($fileNameCustom)) $fileName = $fileNameCustom;
+        else echo "Error: Template file not found!\n";
+
+        // Read template
+        $lines = file($fileName, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+
+        $board = array();
+
+        $this->newBoardHeight = count($lines);
+        $this->newBoardWidth = count(str_split($lines[0]));
+
+        for ($y = 0; $y < count($lines); $y++)
+        {
+            $board[$y] = array();
+
+            $cells = str_split($lines[$y]);
+
+            for ($x = 0; $x < count($cells); $x++)
             {
-                $cells = str_split($lines[$y]);
-
-                for ($x = 0; $x < $_board->width(); $x++)
-                {
-                    if ($cells[$x] == "o") $_board->setField($x, $y, true);
-                }
+                if ($cells[$x] == "o") $board[$y][$x] = true;
+                else $board[$y][$x] = false;
             }
         }
+
+        return $board;
     }
 }

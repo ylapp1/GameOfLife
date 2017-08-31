@@ -11,8 +11,6 @@ namespace GameOfLife;
 /**
  * Class Board
  *
- * call initializeRandomBoard(), initializeGliderBoard() or initializeSpaceShipBoard() to create a new board
- * call printBoard() to print the current board to the console
  * call calculateStep() to calculate one game step for the entire board
  * call isFinished() to check whether the board is finished
  */
@@ -218,7 +216,23 @@ class Board
 
 
     /**
+     * Adds a board to the history of boards
+     * The history of boards stores the last 15 boards of a game
+     *
+     * @param bool[][] $_board
+     */
+    public function addToHistoryOfBoards($_board)
+    {
+        $this->historyOfBoards[] = $_board;
+
+        if (count($this->historyOfBoards) > 15) array_shift($this->historyOfBoards);
+    }
+
+
+    /**
      * Returns an empty board
+     *
+     * @return int[][]      Empty board
      */
     public function initializeEmptyBoard ()
     {
@@ -232,6 +246,7 @@ class Board
         return $board;
     }
 
+
     /**
      * Returns the amount of living neighbour cells of a cell
      *
@@ -239,12 +254,12 @@ class Board
      * @param int $_y   Y-Coordinate of the cell that is inspected
      * @return int      Amount of living neighbour cells
      */
-    public function checkAmountNeighboursAlive($_x, $_y)
+    public function calculateAmountNeighboursAlive($_x, $_y)
     {
         // find row above
         if ($_y - 1 < 0)
         {
-            if ($this->hasBorder) $rowAbove = $_y;
+            if ($this->hasBorder) $rowAbove = null;
             else $rowAbove = $this->height - 1;
         }
         else $rowAbove = $_y - 1;
@@ -252,7 +267,7 @@ class Board
         // find row below
         if ($_y + 1 >= $this->height)
         {
-            if ($this->hasBorder) $rowBelow = $_y;
+            if ($this->hasBorder) $rowBelow = null;
             else $rowBelow = 0;
         }
         else $rowBelow = $_y + 1;
@@ -260,7 +275,7 @@ class Board
         // find column to the left
         if ($_x - 1 < 0)
         {
-            if ($this->hasBorder) $columnLeft = $_x;
+            if ($this->hasBorder) $columnLeft = null;
             else $columnLeft = $this->width - 1;
         }
         else $columnLeft = $_x - 1;
@@ -268,7 +283,7 @@ class Board
         // find column to the right
         if ($_x + 1 >= $this->width)
         {
-            if ($this->hasBorder) $columnRight = $_x;
+            if ($this->hasBorder) $columnRight = null;
             else $columnRight = 0;
         }
         else $columnRight = $_x + 1;
@@ -278,12 +293,7 @@ class Board
         $rows = array($rowBelow, $_y, $rowAbove);
         $columns = array($columnLeft, $_x, $columnRight);
 
-        // remove duplicated entries (if there is a border)
-        $rows = array_unique($rows, SORT_NUMERIC);
-        $columns = array_unique($columns, SORT_NUMERIC);
-
-
-        // get amount of living nearby cells
+        // calculate amount of living nearby cells
         $amountLivingNeighbours = 0;
 
         foreach ($rows as $y)
@@ -300,58 +310,69 @@ class Board
     }
 
     /**
+     * Calculate the new cell state based on the current cell state and the amount of living neighbours
+     *
+     * Cell states:
+     *
+     * true = alive
+     * false = dead
+     *
+     * @param bool $_currentCellState       Current Cell State
+     * @param int $_amountNeighboursAlive   Amount of living neighbour cells
+     * @return bool                         New Cell State
+     */
+    public function calculateNewCellState($_currentCellState, $_amountNeighboursAlive)
+    {
+        $newCellState = $_currentCellState;
+
+        // if current cell is alive
+        if ($_currentCellState)
+        {
+            foreach ($this->rules->death() as $amountDeath)
+            {
+                if ($_amountNeighboursAlive == $amountDeath)
+                {
+                    $newCellState = false;
+                    break;
+                }
+            }
+        }
+        // if current cell is dead
+        else
+        {
+            foreach ($this->rules->birth() as $amountBirth)
+            {
+                if ($_amountNeighboursAlive == $amountBirth)
+                {
+                    $newCellState = true;
+                    break;
+                }
+            }
+        }
+
+        return $newCellState;
+    }
+
+    /**
      * Calculates a single step of the board
      */
     public function calculateStep()
     {
         $newBoard = $this->initializeEmptyBoard();
 
-        // Go through each row
         for ($y = 0; $y < $this->height; $y++)
         {
-            // Go through each column of the row
             for ($x = 0; $x < $this->width; $x++)
             {
-                $amountNeighboursAlive = $this->checkAmountNeighboursAlive($x, $y);
-                $curCellState = $this->getField($x, $y);
-                $newCellState = $curCellState;
-
-                // if current cell is alive
-                if ($curCellState)
-                {
-                    foreach ($this->rules->death() as $amountDeath)
-                    {
-                        if ($amountNeighboursAlive == $amountDeath)
-                        {
-                            $newCellState = false;
-                            break;
-                        }
-                    }
-                }
-                // if current cell is dead
-                else
-                {
-                    foreach ($this->rules->birth() as $amountBirth)
-                    {
-                        if ($amountNeighboursAlive == $amountBirth)
-                        {
-                            $newCellState = true;
-                            break;
-                        }
-                    }
-                }
+                $amountNeighboursAlive = $this->calculateAmountNeighboursAlive($x, $y);
+                $currentCellState = $this->getField($x, $y);
+                $newCellState = $this->calculateNewCellState($currentCellState, $amountNeighboursAlive);
 
                 if ($newCellState) $newBoard[$y][$x] = true;
             }
         }
 
-        $this->historyOfBoards[] = $this->currentBoard;
-
-        if (count($this->historyOfBoards) > 15)
-        {
-            array_shift($this->historyOfBoards);
-        }
-
+        $this->addToHistoryOfBoards($this->currentBoard());
         $this->currentBoard = $newBoard;
         $this->gameStep ++;
     }
@@ -370,7 +391,7 @@ class Board
         }
         else
         {
-            // Check last 15 boards for repeating patterns
+            // Check history of boards for repeating patterns
             foreach ($this->historyOfBoards as $board)
             {
                 if ($this->currentBoard == $board) return true;
@@ -378,108 +399,6 @@ class Board
 
             return false;
         }
-    }
-
-
-    /**
-     * Print the current board to the console
-     */
-    public function printBoard()
-    {
-        // print upper border
-        echo "\n ";
-        for ($i = 0; $i < $this->width; $i++)
-        {
-            echo "-";
-        }
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            echo "\n|";
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                if ($this->getField($x, $y)) echo "o";
-                else echo " ";
-            }
-            echo "|";
-        }
-
-        // print bottom border
-        echo "\n ";
-        for ($i = 0; $i < $this->width; $i++)
-        {
-            echo "-";
-        }
-        echo "\n";
-    }
-
-    /**
-     * Prints the board to the console and highlights the cell at ($_curX | $_curY9
-     *
-     * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
-     * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
-     */
-    public function printBoardEditor($_curX, $_curY)
-    {
-        // Output last set cell x-coordinate
-        echo "\n  ";
-        for ($i = 0; $i < $this->width + 2; $i++)
-        {
-            if ($i == $_curX) echo $_curX;
-            else echo " ";
-        }
-
-        // Output upper border
-        echo "\n ";
-        for ($i = 0; $i < $this->width + 2; $i++)
-        {
-            echo "-";
-        }
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            echo "\n|";
-
-            // Output lines above and below the last set cell
-            if ($y == $_curY || $y == $_curY + 1)
-            {
-                for ($i = 0; $i < $this->width() + 2; $i++)
-                {
-                    echo "-";
-                }
-                echo "|\n|";
-            }
-
-            for ($x= 0; $x < $this->width; $x++)
-            {
-                // Output lines left and right from the last set cell
-                if ($x == $_curX || $x == $_curX + 1)
-                {
-                    echo "|";
-                }
-
-                // Output the cells
-                if ($this->getField($x, $y))
-                {
-                    if ($x == $_curX && $y == $_curY) echo "X";
-                    else    echo "o";
-                }
-                else echo " ";
-            }
-
-            echo "|";
-
-            // Output last set cell y-coordinate
-            if ($y == $_curY) echo $_curY;
-        }
-
-        // Output bottom border
-        echo "\n ";
-        for ($i = 0; $i < $this->width + 2; $i++)
-        {
-            echo "-";
-        }
-        echo "\n";
     }
 
     /**

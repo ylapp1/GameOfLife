@@ -9,6 +9,7 @@
 namespace Input;
 
 use Ulrichsg\Getopt;
+use GameOfLife\Board;
 
 /**
  * Class UserInput
@@ -46,7 +47,7 @@ class UserInput extends BaseInput
         {
             $fileInput = new FileInput();
             $fileInput->fillBoard($_board, $_options);
-            $_board->printBoard();
+            $this->printBoard($_board);
         }
 
         echo "Set the coordinates for the living fields as below:\n";
@@ -138,8 +139,112 @@ class UserInput extends BaseInput
                         echo "Don't give me more than two numbers!";
                     }
                 }
-                $_board->printBoardEditor($inputX, $inputY);
+                $this->printBoardEditor($_board, $inputX, $inputY);
             }
         }
+    }
+
+    /**
+     * Print the board to the console
+     *
+     * @param Board $_board     Current board
+     */
+    private function printBoard($_board)
+    {
+        // print upper border
+        echo "\n ";
+        for ($i = 0; $i < $_board->width(); $i++)
+        {
+            echo "-";
+        }
+
+        for ($y = 0; $y < $_board->height(); $y++)
+        {
+            echo "\n|";
+            for ($x = 0; $x < $_board->width(); $x++)
+            {
+                if ($_board->getField($x, $y)) echo "o";
+                else echo " ";
+            }
+            echo "|";
+        }
+
+        // print bottom border
+        echo "\n ";
+        for ($i = 0; $i < $_board->width(); $i++)
+        {
+            echo "-";
+        }
+        echo "\n";
+    }
+
+    /**
+     * Prints the board to the console and highlights the cell at ($_curX | $_curY9
+     *
+     * @param Board $_board     Current board
+     * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
+     * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
+     */
+    public function printBoardEditor($_board, $_curX, $_curY)
+    {
+        // Output last set cell x-coordinate
+        echo "\n  ";
+        for ($i = 0; $i < $_board->width() + 2; $i++)
+        {
+            if ($i == $_curX) echo $_curX;
+            else echo " ";
+        }
+
+        // Output upper border
+        echo "\n ";
+        for ($i = 0; $i < $_board->width() + 2; $i++)
+        {
+            echo "-";
+        }
+
+        for ($y = 0; $y < $_board->height(); $y++)
+        {
+            echo "\n|";
+
+            // Output lines above and below the last set cell
+            if ($y == $_curY || $y == $_curY + 1)
+            {
+                for ($i = 0; $i < $_board->width() + 2; $i++)
+                {
+                    echo "-";
+                }
+                echo "|\n|";
+            }
+
+            for ($x= 0; $x < $_board->width(); $x++)
+            {
+                // Output lines left and right from the last set cell
+                if ($x == $_curX || $x == $_curX + 1)
+                {
+                    echo "|";
+                }
+
+                // Output the cells
+                if ($_board->getField($x, $y))
+                {
+                    if ($x == $_curX && $y == $_curY) echo "X";
+                    else    echo "o";
+                }
+                else echo " ";
+            }
+
+            echo "|";
+
+            // Output last set cell y-coordinate
+            if ($y == $_curY) echo $_curY;
+        }
+
+        // Output bottom border
+        echo "\n ";
+        for ($i = 0; $i < $_board->width() + 2; $i++)
+        {
+            echo "-";
+        }
+        echo "\n";
     }
 }

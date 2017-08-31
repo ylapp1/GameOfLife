@@ -14,7 +14,7 @@ use Ulrichsg\Getopt;
 /**
  * Class BlinkerInput
  *
- * Places a 3x1 blinker on the board
+ * Places a 1x3 blinker on the board
  *
  * Usage:
  * Use addOptions($_options) to add the objects options to the main option list
