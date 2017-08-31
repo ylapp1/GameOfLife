@@ -493,7 +493,8 @@ class Board
      */
     public function setField ($_x, $_y, $_isAlive)
     {
-        $this->currentBoard[$_y][$_x] = $_isAlive;
+        if ($_isAlive) $this->currentBoard[$_y][$_x] = $_isAlive;
+        else unset($this->currentBoard[$_y][$_x]);
     }
 
     /**
@@ -537,7 +538,7 @@ class Board
         {
             for ($x = 0; $x < $this->width(); $x++)
             {
-                if ($this->currentBoard[$y][$x]) $string .= "o";
+                if ($this->getField($x, $y)) $string .= "o";
                 else $string .= ".";
             }
 
