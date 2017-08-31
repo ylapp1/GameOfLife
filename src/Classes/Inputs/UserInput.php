@@ -109,13 +109,14 @@ class UserInput extends BaseInput
                             }
                             else
                             {
-                                $_board->setField((int)$trimX, (int)$trimY, false);
                                 $inputX = (int)$trimX;
                                 $inputY = (int)$trimY;
+
+                                $_board->setField($inputX, $inputY, false);
                             }
                         }
                         else
-                            {
+                        {
                             if ($inputSplits[0] > $_board->width() - 1 ||
                                 $inputSplits[0] < 0 ||
                                 $inputSplits[1] > $_board->height() - 1 ||
@@ -125,9 +126,10 @@ class UserInput extends BaseInput
                             }
                             else
                             {
-                                $_board->setField((int)$inputSplits[0], (int)$inputSplits[1], true);
                                 $inputX = (int)$inputSplits[0];
                                 $inputY = (int)$inputSplits[1];
+
+                                $_board->setField($inputX, $inputY, true);
                             }
                         }
                     }

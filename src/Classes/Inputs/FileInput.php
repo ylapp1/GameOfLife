@@ -75,7 +75,6 @@ class FileInput extends BaseInput
                 for ($x = 0; $x < $_board->width(); $x++)
                 {
                     if ($cells[$x] == "o") $_board->setField($x, $y, true);
-                    else $_board->setField($x, $y, false);
                 }
             }
         }

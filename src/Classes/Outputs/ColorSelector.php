@@ -40,7 +40,7 @@ class ColorSelector
         // if color input is a color name (e.g. "red", "blue", "green")
         else
         {
-            switch ($_colorInput) {
+            switch (strtolower($_colorInput)) {
                 case "red":
                     $color = new ImageColor(255, 0, 0);
                     break;
