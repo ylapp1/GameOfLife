@@ -224,13 +224,79 @@ class Board
     {
         $board = array();
 
-        for ($i = 0; $i < $this->height; $i++)
+        for ($y = 0; $y < $this->height; $y++)
         {
-            $board[$i] = array();
-            $board[$i] = array_fill(0, $this->width, false);
+            $board[$y] = array();
         }
 
         return $board;
+    }
+
+    /**
+     * Returns the amount of living neighbour cells of a cell
+     *
+     * @param int $_x   X-Coordinate of the cell that is inspected
+     * @param int $_y   Y-Coordinate of the cell that is inspected
+     * @return int      Amount of living neighbour cells
+     */
+    public function checkAmountNeighboursAlive($_x, $_y)
+    {
+        // find row above
+        if ($_y - 1 < 0)
+        {
+            if ($this->hasBorder) $rowAbove = $_y;
+            else $rowAbove = $this->height - 1;
+        }
+        else $rowAbove = $_y - 1;
+
+        // find row below
+        if ($_y + 1 >= $this->height)
+        {
+            if ($this->hasBorder) $rowBelow = $_y;
+            else $rowBelow = 0;
+        }
+        else $rowBelow = $_y + 1;
+
+        // find column to the left
+        if ($_x - 1 < 0)
+        {
+            if ($this->hasBorder) $columnLeft = $_x;
+            else $columnLeft = $this->width - 1;
+        }
+        else $columnLeft = $_x - 1;
+
+        // find column to the right
+        if ($_x + 1 >= $this->width)
+        {
+            if ($this->hasBorder) $columnRight = $_x;
+            else $columnRight = 0;
+        }
+        else $columnRight = $_x + 1;
+
+
+        // save all rows and all columns to check in an array
+        $rows = array($rowBelow, $_y, $rowAbove);
+        $columns = array($columnLeft, $_x, $columnRight);
+
+        // remove duplicated entries (if there is a border)
+        $rows = array_unique($rows, SORT_NUMERIC);
+        $columns = array_unique($columns, SORT_NUMERIC);
+
+
+        // get amount of living nearby cells
+        $amountLivingNeighbours = 0;
+
+        foreach ($rows as $y)
+        {
+            foreach ($columns as $x)
+            {
+                if ($this->getField($x, $y)) $amountLivingNeighbours++;
+            }
+        }
+
+        if ($this->getField($_x, $_y)) $amountLivingNeighbours -= 1;
+
+        return $amountLivingNeighbours;
     }
 
     /**
@@ -246,119 +312,49 @@ class Board
             // Go through each column of the row
             for ($x = 0; $x < $this->width; $x++)
             {
-                $currentCellState = $this->currentBoard[$y][$x];
                 $amountNeighboursAlive = $this->checkAmountNeighboursAlive($x, $y);
-
-                // check whether cell dies, is reborn or stays alive
-                $newCellState = $currentCellState;
-
-                // if current cell is dead
-                if ($currentCellState == false)
-                {
-                    foreach ($this->rules->birth() as $amountBirth)
-                    {
-                        if ($amountNeighboursAlive == $amountBirth) $newCellState = true;
-                    }
-                }
+                $curCellState = $this->getField($x, $y);
+                $newCellState = $curCellState;
 
                 // if current cell is alive
-                else
+                if ($curCellState)
                 {
                     foreach ($this->rules->death() as $amountDeath)
                     {
                         if ($amountNeighboursAlive == $amountDeath)
                         {
                             $newCellState = false;
+                            break;
+                        }
+                    }
+                }
+                // if current cell is dead
+                else
+                {
+                    foreach ($this->rules->birth() as $amountBirth)
+                    {
+                        if ($amountNeighboursAlive == $amountBirth)
+                        {
+                            $newCellState = true;
+                            break;
                         }
                     }
                 }
 
-                $newBoard[$y][$x] = $newCellState;
+                if ($newCellState) $newBoard[$y][$x] = true;
             }
         }
 
         $this->historyOfBoards[] = $this->currentBoard;
+
+        if (count($this->historyOfBoards) > 15)
+        {
+            array_shift($this->historyOfBoards);
+        }
+
         $this->currentBoard = $newBoard;
         $this->gameStep ++;
     }
-
-
-    /**
-     * Returns the amount of living neighbour cells of a cell
-     *
-     * @param int $_x   X-Coordinate of the cell that is inspected
-     * @param int $_y   Y-Coordinate of the cell that is inspected
-     * @return int      Amount of living neighbour cells
-     */
-    public function checkAmountNeighboursAlive($_x, $_y)
-    {
-        // find row above
-        if ($_y - 1 < 0)
-        {
-            if ($this->hasBorder == true) $rowAbove = $_y;
-            else $rowAbove = $this->height - 1;
-        }
-        else $rowAbove = $_y - 1;
-
-
-        // find row below
-        if ($_y + 1 >= $this->height)
-        {
-            if ($this->hasBorder == true) $rowBelow = $_y;
-            else $rowBelow = 0;
-        }
-        else $rowBelow = $_y + 1;
-
-
-        // find column to the left
-        if ($_x - 1 < 0)
-        {
-            if ($this->hasBorder == true) $columnLeft = $_x;
-            else $columnLeft = $this->width - 1;
-        }
-        else $columnLeft = $_x - 1;
-
-
-        // find column to the right
-        if ($_x + 1 >= $this->width)
-        {
-            if ($this->hasBorder == true) $columnRight = $_x;
-            else $columnRight = 0;
-        }
-        else $columnRight = $_x + 1;
-
-
-
-        // save all rows and all columns to check in an array
-        $rows = array($rowBelow, $_y, $rowAbove);
-        $columns = array($columnLeft, $_x, $columnRight);
-
-        // remove duplicated entries (if there is a border)
-        $rows = array_unique($rows, SORT_NUMERIC);
-        $columns = array_unique($columns, SORT_NUMERIC);
-
-
-        // get amount of living nearby cells
-        $amountLivingNeighbours = 0;
-
-
-        foreach ($rows as $row)
-        {
-            foreach ($columns as $column)
-            {
-                if ($this->currentBoard[$row][$column] == 1) $amountLivingNeighbours++;
-            }
-        }
-
-        if ($this->currentBoard[$_y][$_x] == true)
-        {
-            $amountLivingNeighbours -= 1;
-        }
-
-
-        return $amountLivingNeighbours;
-    }
-
 
     /**
      * Checks whether the board is finished (only static or blinking tiles remaining).
@@ -375,9 +371,9 @@ class Board
         else
         {
             // Check last 15 boards for repeating patterns
-            for ($i = count($this->historyOfBoards()) - 1; $i > count($this->historyOfBoards()) - 15 && $i > 0; $i--)
+            foreach ($this->historyOfBoards as $board)
             {
-                if ($this->currentBoard == $this->historyOfBoards()[$i]) return true;
+                if ($this->currentBoard == $board) return true;
             }
 
             return false;
@@ -390,29 +386,26 @@ class Board
      */
     public function printBoard()
     {
+        // print upper border
         echo "\n ";
-
         for ($i = 0; $i < $this->width; $i++)
         {
             echo "-";
         }
 
-        foreach ($this->currentBoard as $line)
+        for ($y = 0; $y < $this->height; $y++)
         {
             echo "\n|";
-
-            foreach ($line as $cell)
+            for ($x = 0; $x < $this->width; $x++)
             {
-                if ($cell === true) echo "o";
+                if ($this->getField($x, $y)) echo "o";
                 else echo " ";
             }
-
             echo "|";
         }
 
-
+        // print bottom border
         echo "\n ";
-
         for ($i = 0; $i < $this->width; $i++)
         {
             echo "-";
@@ -420,7 +413,12 @@ class Board
         echo "\n";
     }
 
-
+    /**
+     * Prints the board to the console and highlights the cell at ($_curX | $_curY9
+     *
+     * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
+     * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
+     */
     public function printBoardEditor($_curX, $_curY)
     {
         // Output last set cell x-coordinate
@@ -461,7 +459,7 @@ class Board
                 }
 
                 // Output the cells
-                if ($this->getField($x, $y) == true)
+                if ($this->getField($x, $y))
                 {
                     if ($x == $_curX && $y == $_curY) echo "X";
                     else    echo "o";
@@ -484,7 +482,6 @@ class Board
         echo "\n";
     }
 
-
     /**
      * Sets a field on the board.
      *
@@ -499,7 +496,6 @@ class Board
         $this->currentBoard[$_y][$_x] = $_isAlive;
     }
 
-
     /**
      * Returns the status of a specific field
      *
@@ -510,9 +506,8 @@ class Board
      */
     public function getField ($_x, $_y)
     {
-        return $this->currentBoard[$_y][$_x];
+        return isset($this->currentBoard[$_y][$_x]);
     }
-
 
     /**
      * Returns the total amount of living cells on the board
@@ -529,7 +524,6 @@ class Board
         return $amountCellsAlive;
     }
 
-
     /**
      * Convert board to string
      *
@@ -543,8 +537,8 @@ class Board
         {
             for ($x = 0; $x < $this->width(); $x++)
             {
-                if ($this->getField($x, $y) == true) $string .= "o";
-                else $string .= "_";
+                if ($this->currentBoard[$y][$x]) $string .= "o";
+                else $string .= ".";
             }
 
             if ($y != $this->height() - 1) $string .= "\r\n";

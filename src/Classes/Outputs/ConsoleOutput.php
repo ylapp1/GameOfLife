@@ -72,12 +72,12 @@ class ConsoleOutput extends BaseOutput
         }
         echo "╣";*/
 
-        foreach ($_board->currentBoard() as $line)
+        for ($y = 0; $y < $_board->height(); $y++)
         {
             echo "\n║";
-            foreach ($line as $cell)
+            for ($x = 0; $x < $_board->width(); $x++)
             {
-                if ($cell === true) echo "☻";
+                if ($_board->getField($x, $y)) echo "☻";
                 else echo " ";
             }
             echo "║";

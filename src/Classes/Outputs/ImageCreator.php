@@ -25,6 +25,8 @@ class ImageCreator
     private $cellAliveColor;
     private $cellSize;
     private $gameFolder;
+    private $baseImage;
+    private $cellImage;
 
     /**
      * ImageCreator constructor.
@@ -39,9 +41,9 @@ class ImageCreator
     public function __construct($_boardHeight, $_boardWidth, $_cellSize, $_cellAliveColor, $_backgroundColor, $_gridColor, $_gameFolder = null)
     {
         // Create temporary directory if it doesn't exist
-        if (! file_exists($this->basePath . "tmp")) mkdir($this->basePath . "tmp");
+        //if (! file_exists($this->basePath . "tmp")) mkdir($this->basePath . "tmp");
 
-        // Create a base Image on which all the other images will be based
+        // Create a base image (empty grid) on which all the other images will be based
         $this->cellSize = $_cellSize;
         $this->gameFolder = $_gameFolder;
 
@@ -69,8 +71,54 @@ class ImageCreator
         }
 
         imagesetthickness($baseImage, 1);
+        $this->baseImage = $baseImage;
 
-        imagepng($baseImage, $this->basePath . "/tmp/base.png");
+        $transparentColor = new ImageColor(0,0,0);
+
+        $red = 0;
+        $green = 0;
+        $blue = 0;
+
+        while ($transparentColor == $this->backgroundColor || $transparentColor == $this->cellAliveColor)
+        {
+            if ($red < 255) $red++;
+            elseif ($green < 255)
+            {
+                $green++;
+                $red = 0;
+            }
+            elseif ($blue < 255)
+            {
+                $blue++;
+                $green = 0;
+                $red = 0;
+            }
+
+            $transparentColor = new ImageColor($red, $green, $blue);
+        }
+
+
+        $cellImage = imagecreatetruecolor($_cellSize, $_cellSize);
+        imagefill($cellImage, 0, 0, $transparentColor->getColor($cellImage));
+
+        $headSize = $_cellSize * 4/5;
+        $padding = ($_cellSize - $headSize) / 2;
+
+        // Head
+        imagefilledellipse($cellImage, $_cellSize / 2, $_cellSize / 2, $headSize, $headSize, $this->cellAliveColor->getColor($cellImage));
+
+        // Eyes
+        imagefilledellipse($cellImage, $padding + $headSize * 1/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
+        imagefilledellipse($cellImage, $padding + $headSize * 3/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
+
+        imagesetthickness($cellImage, 5);
+
+        // Mouth
+        imagearc($cellImage, $padding + $headSize / 2, $padding + $headSize / 2, $headSize * 3/4,$headSize * 3/4, 25, 155, $this->backgroundColor->getColor($cellImage));
+
+        imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));
+
+        $this->cellImage = $cellImage;
     }
 
     /**
@@ -82,17 +130,16 @@ class ImageCreator
      */
     public function createImage ($_board, $_imageType)
     {
-        $image = imagecreatefrompng($this->basePath . "/tmp/base.png");
+        $image = imagecreate(imagesx($this->baseImage), imagesy($this->baseImage));
+
+        imagecopy($image, $this->baseImage, 0,0,0,0,imagesx($this->baseImage), imagesy($this->baseImage));
 
         // Draw the cells
-        for ($y = 0; $y < imagesy($image); $y += $this->cellSize)
+        foreach ($_board->currentBoard() as $y=>$row)
         {
-            for ($x = 0; $x < imagesx($image); $x += $this->cellSize)
+            foreach ($row as $x=>$cell)
             {
-                if ($_board->getField($x / $this->cellSize, $y / $this->cellSize) == true)
-                {
-                  imagefilledellipse($image, $x + $this->cellSize/2, $y + $this->cellSize/2, $this->cellSize - 5, $this->cellSize - 5, $this->cellAliveColor->getColor($image));
-                }
+                imagecopymerge($image, $this->cellImage, $x * $this->cellSize, $y * $this->cellSize, 0, 0, $this->cellSize, $this->cellSize, 100);
             }
         }
 
@@ -138,9 +185,7 @@ class ImageCreator
     public function __destruct()
     {
         $tmpDirectory = $this->basePath . "/tmp";
-        unlink($tmpDirectory  . "/base.png");
 
-        if (count(glob($tmpDirectory . "/*")) === 0) rmdir($this->basePath . "/tmp/");
-        else echo count(glob($tmpDirectory . "/*")) . " files left in tmp directory";
+        if (count(glob($tmpDirectory . "/*")) === 0 && file_exists($this->basePath . "/tmp/")) rmdir($this->basePath . "/tmp/");
     }
 }
