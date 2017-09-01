@@ -41,13 +41,11 @@ class UserInput extends BaseInput
      */
     function fillBoard($_board, $_options)
     {
-        $isEdit = $_options->getOption("edit");
-
-        if ($isEdit == true)
+        if ($_options->getOption("edit"))
         {
             $fileInput = new FileInput();
             $fileInput->fillBoard($_board, $_options);
-            $this->printBoard($_board);
+            $this->printBoardEditor($_board);
         }
 
         echo "Set the coordinates for the living fields as below:\n";
@@ -145,12 +143,30 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Print the board to the console
+     * Print the board to the console and highlights the cell at ($_curX | $_curY) if both values are set
      *
      * @param Board $_board     Current board
+     * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
+     * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
      */
-    private function printBoard($_board)
+    public function printBoardEditor($_board, $_curX = null, $_curY = null)
     {
+        if ($_curX != null && $_curY != null) $isHighLight = true;
+        else $isHighLight = false;
+
+
+        if ($isHighLight)
+        {
+            // Output last set cell x-coordinate
+            echo "\n  ";
+            for ($i = 0; $i < $_board->width() + 2; $i++)
+            {
+                if ($i == $_curX) echo $_curX;
+                else echo " ";
+            }
+        }
+
+
         // print upper border
         echo "\n ";
         for ($i = 0; $i < $_board->width(); $i++)
@@ -158,56 +174,16 @@ class UserInput extends BaseInput
             echo "-";
         }
 
-        for ($y = 0; $y < $_board->height(); $y++)
-        {
-            echo "\n|";
-            for ($x = 0; $x < $_board->width(); $x++)
-            {
-                if ($_board->getField($x, $y)) echo "o";
-                else echo " ";
-            }
-            echo "|";
-        }
+        if ($isHighLight) echo "--";
 
-        // print bottom border
-        echo "\n ";
-        for ($i = 0; $i < $_board->width(); $i++)
-        {
-            echo "-";
-        }
-        echo "\n";
-    }
 
-    /**
-     * Prints the board to the console and highlights the cell at ($_curX | $_curY9
-     *
-     * @param Board $_board     Current board
-     * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
-     * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
-     */
-    public function printBoardEditor($_board, $_curX, $_curY)
-    {
-        // Output last set cell x-coordinate
-        echo "\n  ";
-        for ($i = 0; $i < $_board->width() + 2; $i++)
-        {
-            if ($i == $_curX) echo $_curX;
-            else echo " ";
-        }
-
-        // Output upper border
-        echo "\n ";
-        for ($i = 0; $i < $_board->width() + 2; $i++)
-        {
-            echo "-";
-        }
-
+        // print board
         for ($y = 0; $y < $_board->height(); $y++)
         {
             echo "\n|";
 
             // Output lines above and below the last set cell
-            if ($y == $_curY || $y == $_curY + 1)
+            if (($y == $_curY || $y == $_curY + 1) && $isHighLight)
             {
                 for ($i = 0; $i < $_board->width() + 2; $i++)
                 {
@@ -216,10 +192,12 @@ class UserInput extends BaseInput
                 echo "|\n|";
             }
 
-            for ($x= 0; $x < $_board->width(); $x++)
+
+            // Output cells
+            for ($x = 0; $x < $_board->width(); $x++)
             {
                 // Output lines left and right from the last set cell
-                if ($x == $_curX || $x == $_curX + 1)
+                if (($x == $_curX || $x == $_curX + 1) && $isHighLight)
                 {
                     echo "|";
                 }
@@ -227,8 +205,8 @@ class UserInput extends BaseInput
                 // Output the cells
                 if ($_board->getField($x, $y))
                 {
-                    if ($x == $_curX && $y == $_curY) echo "X";
-                    else    echo "o";
+                    if (($x == $_curX && $y == $_curY) && $isHighLight) echo "X";
+                    else echo "o";
                 }
                 else echo " ";
             }
@@ -239,12 +217,15 @@ class UserInput extends BaseInput
             if ($y == $_curY) echo $_curY;
         }
 
+
         // Output bottom border
         echo "\n ";
-        for ($i = 0; $i < $_board->width() + 2; $i++)
+        for ($i = 0; $i < $_board->width(); $i++)
         {
             echo "-";
         }
+
+        if ($isHighLight) echo "--";
         echo "\n";
     }
 }
