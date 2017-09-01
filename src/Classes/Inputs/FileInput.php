@@ -91,7 +91,6 @@ class FileInput extends BaseInput
             // Reconfigure the board dimensions
             $_board->setHeight($this->newBoardHeight);
             $_board->setWidth($this->newBoardWidth);
-
             $_board->setCurrentBoard($board);
         }
     }
@@ -108,12 +107,15 @@ class FileInput extends BaseInput
     {
         $fileNameOfficial =  $this->templateDirectory . $_template . ".txt";
         $fileNameCustom = $this->templateDirectory . "/Custom/" . $_template . ".txt";
-        $fileName = "";
 
         // check whether template exists
         if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
         elseif (file_exists($fileNameCustom)) $fileName = $fileNameCustom;
-        else echo "Error: Template file not found!\n";
+        else
+        {
+            echo "Error: Template file not found!\n";
+            return null;
+        }
 
         // Read template
         $lines = file($fileName, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
@@ -131,8 +133,7 @@ class FileInput extends BaseInput
 
             for ($x = 0; $x < count($cells); $x++)
             {
-                if ($cells[$x] == "o") $board[$y][$x] = true;
-                else $board[$y][$x] = false;
+                if ($cells[$x] == "X") $board[$y][$x] = true;
             }
         }
 

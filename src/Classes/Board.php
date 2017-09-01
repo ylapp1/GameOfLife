@@ -472,7 +472,7 @@ class Board
         {
             for ($x = 0; $x < $this->width(); $x++)
             {
-                if ($this->getField($x, $y)) $string .= "o";
+                if ($this->getField($x, $y)) $string .= "X";
                 else $string .= ".";
             }
 
