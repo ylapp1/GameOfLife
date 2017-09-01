@@ -186,7 +186,10 @@ class ImageCreator
     {
         $tmpDirectory = $this->basePath . "/tmp";
 
-        if (count(glob($tmpDirectory . "/*")) === 0 && file_exists($this->basePath . "/tmp/")) rmdir($this->basePath . "/tmp/");
-        else echo "\nDetected files in the tmp directory, not deleting tmp...\n";
+        if (count(glob($tmpDirectory . "/*")) === 0 &&
+            file_exists($this->basePath . "/tmp/"))
+        {
+            rmdir($this->basePath . "/tmp/");
+        }
     }
 }

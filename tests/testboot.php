@@ -12,4 +12,5 @@ $loader =  ComposerAutoloaderInitef2f69864c5695a57d28bbd4a98f5b03::getLoader();
 
 $loader->addPsr4("GameOfLife\\", __DIR__ . "/../src/Classes");
 $loader->addPsr4("Input\\", __DIR__ . "/../src/Classes/Inputs");
+$loader->addPsr4("Output\\", __DIR__ . "/../src/Classes/Outputs");
 $loader->addPsr4("Ulrichsg\\", __DIR__ . "/../src/Ulrichsg");
