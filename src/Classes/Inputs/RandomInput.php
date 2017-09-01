@@ -42,9 +42,7 @@ class RandomInput extends BaseInput
 
         // fill with default value if option is not set
         if ($fillPercent == null) $fillPercent = rand(15, 70);
-
-        // return error if fill percentage is hhigher than 100%
-        if ($fillPercent > 100)
+        elseif ($fillPercent > 100)
         {
             echo "Error: There can't be more living cells than 100% of the boards fields.\n";
             return;

@@ -6,14 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-
-
 use PHPUnit\Framework\TestCase;
 use Input\RandomInput;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-
 
 /**
  * Class BlinkerInputTest
@@ -36,9 +33,11 @@ class RandomInputTest extends TestCase
     public function testCanAddOptions()
     {
         $options = new Getopt();
-
         $this->input->addOptions($options);
-        $this->assertEquals(1, count($options->getOptionList()));
+        $optionList = $options->getOptionList();
+
+        $this->assertEquals(1, count($optionList));
+        $this->assertContains("fillPercent", $optionList[0]);
     }
 
     public function testCanSetCells()

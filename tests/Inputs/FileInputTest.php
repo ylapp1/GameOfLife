@@ -33,9 +33,11 @@ class FileInputTest extends TestCase
     public function testCanAddOptions()
     {
         $options = new Getopt();
-
         $this->input->addOptions($options);
-        $this->assertEquals(1, count($options->getOptionList()));
+        $optionList = $options->getOptionList();
+
+        $this->assertEquals(1, count($optionList));
+        $this->assertContains("template", $optionList[0]);
     }
 
     public function testCanLoadTemplate()
@@ -53,7 +55,6 @@ class FileInputTest extends TestCase
         $rulesComway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $board = new Board(10, 10, 50, true, $rulesComway);
         $options = new Getopt();
-
 
         $this->expectOutputString("Error: No template file specified\n");
 
