@@ -12,13 +12,12 @@ use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 
-
 /**
- * Class BlinkerInputTest
+ * Class SpaceShipInputTest
  */
 class SpaceShipInputTest extends TestCase
 {
-    /** @var  SpaceShipInput $input */
+    /** @var SpaceShipInput $input */
     private $input;
 
     protected function setUp()
@@ -34,12 +33,22 @@ class SpaceShipInputTest extends TestCase
     public function testCanAddOptions()
     {
         $options = new Getopt();
-
         $this->input->addOptions($options);
-        $this->assertEquals(2, count($options->getOptionList()));
+        $optionList = $options->getOptionList();
+
+        $this->assertEquals(2, count($optionList));
+        $this->assertContains("spaceShipPosX", $optionList[0]);
+        $this->assertContains("spaceShipPosY", $optionList[1]);
     }
 
-    public function testCanSetCells()
+    /**
+     * @dataProvider setCellsProvider
+     *
+     * @param int $x            X-Coordinate of the cell
+     * @param int $y            Y-Coordinate of the cell
+     * @param bool $expected    Expected value of the cell
+     */
+    public function testCanSetCells($x, $y, $expected)
     {
         $options = new Getopt();
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -48,5 +57,21 @@ class SpaceShipInputTest extends TestCase
         $this->input->fillBoard($board, $options);
 
         $this->assertEquals(9, $board->getAmountCellsAlive());
+        $this->assertEquals($expected, $board->getField($x, $y));
+    }
+
+    public function setCellsProvider()
+    {
+        return [
+            "Cell 5|4" => [5, 4, true],
+            "Cell 6|4" => [6, 4, true],
+            "Cell 7|4" => [7, 4, true],
+            "Cell 8|4" => [8, 4, true],
+            "Cell 4|5" => [4, 5, true],
+            "Cell 8|5" => [8, 5, true],
+            "Cell 8|6" => [8, 6, true],
+            "Cell 4|7" => [4, 7, true],
+            "Cell 7|7" => [7, 7, true]
+        ];
     }
 }
