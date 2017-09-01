@@ -56,12 +56,13 @@ class GliderInput extends BaseInput
         // fetch Options
         $posX = $_options->getOption("gliderPosX");
         $posY = $_options->getOption("gliderPosY");
+        $boardCenter = $_board->getCenter();
 
-        // Use default values (center) if options are not set
-        if ($posX == null) $posX = ceil($_board->width() / 2) - 1;
+        // Use default values if options are not set
+        if ($posX == null) $posX = $boardCenter["x"];
         else $posX -= 1;
 
-        if ($posY == null) $posY = ceil($_board->height() / 2) - 1;
+        if ($posY == null) $posY = $boardCenter["x"];
         else $posY -= 1;
 
         // check whether the glider is inside board dimensions

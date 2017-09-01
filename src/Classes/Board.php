@@ -445,6 +445,21 @@ class Board
     }
 
     /**
+     * Calculates and returns the center of the board
+     *
+     * @return array
+     */
+    public function getCenter()
+    {
+        $centerX = ceil($this->width / 2) - 1;
+        $centerY = ceil($this->height / 2) - 1;
+
+        $center = array("x" => $centerX, "y" => $centerY);
+
+        return $center;
+    }
+
+    /**
      * Convert board to string
      *
      * @return string
