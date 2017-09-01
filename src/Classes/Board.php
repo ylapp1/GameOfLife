@@ -232,7 +232,7 @@ class Board
     /**
      * Returns an empty board
      *
-     * @return int[][]      Empty board
+     * @return bool[][]      Empty board
      */
     public function initializeEmptyBoard ()
     {
@@ -385,10 +385,8 @@ class Board
      */
     public function isFinished()
     {
-        if ($this->gameStep >= $this->maxSteps)
-        {
-            return true;
-        }
+        if ($this->gameStep >= $this->maxSteps) return true;
+        elseif ($this->getAmountCellsAlive() == 0) return true;
         else
         {
             // Check history of boards for repeating patterns

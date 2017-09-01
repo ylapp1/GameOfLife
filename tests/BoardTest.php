@@ -10,6 +10,8 @@ use PHPUnit\Framework\TestCase;
 
 use GameOfLife\RuleSet;
 use GameOfLife\Board;
+use Input\BlinkerInput;
+use Ulrichsg\Getopt;
 
 /**
  * Class BoardTest
@@ -83,6 +85,47 @@ class BoardTest extends TestCase
     }
 
 
+    public function testCanInitializeEmptyBoard()
+    {
+        $emptyBoard = $this->board->initializeEmptyBoard();
+
+        $amountCellsAlive = 0;
+
+        foreach ($emptyBoard as $line)
+        {
+            foreach ($line as $cell)
+            {
+                if (isset($cell)) $amountCellsAlive++;
+            }
+        }
+
+        $this->assertEquals($amountCellsAlive, 0);
+    }
+
+
+    public function testCanAddToHistoryOfBoards()
+    {
+        $emptyBoard = $this->board->initializeEmptyBoard();
+
+        // Check whether initial amount of boards in history is 0
+        $this->assertEquals(0, count($this->board->historyOfBoards()));
+
+        // Check whether using addToHistoryOfBoards 5 times will result in the history of boards storing 5 boards
+        for ($i = 0; $i < 5; $i++)
+        {
+            $this->board->addToHistoryOfBoards($emptyBoard);
+        }
+        $this->assertEquals(5, count($this->board->historyOfBoards()));
+
+        // Check whether using addToHistoryOfBoards more than 15 times in total will result in the history of boards storing exactly 15 boards
+        for ($i = 0; $i < 12; $i++)
+        {
+            $this->board->addToHistoryOfBoards($emptyBoard);
+        }
+        $this->assertEquals(15, count($this->board->historyOfBoards()));
+    }
+
+
     /**
      * @dataProvider amountCellsAliveProvider
      *
@@ -109,19 +152,27 @@ class BoardTest extends TestCase
     }
 
 
-    public function testCanDetectFinish()
+    public function testDetectsFinish()
     {
-        // check whether cells alive are detected
-        $this->assertEquals(false, $this->board->isFinished());
-
-        $this->board->calculateStep();
+        // check whether empty board is detected
         $this->assertEquals(true, $this->board->isFinished());
 
+        // check whether living cells are detected
         $this->board->setField(0, 0, true);
         $this->assertEquals(false, $this->board->isFinished());
 
         // check whether max step makes the board stop
         $this->board->setGameStep(50);
+        $this->assertEquals(true, $this->board->isFinished());
+
+        // Check whether repeating pattern is detected
+        $input = new BlinkerInput();
+        $options = new Getopt();
+        $input->fillBoard($this->board, $options);
+
+        $this->board->calculateStep();
+        $this->board->calculateStep();
+
         $this->assertEquals(true, $this->board->isFinished());
     }
 
@@ -133,7 +184,7 @@ class BoardTest extends TestCase
      * @param int $_y                    Y-Coordinate of inspected cell
      * @param int $_expected             Expected amount of neighbours
      */
-    public function testCanCheckAmountNeighboursAlive($_cells, $_x, $_y, $_expected)
+    public function testCanCalculateAmountNeighboursAlive($_cells, $_x, $_y, $_expected)
     {
         foreach ($_cells as $cell)
         {
@@ -177,5 +228,36 @@ class BoardTest extends TestCase
             "Living Cell, Three Neighbours" => [true, 3, true],
             "Living Cell, Eight Neighbours" => [true, 8, false]
         ];
+    }
+
+
+    /**
+     * @dataProvider calculateCenterProvider
+     *
+     * @param int $_boardWidth      Board width
+     * @param int $_boardHeight     Board height
+     * @param array $expected       Coordinates of the center
+     */
+    public function testCanCalculateCenter($_boardWidth, $_boardHeight, $expected)
+    {
+        $this->board->setWidth($_boardWidth);
+        $this->board->setHeight($_boardHeight);
+
+        $this->assertEquals($expected, $this->board->getCenter());
+    }
+
+    public function calculateCenterProvider()
+    {
+        return [
+            "10x15 Board, Center = 4|7" => [10, 15, ["x" => 4, "y" => 7]],
+            "23x48 Board, Center = 11|23" => [23, 48, ["x" => 11, "y" => 23]],
+            "1x7 Board, Center 0|3" => [1, 7, ["x" => 0, "y" => 3]]
+        ];
+    }
+
+
+    public function testCanBeConvertedToString()
+    {
+        $this->assertNotEmpty(@strval($this->board));
     }
 }
