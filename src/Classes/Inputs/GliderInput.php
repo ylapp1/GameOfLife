@@ -62,7 +62,7 @@ class GliderInput extends BaseInput
         if ($posX == null) $posX = $boardCenter["x"];
         else $posX -= 1;
 
-        if ($posY == null) $posY = $boardCenter["x"];
+        if ($posY == null) $posY = $boardCenter["y"];
         else $posY -= 1;
 
         // check whether the glider is inside board dimensions

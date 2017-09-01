@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output;
+namespace Output\Helpers;
 
 /**
  * Class ImageColor

@@ -10,6 +10,10 @@ namespace Output;
 
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Output\Helpers\ImageCreator;
+use Output\Helpers\ColorSelector;
+use Output\Helpers\ImageColor;
+use Output\Helpers\GIFEncoder;
 
 /**
  * Class GIFOutput

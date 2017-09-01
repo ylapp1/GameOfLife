@@ -10,6 +10,9 @@ namespace Output;
 
 use Ulrichsg\Getopt;
 Use GameOfLife\Board;
+use Output\Helpers\ImageCreator;
+use Output\Helpers\ColorSelector;
+use Output\Helpers\ImageColor;
 
 /**
  * Class PNGOutput

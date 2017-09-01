@@ -10,6 +10,10 @@ namespace Output;
 
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Output\Helpers\ImageCreator;
+use Output\Helpers\ColorSelector;
+use Output\Helpers\ImageColor;
+use Output\Helpers\FfmpegHelper;
 
 /**
  * Class VideoOutput
@@ -20,7 +24,7 @@ use GameOfLife\Board;
  */
 class VideoOutput
 {
-    private $fps = 1;
+    private $fps = 15;
     private $secondsPerFrame;
     private $tmpPaths = array(__DIR__ . "/../../../Output/tmp/Frames",
                               __DIR__ . "/../../../Output/tmp/Audio");

@@ -29,7 +29,7 @@
  *
  */
 
-namespace Output;
+namespace Output\Helpers;
 
 /**
  * Class GIFEncoder

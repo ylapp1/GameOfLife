@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output;
+namespace Output\Helpers;
 
 use GameOfLife\Board;
 
@@ -19,7 +19,7 @@ use GameOfLife\Board;
  */
 class ImageCreator
 {
-    private $basePath = __DIR__ . "/../../../Output/";
+    private $basePath = __DIR__ . "/../../../../Output/";
     private $backgroundColor;
     private $gridColor;
     private $cellAliveColor;
@@ -187,5 +187,6 @@ class ImageCreator
         $tmpDirectory = $this->basePath . "/tmp";
 
         if (count(glob($tmpDirectory . "/*")) === 0 && file_exists($this->basePath . "/tmp/")) rmdir($this->basePath . "/tmp/");
+        else echo "\nDetected files in the tmp directory, not deleting tmp...\n";
     }
 }
