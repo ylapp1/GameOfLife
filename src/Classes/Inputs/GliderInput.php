@@ -22,8 +22,13 @@ use Ulrichsg\Getopt;
  */
 class GliderInput extends BaseInput
 {
-    private $gliderWidth = 3;
-    private $gliderHeight = 3;
+    /**
+     * GliderInput constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct(3, 3);
+    }
 
     /**
      * Adds GliderInputs specific options to the option list
@@ -60,20 +65,18 @@ class GliderInput extends BaseInput
         else $posY -= 1;
 
         // check whether the glider is inside board dimensions
-        if ($posX < 0 ||
-            $posY < 0 ||
-            $posX + $this->gliderWidth > $_board->width() ||
-            $posY + $this->gliderHeight > $_board->height())
+        if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))
         {
             echo "Error: Glider exceeds field borders.";
-            return;
         }
-
-        // Set the cells
-        $_board->setField($posX + 1, $posY, true);
-        $_board->setField($posX + 2, $posY + 1, true);
-        $_board->setField($posX,$posY + 2, true);
-        $_board->setField($posX + 1, $posY + 2, true);
-        $_board->setField($posX + 2, $posY + 2, true);
+        else
+        {
+            // Set the cells
+            $_board->setField($posX + 1, $posY, true);
+            $_board->setField($posX + 2, $posY + 1, true);
+            $_board->setField($posX,$posY + 2, true);
+            $_board->setField($posX + 1, $posY + 2, true);
+            $_board->setField($posX + 2, $posY + 2, true);
+        }
     }
 }

@@ -22,8 +22,13 @@ use Ulrichsg\Getopt;
  */
 class BlinkerInput extends BaseInput
 {
-    private $blinkerWidth = 1;
-    private $blinkerHeight = 3;
+    /**
+     * BlinkerInput constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct(1, 3);
+    }
 
     /**
      * Adds BlinkeInputs specific options to the option list
@@ -59,18 +64,16 @@ class BlinkerInput extends BaseInput
         else $posY -= 1;
 
         // check whether the blinker is inside board dimensions
-        if ($posX < 0 ||
-            $posY < 0 ||
-            $posX + $this->blinkerWidth > $_board->width() ||
-            $posY + $this->blinkerHeight > $_board->height())
+        if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))
         {
             echo "Error: Blinker exceeds field borders.";
-            return;
         }
-
-        // Set the cells
-        $_board->setField($posX,$posY, true);
-        $_board->setField($posX,$posY + 1,true);
-        $_board->setField($posX,$posY + 2,true);
+        else
+        {
+            // Set the cells
+            $_board->setField($posX,$posY, true);
+            $_board->setField($posX,$posY + 1,true);
+            $_board->setField($posX,$posY + 2,true);
+        }
     }
 }
