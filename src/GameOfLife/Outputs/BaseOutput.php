@@ -15,6 +15,7 @@ use GameOfLife\Board;
  * Class BaseOutput
  *
  * @package Output
+ * @codeCoverageIgnore
  */
 class BaseOutput
 {
@@ -47,7 +48,7 @@ class BaseOutput
     }
 
     /**
-     * Finish output (write to file)
+     * Finish output (Display that simulation is finished, write files and delete temporary files)
      */
     public function finishOutput()
     {

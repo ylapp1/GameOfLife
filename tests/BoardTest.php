@@ -15,6 +15,8 @@ use Ulrichsg\Getopt;
 
 /**
  * Class BoardTest
+ *
+ * @covers \GameOfLife\Board
  */
 class BoardTest extends TestCase
 {
@@ -25,7 +27,7 @@ class BoardTest extends TestCase
     protected function setUp()
     {
         $rulesComway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rulesComway);
+        $this->board = new Board(20, 17, 250, false, $rulesComway);
     }
 
     protected function tearDown()
@@ -35,7 +37,88 @@ class BoardTest extends TestCase
 
 
     /**
+     * @covers \GameOfLife\Board::currentBoard()
+     * @covers \GameOfLife\Board::historyOfBoards()
+     * @covers \GameOfLife\Board::hasBorder()
+     * @covers \GameOfLife\Board::height()
+     * @covers \GameOfLife\Board::maxSteps()
+     * @covers \GameOfLife\Board::width()
+     * @covers \GameOfLife\Board::rules()
+     * @covers \GameOfLife\Board::gameStep()
+     */
+    public function testCanGetAttributes()
+    {
+        $rules = $this->board->rules();
+
+        $this->assertEquals(17, count($this->board->currentBoard()));
+        $this->assertEquals(0, count($this->board->historyOfBoards()));
+        $this->assertEquals(false, $this->board->hasBorder());
+        $this->assertEquals(17, $this->board->height());
+        $this->assertEquals(250, $this->board->maxSteps());
+        $this->assertEquals(20, $this->board->width());
+        $this->assertEquals(array(3), $rules->birth());
+        $this->assertEquals(array(0, 1, 4, 5, 6, 7, 8), $rules->death());
+        $this->assertEquals(0, $this->board->gameStep());
+    }
+
+
+    /**
+     * @dataProvider setAttributesProvider
+     * @covers \GameOfLife\Board::setCurrentBoard()
+     * @covers \GameOfLife\Board::setHistoryOfBoards()
+     * @covers \GameOfLife\Board::setHasBorder()
+     * @covers \GameOfLife\Board::setHeight()
+     * @covers \GameOfLife\Board::setMaxSteps()
+     * @covers \GameOfLife\Board::setWidth()
+     * @covers \GameOfLife\Board::setRules()
+     * @covers \GameOfLife\Board::setGameStep()
+     *
+     * @param array $_board             Current board
+     * @param array $_historyOfBoards   Array of the previous Boards
+     * @param bool $_hasBorder          Border type
+     * @param int $_height              Board height
+     * @param int $_maxSteps            Maximum amount of steps that are calculated
+     * @param int $_width               Board width
+     * @param RuleSet $_rules           Birth/Death rules
+     * @param int $_gameStep            Current game step
+     */
+    public function testCanSetAttributes($_board, $_historyOfBoards, $_hasBorder, $_height, $_maxSteps, $_width,
+                                         $_rules, $_gameStep)
+    {
+        $this->board->setCurrentBoard($_board);
+        $this->board->setHistoryOfBoards($_historyOfBoards);
+        $this->board->setHasBorder($_hasBorder);
+        $this->board->setHeight($_height);
+        $this->board->setMaxSteps($_maxSteps);
+        $this->board->setWidth($_width);
+        $this->board->setRules($_rules);
+        $this->board->setGameStep($_gameStep);
+
+        $this->assertEquals($_board, $this->board->currentBoard());
+        $this->assertEquals($_historyOfBoards, $this->board->historyOfBoards());
+        $this->assertEquals($_hasBorder, $this->board->hasBorder());
+        $this->assertEquals($_height, $this->board->height());
+        $this->assertEquals($_maxSteps, $this->board->maxSteps());
+        $this->assertEquals($_width, $this->board->width());
+        $this->assertEquals($_rules, $this->board->rules());
+        $this->assertEquals($_gameStep, $this->board->gameStep());
+    }
+
+    public function setAttributesProvider()
+    {
+        $emptyBoard = array(array());
+        $rules = new RuleSet(array(0), array(1));
+
+        return [
+            [$emptyBoard, [$emptyBoard], true, 20, 10, 30, $rules, 200],
+            [$emptyBoard, [$emptyBoard, $emptyBoard], false, 67, 13, 45, $rules, 384],
+            [$emptyBoard, [$emptyBoard, $emptyBoard, $emptyBoard], true, 256, 124, 6, $rules, 1789]
+        ];
+    }
+
+    /**
      * @dataProvider setFieldsProvider
+     * @covers \GameOfLife\Board::setField()
      *
      * @param int $_x    X-Coordinate of test field
      * @param int $_y    Y-Coordinate of test field
@@ -60,6 +143,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider readFieldsProvider
+     * @covers \GameOfLife\Board::getField()
      *
      * @param int $_x    X-Coordinate of test field
      * @param int $_y    Y-Coordinate of test field
@@ -85,6 +169,9 @@ class BoardTest extends TestCase
     }
 
 
+    /**
+     * @covers \GameOfLife\Board::initializeEmptyBoard()
+     */
     public function testCanInitializeEmptyBoard()
     {
         $emptyBoard = $this->board->initializeEmptyBoard();
@@ -103,6 +190,9 @@ class BoardTest extends TestCase
     }
 
 
+    /**
+     * @covers \GameOfLife\Board::addToHistoryOfBoards()
+     */
     public function testCanAddToHistoryOfBoards()
     {
         $emptyBoard = $this->board->initializeEmptyBoard();
@@ -128,6 +218,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider amountCellsAliveProvider
+     * @covers \GameOfLife\Board::getAmountCellsAlive()
      *
      * @param array(array) $_cells      Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_expected            Amount of set cells that are expected
@@ -152,6 +243,9 @@ class BoardTest extends TestCase
     }
 
 
+    /**
+     * @covers \GameOfLife\Board::isFinished()
+     */
     public function testDetectsFinish()
     {
         // check whether empty board is detected
@@ -162,14 +256,16 @@ class BoardTest extends TestCase
         $this->assertEquals(false, $this->board->isFinished());
 
         // check whether max step makes the board stop
-        $this->board->setGameStep(50);
+        $this->board->setGameStep(250);
         $this->assertEquals(true, $this->board->isFinished());
 
         // Check whether repeating pattern is detected
+        $this->board->setGameStep(0);
         $input = new BlinkerInput();
         $options = new Getopt();
         $input->fillBoard($this->board, $options);
 
+        $this->board->calculateStep();
         $this->board->calculateStep();
         $this->board->calculateStep();
 
@@ -178,6 +274,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider amountNeighboursAliveProvider
+     * @covers \GameOfLife\Board::calculateAmountNeighboursAlive()
      *
      * @param array(array) $_cells       Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_x                    X-Coordinate of inspected cell
@@ -206,6 +303,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider calculateNewCellStateProvider
+     * @covers \GameOfLife\Board::calculateNewCellState()
      *
      * @param bool $_currentCellState       Current cell state (dead = false; alive = true)
      * @param int $_amountNeighboursAlive   Amount of living neighbours (0 - 8)
@@ -233,6 +331,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider calculateCenterProvider
+     * @covers \GameOfLife\Board::getCenter()
      *
      * @param int $_boardWidth      Board width
      * @param int $_boardHeight     Board height
@@ -256,8 +355,11 @@ class BoardTest extends TestCase
     }
 
 
+    /**
+     * @covers \GameOfLife\Board::__tostring()
+     */
     public function testCanBeConvertedToString()
     {
-        $this->assertNotEmpty(@strval($this->board));
+        $this->assertNotEmpty(strval($this->board));
     }
 }

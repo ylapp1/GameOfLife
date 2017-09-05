@@ -58,7 +58,9 @@ class PNGOutputTest extends TestCase
             $this->deleteDir(__DIR__ . "/../../Output");
         }
 
+        $this->expectOutputString("Starting simulation ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
+
         $this->assertEquals(true, file_exists(__DIR__ . "/../../Output/PNG/Game_1"));
         $this->deleteDir(__DIR__ . "/../../Output");
     }
@@ -81,10 +83,12 @@ class PNGOutputTest extends TestCase
     public function testCanCreatePNG()
     {
         $this->deleteDir(__DIR__ . "/../../Output");
+
+        $this->expectOutputRegex("/.*Starting simulation ...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
         // Create pngs and check whether the files are created
-        for ($i = 0; $i < 30; $i++)
+        for ($i = 0; $i < 10; $i++)
         {
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();

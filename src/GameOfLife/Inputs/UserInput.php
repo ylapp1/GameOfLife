@@ -18,18 +18,70 @@ use GameOfLife\Board;
  */
 class UserInput extends BaseInput
 {
+    private $customTemplatesDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+
     /**
      * Adds UserInputs specific options to the option list
      *
      * @param Getopt $_options  Option list to which the objects options are added
      */
-    function addOptions($_options)
+    public function addOptions($_options)
     {
         $_options->addOptions(
             array(
                 array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template"))
         );
     }
+
+    /**
+     * Catches User Inputs
+     *
+     * @return string   User Input
+     */
+    public function catchUserInput()
+    {
+        $fileOpen = fopen('php://stdin','r') or die($php_errormsg);
+        $inputLine = fgets($fileOpen,1024);
+        fclose($fileOpen);
+
+        return rtrim($inputLine, "\n\r");
+    }
+
+    /**
+     * Saves current board to a custom template file
+     *
+     * @param string $_input    User input in the format "<save> <templateName>"
+     * @param Board $_board     Current board
+     * @return bool    error
+     */
+    public function saveCustomTemplate($_input, $_board)
+    {
+        $config = explode(" ", $_input);
+
+        if (count($config) == 2)
+        {
+            // Create directory if it doesn't exist
+            if (! file_exists($this->customTemplatesDirectory)) mkdir($this->customTemplatesDirectory, 0777);
+
+            $fileName = $config[1] . ".txt";
+
+            if (file_exists($this->customTemplatesDirectory . $fileName))
+            {
+                echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
+
+                $input = $this->catchUserInput();
+
+                if (strtolower($input) == "n" or strtolower($input) == "no") return true;
+            }
+
+            file_put_contents($this->customTemplatesDirectory . $fileName , $_board);
+
+            return false;
+
+        }
+        else return true;
+    }
+
 
     /**
      * Catches input from keyboard to create an own generation
@@ -39,7 +91,7 @@ class UserInput extends BaseInput
      * @param \GameOfLife\Board $_board
      * @param Getopt $_options
      */
-    function fillBoard($_board, $_options)
+    public function fillBoard($_board, $_options)
     {
         if ($_options->getOption("edit"))
         {
@@ -48,94 +100,55 @@ class UserInput extends BaseInput
             $this->printBoardEditor($_board);
         }
 
-        echo "Set the coordinates for the living fields as below:\n";
-        echo "<"."number>,<number".">\n<"."-number>,<-number".">\n";
-        echo "The stroke before the number sets a wrongly set field to false\n";
-        echo "and after that press <"."Enter>. The first number stands for X and the second number for Y\n";
+        echo "Set the coordinates for the living cells as below:\n";
+        echo "<"."X-Coordinate>,<Y-Coordinate".">\n";
+        echo "Enter the coordinates of a set field to unset it.\n";
         echo "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
         echo "You can save your board configuration before starting the simulation by typing \"save\"\n";
         echo "Let's Go:\n";
 
-        $fileOpen = fopen('php://stdin','r') or die($php_errormsg);
-        $lastLine = false;
-
         $inputX = null;
         $inputY = null;
+        $inputFinished = false;
 
-        while (! $lastLine) {
-            $nextLine = fgets($fileOpen,1024);
-            if (stristr($nextLine, "start"))
+        while (! $inputFinished)
+        {
+            $input = $this->catchUserInput();
+
+            if (stristr($input, "exit"))die();
+            elseif (stristr($input, "start")) $inputFinished = true;
+            elseif (stristr($input, "save"))
             {
-                $lastLine = true;
-            }
-            elseif (stristr($nextLine, "save"))
-            {
-                // fetch config name
-                $config = explode(" ", $nextLine);
+                $error = $this->saveCustomTemplate($input, $_board);
 
-                if (count($config) == 2)
-                {
-                    $config[1] = rtrim($config[1], "\n\r");
-
-                    $fileDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
-                    $fileName = $fileDirectory . $config[1] . ".txt";
-
-                    // Create directory if it doesn't exist
-                    if (! file_exists($fileDirectory)) mkdir($fileDirectory, 0777);
-
-                    file_put_contents($fileName, $_board);
-
-                    $lastLine = true;
-                }
-                else echo "Error: No filename specified!";
+                if ($error) echo "Error: No template name specified or saving aborted\n\n";
+                else echo 'Template successfully saved!' . "\n\n" . 'You can set/unset more cells or start the simulation by typing "start"' . "\n\n";
             }
             else
             {
-                if (stristr($nextLine, "exit")) die();
-                if (stristr($nextLine, ","))
+                if (stristr($input, ","))
                 {
-                    $inputSplits = explode(",", $nextLine);
+                    $inputSplits = explode(",", $input);
+
                     if (count($inputSplits) == 2)
                     {
-                        if (stristr($inputSplits[0], "-") && stristr($inputSplits[1], "-"))
+                        $inputX = (int)$inputSplits[0];
+                        $inputY = (int)$inputSplits[1];
+
+                        if ($inputX > $_board->width() - 1 ||
+                            $inputX < 0 ||
+                            $inputY > $_board->height() - 1 ||
+                            $inputY < 0)
                         {
-                            $trimX = trim($inputSplits[0], "-");
-                            $trimY = trim($inputSplits[1], "-");
-
-                            if ($trimX > $_board->width() - 1 || $trimY > $_board->height() - 1)
-                            {
-                                echo "The numbers may not exceed the field borders!";
-                            }
-                            else
-                            {
-                                $inputX = (int)$trimX;
-                                $inputY = (int)$trimY;
-
-                                $_board->setField($inputX, $inputY, false);
-                            }
+                            echo "The numbers may not exceed the field borders!";
                         }
                         else
                         {
-                            if ($inputSplits[0] > $_board->width() - 1 ||
-                                $inputSplits[0] < 0 ||
-                                $inputSplits[1] > $_board->height() - 1 ||
-                                $inputSplits[1] < 0)
-                            {
-                                echo "The numbers may not exceed the field borders!";
-                            }
-                            else
-                            {
-                                $inputX = (int)$inputSplits[0];
-                                $inputY = (int)$inputSplits[1];
-
-                                $_board->setField($inputX, $inputY, true);
-                            }
+                            $currentCellState = $_board->getField($inputX, $inputY);
+                            $_board->setField($inputX, $inputY, !$currentCellState);
                         }
                     }
-                    else
-                    {
-                        echo "Don't give me more than two numbers!";
-                    }
+                    else echo "Don't give me more than two numbers!";
                 }
                 $this->printBoardEditor($_board, $inputX, $inputY);
             }
