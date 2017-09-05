@@ -24,7 +24,7 @@ class BaseOutput
      *
      * @param Getopt $_options     Current option list
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
     }
 
@@ -34,7 +34,7 @@ class BaseOutput
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
      */
-    public function startOutput($_options, $_board)
+    public function startOutput(Getopt $_options, Board $_board)
     {
     }
 
@@ -43,7 +43,7 @@ class BaseOutput
      *
      * @param Board $_board     Current board
      */
-    public function outputBoard($_board)
+    public function outputBoard(Board $_board)
     {
     }
 

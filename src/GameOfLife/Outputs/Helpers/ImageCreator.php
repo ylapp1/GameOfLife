@@ -38,7 +38,8 @@ class ImageCreator
      * @param ImageColor $_gridColor        Grid color of the images
      * @param String $_gameFolder           The complete game folder path of a png output
      */
-    public function __construct($_boardHeight, $_boardWidth, $_cellSize, $_cellAliveColor, $_backgroundColor, $_gridColor, $_gameFolder = null)
+    public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
+                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_gameFolder = null)
     {
         // Create temporary directory if it doesn't exist
         //if (! file_exists($this->basePath . "tmp")) mkdir($this->basePath . "tmp");
@@ -73,29 +74,13 @@ class ImageCreator
         imagesetthickness($baseImage, 1);
         $this->baseImage = $baseImage;
 
-        $transparentColor = new ImageColor(0,0,0);
-
         $red = 0;
-        $green = 0;
-        $blue = 0;
-
-        while ($transparentColor == $this->backgroundColor || $transparentColor == $this->cellAliveColor)
+        while ($red == $this->backgroundColor->red() || $red == $this->cellAliveColor->red())
         {
-            if ($red < 255) $red++;
-            elseif ($green < 255)
-            {
-                $green++;
-                $red = 0;
-            }
-            elseif ($blue < 255)
-            {
-                $blue++;
-                $green = 0;
-                $red = 0;
-            }
-
-            $transparentColor = new ImageColor($red, $green, $blue);
+                $red++;
         }
+
+        $transparentColor = new ImageColor($red, 0, 0);
 
 
         $cellImage = imagecreatetruecolor($_cellSize, $_cellSize);

@@ -34,7 +34,7 @@ class GIFOutput extends BaseOutput
      *
      * @param Getopt $_options      The option list to which the options are added
      */
-    function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
             array(
@@ -51,7 +51,7 @@ class GIFOutput extends BaseOutput
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
      */
-    public function startOutput($_options, $_board)
+    public function startOutput(Getopt $_options, Board $_board)
     {
         echo "Starting GIF Output...\n";
 
@@ -85,7 +85,7 @@ class GIFOutput extends BaseOutput
      *
      * @param Board $_board
      */
-    function outputBoard($_board)
+    public function outputBoard(Board $_board)
     {
         $this->frames[] = $this->imageCreator->createImage($_board, "gif");
 
@@ -97,7 +97,7 @@ class GIFOutput extends BaseOutput
      * Uses GIFEncoder class
      *
      */
-    function finishOutput()
+    public function finishOutput()
     {
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting GIF creation. One moment please...";

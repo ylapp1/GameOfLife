@@ -38,11 +38,20 @@ class ConsoleOutputTest extends TestCase
     public function testCanOutputBoard()
     {
         $gameStepString = "Game step: 1";
+
+        $padding = ceil(($this->board->width() - strlen($gameStepString)) / 2) + 1;
+        $expectedPadding = "";
+
+        for ($i = 0; $i < $padding; $i++)
+        {
+            $expectedPadding .= " ";
+        }
+
         $board = "\n╔══╗" .
                  "\n║  ║" .
                  "\n║  ║" .
                  "\n╚══╝";
-        $outputString = "/.*" . $gameStepString . ".*" . $board . "/";
+        $outputString = "/" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
         $this->output->outputBoard($this->board);

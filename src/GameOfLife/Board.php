@@ -221,7 +221,7 @@ class Board
      *
      * @param bool[][] $_board
      */
-    public function addToHistoryOfBoards($_board)
+    public function addToHistoryOfBoards(array $_board)
     {
         $this->historyOfBoards[] = $_board;
 
@@ -254,7 +254,7 @@ class Board
      * @param int $_y   Y-Coordinate of the cell that is inspected
      * @return int      Amount of living neighbour cells
      */
-    public function calculateAmountNeighboursAlive($_x, $_y)
+    public function calculateAmountNeighboursAlive(int $_x, int $_y)
     {
         // find row above
         if ($_y - 1 < 0)
@@ -300,7 +300,10 @@ class Board
         {
             foreach ($columns as $x)
             {
-                if ($this->getField($x, $y)) $amountLivingNeighbours++;
+                if (isset($y) && isset($x))
+                {
+                    if ($this->getField($x, $y)) $amountLivingNeighbours++;
+                }
             }
         }
 
@@ -321,7 +324,7 @@ class Board
      * @param int $_amountNeighboursAlive   Amount of living neighbour cells
      * @return bool                         New Cell State
      */
-    public function calculateNewCellState($_currentCellState, $_amountNeighboursAlive)
+    public function calculateNewCellState(bool $_currentCellState, int $_amountNeighboursAlive)
     {
         $newCellState = $_currentCellState;
 
@@ -408,7 +411,7 @@ class Board
      *                                  true: alive
      *                                  false: dead
      */
-    public function setField ($_x, $_y, $_isAlive)
+    public function setField (int $_x, int $_y, bool $_isAlive)
     {
         if ($_isAlive) $this->currentBoard[$_y][$_x] = $_isAlive;
         else unset($this->currentBoard[$_y][$_x]);
@@ -422,7 +425,7 @@ class Board
      *
      * @return boolean
      */
-    public function getField ($_x, $_y)
+    public function getField (int $_x, int $_y)
     {
         return isset($this->currentBoard[$_y][$_x]);
     }
@@ -440,6 +443,12 @@ class Board
             $amountCellsAlive += array_sum($line);
         }
         return $amountCellsAlive;
+    }
+
+
+    public function getFillPercentage()
+    {
+        return (float)($this->getAmountCellsAlive()/($this->width * $this->height));
     }
 
     /**

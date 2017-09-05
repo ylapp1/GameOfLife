@@ -21,7 +21,7 @@ class ImageColor
     private $green;
     private $blue;
 
-    public function __construct($_red, $_green, $_blue)
+    public function __construct(int $_red, int $_green, int $_blue)
     {
         $this->red = $_red;
         $this->green = $_green;
@@ -39,7 +39,7 @@ class ImageColor
     /**
      * @param mixed $_red
      */
-    public function setRed($_red)
+    public function setRed(int $_red)
     {
         $this->red = $_red;
     }
@@ -55,7 +55,7 @@ class ImageColor
     /**
      * @param mixed $_green
      */
-    public function setGreen($_green)
+    public function setGreen(int $_green)
     {
         $this->green = $_green;
     }
@@ -71,13 +71,13 @@ class ImageColor
     /**
      * @param mixed $_blue
      */
-    public function setBlue($_blue)
+    public function setBlue(int $_blue)
     {
         $this->blue = $_blue;
     }
 
 
-    public function getColor($_image)
+    public function getColor(resource $_image)
     {
         return imagecolorallocate($_image, $this->red, $this->green, $this->blue);
     }

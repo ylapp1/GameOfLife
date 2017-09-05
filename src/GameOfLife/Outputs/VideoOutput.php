@@ -22,7 +22,7 @@ use Output\Helpers\FfmpegHelper;
  *
  * @package Output
  */
-class VideoOutput
+class VideoOutput extends BaseOutput
 {
     private $fps = 15;
     private $secondsPerFrame;
@@ -39,7 +39,7 @@ class VideoOutput
      *
      * @param Getopt $_options      The option list to which the options are added
      */
-    function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
             array(
@@ -56,7 +56,7 @@ class VideoOutput
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
      */
-    public function startOutput($_options, $_board)
+    public function startOutput(Getopt $_options, Board $_board)
     {
         echo "Starting video output ...\n";
 
@@ -95,10 +95,10 @@ class VideoOutput
      *
      * @param Board $_board
      */
-    function outputBoard($_board)
+    public function outputBoard(Board $_board)
     {
         $this->frames[] = $this->imageCreator->createImage($_board, "video");
-        $this->fillPercentages[] = floatval($_board->getAmountCellsAlive() /($_board->width() * $_board->height()));
+        $this->fillPercentages[] = $_board->getFillpercentage();
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
     }
@@ -108,7 +108,7 @@ class VideoOutput
      * Uses GIFEncoder class
      *
      */
-    function finishOutput()
+    public function finishOutput()
     {
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting video creation ...";

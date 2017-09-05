@@ -19,7 +19,7 @@ use Output\Helpers\ImageColor;
  *
  * @package Output
  */
-class PNGOutput
+class PNGOutput extends BaseOutput
 {
     private $gameFolderName;
     /** @var  ImageCreator $imageCreator */
@@ -29,7 +29,7 @@ class PNGOutput
      *
      * @param Getopt $_options     Current option list
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
             array(
@@ -45,7 +45,7 @@ class PNGOutput
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
      */
-    public function startOutput($_options, $_board)
+    public function startOutput(Getopt $_options, Board $_board)
     {
         $colorSelector = new ColorSelector();
 
@@ -96,7 +96,7 @@ class PNGOutput
      *
      * @param Board $_board     Current board
      */
-    public function outputBoard($_board)
+    public function outputBoard(Board $_board)
     {
         $this->imageCreator->createImage($_board, "png");
 

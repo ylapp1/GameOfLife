@@ -22,8 +22,9 @@ class ConsoleOutput extends BaseOutput
      * add output specific options to the option list
      *
      * @param Getopt $_options     Current option list
+     * @codeCoverageIgnore
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
     }
 
@@ -32,8 +33,9 @@ class ConsoleOutput extends BaseOutput
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
+     * @codeCoverageIgnore
      */
-    public function startOutput($_options, $_board)
+    public function startOutput(Getopt $_options, Board $_board)
     {
         echo "\nStarting the simulation ...\n";
     }
@@ -43,18 +45,15 @@ class ConsoleOutput extends BaseOutput
      *
      * @param Board $_board     Current board
      */
-    public function outputBoard($_board)
+    public function outputBoard(Board $_board)
     {
         echo "\n\n";
 
         $gameStepString = "Game step: " . ($_board->gameStep() + 1);
         $paddingLeft = ceil(($_board->width() - strlen($gameStepString)) / 2) + 1;
 
-        for ($i = 0; $i < $paddingLeft; $i++)
-        {
-            echo " ";
-        }
-        echo $gameStepString . "\n";
+        $padding = str_pad("", $paddingLeft);
+        echo $padding . $gameStepString . "\n";
 
         // output upper border
         echo "╔";
@@ -64,14 +63,7 @@ class ConsoleOutput extends BaseOutput
         }
         echo "╗";
 
-        /*echo "\n║Game Step: ";
-        echo "\n╠";
-        for ($x = 0; $x < $_board->width(); $x++)
-        {
-            echo "═";
-        }
-        echo "╣";*/
-
+        // output board
         for ($y = 0; $y < $_board->height(); $y++)
         {
             echo "\n║";
@@ -83,7 +75,7 @@ class ConsoleOutput extends BaseOutput
             echo "║";
         }
 
-        // Output bottom border
+        // output bottom border
         echo "\n╚";
         for ($x = 0; $x < $_board->width(); $x++)
         {
@@ -97,6 +89,7 @@ class ConsoleOutput extends BaseOutput
 
     /**
      * Finish output (write to file)
+     * @codeCoverageIgnore
      */
     public function finishOutput()
     {

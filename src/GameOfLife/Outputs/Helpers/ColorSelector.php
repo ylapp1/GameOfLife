@@ -24,7 +24,7 @@ class ColorSelector
      *
      * @return ImageColor           Color
      */
-    public function getColor ($_colorInput)
+    public function getColor (string $_colorInput)
     {
         // if color input is a "R,G,B" string
         if (stristr($_colorInput, ",") != false)

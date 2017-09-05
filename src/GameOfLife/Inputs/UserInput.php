@@ -101,7 +101,7 @@ class UserInput extends BaseInput
         }
 
         echo "Set the coordinates for the living cells as below:\n";
-        echo "<"."X-Coordinate>,<Y-Coordinate".">\n";
+        echo "<X-Coordinate" . ">,<Y-Coordinate" . ">\n";
         echo "Enter the coordinates of a set field to unset it.\n";
         echo "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
         echo "You can save your board configuration before starting the simulation by typing \"save\"\n";
@@ -140,17 +140,23 @@ class UserInput extends BaseInput
                             $inputY > $_board->height() - 1 ||
                             $inputY < 0)
                         {
-                            echo "The numbers may not exceed the field borders!";
+                            echo "Error: The values may not exceed the field borders!\n";
+                        }
+                        elseif (! isset($inputX) || ! isset($inputY))
+                        {
+                            echo "Error: No value set for x or y\n";
                         }
                         else
                         {
                             $currentCellState = $_board->getField($inputX, $inputY);
                             $_board->setField($inputX, $inputY, !$currentCellState);
+
+                            $this->printBoardEditor($_board, $inputX, $inputY);
                         }
                     }
-                    else echo "Don't give me more than two numbers!";
+                    else echo "Error: Don't input more than two values!\n";
                 }
-                $this->printBoardEditor($_board, $inputX, $inputY);
+                else echo "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n";
             }
         }
     }
@@ -167,28 +173,12 @@ class UserInput extends BaseInput
         if ($_curX != null && $_curY != null) $isHighLight = true;
         else $isHighLight = false;
 
-
-        if ($isHighLight)
-        {
-            // Output last set cell x-coordinate
-            echo "\n  ";
-            for ($i = 0; $i < $_board->width() + 2; $i++)
-            {
-                if ($i == $_curX) echo $_curX;
-                else echo " ";
-            }
-        }
-
+        // Output last set cell x-coordinate
+        if ($isHighLight) echo "\n  " . str_pad("", $_curX, " ") . $_curX;
 
         // print upper border
-        echo "\n ";
-        for ($i = 0; $i < $_board->width(); $i++)
-        {
-            echo "-";
-        }
-
+        echo "\n " . str_pad("", $_board->width(), "-");
         if ($isHighLight) echo "--";
-
 
         // print board
         for ($y = 0; $y < $_board->height(); $y++)
@@ -198,13 +188,8 @@ class UserInput extends BaseInput
             // Output lines above and below the last set cell
             if (($y == $_curY || $y == $_curY + 1) && $isHighLight)
             {
-                for ($i = 0; $i < $_board->width() + 2; $i++)
-                {
-                    echo "-";
-                }
-                echo "|\n|";
+                echo str_pad("", $_board->width() + 2, "-") . "|\n|";
             }
-
 
             // Output cells
             for ($x = 0; $x < $_board->width(); $x++)
@@ -230,13 +215,8 @@ class UserInput extends BaseInput
             if ($y == $_curY) echo $_curY;
         }
 
-
         // Output bottom border
-        echo "\n ";
-        for ($i = 0; $i < $_board->width(); $i++)
-        {
-            echo "-";
-        }
+        echo "\n " . str_pad("", $_board->width(), "-");
 
         if ($isHighLight) echo "--";
         echo "\n";

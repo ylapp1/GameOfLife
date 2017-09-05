@@ -21,13 +21,13 @@ class FfmpegHelper
     private $options = array();
     private $outputPath;
 
-    public function __construct($_binaryPath)
+    public function __construct(string $_binaryPath)
     {
         $this->binaryPath = $_binaryPath;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function binaryPath()
     {
@@ -35,15 +35,15 @@ class FfmpegHelper
     }
 
     /**
-     * @param mixed $_binaryPath
+     * @param string $_binaryPath
      */
-    public function setBinaryPath($_binaryPath)
+    public function setBinaryPath(string $_binaryPath)
     {
         $this->binaryPath = $_binaryPath;
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function options()
     {
@@ -51,15 +51,15 @@ class FfmpegHelper
     }
 
     /**
-     * @param mixed $_options
+     * @param array $_options
      */
-    public function setOptions($_options)
+    public function setOptions(array $_options)
     {
         $this->options = $_options;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function outputPath()
     {
@@ -67,15 +67,15 @@ class FfmpegHelper
     }
 
     /**
-     * @param mixed $_outputPath
+     * @param string $_outputPath
      */
-    public function setOutputPath($_outputPath)
+    public function setOutputPath(string $_outputPath)
     {
         $this->outputPath = $_outputPath;
     }
 
 
-    public function addOption($_option)
+    public function addOption(string $_option)
     {
         $this->options[] = $_option;
     }
@@ -85,7 +85,7 @@ class FfmpegHelper
         $this->options = array();
     }
 
-    public function executeCommand($outputPath)
+    public function executeCommand(string $outputPath)
     {
         // generate command
         $command = "\"" . $this->binaryPath . "\"";
