@@ -14,8 +14,52 @@ use Input\BaseInput;
  */
 class BaseInputTest extends TestCase
 {
+    /** @var BaseInput */
+    private $input;
+
+    protected function setUp()
+    {
+        $this->input = new BaseInput();
+    }
+
+    protected function tearDown()
+    {
+        unset($this->input);
+    }
+
+
+    /**
+     * @dataProvider setAttributesProvider
+     * @covers \Input\BaseInput::setObjectWidth
+     * @covers \Input\BaseInput::objectWidth
+     * @covers \Input\BaseInput::setObjectHeight
+     * @covers \Input\BaseInput::objectHeight
+     *
+     * @param int $_objectWidth     Object Width
+     * @param int $_objectHeight    Object Height
+     */
+    public function testCanSetAttributes($_objectWidth, $_objectHeight)
+    {
+        $this->input->setObjectWidth($_objectWidth);
+        $this->assertEquals($_objectWidth, $this->input->objectWidth());
+
+        $this->input->setObjectHeight($_objectHeight);
+        $this->assertEquals($_objectHeight, $this->input->objectHeight());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            [10, 12],
+            [15, 275],
+            [203, 846]
+        ];
+    }
+
+
     /**
      * @dataProvider objectOutOfBoundsProvider
+     * @covers \Input\BaseInput::isObjectOutOfBounds
      *
      * @param int $_objectPosX      X-Coordinate of top left corner of the object
      * @param int $_objectPosY      Y-Coordinate of top left corner of the object
@@ -23,15 +67,15 @@ class BaseInputTest extends TestCase
      * @param int $_objectHeight    Object height
      * @param int $_boardWidth      Board width
      * @param int $_boardHeight     Board height
-     * @param bool $expected        Expected result
+     * @param bool $_expected       Expected result
      */
-    public function testDetectsObjectOutOfBounds($_objectPosX, $_objectPosY, $_objectWidth, $_objectHeight, $_boardWidth, $_boardHeight, $expected)
+    public function testDetectsObjectOutOfBounds($_objectPosX, $_objectPosY, $_objectWidth, $_objectHeight, $_boardWidth, $_boardHeight, $_expected)
     {
         $input = new BaseInput();
         $input->setObjectWidth($_objectWidth);
         $input->setObjectHeight($_objectHeight);
 
-        $this->assertEquals($expected, $input->isObjectOutOfBounds($_boardWidth, $_boardHeight, $_objectPosX, $_objectPosY));
+        $this->assertEquals($_expected, $input->isObjectOutOfBounds($_boardWidth, $_boardHeight, $_objectPosX, $_objectPosY));
     }
 
     public function objectOutOfBoundsProvider()

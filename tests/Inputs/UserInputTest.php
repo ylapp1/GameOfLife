@@ -50,12 +50,24 @@ class UserInputTest extends TestCase
     public function testCanOutputBoard()
     {
         $expectedString= "\n" .
-                          " --\n" .
-                          "|o |\n" .
-                          "|  |\n" .
-                          " --\n";
+                         " --\n" .
+                         "|o |\n" .
+                         "|  |\n" .
+                         " --\n";
 
         $this->expectOutputString($expectedString);
         $this->input->printBoardEditor($this->board);
+
+
+        $expectedString .= "\n" .
+                           " 0\n" .
+                           " ---\n" .
+                           "|X| |0\n" .
+                           "|---|\n" .
+                           "| | |\n" .
+                           " ---\n";
+
+        $this->expectOutputString($expectedString);
+        $this->input->printBoardEditor($this->board, 0, 0);
     }
 }

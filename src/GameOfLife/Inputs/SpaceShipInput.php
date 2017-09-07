@@ -58,10 +58,10 @@ class SpaceShipInput extends BaseInput
         $boardCenter = $_board->getCenter();
 
         // Use default values if options not set
-        if ($posX == null) $posX = $boardCenter["x"];
+        if (! isset($posX)) $posX = $boardCenter["x"];
         else $posX -= 1;
 
-        if ($posY == null) $posY = $boardCenter["y"];
+        if (! isset($posY)) $posY = $boardCenter["y"];
         else $posY -= 1;
 
         // check whether the spaceship is inside board dimensions

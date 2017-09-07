@@ -9,6 +9,7 @@
 use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Ulrichsg\Getopt;
 use Output\ConsoleOutput;
 
 /**
@@ -35,6 +36,19 @@ class ConsoleOutputTest extends TestCase
         unset($this->board);
     }
 
+
+    /**
+     * @covers \Output\ConsoleOutput::startOutput()
+     */
+    public function testCanStartOutput()
+    {
+        $this->expectOutputString("\nStarting the simulation ...\n");
+        $this->output->startOutput(new Getopt(),$this->board);
+    }
+
+    /**
+     * @covers \Output\ConsoleOutput::outputBoard()
+     */
     public function testCanOutputBoard()
     {
         $gameStepString = "Game step: 1";
@@ -55,5 +69,14 @@ class ConsoleOutputTest extends TestCase
 
         $this->expectOutputRegex($outputString);
         $this->output->outputBoard($this->board);
+    }
+
+    /**
+     * @covers \Output\ConsoleOutput::finishOutput()
+     */
+    public function testCanFinishOutput()
+    {
+        $this->expectOutputString("\nSimulation finished. All cells are dead or a repeating pattern was detected.\n\n");
+        $this->output->finishOutput();
     }
 }

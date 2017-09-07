@@ -41,10 +41,10 @@ class RandomInput extends BaseInput
         $fillPercent = $_options->getOption("fillPercent");
 
         // fill with default value if option is not set
-        if ($fillPercent == null) $fillPercent = rand(15, 70);
+        if (! isset($fillPercent)) $fillPercent = rand(15, 70);
         elseif ($fillPercent > 100)
         {
-            echo "Error: There can't be more living cells than 100% of the boards fields.\n";
+            echo "Error: There can't be more living cells than 100% of the fields.\n";
             return;
         }
 

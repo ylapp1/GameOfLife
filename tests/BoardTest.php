@@ -335,14 +335,14 @@ class BoardTest extends TestCase
      *
      * @param int $_boardWidth      Board width
      * @param int $_boardHeight     Board height
-     * @param array $expected       Coordinates of the center
+     * @param array $_expected       Coordinates of the center
      */
-    public function testCanCalculateCenter($_boardWidth, $_boardHeight, $expected)
+    public function testCanCalculateCenter($_boardWidth, $_boardHeight, $_expected)
     {
         $this->board->setWidth($_boardWidth);
         $this->board->setHeight($_boardHeight);
 
-        $this->assertEquals($expected, $this->board->getCenter());
+        $this->assertEquals($_expected, $this->board->getCenter());
     }
 
     public function calculateCenterProvider()
@@ -361,5 +361,34 @@ class BoardTest extends TestCase
     public function testCanBeConvertedToString()
     {
         $this->assertNotEmpty(strval($this->board));
+    }
+
+
+    /**
+     * @dataProvider calculateFillPercentProvider
+     *
+     * @param array $_cells     Cells that will be set to true
+     * @param float $_expected  Expected fill percentage
+     */
+    public function testCanCalculateFillPercent(array $_cells, float $_expected)
+    {
+        $this->board->setWidth(5);
+        $this->board->setHeight(10);
+
+        foreach ($_cells as $cell)
+        {
+            $this->board->setField($cell[0],$cell[1], true);
+        }
+
+        $this->assertEquals($_expected, $this->board->getFillPercentage());
+    }
+
+    public function calculateFillPercentProvider()
+    {
+        return [
+            "5 of 50 cells" => [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], 0.1],
+            "7 of 50 cells" => [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [1, 0], [1, 1]], 0.14],
+            "9 of 50 cells" => [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [1,0], [1, 1], [1, 2], [1, 3]], 0.18]
+        ];
     }
 }

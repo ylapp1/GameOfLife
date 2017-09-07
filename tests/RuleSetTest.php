@@ -29,19 +29,21 @@ class RuleSetTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\RuleSet::birth()
-     * @covers \GameOfLife\RuleSet::death()
+     * @covers \GameOfLife\RuleSet::__construct()
      */
-    public function testCanGetAttributes()
+    public function testCanBeConstructed()
     {
-        $this->assertEquals(array(1), $this->ruleSet->birth());
-        $this->assertEquals(array(2), $this->ruleSet->death());
+        $ruleSet = new RuleSet(array(0), array(0, 1));
+        $this->assertEquals(array(0), $ruleSet->birth());
+        $this->assertEquals(array(0, 1), $ruleSet->death());
     }
 
     /**
-     * @covers \GameOfLife\RuleSet::setBirth()
-     * @covers \GameOfLife\RuleSet::setDeath()
      * @dataProvider setAttributesProvider
+     * @covers \GameOfLife\RuleSet::setBirth()
+     * @covers \GameOfLife\RuleSet::birth()
+     * @covers \GameOfLife\RuleSet::setDeath()
+     * @covers \GameOfLife\RuleSet::death()
      *
      * @param array $_rulesBirth    Birth rules
      * @param array $_rulesDeath    Death rules

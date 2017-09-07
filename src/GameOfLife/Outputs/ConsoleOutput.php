@@ -33,7 +33,6 @@ class ConsoleOutput extends BaseOutput
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
-     * @codeCoverageIgnore
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -89,7 +88,6 @@ class ConsoleOutput extends BaseOutput
 
     /**
      * Finish output (write to file)
-     * @codeCoverageIgnore
      */
     public function finishOutput()
     {

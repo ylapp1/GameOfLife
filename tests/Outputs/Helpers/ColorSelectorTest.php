@@ -16,8 +16,8 @@ use PHPUnit\Framework\TestCase;
 class ColorSelectorTest extends TestCase
 {
     /**
-     * @covers \Output\Helpers\ColorSelector::getColor()
      * @dataProvider parseColorsProvider
+     * @covers \Output\Helpers\ColorSelector::getColor()
      *
      * @param string $_input        User input string
      * @param int $_expectedRed     Expected red

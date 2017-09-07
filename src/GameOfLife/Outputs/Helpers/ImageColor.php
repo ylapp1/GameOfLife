@@ -29,7 +29,7 @@ class ImageColor
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function red()
     {
@@ -37,7 +37,7 @@ class ImageColor
     }
 
     /**
-     * @param mixed $_red
+     * @param int $_red
      */
     public function setRed(int $_red)
     {
@@ -45,7 +45,7 @@ class ImageColor
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function green()
     {
@@ -53,7 +53,7 @@ class ImageColor
     }
 
     /**
-     * @param mixed $_green
+     * @param int $_green
      */
     public function setGreen(int $_green)
     {
@@ -61,7 +61,7 @@ class ImageColor
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function blue()
     {
@@ -69,15 +69,20 @@ class ImageColor
     }
 
     /**
-     * @param mixed $_blue
+     * @param int $_blue
      */
     public function setBlue(int $_blue)
     {
         $this->blue = $_blue;
     }
 
-
-    public function getColor(resource $_image)
+    /**
+     * Returns a color that can be used only on a specific image
+     *
+     * @param resource $_image
+     * @return int
+     */
+    public function getColor($_image)
     {
         return imagecolorallocate($_image, $this->red, $this->green, $this->blue);
     }
