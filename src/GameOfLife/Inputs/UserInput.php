@@ -8,8 +8,10 @@
 
 namespace Input;
 
+use phpDocumentor\Reflection\File;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use GameOfLife\FileSystemHandler;
 
 /**
  * Class UserInput
@@ -56,28 +58,28 @@ class UserInput extends BaseInput
      */
     public function saveCustomTemplate($_input, $_board)
     {
+        $fileSystemHandler = new FileSystemHandler();
         $config = explode(" ", $_input);
 
         if (count($config) == 2)
         {
-            // Create directory if it doesn't exist
-            if (! file_exists($this->customTemplatesDirectory)) mkdir($this->customTemplatesDirectory, 0777);
-
+            $fileSystemHandler->createDirectory($this->customTemplatesDirectory);
             $fileName = $config[1] . ".txt";
 
-            if (file_exists($this->customTemplatesDirectory . $fileName))
+            $success = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
+
+            if ($success !== true)
             {
                 echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
-
                 $input = $this->catchUserInput();
-
-                if (strtolower($input) == "n" or strtolower($input) == "no") return true;
+                if (strtolower($input) == "y" or strtolower($input) == "yes")
+                {
+                    $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board, true);
+                    return false;
+                }
+                else return true;
             }
-
-            file_put_contents($this->customTemplatesDirectory . $fileName , $_board);
-
-            return false;
-
+            else return false;
         }
         else return true;
     }
@@ -170,15 +172,22 @@ class UserInput extends BaseInput
      */
     public function printBoardEditor($_board, $_curX = null, $_curY = null)
     {
-        if ($_curX != null && $_curY != null) $isHighLight = true;
+        $bonusDashes = 0;
+
+        if (isset($_curX) && isset($_curY))
+        {
+            $isHighLight = true;
+
+            if ($_curY == 0) $bonusDashes = 1;
+            else $bonusDashes = 2;
+        }
         else $isHighLight = false;
 
         // Output last set cell x-coordinate
-        if ($isHighLight) echo "\n  " . str_pad("", $_curX, " ") . $_curX;
+        if ($isHighLight) echo "\n " . str_pad("", $_curX, " ") . $_curX;
 
         // print upper border
-        echo "\n " . str_pad("", $_board->width(), "-");
-        if ($isHighLight) echo "--";
+        echo "\n " . str_pad("", $_board->width() + $bonusDashes, "-");
 
         // print board
         for ($y = 0; $y < $_board->height(); $y++)
@@ -186,18 +195,21 @@ class UserInput extends BaseInput
             echo "\n|";
 
             // Output lines above and below the last set cell
-            if (($y == $_curY || $y == $_curY + 1) && $isHighLight)
+            if ($isHighLight && $y != 0)
             {
-                echo str_pad("", $_board->width() + 2, "-") . "|\n|";
+                if ($y == $_curY || $y == $_curY + 1)
+                {
+                    echo str_pad("", $_board->width() + $bonusDashes, "-") . "|\n|";
+                }
             }
 
             // Output cells
             for ($x = 0; $x < $_board->width(); $x++)
             {
-                // Output lines left and right from the last set cell
-                if (($x == $_curX || $x == $_curX + 1) && $isHighLight)
+                // Output lines left and right from the last set cel
+                if ($isHighLight && $x != 0)
                 {
-                    echo "|";
+                    if ($x == $_curX || $x == $_curX + 1) echo "|";
                 }
 
                 // Output the cells
@@ -216,9 +228,6 @@ class UserInput extends BaseInput
         }
 
         // Output bottom border
-        echo "\n " . str_pad("", $_board->width(), "-");
-
-        if ($isHighLight) echo "--";
-        echo "\n";
+        echo "\n " . str_pad("", $_board->width() + $bonusDashes, "-") . "\n";
     }
 }

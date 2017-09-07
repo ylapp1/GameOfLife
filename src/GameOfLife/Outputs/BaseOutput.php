@@ -19,6 +19,8 @@ use GameOfLife\Board;
  */
 class BaseOutput
 {
+    protected $outputDirectory = __DIR__ . "/../../../Output/";
+
     /**
      * add output specific options to the option list
      *

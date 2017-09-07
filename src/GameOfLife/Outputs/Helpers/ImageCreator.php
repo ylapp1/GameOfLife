@@ -41,9 +41,6 @@ class ImageCreator
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
                                 ImageColor $_backgroundColor, ImageColor $_gridColor, string $_gameFolder = null)
     {
-        // Create temporary directory if it doesn't exist
-        //if (! file_exists($this->basePath . "tmp")) mkdir($this->basePath . "tmp");
-
         // Create a base image (empty grid) on which all the other images will be based
         $this->cellSize = $_cellSize;
         $this->gameFolder = $_gameFolder;
@@ -160,21 +157,5 @@ class ImageCreator
         imagedestroy($image);
 
         return $filePath;
-    }
-
-    /**
-     * Class destructor
-     *
-     * Deletes remaining tmp files
-     */
-    public function __destruct()
-    {
-        $tmpDirectory = $this->basePath . "/tmp";
-
-        if (count(glob($tmpDirectory . "/*")) === 0 &&
-            file_exists($this->basePath . "/tmp/"))
-        {
-            rmdir($this->basePath . "/tmp/");
-        }
     }
 }

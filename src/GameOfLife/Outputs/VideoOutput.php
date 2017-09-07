@@ -8,6 +8,7 @@
 
 namespace Output;
 
+use GameOfLife\FileSystemHandler;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use Output\Helpers\ImageCreator;
@@ -26,13 +27,12 @@ class VideoOutput extends BaseOutput
 {
     private $fps = 15;
     private $secondsPerFrame;
-    private $tmpPaths = array(__DIR__ . "/../../../Output/tmp/Frames",
-                              __DIR__ . "/../../../Output/tmp/Audio");
-    private $outputPath = __DIR__ . "/../../../Output/Video/";
     private $frames = array();
     /** @var ImageCreator $imageCreator */
     private $imageCreator;
     private $fillPercentages = array();
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
 
     /**
      * Adds VideoOutputs specific option to an option list
@@ -61,6 +61,7 @@ class VideoOutput extends BaseOutput
         echo "Starting video output ...\n";
 
         $colorSelector = new ColorSelector();
+        $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
         if ($_options->getOption("videoOutputSize")) $cellSize = intval($_options->getOption("videoOutputSize"));
@@ -80,11 +81,10 @@ class VideoOutput extends BaseOutput
 
         if ($_options->getOption("videoOutputFPS")) $this->fps = intval($_options->getOption("videoOutputFPS"));
 
-        foreach ($this->tmpPaths as $tmpPath)
-        {
-            if (! file_exists($tmpPath)) mkdir($tmpPath, 0777, true);
-        }
-        if (! file_exists($this->outputPath)) mkdir($this->outputPath, 0777, true);
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "Video");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
+
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
 
         $this->secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
@@ -169,27 +169,8 @@ class VideoOutput extends BaseOutput
         // Save video in output folder
         $ffmpegHelper->executeCommand("\"Output\\Video\\" . $fileName . "\"");
 
-
-        // Delete all frames
-        foreach ($this->frames as $frame)
-        {
-            unlink($frame);
-        }
-        // Delete all audio files
-        foreach ($audioFiles as $audioFile)
-        {
-            unlink($audioFile);
-        }
-        // Delete other temporary files created by VideoOutput
-        unlink("Output/tmp/Audio/list.txt");
-
-        // Delete directories
-        foreach ($this->tmpPaths as $tmpPath)
-        {
-           rmdir($tmpPath);
-        }
-
         unset($this->imageCreator);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
 
         echo "\nVideo creation complete!\n\n";
     }

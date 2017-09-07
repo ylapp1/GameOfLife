@@ -8,6 +8,7 @@
 
 namespace Output;
 
+use GameOfLife\FileSystemHandler;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use Output\Helpers\ImageCreator;
@@ -23,11 +24,11 @@ use Output\Helpers\GIFEncoder;
 class GIFOutput extends BaseOutput
 {
     private $frameTime = 20;
-    private $tmpPath = __DIR__ . "/../../../Output/tmp/Frames";
-    private $outputPath = __DIR__ . "/../../../Output/Gif/";
     private $frames = array();
     /** @var ImageCreator $imageCreator */
     private $imageCreator;
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
 
     /**
      * Adds GIFOutputs specific option to an option list
@@ -56,6 +57,7 @@ class GIFOutput extends BaseOutput
         echo "Starting GIF Output...\n";
 
         $colorSelector = new ColorSelector();
+        $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
         if ($_options->getOption("gifOutputSize")) $cellSize = intval($_options->getOption("gifOutputSize"));
@@ -75,8 +77,9 @@ class GIFOutput extends BaseOutput
 
         if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
 
-        if (! file_exists($this->tmpPath)) mkdir($this->tmpPath, 0777, true);
-        if (! file_exists($this->outputPath)) mkdir($this->outputPath, 0777, true);
+
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "Gif");
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
     }
 
@@ -116,23 +119,16 @@ class GIFOutput extends BaseOutput
         do
         {
             $fileNameCount++;
-        } while (file_exists($this->outputPath . "Gif_$fileNameCount.gif"));
+        } while (file_exists($this->outputDirectory . "Gif/Gif_" . $fileNameCount . ".gif"));
 
-        if (fwrite(fopen($this->outputPath . "Gif_$fileNameCount.gif", "wb"), $gif->GetAnimation()) == false)
+        if (fwrite(fopen($this->outputDirectory . "Gif/Gif_" . $fileNameCount . ".gif", "wb"), $gif->GetAnimation()) == false)
         {
             echo "An error occurred during the gif creation. Stopping...";
             die();
         };
 
-        // Delete all frames
-        foreach ($this->frames as $frame)
-        {
-            unlink($frame);
-        }
-        // Delete frames directory
-        rmdir($this->tmpPath);
-
         unset($this->imageCreator);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
 
         echo "\nGIF creation complete.";
     }

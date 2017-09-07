@@ -10,6 +10,7 @@ namespace Input;
 
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use GameOfLife\FileSystemHandler;
 
 /**
  * Class FileInput
@@ -83,7 +84,7 @@ class FileInput extends BaseInput
         $template = $_options->getOption("template");
 
         // return error if template name is not set
-        if ($template == null) echo "Error: No template file specified\n";
+        if (! isset($template)) echo "Error: No template file specified\n";
         else
         {
             $board = $this->loadTemplate($template);
@@ -105,7 +106,7 @@ class FileInput extends BaseInput
      */
     public function loadTemplate($_template)
     {
-        $fileNameOfficial =  $this->templateDirectory . $_template . ".txt";
+        $fileNameOfficial =  $this->templateDirectory . "/" . $_template . ".txt";
         $fileNameCustom = $this->templateDirectory . "/Custom/" . $_template . ".txt";
 
         // check whether template exists
@@ -118,7 +119,8 @@ class FileInput extends BaseInput
         }
 
         // Read template
-        $lines = file($fileName, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $fileSystemHandler = new FileSystemHandler();
+        $lines = $fileSystemHandler->readFile($fileName);
 
         $board = array();
 

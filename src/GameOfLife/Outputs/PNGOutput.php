@@ -8,11 +8,13 @@
 
 namespace Output;
 
+use GameOfLife\FileSystemHandler;
 use Ulrichsg\Getopt;
 Use GameOfLife\Board;
 use Output\Helpers\ImageCreator;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageColor;
+
 
 /**
  * Class PNGOutput
@@ -24,6 +26,8 @@ class PNGOutput extends BaseOutput
     private $gameFolderName;
     /** @var  ImageCreator $imageCreator */
     private $imageCreator;
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
     /**
      * add output specific options to the option list
      *
@@ -40,7 +44,7 @@ class PNGOutput extends BaseOutput
     }
 
     /**
-     * Start output
+     * Fetches the options and creates the necessary directories if they do not exist yet
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -48,6 +52,7 @@ class PNGOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         $colorSelector = new ColorSelector();
+        $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
         if ($_options->getOption("pngOutputSize")) $cellSize = intval($_options->getOption("pngOutputSize"));
@@ -83,7 +88,7 @@ class PNGOutput extends BaseOutput
 
         // Create new folder for current game
         $this->gameFolderName = "Game_" . ($lastGameId + 1);
-        mkdir(__DIR__ . "/../../../Output/PNG/" . $this->gameFolderName, 0777, true);
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "PNG/" . $this->gameFolderName);
 
         // initialize ImageCreator for this PNGOutput
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/PNG/" . $this->gameFolderName);
