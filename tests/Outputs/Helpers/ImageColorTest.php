@@ -76,4 +76,33 @@ class ImageColorTest extends TestCase
             [70, 80, 90]
         ];
     }
+
+
+    /**
+     * @dataProvider returnColorProvider
+     *
+     * @param int $_red
+     * @param int $_green
+     * @param int $_blue
+     */
+    public function testCanReturnColor(int $_red, int $_green, int $_blue)
+    {
+        $color = new ImageColor($_red, $_green, $_blue);
+        // same image twice, so the functions won't effect each others image
+        $testImageOne = imagecreate(1, 1);
+        $testImageTwo = imagecreate(1, 1);
+
+        $this->assertEquals(imagecolorallocate($testImageOne, $_red, $_green, $_blue), $color->getColor($testImageTwo));
+    }
+
+    public function returnColorProvider()
+    {
+        return [
+            [255, 0, 0],
+            [234, 23, 54],
+            [123, 123, 123],
+            [43, 65, 87],
+            [100, 200, 255]
+        ];
+    }
 }
