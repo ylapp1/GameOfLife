@@ -72,14 +72,85 @@ class ImageCreatorTest extends TestCase
     }
 
 
+    /**
+     * @covers \Output\Helpers\ImageCreator::__construct
+     */
     public function testCanBeConstructed()
     {
         $colorBlack = new ImageColor(0, 0, 0);
         $colorWhite = new ImageColor(255, 255, 255);
 
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
-            $colorWhite, $colorBlack, "tmp/Frames");
+                                         $colorWhite, $colorBlack, "tmp/Frames");
 
-        $this->assertEquals(__DIR__ . "/../../../../Output/", $imageCreator->basePath());
+        $this->assertEquals('D:\www\5.GameOfLife\GameOfLife\src\GameOfLife\Outputs\Helpers/../../../../Output/', $imageCreator->basePath());
+        $this->assertEquals(15, $imageCreator->cellSize());
+        $this->assertEquals($colorWhite, $imageCreator->backgroundColor());
+        $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
+        $this->assertEquals($colorBlack, $imageCreator->gridColor());
+        $this->assertEquals("tmp/Frames", $imageCreator->gameFolder());
+        $this->assertEquals(true, is_resource($imageCreator->baseImage()));
+        $this->assertEquals(true, is_resource($imageCreator->cellImage()));
+    }
+
+    /**
+     * @dataProvider setAttributesProvider
+     * @covers \Output\Helpers\ImageCreator::setBasePath()
+     * @covers \Output\Helpers\ImageCreator::basePath()
+     * @covers \Output\Helpers\ImageCreator::setCellSize()
+     * @covers \Output\Helpers\ImageCreator::cellSize()
+     * @covers \Output\Helpers\ImageCreator::setBackgroundColor()
+     * @covers \Output\Helpers\ImageCreator::backgroundColor()
+     * @covers \Output\Helpers\ImageCreator::setCellAliveColor()
+     * @covers \Output\Helpers\ImageCreator::cellAliveColor()
+     * @covers \Output\Helpers\ImageCreator::setGridColor()
+     * @covers \Output\Helpers\ImageCreator::gridColor()
+     * @covers \Output\Helpers\ImageCreator::setGameFolder()
+     * @covers \Output\Helpers\ImageCreator::gameFolder()
+     * @covers \Output\Helpers\ImageCreator::setBaseImage()
+     * @covers \Output\Helpers\ImageCreator::baseImage()
+     * @covers \Output\Helpers\ImageCreator::setCellImage()
+     * @covers \Output\Helpers\ImageCreator::cellImage()
+     *
+     * @param string $_basePath
+     * @param int $_cellSize
+     * @param string $_gameFolder
+     */
+    public function testCanSetAttributes(string $_basePath, int $_cellSize, string $_gameFolder)
+    {
+        $baseImage = imagecreate(rand(1, 10), rand(1, 10));
+        $cellImage = imagecreate(rand(1, 10), rand(1, 10));
+
+        $backgroundColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
+        $cellAliveColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
+        $gridColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
+
+
+        $this->imageCreator->setBasePath($_basePath);
+        $this->imageCreator->setCellSize($_cellSize);
+        $this->imageCreator->setBackgroundColor($backgroundColor);
+        $this->imageCreator->setCellAliveColor($cellAliveColor);
+        $this->imageCreator->setGridColor($gridColor);
+        $this->imageCreator->setGameFolder($_gameFolder);
+        $this->imageCreator->setBaseImage($baseImage);
+        $this->imageCreator->setCellImage($cellImage);
+
+        $this->assertEquals($_basePath, $this->imageCreator->basePath());
+        $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
+        $this->assertEquals($backgroundColor, $this->imageCreator->backgroundColor());
+        $this->assertEquals($cellAliveColor, $this->imageCreator->cellAliveColor());
+        $this->assertEquals($gridColor, $this->imageCreator->gridColor());
+        $this->assertEquals($_gameFolder, $this->imageCreator->gameFolder());
+        $this->assertEquals($baseImage, $this->imageCreator->baseImage());
+        $this->assertEquals($cellImage, $this->imageCreator->cellImage());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            ["path", 4, "other/path"],
+            ["path/to/file", 444, "my/other/path"],
+            ["a/test/path", 123, "my/path"]
+        ];
     }
 }

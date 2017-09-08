@@ -128,7 +128,7 @@ class ImageCreator
     /**
      * @return resource
      */
-    public function baseImage(): resource
+    public function baseImage()
     {
         return $this->baseImage;
     }
@@ -136,7 +136,7 @@ class ImageCreator
     /**
      * @param resource $baseImage
      */
-    public function setBaseImage(resource $baseImage)
+    public function setBaseImage($baseImage)
     {
         $this->baseImage = $baseImage;
     }
@@ -144,7 +144,7 @@ class ImageCreator
     /**
      * @return resource
      */
-    public function cellImage(): resource
+    public function cellImage()
     {
         return $this->cellImage;
     }
@@ -152,7 +152,7 @@ class ImageCreator
     /**
      * @param resource $cellImage
      */
-    public function setCellImage(resource $cellImage)
+    public function setCellImage($cellImage)
     {
         $this->cellImage = $cellImage;
     }
