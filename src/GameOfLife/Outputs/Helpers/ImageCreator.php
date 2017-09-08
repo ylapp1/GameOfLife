@@ -28,6 +28,135 @@ class ImageCreator
     private $baseImage;
     private $cellImage;
 
+
+    /**
+     * @return string
+     */
+    public function basePath(): string
+    {
+        return $this->basePath;
+    }
+
+    /**
+     * @param string $basePath
+     */
+    public function setBasePath(string $basePath)
+    {
+        $this->basePath = $basePath;
+    }
+
+    /**
+     * @return ImageColor
+     */
+    public function backgroundColor(): ImageColor
+    {
+        return $this->backgroundColor;
+    }
+
+    /**
+     * @param ImageColor $backgroundColor
+     */
+    public function setBackgroundColor(ImageColor $backgroundColor)
+    {
+        $this->backgroundColor = $backgroundColor;
+    }
+
+    /**
+     * @return ImageColor
+     */
+    public function gridColor(): ImageColor
+    {
+        return $this->gridColor;
+    }
+
+    /**
+     * @param ImageColor $gridColor
+     */
+    public function setGridColor(ImageColor $gridColor)
+    {
+        $this->gridColor = $gridColor;
+    }
+
+    /**
+     * @return ImageColor
+     */
+    public function cellAliveColor(): ImageColor
+    {
+        return $this->cellAliveColor;
+    }
+
+    /**
+     * @param ImageColor $cellAliveColor
+     */
+    public function setCellAliveColor(ImageColor $cellAliveColor)
+    {
+        $this->cellAliveColor = $cellAliveColor;
+    }
+
+    /**
+     * @return int
+     */
+    public function cellSize(): int
+    {
+        return $this->cellSize;
+    }
+
+    /**
+     * @param int $cellSize
+     */
+    public function setCellSize(int $cellSize)
+    {
+        $this->cellSize = $cellSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function gameFolder(): string
+    {
+        return $this->gameFolder;
+    }
+
+    /**
+     * @param string $gameFolder
+     */
+    public function setGameFolder(string $gameFolder)
+    {
+        $this->gameFolder = $gameFolder;
+    }
+
+    /**
+     * @return resource
+     */
+    public function baseImage(): resource
+    {
+        return $this->baseImage;
+    }
+
+    /**
+     * @param resource $baseImage
+     */
+    public function setBaseImage(resource $baseImage)
+    {
+        $this->baseImage = $baseImage;
+    }
+
+    /**
+     * @return resource
+     */
+    public function cellImage(): resource
+    {
+        return $this->cellImage;
+    }
+
+    /**
+     * @param resource $cellImage
+     */
+    public function setCellImage(resource $cellImage)
+    {
+        $this->cellImage = $cellImage;
+    }
+
     /**
      * ImageCreator constructor.
      * @param $_boardHeight

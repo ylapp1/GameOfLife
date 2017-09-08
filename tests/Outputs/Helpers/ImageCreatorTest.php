@@ -54,15 +54,24 @@ class ImageCreatorTest extends TestCase
     public function testCanCreateImage()
     {
         $this->expectOutputRegex("/.*Gamestep: 1.*/");
-        $this->imageCreator->createImage($this->board, "png");
 
-        /*
+        $this->imageCreator->createImage($this->board, "png");
         $this->assertEquals(true, file_exists($this->outputDirectory . "0.png"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+
+        $this->imageCreator->createImage($this->board, "video");
         $this->assertEquals(true, file_exists($this->outputDirectory . "0.png"));
-        */
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+
+        $this->imageCreator->createImage($this->board, "gif");
+        $this->assertEquals(true, file_exists($this->outputDirectory . "0.gif"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+
+        $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
+        $this->imageCreator->createImage($this->board, "myInvalidImageType");
     }
 
-    /*
+
     public function testCanBeConstructed()
     {
         $colorBlack = new ImageColor(0, 0, 0);
@@ -70,5 +79,7 @@ class ImageCreatorTest extends TestCase
 
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
             $colorWhite, $colorBlack, "tmp/Frames");
-    }*/
+
+        $this->assertEquals(__DIR__ . "/../../../../Output/", $imageCreator->basePath());
+    }
 }
