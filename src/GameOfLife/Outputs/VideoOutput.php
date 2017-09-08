@@ -97,10 +97,9 @@ class VideoOutput extends BaseOutput
      */
     public function outputBoard(Board $_board)
     {
+        echo "\rGamestep: " . ($_board->gameStep() + 1);
         $this->frames[] = $this->imageCreator->createImage($_board, "video");
         $this->fillPercentages[] = $_board->getFillpercentage();
-
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
     }
 
     /**
@@ -113,29 +112,19 @@ class VideoOutput extends BaseOutput
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting video creation ...";
 
-        $fileNames = glob("Output\\Video\\*.mp4");
-
-        if (count($fileNames) == 0) $lastGameId = 0;
-        else
-        {
-            $fileIds = array();
-            foreach ($fileNames as $fileName)
-            {
-                $fileData = explode("_", basename($fileName));
-                $fileIds[] = intval($fileData[1]);
-            }
-
-            sort($fileIds, SORT_NUMERIC);
-            $lastGameId = $fileIds[count($fileIds) - 1];
-        }
-
-        $fileName = "Game_" . ($lastGameId + 1) . ".mp4";
+        $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Initialize ffmpeg helper
         $ffmpegHelper = new FfmpegHelper("Tools/ffmpeg/bin/ffmpeg.exe");
 
         // generate Audio files for each frame
         $audioFiles = array();
+
+        if (count($this->frames) == 0)
+        {
+            echo "Error: No frames in frames folder found!\n";
+            return;
+        }
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
@@ -150,7 +139,7 @@ class VideoOutput extends BaseOutput
 
             $audioFiles[] = $outputPath;
 
-            file_put_contents("Output\\tmp\\Audio\\list.txt", "file '" . $outputPath . "'\r\n", FILE_APPEND);
+            file_put_contents($this->outputDirectory . "tmp/Audio/list.txt", "file '" . $outputPath . "'\r\n", FILE_APPEND);
         }
 
         // Create video with sound

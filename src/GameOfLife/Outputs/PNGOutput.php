@@ -23,7 +23,6 @@ use Output\Helpers\ImageColor;
  */
 class PNGOutput extends BaseOutput
 {
-    private $gameFolderName;
     /** @var  ImageCreator $imageCreator */
     private $imageCreator;
     /** @var FileSystemHandler */
@@ -70,28 +69,12 @@ class PNGOutput extends BaseOutput
         if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
         else $gridColor = new ImageColor(0, 0, 0);
 
-        $fileNames = glob(__DIR__ . "/../../../Output/PNG/Game_*");
-
-        if (count($fileNames) == 0) $lastGameId = 0;
-        else
-        {
-            $fileIds = array();
-            foreach ($fileNames as $fileName)
-            {
-                $fileData = explode("_", basename($fileName));
-                $fileIds[] = intval($fileData[1]);
-            }
-
-            sort($fileIds, SORT_NUMERIC);
-            $lastGameId = $fileIds[count($fileIds) - 1];
-        }
-
         // Create new folder for current game
-        $this->gameFolderName = "Game_" . ($lastGameId + 1);
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "PNG/" . $this->gameFolderName);
+        $gameFolderName = "/PNG/Game_" . $this->getNewGameId("PNG");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . $gameFolderName);
 
         // initialize ImageCreator for this PNGOutput
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/PNG/" . $this->gameFolderName);
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $gameFolderName);
 
         echo "Starting simulation ...\n\n";
     }
@@ -103,9 +86,8 @@ class PNGOutput extends BaseOutput
      */
     public function outputBoard(Board $_board)
     {
-        $this->imageCreator->createImage($_board, "png");
-
         echo "\rGamestep: " . ($_board->gameStep() + 1);
+        $this->imageCreator->createImage($_board, "png");
     }
 
     /**

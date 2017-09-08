@@ -90,9 +90,8 @@ class GIFOutput extends BaseOutput
      */
     public function outputBoard(Board $_board)
     {
-        $this->frames[] = $this->imageCreator->createImage($_board, "gif");
-
         echo "\rGamestep: " . ($_board->gameStep() + 1);
+        $this->frames[] = $this->imageCreator->createImage($_board, "gif");
     }
 
     /**
@@ -105,6 +104,12 @@ class GIFOutput extends BaseOutput
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
         echo "\nStarting GIF creation. One moment please...";
 
+        if (count($this->frames) == 0)
+        {
+            echo "Error: No frames in frames folder found!\n";
+            return;
+        }
+
         $frameDurations = array();
 
         for ($i = 0; $i < count($this->frames) - 1; $i++)
@@ -115,17 +120,13 @@ class GIFOutput extends BaseOutput
         $frameDurations[] = $this->frameTime + 200;
 
         $gif = new GIFEncoder($this->frames, $frameDurations, 0, 2, 1, 0, 0, "url");
-        $fileNameCount = 0;
-        do
-        {
-            $fileNameCount++;
-        } while (file_exists($this->outputDirectory . "Gif/Gif_" . $fileNameCount . ".gif"));
+        $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
 
-        if (fwrite(fopen($this->outputDirectory . "Gif/Gif_" . $fileNameCount . ".gif", "wb"), $gif->GetAnimation()) == false)
+        if (fwrite(fopen($this->outputDirectory . "Gif/" . $fileName, "wb"), $gif->GetAnimation()) == false)
         {
             echo "An error occurred during the gif creation. Stopping...";
-            die();
-        };
+            return;
+        }
 
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);

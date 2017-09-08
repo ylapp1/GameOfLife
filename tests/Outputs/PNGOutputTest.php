@@ -8,6 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use GameOfLife\FileSystemHandler;
 use Output\PNGOutput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
@@ -23,10 +24,15 @@ class PNGOutputTest extends TestCase
     private $board;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
+    /** @var string */
+    private $outputDirectory = __DIR__ . "/../../Output/";
 
     protected function setUp()
     {
         $this->output = new PNGOutput();
+        $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
@@ -37,11 +43,13 @@ class PNGOutputTest extends TestCase
 
     protected function tearDown()
     {
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+
         unset($this->output);
         unset($this->board);
         unset($this->optionsMock);
+        unset($this->fileSystemHandler);
     }
-
 
     /**
      * @covers \Output\PNGOutput::addOptions()
@@ -62,58 +70,42 @@ class PNGOutputTest extends TestCase
         $this->output->addOptions($this->optionsMock);
     }
 
-
     /**
      * @covers \Output\PNGOutput::startOutput()
      */
     public function testCanCreateOutputDirectory()
     {
-        // Delete output directory if exists
-        if (file_exists(__DIR__ . "/../../Output"))
-        {
-            $this->deleteDir(__DIR__ . "/../../Output");
-        }
+        $this->assertEquals(false, file_exists($this->outputDirectory));
 
         $this->expectOutputString("Starting simulation ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
-
-        $this->assertEquals(true, file_exists(__DIR__ . "/../../Output/PNG/Game_1"));
-        $this->deleteDir(__DIR__ . "/../../Output");
+        $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0"));
     }
-
-    private function deleteDir($dirPath)
-    {
-        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') $dirPath .= '/';
-
-        $files = glob($dirPath . '*', GLOB_MARK);
-        foreach ($files as $file)
-        {
-            if (is_dir($file)) self::deleteDir($file);
-            else unlink($file);
-        }
-
-        if (file_exists($dirPath)) rmdir($dirPath);
-    }
-
 
     /**
      * @covers \Output\PNGOutput::outputBoard()
      */
     public function testCanCreatePNG()
     {
-        $this->deleteDir(__DIR__ . "/../../Output");
-
         $this->expectOutputRegex("/.*Starting simulation ...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
         // Create pngs and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
+            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();
-            $this->assertEquals(true, file_exists(__DIR__ . "/../../Output/PNG/Game_1/" . $i . ".png"));
+            $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0/" . $i . ".png"));
         }
+    }
 
-        $this->deleteDir(__DIR__ . "/../../Output");
+    /**
+     * @covers \Output\PNGOutput::finishOutput()
+     */
+    public function testCanFinishOutput()
+    {
+        $this->expectOutputString("\n\nSimulation finished. All cells are dead or a repeating pattern was detected.");
+        $this->output->finishOutput();
     }
 }

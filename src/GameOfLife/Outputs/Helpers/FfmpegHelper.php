@@ -74,17 +74,29 @@ class FfmpegHelper
         $this->outputPath = $_outputPath;
     }
 
-
+    /**
+     * Add an option to the option list
+     *
+     * @param string $_option
+     */
     public function addOption(string $_option)
     {
         $this->options[] = $_option;
     }
 
+    /**
+     * Reset the option list to an empty array
+     */
     public function resetOptions()
     {
         $this->options = array();
     }
 
+    /**
+     * Generate and execute the ffmpeg command
+     *
+     * @param string $outputPath
+     */
     public function executeCommand(string $outputPath)
     {
         // generate command
