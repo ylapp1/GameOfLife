@@ -9,6 +9,7 @@
 namespace Output\Helpers;
 
 use GameOfLife\Board;
+use GameOfLife\FileSystemHandler;
 
 /**
  * Class ImageCreator
@@ -27,7 +28,7 @@ class ImageCreator
     private $gameFolder;
     private $baseImage;
     private $cellImage;
-
+    private $fileSystemHandler;
 
     /**
      * @return string
@@ -230,6 +231,8 @@ class ImageCreator
         imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));
 
         $this->cellImage = $cellImage;
+
+        $this->fileSystemHandler = new FileSystemHandler();
     }
 
     /**
@@ -263,20 +266,18 @@ class ImageCreator
         {
             case "png":
             case "video":
-                $filePath .= $this->gameFolder . "/";
+                $filePath .= $this->gameFolder;
+                $this->fileSystemHandler->createDirectory($filePath);
 
-                if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
-
-                $filePath .= $fileName . ".png";
+                $filePath .= "/" . $fileName . ".png";
                 imagepng($image, $filePath);
                 break;
 
             case "gif":
-                $filePath .= "tmp/Frames/";
+                $filePath .= $this->gameFolder;
+                $this->fileSystemHandler->createDirectory($filePath);
 
-                if (! file_exists($filePath)) mkdir ($filePath, 0777, true);
-
-                $filePath .= $fileName . ".gif";
+                $filePath .= "/" . $fileName . ".gif";
                 imagegif($image, $filePath);
                 break;
             default:

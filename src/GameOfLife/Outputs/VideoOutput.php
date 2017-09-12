@@ -85,7 +85,7 @@ class VideoOutput extends BaseOutput
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames");
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
 
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "tmp/Frames");
 
         $this->secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
     }
@@ -128,18 +128,18 @@ class VideoOutput extends BaseOutput
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
-            $outputPath = "Output/tmp/Audio/" . $i . ".wav";
+            $outputPath = "tmp/Audio/" . $i . ".wav";
 
             // Generate random beep sound
             $ffmpegHelper->resetOptions();
             $ffmpegHelper->addOption("-f lavfi");
             $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
             $ffmpegHelper->addOption("-t " . $this->secondsPerFrame);
-            $ffmpegHelper->executeCommand($outputPath);
+            $ffmpegHelper->executeCommand($this->outputDirectory . $outputPath);
 
             $audioFiles[] = $outputPath;
 
-            file_put_contents($this->outputDirectory . "tmp/Audio/list.txt", "file '" . $outputPath . "'\r\n", FILE_APPEND);
+            file_put_contents($this->outputDirectory . "tmp/Audio/list.txt", "file Output/'" . $outputPath . "'\r\n", FILE_APPEND);
         }
 
         // Create video with sound

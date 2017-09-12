@@ -78,9 +78,9 @@ class GIFOutput extends BaseOutput
         if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
 
 
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames/");
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "Gif");
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "/tmp/Frames");
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "tmp/Frames");
     }
 
     /**

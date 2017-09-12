@@ -109,11 +109,11 @@ class VideoOutputTest extends TestCase
         $outputRegex .= "\nStarting video creation ...";
         $outputRegex .= ".*\nVideo creation complete!\n\n";
 
-        //$this->expectOutputRegex("/.*". $outputRegex . ".*/");
-        /*$this->output->finishOutput();
+        $this->expectOutputRegex("/.*". $outputRegex . ".*/");
+        $this->output->finishOutput();
 
-        $this->assertEquals(true, file_exists($this->outputDirectory . "Video/Game_0.mp4"));
-        $this->assertEquals(false, file_exists($this->outputDirectory . "tmp"));*/
+        //$this->assertEquals(true, file_exists($this->outputDirectory . "Video/Game_0.mp4"));
+        $this->assertEquals(false, file_exists($this->outputDirectory . "tmp"));
     }
 
     /**
