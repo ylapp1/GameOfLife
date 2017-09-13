@@ -105,9 +105,16 @@ class VideoOutputTest extends TestCase
         }
 
         // Check whether finishOutput creates the final gif
-        $outputRegex = "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
-        $outputRegex .= "\nStarting video creation ...";
-        $outputRegex .= ".*\nVideo creation complete!\n\n";
+        $outputRegex = "\nSimulation finished. All cells are dead or a repeating pattern was detected.";
+        $outputRegex .= "\nStarting video creation ...\n";
+
+        for ($i = 0; $i < 10; $i++)
+        {
+            $outputRegex .= ".*\rGenerating audio ... " . ($i + 1) . "\\/10";
+        }
+
+        $outputRegex .= "\nGenerating video file ...";
+        $outputRegex .= "\nVideo creation complete!\n\n";
 
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
         $this->output->finishOutput();

@@ -110,7 +110,7 @@ class VideoOutput extends BaseOutput
     public function finishOutput()
     {
         echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
-        echo "\nStarting video creation ...";
+        echo "\nStarting video creation ...\n";
 
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
@@ -126,8 +126,11 @@ class VideoOutput extends BaseOutput
             return;
         }
 
+        $amountFrames = count($this->frames);
+
         for ($i = 0; $i < count($this->frames); $i++)
         {
+            echo "\rGenerating audio ... " . ($i + 1) . "/" . $amountFrames;
             $outputPath = "tmp/Audio/" . $i . ".wav";
 
             // Generate random beep sound
@@ -135,12 +138,15 @@ class VideoOutput extends BaseOutput
             $ffmpegHelper->addOption("-f lavfi");
             $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
             $ffmpegHelper->addOption("-t " . $this->secondsPerFrame);
+
             $ffmpegHelper->executeCommand($this->outputDirectory . $outputPath);
 
             $audioFiles[] = $outputPath;
 
             file_put_contents($this->outputDirectory . "tmp/Audio/list.txt", "file Output/'" . $outputPath . "'\r\n", FILE_APPEND);
         }
+
+        echo "\nGenerating video file ...";
 
         // Create video with sound
         $ffmpegHelper->resetOptions();

@@ -106,9 +106,11 @@ class FfmpegHelper
             $command .= " " . $option;
         }
         $command .= " \"" . $outputPath . "\"";
+        // hide output by redirecting it to NUL
+        $command .= " 2>NUL";
 
-        $output = array();
+        $options = array();
         $returnValue = 0;
-        exec($command, $output, $returnValue);
+        exec($command, $options, $returnValue);
     }
 }
