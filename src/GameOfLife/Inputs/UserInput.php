@@ -52,43 +52,114 @@ class UserInput extends BaseInput
     /**
      * Saves current board to a custom template file
      *
-     * @param string $_input    User input in the format "<save> <templateName>"
+     * @param string $_templateName    User input in the format "<save> <templateName>"
      * @param Board $_board     Current board
-     * @return bool    error
      */
-    public function saveCustomTemplate($_input, $_board)
+    public function saveCustomTemplate(String $_templateName, Board $_board)
     {
         $fileSystemHandler = new FileSystemHandler();
-        $config = explode(" ", $_input);
+        $fileSystemHandler->createDirectory($this->customTemplatesDirectory);
+        $fileName = $_templateName . ".txt";
 
-        if (count($config) == 2)
+        $success = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
+
+        if ($success !== true)
         {
-            $fileSystemHandler->createDirectory($this->customTemplatesDirectory);
-            $fileName = $config[1] . ".txt";
-
-            $success = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
-
-            if ($success !== true)
+            echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
+            $input = $this->catchUserInput();
+            if (strtolower($input) == "y" or strtolower($input) == "yes")
             {
-                echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
-                $input = $this->catchUserInput();
-                if (strtolower($input) == "y" or strtolower($input) == "yes")
-                {
-                    $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board, true);
-                    return false;
-                }
-                else return true;
+                $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board, true);
+                echo "Template successfully replaced!\n\n";
             }
-            else return false;
+            else echo "Saving aborted.\n\n";
         }
-        else return true;
+        else echo "Template successfully saved!\n\n";
+
+        echo 'You can set/unset more cells or start the simulation by typing "start"' . "\n\n";
     }
 
+    /**
+     * Converts user input to int and checks whether coordinate is inside field borders
+     *
+     * @param string $_inputCoordinate  User input string (a single coordinate)
+     * @param int $_minValue            The lowest value that the input coordinate may be
+     * @param int $_maxValue            The highest value that the input coordinate may be
+     *
+     * @return int   Input coordinate
+     */
+    public function getInputCoordinate(String $_inputCoordinate, int $_minValue, int $_maxValue)
+    {
+        if (strlen($_inputCoordinate) == 0) return false;
+
+        // convert coordinate to integer
+        $coordinate = (int)$_inputCoordinate;
+
+        // Check whether field borders are exceeded
+        if ($coordinate < $_minValue || $coordinate > $_maxValue) return false;
+        else return $coordinate;
+    }
+
+    public function setField(Board $_board, String $_inputCoordinates)
+    {
+        $inputSplits = explode(",", $_inputCoordinates);
+
+        if (count($inputSplits) == 2)
+        {
+            $inputX = $this->getInputCoordinate($inputSplits[0], 0, $_board->width() - 1);
+            $inputY = $this->getInputCoordinate($inputSplits[1], 0, $_board->height() - 1);
+
+            if ($inputX === false) echo "Error: Invalid value for x specified: Value exceeds field borders or is not set\n";
+            elseif ($inputY === false) echo "Error: Invalid value for y specified: Value exceeds field borders or is not set\n";
+            else
+            {
+                $currentCellState = $_board->getField($inputX, $inputY);
+                $_board->setField($inputX, $inputY, !$currentCellState);
+                $this->printBoardEditor($_board, $inputX, $inputY);
+            }
+        }
+        else echo "Error: Don't input more than two values!\n";
+    }
+
+    /**
+     * Processes the user input
+     *
+     * @param String $_input    User input
+     * @param Board $_board     Game Board
+     * @return bool isInputFinished
+     */
+    public function processInput(String $_input, Board $_board)
+    {
+        if (stristr($_input, "exit"))
+        {
+            $_board->setCurrentBoard($_board->initializeEmptyBoard());
+            return true;
+        }
+        elseif (stristr($_input, "start")) return true;
+        elseif (stristr($_input, "save"))
+        {
+            $config = explode(" ", $_input);
+
+            if (count($config) != 2) echo "Error: Invalid template name!\n";
+            else $this->saveCustomTemplate($config[1], $_board);
+
+            return false;
+        }
+        elseif (stristr($_input, ","))
+        {
+            $this->setField($_board, $_input);
+            return false;
+        }
+        else
+        {
+            echo "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n";
+            return false;
+        }
+    }
 
     /**
      * Catches input from keyboard to create an own generation
      * Put Numbers in like 5,5 to set to true
-     * or -5,-5 to set to false
      *
      * @param \GameOfLife\Board $_board
      * @param Getopt $_options
@@ -109,57 +180,12 @@ class UserInput extends BaseInput
         echo "You can save your board configuration before starting the simulation by typing \"save\"\n";
         echo "Let's Go:\n";
 
-        $inputX = null;
-        $inputY = null;
-        $inputFinished = false;
+        $isInputFinished = false;
 
-        while (! $inputFinished)
+        while (! $isInputFinished)
         {
             $input = $this->catchUserInput();
-
-            if (stristr($input, "exit"))die();
-            elseif (stristr($input, "start")) $inputFinished = true;
-            elseif (stristr($input, "save"))
-            {
-                $error = $this->saveCustomTemplate($input, $_board);
-
-                if ($error) echo "Error: No template name specified or saving aborted\n\n";
-                else echo 'Template successfully saved!' . "\n\n" . 'You can set/unset more cells or start the simulation by typing "start"' . "\n\n";
-            }
-            else
-            {
-                if (stristr($input, ","))
-                {
-                    $inputSplits = explode(",", $input);
-
-                    if (count($inputSplits) == 2)
-                    {
-                        $inputX = (int)$inputSplits[0];
-                        $inputY = (int)$inputSplits[1];
-
-                        if ($inputX > $_board->width() - 1 ||
-                            $inputX < 0 ||
-                            $inputY > $_board->height() - 1 ||
-                            $inputY < 0)
-                        {
-                            echo "Error: The values may not exceed the field borders!\n";
-                        }
-                        elseif (! isset($inputX) || ! isset($inputY))
-                        {
-                            echo "Error: No value set for x or y\n";
-                        }
-                        else
-                        {
-                            $currentCellState = $_board->getField($inputX, $inputY);
-                            $_board->setField($inputX, $inputY, !$currentCellState);
-
-                            $this->printBoardEditor($_board, $inputX, $inputY);
-                        }
-                    }
-                    else echo "Error: Don't input more than two values!\n";
-                }
-                else echo "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n";
-            }
+            $isInputFinished = $this->processInput($input, $_board);
         }
     }
 
@@ -170,7 +196,7 @@ class UserInput extends BaseInput
      * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
      * @param Integer $_curY    Y-Coordinate of the cell that shall be highlighted
      */
-    public function printBoardEditor($_board, $_curX = null, $_curY = null)
+    public function printBoardEditor(Board $_board, $_curX = null, $_curY = null)
     {
         $bonusDashes = 0;
 
@@ -178,7 +204,7 @@ class UserInput extends BaseInput
         {
             $isHighLight = true;
 
-            if ($_curY == 0) $bonusDashes = 1;
+            if ($_curX == 0) $bonusDashes = 1;
             else $bonusDashes = 2;
         }
         else $isHighLight = false;
