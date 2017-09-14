@@ -118,7 +118,7 @@ class UserInput extends BaseInput
                 $this->printBoardEditor($_board, $inputX, $inputY);
             }
         }
-        else echo "Error: Don't input more than two values!\n";
+        else echo "Error: Please input exactly two values!\n";
     }
 
     /**
@@ -181,7 +181,6 @@ class UserInput extends BaseInput
         echo "Let's Go:\n";
 
         $isInputFinished = false;
-
         while (! $isInputFinished)
         {
             $input = $this->catchUserInput();

@@ -26,7 +26,6 @@ class UserInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new UserInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(2, 2, 50, true, $rules);
         $this->board->setField(0, 0, true);
@@ -142,11 +141,47 @@ class UserInputTest extends TestCase
             [true, "startjkjjjkkjkjkj"],
             [false, "save", "Error: Invalid template name!\n"],
             [false, "save my file is test.txt", "Error: Invalid template name!\n"],
-            [false, "1,1", "\n  1\n ----\n|o| |\n|----|\n| |X|1\n ----\n"],
+            [false, "1,1", "\n" .
+                           "  1\n" .
+                           " ----\n" .
+                           "|o| |\n" .
+                           "|----|\n" .
+                           "| |X|1\n" .
+                           " ----\n"
+            ],
             [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
             [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
-            [false, "1,1,1", "Error: Don't input more than two values!\n"],
+            [false, "1,1,1", "Error: Please input exactly two values!\n"],
             [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"]
+        ];
+    }
+
+    /**
+     * @dataProvider setFieldProvider
+     * @covers \Input\UserInput::setField()
+     *
+     * @param String $_inputCoordinates     Input coordinates in the format <x>,<y>
+     * @param String $_expectedString       Expected Error message
+     * @param int $_expectedX               Expected x position of new set cell
+     * @param int $_expectedY               Expected y positoin of new set cell
+     */
+    public function testCanSetField(String $_inputCoordinates, String $_expectedString, int $_expectedX = null, int $_expectedY = null)
+    {
+        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->expectOutputRegex("/.*" . $_expectedString . ".*/");
+        $this->input->setField($this->board, $_inputCoordinates);
+
+        if (isset($_expectedX) && isset($_expectedY)) $this->assertEquals(true, $this->board->getField($_expectedX, $_expectedY));
+    }
+
+    public function setFieldProvider()
+    {
+        return [
+            "More than two values" => ["1,1,1,1,1,1,1,1,1", "Error: Please input exactly two values!\n"],
+            "Less than two values" => ["1", "Error: Please input exactly two values!\n"],
+            "Exactly two values (1,1)" => ["1,1", "1", 1, 1],
+            "Exactly two values (1,0)" => ["1, 0", "1", 1, 0],
+            "Exactly two values (0,0)" => ["      0    ,      0    ", "0", 0, 0]
         ];
     }
 }
