@@ -27,10 +27,8 @@ class FileInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new FileInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
-
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -38,9 +36,9 @@ class FileInputTest extends TestCase
     protected function tearDown()
     {
         unset($this->input);
+        unset($this->board);
         unset($this->optionsMock);
     }
-
 
     /**
      * @dataProvider setAttributesProvider
@@ -71,19 +69,18 @@ class FileInputTest extends TestCase
         ];
     }
 
-
     /**
      * @covers \Input\FileInput::addOptions()
      */
     public function testCanAddOptions()
     {
         $fileInputOptions = array(
-            array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"));
+            array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration")
+        );
 
         $this->optionsMock->expects($this->exactly(1))
             ->method("addOptions")
             ->with($fileInputOptions);
-
         $this->input->addOptions($this->optionsMock);
     }
 
@@ -126,7 +123,6 @@ class FileInputTest extends TestCase
             ["hello"]
         ];
     }
-
 
     /**
      * @covers \Input\FileInput::fillBoard

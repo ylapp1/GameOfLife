@@ -17,7 +17,6 @@ class RuleSetTest extends TestCase
     /** @var RuleSet */
     private $ruleSet;
 
-
     protected function setUp()
     {
         $this->ruleSet = new RuleSet(array(1), array(2));

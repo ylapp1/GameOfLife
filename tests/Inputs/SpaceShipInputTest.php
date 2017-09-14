@@ -27,10 +27,8 @@ class SpaceShipInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new SpaceShipInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
-
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -42,14 +40,12 @@ class SpaceShipInputTest extends TestCase
         unset($this->optionsMock);
     }
 
-
     /**
      * @covers \Input\SpaceShipInput::__construct
      */
     public function testCanBeConstructed()
     {
         $input = new SpaceShipInput();
-
         $this->assertEquals(5, $input->objectWidth());
         $this->assertEquals(4, $input->objectHeight());
     }
@@ -67,7 +63,6 @@ class SpaceShipInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($spaceShipOptions);
-
         $this->input->addOptions($this->optionsMock);
     }
 
@@ -112,8 +107,8 @@ class SpaceShipInputTest extends TestCase
     public function testCanFillBoardWithCustomPositions(int $_spaceShipPosX, int $_spaceShipPosY, bool $_expectsError)
     {
         $this->optionsMock->method("getOption")
-            ->withConsecutive(["spaceShipPosX"], ["spaceShipPosY"])
-            ->willReturn($_spaceShipPosX, $_spaceShipPosY);
+                          ->withConsecutive(["spaceShipPosX"], ["spaceShipPosY"])
+                          ->willReturn($_spaceShipPosX, $_spaceShipPosY);
 
         if ($_expectsError) $this->expectOutputString("Error: Spaceship exceeds field borders.");
 

@@ -47,11 +47,11 @@ class FileSystemHandler
     public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
     {
         if (substr($_directoryPath, strlen($_directoryPath) - 1, 1) != '/') $_directoryPath .= '/';
-
         $files = glob($_directoryPath . '*', GLOB_MARK);
 
         if (count($files) !== 0)
-            if (! $_deleteWhenNotEmpty) return $this::ERROR_DIRECTORY_NOT_EMPTY;
+        {
+            if (!$_deleteWhenNotEmpty) return $this::ERROR_DIRECTORY_NOT_EMPTY;
             else
             {
                 foreach ($files as $file)
@@ -60,6 +60,7 @@ class FileSystemHandler
                     else unlink($file);
                 }
             }
+        }
 
         if (file_exists($_directoryPath)) rmdir($_directoryPath);
         return true;

@@ -27,10 +27,8 @@ class BlinkerInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new BlinkerInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
-
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -42,14 +40,12 @@ class BlinkerInputTest extends TestCase
         unset($this->optionsMock);
     }
 
-
     /**
      * @covers \Input\BlinkerInput::__construct
      */
     public function testCanBeConstructed()
     {
         $input = new BlinkerInput();
-
         $this->assertEquals(1, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
     }
@@ -61,15 +57,14 @@ class BlinkerInputTest extends TestCase
     {
         $blinkerOptions = array(
             array(null, "blinkerPosX", Getopt::REQUIRED_ARGUMENT, "X position of the blinker"),
-            array(null, "blinkerPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker"));
+            array(null, "blinkerPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker")
+        );
 
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($blinkerOptions);
-
         $this->input->addOptions($this->optionsMock);
     }
-
 
     /**
      * @dataProvider setCellsProvider
@@ -82,7 +77,6 @@ class BlinkerInputTest extends TestCase
     public function testCanSetCells($_x, $_y, $_expected)
     {
         $this->input->fillBoard($this->board, new Getopt());
-
         $this->assertEquals(3, $this->board->getAmountCellsAlive());
         $this->assertEquals($_expected, $this->board->getField($_x, $_y));
     }
@@ -95,7 +89,6 @@ class BlinkerInputTest extends TestCase
             "Cell 4|6" => [4, 6, true]
         ];
     }
-
 
     /**
      * @dataProvider fillBoardWithCustomPositionsProvider

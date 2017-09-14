@@ -27,12 +27,10 @@ class RandomInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new RandomInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
-
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
-            ->getMock();
+                                  ->getMock();
     }
 
     protected function tearDown()
@@ -41,7 +39,6 @@ class RandomInputTest extends TestCase
         unset($this->board);
         unset($this->optionsMock);
     }
-
 
     /**
      * @covers \Input\RandomInput::addOptions()
@@ -55,7 +52,6 @@ class RandomInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($blinkerOptions);
-
         $this->input->addOptions($this->optionsMock);
     }
 
@@ -64,11 +60,15 @@ class RandomInputTest extends TestCase
      */
     public function testCanFillBoardRandomPercentage()
     {
-        $minAmountCellsAlive = (float)$this->board->getAmountCellsAlive() * 0.15;
+        $amountFields = $this->board->height() * $this->board->width();
+        $minAmountCellsAlive = (float)$amountFields * 0.15;
+        $maxAmountCellsAlive = (float)$amountFields * 0.70;
+
         $this->input->fillBoard($this->board, new Getopt());
 
         $amountCellsAlive = $this->board->getAmountCellsAlive();
-        $this->assertGreaterThan($minAmountCellsAlive, $amountCellsAlive);
+        $this->assertGreaterThanOrEqual($minAmountCellsAlive, $amountCellsAlive);
+        $this->assertLessThanOrEqual($maxAmountCellsAlive, $amountCellsAlive);
     }
 
     /**

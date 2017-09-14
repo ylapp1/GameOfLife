@@ -25,9 +25,8 @@ class FileInput extends BaseInput
     private $newBoardWidth;
     private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
 
-
     /**
-     * @return mixed
+     * @return int
      */
     public function newBoardHeight()
     {
@@ -35,7 +34,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * @param mixed $_newBoardHeight
+     * @param int $_newBoardHeight
      */
     public function setNewBoardHeight($_newBoardHeight)
     {
@@ -43,7 +42,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function newBoardWidth()
     {
@@ -51,13 +50,12 @@ class FileInput extends BaseInput
     }
 
     /**
-     * @param mixed $_newBoardWidth
+     * @param int $_newBoardWidth
      */
     public function setNewBoardWidth($_newBoardWidth)
     {
         $this->newBoardWidth = $_newBoardWidth;
     }
-
 
     /**
      * Adds FileInputs specific options to the option list
@@ -96,7 +94,6 @@ class FileInput extends BaseInput
         }
     }
 
-
     /**
      * Load cell configuration from txt file
      *
@@ -121,7 +118,6 @@ class FileInput extends BaseInput
         // Read template
         $fileSystemHandler = new FileSystemHandler();
         $lines = $fileSystemHandler->readFile($fileName);
-
         $board = array();
 
         $this->newBoardHeight = count($lines);
@@ -130,7 +126,6 @@ class FileInput extends BaseInput
         for ($y = 0; $y < count($lines); $y++)
         {
             $board[$y] = array();
-
             $cells = str_split($lines[$y]);
 
             for ($x = 0; $x < count($cells); $x++)

@@ -27,7 +27,6 @@ class BaseInputTest extends TestCase
         unset($this->input);
     }
 
-
     /**
      * @dataProvider setAttributesProvider
      * @covers \Input\BaseInput::setObjectWidth
@@ -55,7 +54,6 @@ class BaseInputTest extends TestCase
             [203, 846]
         ];
     }
-
 
     /**
      * @dataProvider objectOutOfBoundsProvider

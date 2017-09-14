@@ -27,10 +27,8 @@ class GliderInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new GliderInput();
-
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
-
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -42,14 +40,12 @@ class GliderInputTest extends TestCase
         unset($this->optionsMock);
     }
 
-
     /**
      * @covers \Input\GliderInput::__construct
      */
     public function testCanBeConstructed()
     {
         $input = new GliderInput();
-
         $this->assertEquals(3, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
     }
@@ -67,7 +63,6 @@ class GliderInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
             ->method("addOptions")
             ->with($gliderOptions);
-
         $this->input->addOptions($this->optionsMock);
     }
 
