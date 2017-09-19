@@ -9,7 +9,7 @@
 use Output\BaseOutput;
 use Output\PNGOutput;
 use Output\VideoOutput;
-use Output\GifOutput;
+use Output\GIFOutput;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
@@ -60,7 +60,7 @@ class BaseOutputTest extends TestCase
     public function testCanGetNewGameId()
     {
         $pngOutput = new PNGOutput();
-        $gifOutput = new GifOutput();
+        $gifOutput = new GIFOutput();
         $videoOutput = new VideoOutput();
 
         $this->assertEquals(0, $this->output->getNewGameId("PNG"));
