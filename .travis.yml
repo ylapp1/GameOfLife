@@ -2,5 +2,4 @@ language: php
 php:
   - 7.1.8
 install: composer install
-scripts:
-  phpunit --bootstrap tests/testboot.php --config tests/phpunit.xml
+scripts: phpunit --coverage-text
