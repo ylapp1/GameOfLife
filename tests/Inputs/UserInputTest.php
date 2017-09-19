@@ -26,6 +26,8 @@ class UserInputTest extends TestCase
     private $fileSystemHandler;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $userInputMock;
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $optionsMock;
 
     protected function setUp()
     {
@@ -38,6 +40,9 @@ class UserInputTest extends TestCase
         $this->userInputMock = $this->getMockBuilder(\Input\UserInput::class)
                                     ->setMethods(["catchUserInput"])
                                     ->getMock();
+
+        $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                                  ->getMock();
     }
 
     protected function tearDown()
@@ -48,6 +53,7 @@ class UserInputTest extends TestCase
         unset($this->input);
         unset($this->board);
         unset($this->userInputMock);
+        unset($this->optionsMock);
     }
 
     /**
@@ -55,12 +61,14 @@ class UserInputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $options = new Getopt();
-        $this->input->addOptions($options);
-        $optionList = $options->getOptionList();
+        $userInputOptions = array(
+            array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template")
+        );
 
-        $this->assertEquals(1, count($optionList));
-        $this->assertContains("edit", $optionList[0]);
+        $this->optionsMock->expects($this->exactly(1))
+                          ->method("addOptions")
+                          ->with($userInputOptions);
+        $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -220,11 +228,11 @@ class UserInputTest extends TestCase
     public function testCanFillBoard(int $_inputX, int $_inputY)
     {
         $this->userInputMock->method("catchUserInput")
-                      ->withConsecutive()
-                      ->willReturn($_inputX . "," . $_inputY, "start");
+                            ->withConsecutive()
+                            ->willReturn($_inputX . "," . $_inputY, "start");
 
         $this->userInputMock->expects($this->exactly(2))
-                      ->method("catchUserInput");
+                            ->method("catchUserInput");
 
         $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
 
@@ -250,7 +258,9 @@ class UserInputTest extends TestCase
         ];
     }
 
-
+    /**
+     * @covers \Input\UserInput::fillBoard()
+     */
     public function testCanLoadTemplate()
     {
         $this->userInputMock->method("catchUserInput")
@@ -262,12 +272,10 @@ class UserInputTest extends TestCase
         $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
         $this->assertEquals(0, $this->board->getAmountCellsAlive());
 
-        $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
-                            ->getMock();
-        $optionsMock->expects($this->exactly(2))
-                    ->method("getOption")
-                    ->withConsecutive(["edit"], ["template"])
-                    ->willReturn(true, "unittest");
+        $this->optionsMock->expects($this->exactly(2))
+                          ->method("getOption")
+                          ->withConsecutive(["edit"], ["template"])
+                          ->willReturn(true, "unittest");
 
         $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
                                 "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
@@ -276,7 +284,7 @@ class UserInputTest extends TestCase
                                 "You can save your board configuration before starting the simulation by typing \"save\"\n" .
                                 "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        $this->userInputMock->fillBoard($this->board, $optionsMock);
+        $this->userInputMock->fillBoard($this->board, $this->optionsMock);
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
         $this->assertEquals(true, $this->board->getField(0, 0));
