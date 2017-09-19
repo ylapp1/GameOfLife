@@ -2,6 +2,6 @@ language: php
 php:
   - 7.1.8
 install: composer install
-env:
-  - phpunitConfig="tests/phpunit.xml"
-scripts: phpunit --configuration $phpunitConfig --coverage-text
+scripts: phpunit --configuration tests/phpunit.xml --coverage-text
+branches:
+  only: feature/phase5
