@@ -82,7 +82,7 @@ class ImageCreatorTest extends TestCase
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                          $colorWhite, $colorBlack, "tmp/Frames");
 
-        $this->assertStringEndsWith('GameOfLife\src\GameOfLife\Outputs\Helpers/../../../../Output/', $imageCreator->basePath());
+        $this->assertStringEndsWith('GameOfLife/src/GameOfLife/Outputs/Helpers/../../../../Output/', $imageCreator->basePath());
         $this->assertEquals(15, $imageCreator->cellSize());
         $this->assertEquals($colorWhite, $imageCreator->backgroundColor());
         $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
