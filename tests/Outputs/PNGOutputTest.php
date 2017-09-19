@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 use Output\PNGOutput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;

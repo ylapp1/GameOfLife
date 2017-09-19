@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 
 /**
  * Class GIFOutputTest

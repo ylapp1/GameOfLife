@@ -9,7 +9,7 @@
 namespace Output\Helpers;
 
 use GameOfLife\Board;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 
 /**
  * Class ImageCreator

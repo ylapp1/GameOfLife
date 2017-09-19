@@ -11,7 +11,7 @@ use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 
 /**
  * Class ImageCreatorTest

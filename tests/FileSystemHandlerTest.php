@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,8 +33,8 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider createDirectoryProvider()
-     * @covers \GameOfLife\FileSystemHandler::createDirectory()
-     * @covers \GameOfLife\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystemHandler::createDirectory()
+     * @covers \Utils\FileSystemHandler::deleteDirectory()
      *
      * @param string $_directoryName    Test directory name
      * @param array $_subDirectories    Sub directories that shall be created
@@ -69,8 +69,8 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\FileSystemHandler::createDirectory()
-     * @covers \GameOfLife\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystemHandler::createDirectory()
+     * @covers \Utils\FileSystemHandler::deleteDirectory()
      */
     public function testCanDetectExistingDirectory()
     {
@@ -87,9 +87,9 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider writeFileProvider
-     * @covers \GameOfLife\FileSystemHandler::writeFile()
-     * @covers \GameOfLife\FileSystemHandler::readFile()
-     * @covers \GameOfLife\FileSystemHandler::deleteFile()
+     * @covers \Utils\FileSystemHandler::writeFile()
+     * @covers \Utils\FileSystemHandler::readFile()
+     * @covers \Utils\FileSystemHandler::deleteFile()
      *
      * @param string $_fileName     File name of the test file
      * @param string $_content      Content of the test file
@@ -119,7 +119,11 @@ class FileSystemHandlerTest extends TestCase
         ];
     }
 
-
+    /**
+     * @covers \Utils\FileSystemHandler::writeFile()
+     * @covers \Utils\FileSystemHandler::readFile()
+     * @covers \Utils\FileSystemHandler::deleteFile()
+     */
     public function testCanDetectExistingFile()
     {
         $filePath = $this->testDirectory . "/mytest.txt";
@@ -132,7 +136,7 @@ class FileSystemHandlerTest extends TestCase
         $this->assertEquals($fileContent, $this->fileSystemHandler->readFile($filePath));
 
         $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
-        $this->assertEquals(\GameOfLife\FileSystemHandler::ERROR_FILE_EXISTS, $error);
+        $this->assertEquals(\Utils\FileSystemHandler::ERROR_FILE_EXISTS, $error);
 
         // Check whether content of file was changed
         $this->assertEquals($fileContent, $this->fileSystemHandler->readFile($filePath));

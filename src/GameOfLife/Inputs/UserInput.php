@@ -10,7 +10,7 @@ namespace Input;
 
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 
 /**
  * Class UserInput

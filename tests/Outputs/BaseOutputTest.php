@@ -13,7 +13,7 @@ use Output\GIFOutput;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**

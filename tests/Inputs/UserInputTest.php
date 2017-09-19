@@ -9,7 +9,7 @@
 use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 use Input\UserInput;
 use Ulrichsg\Getopt;
 

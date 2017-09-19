@@ -8,7 +8,7 @@
 
 namespace Output;
 
-use GameOfLife\FileSystemHandler;
+use Utils\FileSystemHandler;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use Output\Helpers\ImageCreator;
