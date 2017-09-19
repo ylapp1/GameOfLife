@@ -4,11 +4,7 @@
 
     <filter>
         <whitelist>
-            <directory>../src</directory>
-            <exclude>
-                <file>../src/Ulrichsg/Getopt.php</file>
-                <file>../src/GameOfLife/Outputs/Helpers/GIFEncoder.php</file>
-            </exclude>
+            <directory>../src/GameOfLife</directory>
         </whitelist>
     </filter>
 

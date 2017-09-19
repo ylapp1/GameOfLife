@@ -14,7 +14,7 @@ use GameOfLife\Board;
 use Output\Helpers\ImageCreator;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageColor;
-use Output\Helpers\GIFEncoder;
+use GIFEncoder\GIFEncoder;
 
 /**
  * Class GIFOutput
