@@ -22,6 +22,8 @@ class UserInputTest extends TestCase
     private $input;
     /** @var Board $board */
     private $board;
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
 
     protected function setUp()
     {
@@ -29,10 +31,14 @@ class UserInputTest extends TestCase
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(2, 2, 50, true, $rules);
         $this->board->setField(0, 0, true);
+        $this->fileSystemHandler = new FileSystemHandler();
     }
 
     protected function tearDown()
     {
+        $this->fileSystemHandler->deleteDirectory(__DIR__ . "/../../Input/Templates/Custom", true);
+
+        unset($this->fileSystemHandler);
         unset($this->input);
         unset($this->board);
     }
@@ -87,9 +93,6 @@ class UserInputTest extends TestCase
         $this->input->saveCustomTemplate("unitTest", $this->board);
 
         $this->assertEquals(true, file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
-
-        $fileSystemHandler = new FileSystemHandler();
-        $fileSystemHandler->deleteDirectory(__DIR__ . "/../../Input/Templates/Custom", true);
     }
 
     /**
@@ -152,7 +155,8 @@ class UserInputTest extends TestCase
             [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
             [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
             [false, "1,1,1", "Error: Please input exactly two values!\n"],
-            [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"]
+            [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
+            [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"]
         ];
     }
 
