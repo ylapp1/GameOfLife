@@ -8,7 +8,6 @@
 
 namespace Input;
 
-use phpDocumentor\Reflection\File;
 use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\FileSystemHandler;

@@ -81,7 +81,7 @@ class FileSystemHandler
         if (file_exists($_filePath . "/" . $_fileName))
         {
             if (!$_overwriteIfExists) return $this::ERROR_FILE_EXISTS;
-            else unlink($_filePath . "/" . $_fileName);
+            else $this->deleteFile($_filePath . "/" . $_fileName);
         }
         else $this->createDirectory($_filePath);
 
@@ -100,5 +100,15 @@ class FileSystemHandler
     {
         if (! file_exists($_filePath)) return $this::ERROR_FILE_NOT_EXISTS;
         else return file($_filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+    }
+
+    /**
+     * Deletes a file
+     *
+     * @param string $_filePath
+     */
+    function deleteFile(string $_filePath)
+    {
+        if (file_exists($_filePath)) unlink($_filePath);
     }
 }
