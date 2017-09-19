@@ -2,6 +2,4 @@ language: php
 php:
   - 7.1.8
 install: composer install
-scripts: phpunit --configuration tests/phpunit.xml --coverage-text
-branches:
-  only: feature/phase5
+script: phpunit --configuration tests/phpunit.xml --coverage-text
