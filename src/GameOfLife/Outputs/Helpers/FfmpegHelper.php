@@ -93,24 +93,22 @@ class FfmpegHelper
     }
 
     /**
-     * Generate and execute the ffmpeg command
+     * Generates a ffmpeg command that can be executed by using exec
      *
-     * @param string $outputPath
+     * @param string $_outputPath   Path where result of ffmpeg shall be saved
+     * @return string               The ffmpeg command
      */
-    public function executeCommand(string $outputPath)
+    public function generateCommand(string $_outputPath)
     {
-        // generate command
         $command = "\"" . $this->binaryPath . "\"";
         foreach ($this->options as $option)
         {
             $command .= " " . $option;
         }
-        $command .= " \"" . $outputPath . "\"";
+        $command .= " \"" . $_outputPath . "\"";
         // hide output by redirecting it to NUL
         $command .= " 2>NUL";
 
-        $options = array();
-        $returnValue = 0;
-        exec($command, $options, $returnValue);
+        return $command;
     }
 }

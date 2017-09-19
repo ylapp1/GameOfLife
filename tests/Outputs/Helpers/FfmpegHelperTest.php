@@ -19,7 +19,7 @@ class FfmpegHelperTest extends TestCase
 
     protected function setUp()
     {
-        $this->ffmpegHelper = new FfmpegHelper("hello");
+        $this->ffmpegHelper = new FfmpegHelper("ffmpeg.exe");
     }
 
     protected function tearDown()
@@ -90,5 +90,14 @@ class FfmpegHelperTest extends TestCase
         $this->ffmpegHelper->resetOptions();
 
         $this->assertEquals(0, count($this->ffmpegHelper->options()));
+    }
+
+    public function testCanGenerateCommand()
+    {
+        $this->ffmpegHelper->addOption("myTest");
+        $this->ffmpegHelper->addOption("thisIsATest");
+        $this->ffmpegHelper->addOption("testing");
+
+        $this->assertEquals('"ffmpeg.exe" myTest thisIsATest testing "Output" 2>NUL', $this->ffmpegHelper->generateCommand("Output"));
     }
 }

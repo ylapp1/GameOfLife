@@ -139,7 +139,7 @@ class VideoOutput extends BaseOutput
             $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
             $ffmpegHelper->addOption("-t " . $this->secondsPerFrame);
 
-            $ffmpegHelper->executeCommand($this->outputDirectory . $outputPath);
+            exec($ffmpegHelper->generateCommand($this->outputDirectory . $outputPath));
 
             $audioFiles[] = $outputPath;
 
@@ -162,7 +162,7 @@ class VideoOutput extends BaseOutput
         $ffmpegHelper->addOption("-pix_fmt yuv420p");
 
         // Save video in output folder
-        $ffmpegHelper->executeCommand("\"Output\\Video\\" . $fileName . "\"");
+        exec($ffmpegHelper->generateCommand("\"Output\\Video\\" . $fileName . "\""));
 
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
