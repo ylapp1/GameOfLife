@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-$loader = require_once __DIR__ . '/../vendor/composer/autoload_real.php';
-
+//require_once __DIR__ . '/../vendor/composer/autoload_real.php';
 //$loader =  ComposerAutoloaderInitef2f69864c5695a57d28bbd4a98f5b03::getLoader();
+$loader = require_once __DIR__ . "/../vendor/autoload.php";
 
 $loader->addPsr4("GameOfLife\\", __DIR__ . "/../src/GameOfLife");
 $loader->addPsr4("Input\\", __DIR__ . "/../src/GameOfLife/Inputs");
