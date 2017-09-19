@@ -291,4 +291,34 @@ class UserInputTest extends TestCase
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
     }
+
+    /**
+     * @dataProvider catchUserInputProvider
+     * @covers \Input\UserInput::catchUserInput()
+     *
+     * @param string $_fileContent      Content that will be written to a test file which is read by catchUserInput
+     */
+    public function testCanCatchUserInput(string $_fileContent)
+    {
+        $testDirectory = __DIR__ . "/../unitTest";
+        $this->fileSystemHandler->createDirectory($testDirectory);
+
+        $testFile = "testInput.txt";
+        $this->fileSystemHandler->writeFile($testDirectory, $testFile, $_fileContent);
+
+        $this->assertEquals($_fileContent, $this->input->catchUserInput($testDirectory . "/" . $testFile));
+
+        $this->fileSystemHandler->deleteDirectory($testDirectory, true);
+    }
+
+    public function catchUserInputProvider()
+    {
+        return [
+            ["Hello universe!"],
+            ["Hello world!"],
+            ["Hallo Welt!"],
+            ["Hallo Universum!!!"],
+            ["Ich bin eine Datei"]
+        ];
+    }
 }

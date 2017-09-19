@@ -35,13 +35,14 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Catches User Inputs
+     * Catches User Inputs from input source
      *
+     * @param string $_inputSource  Input source (e.g. php://stdin)
      * @return string   User Input
      */
-    public function catchUserInput()
+    public function catchUserInput(string $_inputSource)
     {
-        $fileOpen = fopen('php://stdin','r') or die($php_errormsg);
+        $fileOpen = fopen($_inputSource,'r');
         $inputLine = fgets($fileOpen,1024);
         fclose($fileOpen);
 
@@ -65,7 +66,7 @@ class UserInput extends BaseInput
         if ($success !== true)
         {
             echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
-            $input = $this->catchUserInput();
+            $input = $this->catchUserInput('php://stdin');
             if (strtolower($input) == "y" or strtolower($input) == "yes")
             {
                 $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board, true);
@@ -182,7 +183,7 @@ class UserInput extends BaseInput
         $isInputFinished = false;
         while (! $isInputFinished)
         {
-            $input = $this->catchUserInput();
+            $input = $this->catchUserInput('php://stdin');
             $isInputFinished = $this->processInput($input, $_board);
         }
     }
