@@ -24,6 +24,8 @@ class UserInputTest extends TestCase
     private $board;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $userInputMock;
 
     protected function setUp()
     {
@@ -32,6 +34,10 @@ class UserInputTest extends TestCase
         $this->board = new Board(2, 2, 50, true, $rules);
         $this->board->setField(0, 0, true);
         $this->fileSystemHandler = new FileSystemHandler();
+
+        $this->userInputMock = $this->getMockBuilder(\Input\UserInput::class)
+                                    ->setMethods(["catchUserInput"])
+                                    ->getMock();
     }
 
     protected function tearDown()
@@ -41,6 +47,7 @@ class UserInputTest extends TestCase
         unset($this->fileSystemHandler);
         unset($this->input);
         unset($this->board);
+        unset($this->userInputMock);
     }
 
     /**
@@ -83,7 +90,6 @@ class UserInputTest extends TestCase
         $this->input->printBoardEditor($this->board, 0, 0);
     }
 
-
     /**
      * @covers \Input\UserInput::saveCustomTemplate()
      */
@@ -91,9 +97,23 @@ class UserInputTest extends TestCase
     {
         $this->expectOutputRegex("/.*Template successfully saved!\n\n.*/");
         $this->input->saveCustomTemplate("unitTest", $this->board);
-
         $this->assertEquals(true, file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
+
+        $this->userInputMock->expects($this->exactly(3))
+                            ->method("catchUserInput")
+                            ->withConsecutive()
+                            ->willReturn("n", "y", "yes");
+
+        $this->expectOutputRegex("/.*Saving aborted.\n\n.*/");
+        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+
+        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+
+        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
     }
+
 
     /**
      * @dataProvider getInputCoordinatesProvider
@@ -187,5 +207,80 @@ class UserInputTest extends TestCase
             "Exactly two values (1,0)" => ["1, 0", "1", 1, 0],
             "Exactly two values (0,0)" => ["      0    ,      0    ", "0", 0, 0]
         ];
+    }
+
+
+    /**
+     * @dataProvider fillBoardProvider()
+     * @covers \Input\UserInput::fillBoard()
+     *
+     * @param int $_inputX  X Coordinate of user input
+     * @param int $_inputY  Y Coordinate of user input
+     */
+    public function testCanFillBoard(int $_inputX, int $_inputY)
+    {
+        $this->userInputMock->method("catchUserInput")
+                      ->withConsecutive()
+                      ->willReturn($_inputX . "," . $_inputY, "start");
+
+        $this->userInputMock->expects($this->exactly(2))
+                      ->method("catchUserInput");
+
+        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+
+        $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
+                                 "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
+                                 "Enter the coordinates of a set field to unset it.\n" .
+                                 "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
+                                 "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                 "Let's Go:\n";
+        $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
+        $this->userInputMock->fillBoard($this->board, new Getopt());
+
+        $this->assertEquals(1, $this->board->getAmountCellsAlive());
+        $this->assertEquals(true, $this->board->getField($_inputX, $_inputY));
+    }
+
+    public function fillBoardProvider()
+    {
+        return [
+            [0, 0],
+            [0, 1],
+            [1, 1]
+        ];
+    }
+
+
+    public function testCanLoadTemplate()
+    {
+        $this->userInputMock->method("catchUserInput")
+                            ->willReturn("start");
+
+        $this->userInputMock->expects($this->exactly(1))
+                            ->method("catchUserInput");
+
+        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->assertEquals(0, $this->board->getAmountCellsAlive());
+
+        $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                            ->getMock();
+        $optionsMock->expects($this->exactly(2))
+                    ->method("getOption")
+                    ->withConsecutive(["edit"], ["template"])
+                    ->willReturn(true, "unittest");
+
+        $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
+                                "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
+                                "Enter the coordinates of a set field to unset it.\n" .
+                                "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
+                                "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                "Let's Go:\n";
+        $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
+        $this->userInputMock->fillBoard($this->board, $optionsMock);
+
+        $this->assertEquals(1, $this->board->getAmountCellsAlive());
+        $this->assertEquals(true, $this->board->getField(0, 0));
+        $this->assertEquals(2, $this->board->width());
+        $this->assertEquals(2, $this->board->height());
     }
 }
