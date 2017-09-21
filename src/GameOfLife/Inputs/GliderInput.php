@@ -17,11 +17,13 @@ use Ulrichsg\Getopt;
  * Places a glider on the board
  *
  * Usage:
- * Use addOptions($_options) to add the objects options to the main option list
- * Use fillBoard to set the glider on the board
+ *   - Call addOptions($_options) to add the objects options to the main option list
+ *   - Call fillBoard to set the glider on the board
  */
 class GliderInput extends BaseInput
 {
+    // Magic Methods
+
     /**
      * GliderInput constructor.
      */
@@ -30,15 +32,17 @@ class GliderInput extends BaseInput
         parent::__construct(3, 3);
     }
 
+
     /**
      * Adds GliderInputs specific options to the option list
      *
      * @param Getopt $_options  Option list to which the objects options are added
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
-            array(
+            array
+            (
                 array(null, "gliderPosX", Getopt::REQUIRED_ARGUMENT, "X position of the glider"),
                 array(null, "gliderPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the glider")
             )
@@ -51,24 +55,19 @@ class GliderInput extends BaseInput
      * @param Board $_board     The board
      * @param Getopt $_options  Options (posX, posY)
      */
-    public function fillBoard($_board, $_options)
+    public function fillBoard(Board $_board, Getopt $_options)
     {
-        // fetch Options
-        $posX = $_options->getOption("gliderPosX");
-        $posY = $_options->getOption("gliderPosY");
         $boardCenter = $_board->getCenter();
+        $posX = $boardCenter["x"];
+        $posY = $boardCenter["y"];
 
-        // Use default values if options are not set
-        if (! isset($posX)) $posX = $boardCenter["x"];
-        else $posX -= 1;
-
-        if (! isset($posY)) $posY = $boardCenter["y"];
-        else $posY -= 1;
+        if ($_options->getOption("gliderPosX")) $posX = (int)$_options->getOption("gliderPosX");
+        if ($_options->getOption("gliderPosY")) $posY = (int)$_options->getOption("gliderPosY");
 
         // check whether the glider is inside board dimensions
         if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))
         {
-            echo "Error: Glider exceeds field borders.";
+            echo "Error: Glider exceeds field borders.\n";
         }
         else
         {

@@ -11,6 +11,8 @@ namespace Utils;
 /**
  * Class FileSystemHandler
  *
+ * Handles directory and file creation/deletion
+ *
  * @package Output\Helpers
  */
 class FileSystemHandler
@@ -29,7 +31,7 @@ class FileSystemHandler
      *
      * @return int  Error
      */
-    public function createDirectory(string $_directoryPath)
+    public function createDirectory(string $_directoryPath): int
     {
         if (! file_exists($_directoryPath))
         {
@@ -48,7 +50,7 @@ class FileSystemHandler
      *
      * @return int  Error
      */
-    public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
+    public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false): int
     {
         if (! file_exists($_directoryPath)) return self::ERROR_DIRECTORY_NOT_EXISTS;
 
@@ -65,7 +67,7 @@ class FileSystemHandler
                     if (is_dir($file))
                     {
                         $error = $this->deleteDirectory($file, $_deleteWhenNotEmpty);
-                        if ($error != self::NO_ERROR) return $error;
+                        if ($error !== self::NO_ERROR) return $error;
                     }
                     else unlink($file);
                 }
@@ -83,7 +85,7 @@ class FileSystemHandler
      *
      * @return int  Error
      */
-    function deleteFile(string $_filePath)
+    function deleteFile(string $_filePath): int
     {
         if (file_exists($_filePath))
         {
@@ -102,7 +104,7 @@ class FileSystemHandler
      */
     function readFile(string $_filePath)
     {
-        if (! file_exists($_filePath)) return $this::ERROR_FILE_NOT_EXISTS;
+        if (! file_exists($_filePath)) return self::ERROR_FILE_NOT_EXISTS;
         else return file($_filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
     }
 
@@ -112,11 +114,11 @@ class FileSystemHandler
      * @param string $_filePath         The file path
      * @param string $_fileName         The name of the new file
      * @param string $_content          The file content
-     * @param bool $_overwriteIfExists  Overwrite existing file
+     * @param bool $_overwriteIfExists  If set to true, an existing file will be overwritten
      *
      * @return int  Error
      */
-    function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
+    function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false): int
     {
         // Create directory if it doesn't exist
         if (file_exists($_filePath . "/" . $_fileName))

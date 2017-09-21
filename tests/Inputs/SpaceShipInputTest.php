@@ -107,24 +107,25 @@ class SpaceShipInputTest extends TestCase
     public function testCanFillBoardWithCustomPositions(int $_spaceShipPosX, int $_spaceShipPosY, bool $_expectsError)
     {
         $this->optionsMock->method("getOption")
-                          ->withConsecutive(["spaceShipPosX"], ["spaceShipPosY"])
-                          ->willReturn($_spaceShipPosX, $_spaceShipPosY);
+                          ->withConsecutive(["spaceShipPosX"], ["spaceShipPosX"], ["spaceShipPosY"], ["spaceShipPosY"])
+                          ->willReturn($_spaceShipPosX, $_spaceShipPosX, $_spaceShipPosY, $_spaceShipPosY);
 
-        if ($_expectsError) $this->expectOutputString("Error: Spaceship exceeds field borders.");
+        if ($_expectsError) $this->expectOutputString("Error: Spaceship exceeds field borders.\n");
 
         $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX, $_spaceShipPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 1, $_spaceShipPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 2, $_spaceShipPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX - 1, $_spaceShipPosY));
+            $this->assertEquals(9, $this->board->getAmountCellsAlive());
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 1, $_spaceShipPosY));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 2, $_spaceShipPosY));
             $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX - 1, $_spaceShipPosY + 2));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 2, $_spaceShipPosY + 2));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX, $_spaceShipPosY + 1));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 1));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 2));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX, $_spaceShipPosY + 3));
+            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY + 3));
 
         }
     }
@@ -132,13 +133,13 @@ class SpaceShipInputTest extends TestCase
     public function fillBoardWithCustomPositionsProvider()
     {
         return [
-            "Exceed left border (0|1)" => [0, 1, true],
-            "Exceed upper border (1|0)" => [1, 0, true],
-            "Valid position (1|2)" => [1, 2, false],
-            "Valid position (2|4)" => [2, 4, false],
-            "Valid position (5|5)" => [5, 5, false],
-            "Exceed right border (7|4)" => [7, 4, true],
-            "Exceed bottom border (3|9)" => [3, 9, true]
+            "Exceed left border (-1|1)" => ["-1", "1", true],
+            "Exceed upper border (1|-1)" => ["1", "-1", true],
+            "Valid position (1|2)" => ["1", "2", false],
+            "Valid position (2|4)" => ["2", "4", false],
+            "Valid position (5|5)" => ["5", "5", false],
+            "Exceed right border (7|4)" => ["7", "4", true],
+            "Exceed bottom border (3|9)" => ["3", "9", true]
         ];
     }
 }

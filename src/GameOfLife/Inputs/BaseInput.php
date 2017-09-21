@@ -8,8 +8,8 @@
 
 namespace Input;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 
 /**
  * Class BaseInput
@@ -19,8 +19,11 @@ use GameOfLife\Board;
  */
 class BaseInput
 {
-    private $objectWidth;
     private $objectHeight;
+    private $objectWidth;
+
+
+    // Magic Methods
 
     /**
      * BaseInput constructor.
@@ -28,42 +31,53 @@ class BaseInput
      * @param int $_objectWidth     Object width
      * @param int $_objectHeight    Object height
      */
-    public function __construct($_objectWidth = null, $_objectHeight = null)
+    public function __construct(int $_objectWidth = null, int $_objectHeight = null)
     {
         $this->objectWidth = $_objectWidth;
         $this->objectHeight = $_objectHeight;
     }
 
-    /**
-     * @return mixed
-     */
-    public function objectWidth()
-    {
-        return $this->objectWidth;
-    }
+
+    // Getters and Setters
 
     /**
-     * @param mixed $objectWidth
+     * Returns the object height
+     *
+     * @return int  Object height
      */
-    public function setObjectWidth($objectWidth)
-    {
-        $this->objectWidth = $objectWidth;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function objectHeight()
+    public function objectHeight(): int
     {
         return $this->objectHeight;
     }
 
     /**
-     * @param mixed $objectHeight
+     * Sets the object height
+     *
+     * @param int $_objectHeight    Object height
      */
-    public function setObjectHeight($objectHeight)
+    public function setObjectHeight(int $_objectHeight)
     {
-        $this->objectHeight = $objectHeight;
+        $this->objectHeight = $_objectHeight;
+    }
+
+    /**
+     * Returns the object width
+     *
+     * @return int  Object width
+     */
+    public function objectWidth(): int
+    {
+        return $this->objectWidth;
+    }
+
+    /**
+     * Sets the object width
+     *
+     * @param int $_objectWidth     Object width
+     */
+    public function setObjectWidth(int $_objectWidth)
+    {
+        $this->objectWidth = $_objectWidth;
     }
 
 
@@ -74,7 +88,7 @@ class BaseInput
      *
      * @param Getopt $_options     Option list to which the objects options are added
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
     }
 
@@ -83,10 +97,10 @@ class BaseInput
      *
      * @codeCoverageIgnore
      *
-     * @param Board $_board      The board which shall be filled with cells
+     * @param Board $_board       The board which shall be filled with cells
      * @param Getopt $_options    Object specific options (e.g. posX, posY, fillPercent)
      */
-    public function fillBoard($_board, $_options)
+    public function fillBoard(Board $_board, Getopt $_options)
     {
     }
 
@@ -97,9 +111,11 @@ class BaseInput
      * @param int $_boardHeight Board height
      * @param int $_posX        X-Coordinate of the top left border of the object
      * @param int $_posY        Y-Coordinate of the top left border of the object
-     * @return bool
+     *
+     * @return bool     True: Object is out of bounds
+     *                  False: Object is not out of bounds
      */
-    public function isObjectOutOfBounds($_boardWidth, $_boardHeight, $_posX, $_posY)
+    public function isObjectOutOfBounds(int $_boardWidth, int $_boardHeight, int $_posX, int $_posY)
     {
         if ($_posX < 0 ||
             $_posY < 0 ||

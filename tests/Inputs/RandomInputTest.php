@@ -17,10 +17,10 @@ use GameOfLife\RuleSet;
  */
 class RandomInputTest extends TestCase
 {
-    /** @var  RandomInput $input */
-    private $input;
     /** @var Board $board */
     private $board;
+    /** @var  RandomInput $input */
+    private $input;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
 
@@ -45,13 +45,13 @@ class RandomInputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $blinkerOptions = array(
+        $randomInputOptions = array(
             array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
         );
 
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
-                          ->with($blinkerOptions);
+                          ->with($randomInputOptions);
         $this->input->addOptions($this->optionsMock);
     }
 
@@ -77,15 +77,16 @@ class RandomInputTest extends TestCase
      *
      * @param int $_fillPercentage  Fill Percentage
      * @param bool $_expectsError   Expects error message
+     * @param string $_errorMessage The expected error message
      */
-    public function testCanFillBoardCustomPercentage(int $_fillPercentage, bool $_expectsError)
+    public function testCanFillBoardCustomPercentage(int $_fillPercentage, bool $_expectsError, string $_errorMessage = null)
     {
-        $this->optionsMock->expects($this->exactly(1))
+        $this->optionsMock->expects($this->exactly(2))
                           ->method("getOption")
                           ->with("fillPercent")
                           ->willReturn($_fillPercentage);
 
-        if ($_expectsError) $this->expectOutputString("Error: There can't be more living cells than 100% of the fields.\n");
+        if ($_expectsError) $this->expectOutputString($_errorMessage);
         $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
@@ -98,16 +99,16 @@ class RandomInputTest extends TestCase
     public function fillBoardCustomPercentageProvider()
     {
         return [
-            "0% filled" => [0, false],
-            "20% filled" => [20, false],
-            "50% filled" => [50, false],
-            "76% filled" => [76, false],
-            "90% filled" => [90, false],
-            "99% filled" => [99, false],
-            "100% filled" => [100, false],
-            "101% filled" => [101, true],
-            "130% filled" => [130, true],
-            "2500% filled" => [2500, true]
+            "-1% filled" => ["-1", true, "Error: There can't be less living cells than 0% of the fields.\n"],
+            "20% filled" => ["20", false],
+            "50% filled" => ["50", false],
+            "76% filled" => ["76", false],
+            "90% filled" => ["90", false],
+            "99% filled" => ["99", false],
+            "100% filled" => ["100", false],
+            "101% filled" => ["101", true, "Error: There can't be more living cells than 100% of the fields.\n"],
+            "130% filled" => ["130", true, "Error: There can't be more living cells than 100% of the fields.\n"],
+            "2500% filled" => ["2500", true, "Error: There can't be more living cells than 100% of the fields.\n"]
         ];
     }
 }

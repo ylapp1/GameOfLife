@@ -13,6 +13,8 @@ use Ulrichsg\Getopt;
 
 /**
  * Class RandomInput
+ *
+ * Fills the board with random set cells
  */
 class RandomInput extends BaseInput
 {
@@ -21,11 +23,13 @@ class RandomInput extends BaseInput
      *
      * @param Getopt $_options  Option list to which the objects options are added
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
-            array(
-                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board"))
+            array
+            (
+                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
+            )
         );
     }
 
@@ -35,16 +39,19 @@ class RandomInput extends BaseInput
      * @param Board $_board     The Board
      * @param Getopt $_options  Options (fillPercent)
      */
-    public function fillBoard($_board, $_options)
+    public function fillBoard(Board $_board, Getopt $_options)
     {
-        // fetch options
-        $fillPercent = $_options->getOption("fillPercent");
+        if ($_options->getOption("fillPercent")) $fillPercent = (float)$_options->getOption("fillPercent");
+        else $fillPercent = (float)(rand(15000, 70000) / 1000);
 
-        // fill with default value if option is not set
-        if (! isset($fillPercent)) $fillPercent = rand(15, 70);
-        elseif ($fillPercent > 100)
+        if ($fillPercent > 100)
         {
             echo "Error: There can't be more living cells than 100% of the fields.\n";
+            return;
+        }
+        elseif ($fillPercent < 0)
+        {
+            echo "Error: There can't be less living cells than 0% of the fields.\n";
             return;
         }
 

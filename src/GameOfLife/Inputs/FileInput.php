@@ -8,8 +8,8 @@
 
 namespace Input;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
@@ -21,52 +21,86 @@ use Utils\FileSystemHandler;
  */
 class FileInput extends BaseInput
 {
-    private $newBoardHeight;
-    private $newBoardWidth;
     private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
+    private $templateHeight;
+    private $templateWidth;
+
+
+    // Getters and Setters
 
     /**
-     * @return int
+     * Returns the template directory
+     *
+     * @return string   Template directory
      */
-    public function newBoardHeight()
+    public function templateDirectory(): string
     {
-        return $this->newBoardHeight;
+        return $this->templateDirectory;
     }
 
     /**
-     * @param int $_newBoardHeight
+     * Sets the template directory
+     *
+     * @param string $_templateDirectory    Template directory
      */
-    public function setNewBoardHeight($_newBoardHeight)
+    public function setTemplateDirectory(string $_templateDirectory)
     {
-        $this->newBoardHeight = $_newBoardHeight;
+        $this->templateDirectory = $_templateDirectory;
     }
 
     /**
-     * @return int
+     * Returns the height of the template board
+     *
+     * @return int  Height of the template board
      */
-    public function newBoardWidth()
+    public function templateHeight(): int
     {
-        return $this->newBoardWidth;
+        return $this->templateHeight;
     }
 
     /**
-     * @param int $_newBoardWidth
+     * Sets the height of the template board
+     *
+     * @param int $_templateHeight  Height of the template board
      */
-    public function setNewBoardWidth($_newBoardWidth)
+    public function setTemplateHeight(int $_templateHeight)
     {
-        $this->newBoardWidth = $_newBoardWidth;
+        $this->templateHeight = $_templateHeight;
     }
+
+    /**
+     * returns the width ot the template board
+     *
+     * @return int  Width of the template board
+     */
+    public function templateWidth(): int
+    {
+        return $this->templateWidth;
+    }
+
+    /**
+     * Sets the width of the template board
+     *
+     * @param int $_templateWidth   Width of the template board
+     */
+    public function setTemplateWidth(int $_templateWidth)
+    {
+        $this->templateWidth = $_templateWidth;
+    }
+
 
     /**
      * Adds FileInputs specific options to the option list
      *
      * @param Getopt $_options     Option list to which the objects options are added
      */
-    public function addOptions($_options)
+    public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
-            array(
-                array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"))
+            array
+            (
+                array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration")
+            )
         );
     }
 
@@ -76,35 +110,31 @@ class FileInput extends BaseInput
      * @param Board $_board      The Board
      * @param Getopt $_options   Options (template)
      */
-    public function fillBoard($_board, $_options)
+    public function fillBoard(Board $_board, Getopt $_options)
     {
-        // fetch options
-        $template = $_options->getOption("template");
-
-        // return error if template name is not set
-        if (! isset($template)) echo "Error: No template file specified\n";
-        else
+        if ($_options->getOption("template"))
         {
-            $board = $this->loadTemplate($template);
+            $board = $this->loadTemplate($_options->getOption("template"));
 
             // Reconfigure the board dimensions
-            $_board->setHeight($this->newBoardHeight);
-            $_board->setWidth($this->newBoardWidth);
+            $_board->setHeight($this->templateHeight);
+            $_board->setWidth($this->templateWidth);
             $_board->setCurrentBoard($board);
         }
+        else echo "Error: No template file specified\n";
     }
 
     /**
-     * Load cell configuration from txt file
+     * Load board from txt file
      *
-     * @param string $_template     Template name
+     * @param string $_templateName     Template name
      *
-     * @return array                The board array
+     * @return array  The board
      */
-    public function loadTemplate($_template)
+    public function loadTemplate(string $_templateName): array
     {
-        $fileNameOfficial =  $this->templateDirectory . "/" . $_template . ".txt";
-        $fileNameCustom = $this->templateDirectory . "/Custom/" . $_template . ".txt";
+        $fileNameOfficial =  $this->templateDirectory . "/" . $_templateName . ".txt";
+        $fileNameCustom = $this->templateDirectory . "/Custom/" . $_templateName . ".txt";
 
         // check whether template exists
         if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
@@ -112,16 +142,16 @@ class FileInput extends BaseInput
         else
         {
             echo "Error: Template file not found!\n";
-            return null;
+            return array();
         }
 
         // Read template
         $fileSystemHandler = new FileSystemHandler();
         $lines = $fileSystemHandler->readFile($fileName);
-        $board = array();
 
-        $this->newBoardHeight = count($lines);
-        $this->newBoardWidth = count(str_split($lines[0]));
+        $board = array();
+        $this->templateHeight = count($lines);
+        $this->templateWidth = count(str_split($lines[0]));
 
         for ($y = 0; $y < count($lines); $y++)
         {

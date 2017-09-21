@@ -108,33 +108,34 @@ class GliderInputTest extends TestCase
     public function testCanFillBoardWithCustomPositions(int $_gliderPosX, int $_gliderPosY, bool $_expectsError)
     {
         $this->optionsMock->method("getOption")
-            ->withConsecutive(["gliderPosX"], ["gliderPosY"])
-            ->willReturn($_gliderPosX, $_gliderPosY);
+            ->withConsecutive(["gliderPosX"], ["gliderPosX"], ["gliderPosY"], ["gliderPosY"])
+            ->willReturn($_gliderPosX, $_gliderPosX, $_gliderPosY, $_gliderPosY);
 
-        if ($_expectsError) $this->expectOutputString("Error: Glider exceeds field borders.");
+        if ($_expectsError) $this->expectOutputString("Error: Glider exceeds field borders.\n");
 
         $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
-            $this->assertEquals(true, $this->board->getField($_gliderPosX, $_gliderPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_gliderPosX + 1, $_gliderPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_gliderPosX - 1, $_gliderPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_gliderPosX, $_gliderPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_gliderPosX + 1, $_gliderPosY + 1));
+            $this->assertEquals(5, $this->board->getAmountCellsAlive());
+            $this->assertTrue($this->board->getField($_gliderPosX + 1, $_gliderPosY));
+            $this->assertTrue($this->board->getField($_gliderPosX + 2, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getField($_gliderPosX, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getField($_gliderPosX + 1, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getField($_gliderPosX + 2, $_gliderPosY + 2));
         }
     }
 
     public function fillBoardWithCustomPositionsProvider()
     {
         return [
-            "Exceed left border (0|1)" => [0, 1, true],
-            "Exceed upper border (1|0)" => [1, 0, true],
-            "Valid position (1|2)" => [1, 2, false],
-            "Valid position (2|4)" => [2, 4, false],
-            "Valid position (6|5)" => [6, 5, false],
-            "Exceed right border (9|4)" => [9, 4, true],
-            "Exceed bottom border (5|9)" => [5, 9, true]
+            "Exceed left border (-1|1)" => ["-1","1", true],
+            "Exceed upper border (1|-1)" => ["1", "-1", true],
+            "Valid position (1|2)" => ["1", "2", false],
+            "Valid position (2|4)" => ["2", "4", false],
+            "Valid position (6|5)" => ["6", "5", false],
+            "Exceed right border (9|4)" => ["9", "4", true],
+            "Exceed bottom border (5|9)" => ["5", "9", true]
         ];
     }
 }

@@ -42,30 +42,36 @@ class FileInputTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \Input\FileInput::setNewBoardHeight()
-     * @covers \Input\FileInput::newBoardHeight()
-     * @covers \Input\FileInput::setNewBoardWidth()
-     * @covers \Input\FileInput::newBoardWidth()
+     * @covers \Input\FileInput::setTemplateDirectory()
+     * @covers \Input\FileInput::templateDirectory()
+     * @covers \Input\FileInput::setTemplateHeight()
+     * @covers \Input\FileInput::templateHeight()
+     * @covers \Input\FileInput::setTemplateWidth()
+     * @covers \Input\FileInput::templateWidth()
      *
-     * @param int $_newBoardWidth   New width of board after reading template
-     * @param int $_newBoardHeight  New height of board after reading template
+     * @param string $_templateDirectory    Template directory
+     * @param int $_templateWidth   New width of board after reading template
+     * @param int $_templateHeight  New height of board after reading template
      */
-    public function testCanSetAttributes($_newBoardWidth, $_newBoardHeight)
+    public function testCanSetAttributes($_templateDirectory, $_templateWidth, $_templateHeight)
     {
-        $this->input->setNewBoardWidth($_newBoardWidth);
-        $this->assertEquals($_newBoardWidth, $this->input->newBoardWidth());
+        $this->input->setTemplateDirectory($_templateDirectory);
+        $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
 
-        $this->input->setNewBoardHeight($_newBoardHeight);
-        $this->assertEquals($_newBoardHeight, $this->input->newBoardHeight());
+        $this->input->setTemplateHeight($_templateHeight);
+        $this->assertEquals($_templateHeight, $this->input->templateHeight());
+
+        $this->input->setTemplateWidth($_templateWidth);
+        $this->assertEquals($_templateWidth, $this->input->templateWidth());
     }
 
     public function setAttributesProvider()
     {
         return [
-            [1, 2],
-            [23, 76],
-            [45, 98],
-            [33, 55]
+            ["test", 1, 2],
+            ["myDirectory", 23, 76],
+            ["randomDirectory", 45, 98],
+            ["testThisDirectory", 33, 55]
         ];
     }
 
@@ -92,8 +98,8 @@ class FileInputTest extends TestCase
         $board = $this->input->loadTemplate("unittest");
 
         $this->assertNotEmpty($board);
-        $this->assertEquals(2, $this->input->newBoardWidth());
-        $this->assertEquals(2, $this->input->newBoardHeight());
+        $this->assertEquals(2, $this->input->templateWidth());
+        $this->assertEquals(2, $this->input->templateHeight());
 
         $this->assertEquals(true, $board[0][0]);
         $this->assertEquals(null, @$board[0][1]);
@@ -129,7 +135,8 @@ class FileInputTest extends TestCase
      */
     public function testCanFillBoard()
     {
-        $this->optionsMock->method("getOption")
+        $this->optionsMock->expects($this->exactly(2))
+                          ->method("getOption")
                           ->with("template")
                           ->willReturn("unittest");
 

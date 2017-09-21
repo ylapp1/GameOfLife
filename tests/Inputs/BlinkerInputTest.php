@@ -101,32 +101,32 @@ class BlinkerInputTest extends TestCase
     public function testCanFillBoardWithCustomPositions(int $_blinkerPosX, int $_blinkerPosY, bool $_expectsError)
     {
         $this->optionsMock->method("getOption")
-                          ->withConsecutive(["blinkerPosX"], ["blinkerPosY"])
-                          ->willReturn($_blinkerPosX, $_blinkerPosY);
+                          ->withConsecutive(["blinkerPosX"], ["blinkerPosX"], ["blinkerPosY"], ["blinkerPosY"])
+                          ->willReturn($_blinkerPosX, $_blinkerPosX, $_blinkerPosY, $_blinkerPosY);
 
-        if ($_expectsError) $this->expectOutputString("Error: Blinker exceeds field borders.");
+        if ($_expectsError) $this->expectOutputString("Error: Blinker exceeds field borders.\n");
 
         $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
-            $this->assertEquals(true, $this->board->getField($_blinkerPosX - 1, $_blinkerPosY - 1));
-            $this->assertEquals(true, $this->board->getField($_blinkerPosX - 1, $_blinkerPosY));
-            $this->assertEquals(true, $this->board->getField($_blinkerPosX - 1, $_blinkerPosY + 1));
-            $this->assertEquals(false, $this->board->getField($_blinkerPosX + 3, $_blinkerPosY));
+            $this->assertEquals(3, $this->board->getAmountCellsAlive());
+            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY));
+            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY + 1));
+            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY + 2));
         }
     }
 
     public function fillBoardWithCustomPositionsProvider()
     {
         return [
-            "Exceed left border (0|1)" => [0, 1, true],
-            "Exceed upper border (1|0)" => [1, 0, true],
-            "Valid position (1|2)" => [1, 2, false],
-            "Valid position (2|4)" => [2, 4, false],
-            "Valid position (10|5)" => [10, 5, false],
-            "Exceed right border (11|4)" => [11, 4, true],
-            "Exceed bottom border (5|9)" => [5, 9, true]
+            "Exceed left border (-1|1)" => ["-1", "1", true],
+            "Exceed upper border (1|-1)" => ["1", "-1", true],
+            "Valid position (1|2)" => ["1", "2", false],
+            "Valid position (2|4)" => ["2", "4", false],
+            "Valid position (10|5)" => ["10", "5", true],
+            "Exceed right border (11|4)" => ["11", "4", true],
+            "Exceed bottom border (5|9)" => ["5", "9", true]
         ];
     }
 }
