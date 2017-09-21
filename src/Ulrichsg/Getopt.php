@@ -1,5 +1,7 @@
 <?php
+
 namespace Ulrichsg;
+
 /*
  * Copyright (c) 2011 Ulrich Schmidt-Goertz <ulrich at schmidt-goertz.de>
  *

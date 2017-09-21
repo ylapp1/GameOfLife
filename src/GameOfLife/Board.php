@@ -16,15 +16,17 @@ namespace GameOfLife;
  */
 class Board
 {
-    private $currentBoard = array(array());
-    private $historyOfBoards = array();
+    private $currentBoard;
+    private $gameStep;
     private $hasBorder;
     private $height;
+    private $historyOfBoards;
     private $maxSteps;
-    private $width;
     private $rules;
-    private $gameStep;
+    private $width;
 
+
+    // Magic methods
 
     /**
      * Board constructor.
@@ -37,18 +39,45 @@ class Board
      *                              true: borders link to the opposite side of the field
      * @param RuleSet $_rules   contains Birth/Death rules of the board
      */
-    public function __construct($_width, $_height, $_maxSteps, $_hasBorder, $_rules)
+    public function __construct(int $_width, int $_height, int $_maxSteps, bool $_hasBorder, RuleSet $_rules)
     {
+        $this->gameStep = 0;
         $this->hasBorder = $_hasBorder;
         $this->height = $_height;
+        $this->historyOfBoards = array();
         $this->maxSteps = $_maxSteps;
         $this->rules = $_rules;
         $this->width = $_width;
 
+        // must be called after board height is set
         $this->currentBoard = $this->initializeEmptyBoard();
-        $this->gameStep = 0;
     }
 
+    /**
+     * Converts the board to string
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        $string = "";
+
+        for ($y = 0; $y < $this->height; $y++)
+        {
+            for ($x = 0; $x < $this->width; $x++)
+            {
+                if ($this->getField($x, $y)) $string .= "X";
+                else $string .= ".";
+            }
+
+            if ($y != $this->height - 1) $string .= "\r\n";
+        }
+
+        return $string;
+    }
+
+
+    // Getters and Setters
 
     /**
      * Returns current Board
@@ -63,31 +92,31 @@ class Board
     /**
      * Sets current board
      *
-     * @param array $currentBoard   Current board
+     * @param array $_currentBoard   Current board
      */
-    public function setCurrentBoard(array $currentBoard)
+    public function setCurrentBoard(array $_currentBoard)
     {
-        $this->currentBoard = $currentBoard;
+        $this->currentBoard = $_currentBoard;
     }
 
     /**
-     * Returns the history of boards
+     * Returns the current game step
      *
-     * @return array   History of boards
+     * @return int  Current game step
      */
-    public function historyOfBoards(): array
+    public function gameStep(): int
     {
-        return $this->historyOfBoards;
+        return $this->gameStep;
     }
 
     /**
-     * Set the history of boards
+     * Sets the current game step
      *
-     * @param array $historyOfBoards    History of boards
+     * @param int $_gameStep Current game step
      */
-    public function setHistoryOfBoards(array $historyOfBoards)
+    public function setGameStep(int $_gameStep)
     {
-        $this->historyOfBoards = $historyOfBoards;
+        $this->gameStep = $_gameStep;
     }
 
     /**
@@ -105,13 +134,13 @@ class Board
     /**
      * Sets the border type
      *
-     * @param bool $hasBorder   Border type
+     * @param bool $_hasBorder   Border type
      *                              true: The border is made of cells that are constantly dead
      *                              false: Each border links to the opposite site of the board
      */
-    public function setHasBorder(bool $hasBorder)
+    public function setHasBorder(bool $_hasBorder)
     {
-        $this->hasBorder = $hasBorder;
+        $this->hasBorder = $_hasBorder;
     }
 
     /**
@@ -127,15 +156,35 @@ class Board
     /**
      * Sets the board height
      *
-     * @param int $height   Board height
+     * @param int $_height   Board height
      */
-    public function setHeight(int $height)
+    public function setHeight(int $_height)
     {
-        $this->height = $height;
+        $this->height = $_height;
     }
 
     /**
-     * Return the maximum amount of steps which are calculated before the board stops calculating more steps
+     * Returns the history of boards
+     *
+     * @return array   History of boards
+     */
+    public function historyOfBoards(): array
+    {
+        return $this->historyOfBoards;
+    }
+
+    /**
+     * Sets the history of boards
+     *
+     * @param array $_historyOfBoards    History of boards
+     */
+    public function setHistoryOfBoards(array $_historyOfBoards)
+    {
+        $this->historyOfBoards = $_historyOfBoards;
+    }
+
+    /**
+     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps
      *
      * @return int   Maximum amount of game steps
      */
@@ -147,31 +196,11 @@ class Board
     /**
      * Sets the maximum amount of steps which are calculated before the board stops calculating more steps
      *
-     * @param int $maxSteps     Maximum amount of game steps
+     * @param int $_maxSteps     Maximum amount of game steps
      */
-    public function setMaxSteps(int $maxSteps)
+    public function setMaxSteps(int $_maxSteps)
     {
-        $this->maxSteps = $maxSteps;
-    }
-
-    /**
-     * Returns the board width
-     *
-     * @return int  Board width
-     */
-    public function width(): int
-    {
-        return $this->width;
-    }
-
-    /**
-     * Set the board width
-     *
-     * @param int $width    Board width
-     */
-    public function setWidth(int $width)
-    {
-        $this->width = $width;
+        $this->maxSteps = $_maxSteps;
     }
 
     /**
@@ -185,67 +214,91 @@ class Board
     }
 
     /**
-     * Set the rule set
+     * Sets the rule set
      *
-     * @param RuleSet $rules    Death/Birth rules of the current board
+     * @param RuleSet $_rules    Death/Birth rules of the current board
      */
-    public function setRules(RuleSet $rules)
+    public function setRules(RuleSet $_rules)
     {
-        $this->rules = $rules;
+        $this->rules = $_rules;
     }
 
     /**
-     * Returns the current game step
+     * Returns the board width
      *
-     * @return int
+     * @return int  Board width
      */
-    public function gameStep(): int
+    public function width(): int
     {
-        return $this->gameStep;
+        return $this->width;
     }
 
     /**
-     * Set the current game step
+     * Sets the board width
      *
-     * @param int $gameStep
+     * @param int $_width    Board width
      */
-    public function setGameStep(int $gameStep)
+    public function setWidth(int $_width)
     {
-        $this->gameStep = $gameStep;
+        $this->width = $_width;
     }
+
 
 
     /**
      * Adds a board to the history of boards
      * The history of boards stores the last 15 boards of a game
      *
-     * @param bool[][] $_board
+     * @param bool[][] $_board  The board that will be added to the history of boards
      */
-    public function addToHistoryOfBoards(array $_board)
+    public function addToHistory(array $_board)
     {
         $this->historyOfBoards[] = $_board;
-
         if (count($this->historyOfBoards) > 15) array_shift($this->historyOfBoards);
     }
 
-
     /**
-     * Returns an empty board
+     * Calculates a single step of the board
      *
-     * @return bool[][]      Empty board
+     *   - Calculates the new cell state for each cell
+     *   - Adds last board to history of boards
+     *   - Increments game step by 1
      */
-    public function initializeEmptyBoard ()
+    public function calculateStep()
     {
-        $board = array();
+        $newBoard = $this->initializeEmptyBoard();
 
         for ($y = 0; $y < $this->height; $y++)
         {
-            $board[$y] = array();
+            for ($x = 0; $x < $this->width; $x++)
+            {
+                $amountNeighboursAlive = $this->getAmountNeighboursAlive($x, $y);
+                $currentCellState = $this->getField($x, $y);
+                $newCellState = $this->getNewCellState($currentCellState, $amountNeighboursAlive);
+
+                if ($newCellState) $newBoard[$y][$x] = true;
+            }
         }
 
-        return $board;
+        $this->addToHistory($this->currentBoard());
+        $this->currentBoard = $newBoard;
+        $this->gameStep ++;
     }
 
+    /**
+     * Returns the total amount of living cells on the board
+     *
+     * @return int      Amount of living cells
+     */
+    public function getAmountCellsAlive(): int
+    {
+        $amountCellsAlive = 0;
+        foreach ($this->currentBoard as $line)
+        {
+            $amountCellsAlive += array_sum($line);
+        }
+        return $amountCellsAlive;
+    }
 
     /**
      * Returns the amount of living neighbour cells of a cell
@@ -254,62 +307,90 @@ class Board
      * @param int $_y   Y-Coordinate of the cell that is inspected
      * @return int      Amount of living neighbour cells
      */
-    public function calculateAmountNeighboursAlive(int $_x, int $_y)
+    public function getAmountNeighboursAlive(int $_x, int $_y): int
     {
-        // find row above
-        if ($_y - 1 < 0)
+        $columns = array($_x);
+        $rows = array($_y);
+
+        // column to the left
+        if ($_x == 0)
         {
-            if ($this->hasBorder) $rowAbove = null;
-            else $rowAbove = $this->height - 1;
+            if (! $this->hasBorder) $columns[] = $this->width - 1;
         }
-        else $rowAbove = $_y - 1;
+        else $columns[] = $_x - 1;
 
-        // find row below
-        if ($_y + 1 >= $this->height)
+        // column to the right
+        if ($_x + 1 == $this->width)
         {
-            if ($this->hasBorder) $rowBelow = null;
-            else $rowBelow = 0;
+            if (! $this->hasBorder) $columns[] = 0;
         }
-        else $rowBelow = $_y + 1;
+        else $columns[] = $_x + 1;
 
-        // find column to the left
-        if ($_x - 1 < 0)
+        // row above
+        if ($_y == 0)
         {
-            if ($this->hasBorder) $columnLeft = null;
-            else $columnLeft = $this->width - 1;
+            if (! $this->hasBorder) $rows[] = $this->height - 1;
         }
-        else $columnLeft = $_x - 1;
+        else $rows[] = $_y - 1;
 
-        // find column to the right
-        if ($_x + 1 >= $this->width)
+        // row below
+        if ($_y + 1 == $this->height)
         {
-            if ($this->hasBorder) $columnRight = null;
-            else $columnRight = 0;
+            if (! $this->hasBorder) $rows[] = 0;
         }
-        else $columnRight = $_x + 1;
+        else $rows[] = $_y + 1;
 
 
-        // save all rows and all columns to check in an array
-        $rows = array($rowBelow, $_y, $rowAbove);
-        $columns = array($columnLeft, $_x, $columnRight);
-
-        // calculate amount of living nearby cells
+        // calculate amount of living neighbour cells
         $amountLivingNeighbours = 0;
 
         foreach ($rows as $y)
         {
             foreach ($columns as $x)
             {
-                if (isset($y) && isset($x))
-                {
-                    if ($this->getField($x, $y)) $amountLivingNeighbours++;
-                }
+                if ($this->getField($x, $y)) $amountLivingNeighbours++;
             }
         }
 
         if ($this->getField($_x, $_y)) $amountLivingNeighbours -= 1;
 
         return $amountLivingNeighbours;
+    }
+
+    /**
+     * Calculates and returns the center of the board
+     *
+     * @return int[][]  Coordinates of the center (array structure: [["x"] => X-Coordinate, ["y"] => Y-Coordinate])
+     */
+    public function getCenter(): array
+    {
+        $centerX = ceil($this->width / 2) - 1;
+        $centerY = ceil($this->height / 2) - 1;
+
+        return array("x" => $centerX, "y" => $centerY);
+    }
+
+    /**
+     * Returns the status of a specific field
+     *
+     * @param int $_x   X-Coordinate of the field
+     * @param int $_y   Y-Coordinate of the field
+     *
+     * @return bool     Returns whether the cell is alive (true) or dead (false)
+     */
+    public function getField (int $_x, int $_y): bool
+    {
+        return isset($this->currentBoard[$_y][$_x]);
+    }
+
+    /**
+     * Returns the percentage of cells that are alive
+     *
+     * @return float    Fill percentage
+     */
+    public function getFillPercentage(): float
+    {
+        return (float)($this->getAmountCellsAlive()/($this->width * $this->height));
     }
 
     /**
@@ -322,9 +403,10 @@ class Board
      *
      * @param bool $_currentCellState       Current Cell State
      * @param int $_amountNeighboursAlive   Amount of living neighbour cells
+     *
      * @return bool                         New Cell State
      */
-    public function calculateNewCellState(bool $_currentCellState, int $_amountNeighboursAlive)
+    public function getNewCellState(bool $_currentCellState, int $_amountNeighboursAlive): bool
     {
         $newCellState = $_currentCellState;
 
@@ -357,36 +439,34 @@ class Board
     }
 
     /**
-     * Calculates a single step of the board
+     * Returns an empty board
+     *
+     * @return bool[][]      Empty board
      */
-    public function calculateStep()
+    public function initializeEmptyBoard (): array
     {
-        $newBoard = $this->initializeEmptyBoard();
+        $board = array();
 
         for ($y = 0; $y < $this->height; $y++)
         {
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                $amountNeighboursAlive = $this->calculateAmountNeighboursAlive($x, $y);
-                $currentCellState = $this->getField($x, $y);
-                $newCellState = $this->calculateNewCellState($currentCellState, $amountNeighboursAlive);
-
-                if ($newCellState) $newBoard[$y][$x] = true;
-            }
+            $board[$y] = array();
         }
 
-        $this->addToHistoryOfBoards($this->currentBoard());
-        $this->currentBoard = $newBoard;
-        $this->gameStep ++;
+        return $board;
     }
 
     /**
-     * Checks whether the board is finished (only static or blinking tiles remaining).
-     * Returns true if board is finished and false if board is not finished yet
+     * Checks whether the board is finished
      *
-     * @return bool
+     * The board is finished when either:
+     *   - all cells are dead
+     *   - maxSteps is reached
+     *   - only tiles are remaining that have a reoccurring pattern within 15 game steps
+     *
+     * @return bool  true:  board is finished
+     *               false: board is not finished
      */
-    public function isFinished()
+    public function isFinished(): bool
     {
         if ($this->gameStep >= $this->maxSteps) return true;
         elseif ($this->getAmountCellsAlive() == 0) return true;
@@ -397,9 +477,9 @@ class Board
             {
                 if ($this->currentBoard == $board) return true;
             }
-
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -407,7 +487,7 @@ class Board
      *
      * @param int $_x   X-Coordinate of the cell which shall be set
      * @param int $_y   Y-Coordinate of the cell which shall be set
-     * @param boolean $_isAlive     State which the cell shall be set to
+     * @param boolean $_isAlive     State which the cell will be set to
      *                                  true: alive
      *                                  false: dead
      */
@@ -415,77 +495,5 @@ class Board
     {
         if ($_isAlive) $this->currentBoard[$_y][$_x] = $_isAlive;
         else unset($this->currentBoard[$_y][$_x]);
-    }
-
-    /**
-     * Returns the status of a specific field
-     *
-     * @param int $_x   X-Coordinate of the field
-     * @param int $_y   Y-Coordinate of the field
-     *
-     * @return boolean
-     */
-    public function getField (int $_x, int $_y)
-    {
-        return isset($this->currentBoard[$_y][$_x]);
-    }
-
-    /**
-     * Returns the total amount of living cells on the board
-     *
-     * @return int      Amount of living cells
-     */
-    public function getAmountCellsAlive()
-    {
-        $amountCellsAlive = 0;
-        foreach ($this->currentBoard as $line)
-        {
-            $amountCellsAlive += array_sum($line);
-        }
-        return $amountCellsAlive;
-    }
-
-
-    public function getFillPercentage()
-    {
-        return (float)($this->getAmountCellsAlive()/($this->width * $this->height));
-    }
-
-    /**
-     * Calculates and returns the center of the board
-     *
-     * @return array
-     */
-    public function getCenter()
-    {
-        $centerX = ceil($this->width / 2) - 1;
-        $centerY = ceil($this->height / 2) - 1;
-
-        $center = array("x" => $centerX, "y" => $centerY);
-
-        return $center;
-    }
-
-    /**
-     * Convert board to string
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $string = "";
-
-        for ($y = 0; $y < $this->height(); $y++)
-        {
-            for ($x = 0; $x < $this->width(); $x++)
-            {
-                if ($this->getField($x, $y)) $string .= "X";
-                else $string .= ".";
-            }
-
-            if ($y != $this->height() - 1) $string .= "\r\n";
-        }
-
-        return $string;
     }
 }

@@ -18,24 +18,30 @@ class RuleSet
     private $birth = array();
     private $death = array();
 
+
+    // Magic Methods
+
     /**
      * RuleSet constructor.
      *
      * @param array $_birth     Amount of living neighbours which will rebirth a dead cell
      * @param array $_death     Amount of living neighbours which will kill a living cell
      */
-    public function __construct($_birth, $_death)
+    public function __construct(array $_birth, array $_death)
     {
         $this->birth = $_birth;
         $this->death = $_death;
     }
 
+
+    // Getters and Setters
+
     /**
      * Returns the birth rules
      *
-     * @return array    Birth rules
+     * @return array    Amount of living neighbours which will rebirth a dead cell
      */
-    public function birth()
+    public function birth(): array
     {
         return $this->birth;
     }
@@ -45,7 +51,7 @@ class RuleSet
      *
      * @param array $_birth   Amount of living neighbours which will rebirth a dead cell
      */
-    public function setBirth($_birth)
+    public function setBirth(array $_birth)
     {
         $this->birth = $_birth;
     }
@@ -53,9 +59,9 @@ class RuleSet
     /**
      * Returns the death rules
      *
-     * @return array    Death rules
+     * @return array    Amount of living neighbours which will kill a living cell
      */
-    public function death()
+    public function death(): array
     {
         return $this->death;
     }
@@ -65,7 +71,7 @@ class RuleSet
      *
      * @param array $_death  Amount of living neighbours which will kill a living cell
      */
-    public function setDeath($_death)
+    public function setDeath(array $_death)
     {
         $this->death = $_death;
     }

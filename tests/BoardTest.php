@@ -191,7 +191,7 @@ class BoardTest extends TestCase
 
 
     /**
-     * @covers \GameOfLife\Board::addToHistoryOfBoards()
+     * @covers \GameOfLife\Board::addToHistory()
      */
     public function testCanAddToHistoryOfBoards()
     {
@@ -203,14 +203,14 @@ class BoardTest extends TestCase
         // Check whether using addToHistoryOfBoards 5 times will result in the history of boards storing 5 boards
         for ($i = 0; $i < 5; $i++)
         {
-            $this->board->addToHistoryOfBoards($emptyBoard);
+            $this->board->addToHistory($emptyBoard);
         }
         $this->assertEquals(5, count($this->board->historyOfBoards()));
 
         // Check whether using addToHistoryOfBoards more than 15 times in total will result in the history of boards storing exactly 15 boards
         for ($i = 0; $i < 12; $i++)
         {
-            $this->board->addToHistoryOfBoards($emptyBoard);
+            $this->board->addToHistory($emptyBoard);
         }
         $this->assertEquals(15, count($this->board->historyOfBoards()));
     }
@@ -274,7 +274,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider amountNeighboursAliveProvider
-     * @covers \GameOfLife\Board::calculateAmountNeighboursAlive()
+     * @covers \GameOfLife\Board::getAmountNeighboursAlive()
      *
      * @param array(array) $_cells       Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_x                    X-Coordinate of inspected cell
@@ -288,7 +288,7 @@ class BoardTest extends TestCase
             $this->board->setField($cell[0], $cell[1], true);
         }
 
-        $this->assertEquals($_expected, $this->board->calculateAmountNeighboursAlive($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getAmountNeighboursAlive($_x, $_y));
     }
 
     public function amountNeighboursAliveProvider()
@@ -303,7 +303,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider calculateNewCellStateProvider
-     * @covers \GameOfLife\Board::calculateNewCellState()
+     * @covers \GameOfLife\Board::getNewCellState()
      *
      * @param bool $_currentCellState       Current cell state (dead = false; alive = true)
      * @param int $_amountNeighboursAlive   Amount of living neighbours (0 - 8)
@@ -311,7 +311,7 @@ class BoardTest extends TestCase
      */
     public function testCanCalculateNewCellState($_currentCellState, $_amountNeighboursAlive, $_expected)
     {
-        $this->assertEquals($_expected, $this->board->calculateNewCellState($_currentCellState, $_amountNeighboursAlive));
+        $this->assertEquals($_expected, $this->board->getNewCellState($_currentCellState, $_amountNeighboursAlive));
     }
 
     public function calculateNewCellStateProvider()

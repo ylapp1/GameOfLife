@@ -1,4 +1,7 @@
 <?php
+
+namespace GIFEncoder;
+
 /*
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 ::
@@ -23,8 +26,6 @@
 ::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 */
-
-namespace GIFEncoder;
 
 Class GIFEncoder {
     var $GIF = "GIF89a";		/* GIF header 6 bytes	*/
