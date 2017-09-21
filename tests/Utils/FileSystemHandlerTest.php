@@ -42,20 +42,20 @@ class FileSystemHandlerTest extends TestCase
     public function testCanHandleDirectories(string $_directoryName, array $_subDirectories = array())
     {
         $directoryPath = $this->testDirectory . "/" . $_directoryName;
-        $this->assertEquals(false, file_exists($directoryPath));
-        $this->assertEquals(true, $this->fileSystemHandler->createDirectory($directoryPath));
-        $this->assertEquals(true, file_exists($directoryPath));
+        $this->assertFalse(file_exists($directoryPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($directoryPath));
+        $this->assertTrue(file_exists($directoryPath));
 
         foreach ($_subDirectories as $subDirectory)
         {
             $subDirectoryPath = $this->testDirectory . "/" . $_directoryName . "/" . $subDirectory;
-            $this->assertEquals(false, file_exists($subDirectoryPath));
-            $this->assertEquals(true, $this->fileSystemHandler->createDirectory($subDirectoryPath));
-            $this->assertEquals(true, file_exists($subDirectoryPath));
+            $this->assertFalse(file_exists($subDirectoryPath));
+            $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($subDirectoryPath));
+            $this->assertTrue(file_exists($subDirectoryPath));
         }
 
-        $this->assertEquals(true, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
-        $this->assertEquals(false, file_exists($directoryPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
+        $this->assertFalse(file_exists($directoryPath));
     }
 
     public function createDirectoryProvider()
@@ -75,14 +75,14 @@ class FileSystemHandlerTest extends TestCase
     public function testCanDetectExistingDirectory()
     {
         $directoryPath = $this->testDirectory . "/atest";
-        $this->assertEquals(false, file_exists($directoryPath));
-        $this->assertEquals(true, $this->fileSystemHandler->createDirectory($directoryPath));
-        $this->assertEquals(true, file_exists($directoryPath));
+        $this->assertFalse(file_exists($directoryPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($directoryPath));
+        $this->assertTrue(file_exists($directoryPath));
 
         // try to create the existing directory again
-        $this->assertEquals(false, $this->fileSystemHandler->createDirectory($directoryPath));
-        $this->assertEquals(true, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
-        $this->assertEquals(false, file_exists($directoryPath));
+        $this->assertEquals(FileSystemHandler::ERROR_DIRECTORY_EXISTS, $this->fileSystemHandler->createDirectory($directoryPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
+        $this->assertFalse(file_exists($directoryPath));
     }
 
     /**
@@ -99,13 +99,15 @@ class FileSystemHandlerTest extends TestCase
     {
         $outputPath = $this->testDirectory . "/" . $_fileName;
 
-        $this->assertEquals(false, file_exists($outputPath));
-        $this->assertEquals(true, $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content));
-        $this->assertEquals(true, file_exists($outputPath));
+        $this->assertFalse(file_exists($outputPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content));
+        $this->assertTrue(file_exists($outputPath));
         $this->assertEquals($_expectedContent, $this->fileSystemHandler->readFile($outputPath));
 
-        $this->fileSystemHandler->deleteFile($outputPath);
-        $this->assertEquals(false, file_exists($outputPath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($outputPath));
+        $this->assertFalse(file_exists($outputPath));
+
+        $this->assertEquals(FileSystemHandler::ERROR_FILE_NOT_EXISTS, $this->fileSystemHandler->deleteFile("nonExistingFile.notExisting"));
     }
 
     public function writeFileProvider()
@@ -128,23 +130,22 @@ class FileSystemHandlerTest extends TestCase
     {
         $filePath = $this->testDirectory . "/mytest.txt";
 
-        $this->assertEquals(false, file_exists($filePath));
-        $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
-        $this->assertEquals(true, file_exists($filePath));
+        $this->assertFalse(file_exists($filePath));
+        $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $error);
+        $this->assertTrue(file_exists($filePath));
 
-        $fileContent = array("Hello World!");
-        $this->assertEquals($fileContent, $this->fileSystemHandler->readFile($filePath));
+        $this->assertEquals(array("Hello World!"), $this->fileSystemHandler->readFile($filePath));
 
         $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
-        $this->assertEquals(\Utils\FileSystemHandler::ERROR_FILE_EXISTS, $error);
+        $this->assertEquals(FileSystemHandler::ERROR_FILE_EXISTS, $error);
 
         // Check whether content of file was changed
-        $this->assertEquals($fileContent, $this->fileSystemHandler->readFile($filePath));
-
-        $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
+        $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $error);
         $this->assertEquals(array("Hello universe!"), $this->fileSystemHandler->readFile($filePath));
 
-        $this->fileSystemHandler->deleteFile($filePath);
-        $this->assertEquals(false, file_exists($filePath));
+        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($filePath));
+        $this->assertFalse(file_exists($filePath));
     }
 }

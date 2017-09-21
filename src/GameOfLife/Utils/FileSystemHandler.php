@@ -15,15 +15,19 @@ namespace Utils;
  */
 class FileSystemHandler
 {
-    const ERROR_FILE_EXISTS = 10;
-    const ERROR_DIRECTORY_NOT_EMPTY = 11;
-    const ERROR_FILE_NOT_EXISTS = 12;
+    const NO_ERROR = 0;
+    const ERROR_DIRECTORY_EXISTS = 1;
+    const ERROR_DIRECTORY_NOT_EMPTY = 2;
+    const ERROR_DIRECTORY_NOT_EXISTS = 3;
+    const ERROR_FILE_EXISTS = 4;
+    const ERROR_FILE_NOT_EXISTS = 5;
 
     /**
      * Creates a directory if it doesn't exist yet
      *
      * @param string $_directoryPath    The directory path
-     * @return bool     success
+     *
+     * @return int  Error
      */
     public function createDirectory(string $_directoryPath)
     {
@@ -31,9 +35,9 @@ class FileSystemHandler
         {
             // create all directories in the directory path (if they don't exist)
             mkdir($_directoryPath, 0777, true);
-            return true;
+            return self::NO_ERROR;
         }
-        else return false;
+        else return self::ERROR_DIRECTORY_EXISTS;
     }
 
     /**
@@ -42,59 +46,59 @@ class FileSystemHandler
      * @param string $_directoryPath        The directory path
      * @param bool $_deleteWhenNotEmpty     If set to true all files inside the directory will be deleted
      *
-     * @return bool     success
+     * @return int  Error
      */
     public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
     {
+        if (! file_exists($_directoryPath)) return self::ERROR_DIRECTORY_NOT_EXISTS;
+
         if (substr($_directoryPath, strlen($_directoryPath) - 1, 1) != '/') $_directoryPath .= '/';
         $files = glob($_directoryPath . '*', GLOB_MARK);
 
         if (count($files) !== 0)
         {
-            if (!$_deleteWhenNotEmpty) return $this::ERROR_DIRECTORY_NOT_EMPTY;
+            if (! $_deleteWhenNotEmpty) return self::ERROR_DIRECTORY_NOT_EMPTY;
             else
             {
                 foreach ($files as $file)
                 {
-                    if (is_dir($file)) $this->deleteDirectory($file, $_deleteWhenNotEmpty);
+                    if (is_dir($file))
+                    {
+                        $error = $this->deleteDirectory($file, $_deleteWhenNotEmpty);
+                        if ($error != self::NO_ERROR) return $error;
+                    }
                     else unlink($file);
                 }
             }
         }
 
-        if (file_exists($_directoryPath)) rmdir($_directoryPath);
-        return true;
+        rmdir($_directoryPath);
+        return self::NO_ERROR;
     }
 
     /**
-     * Write text to file
+     * Deletes a file
      *
-     * @param string $_filePath     The file path
-     * @param string $_fileName     The name of the new file
-     * @param string $_content      The file content
-     * @param bool $_overwriteIfExists  Overwrite existing file
-     * @return bool|int             Error Code
+     * @param string $_filePath    Path to the file that shall be deleted
+     *
+     * @return int  Error
      */
-    function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
+    function deleteFile(string $_filePath)
     {
-        // Create directory if it doesn't exist
-        if (file_exists($_filePath . "/" . $_fileName))
+        if (file_exists($_filePath))
         {
-            if (!$_overwriteIfExists) return $this::ERROR_FILE_EXISTS;
-            else $this->deleteFile($_filePath . "/" . $_fileName);
+            unlink($_filePath);
+            return self::NO_ERROR;
         }
-        else $this->createDirectory($_filePath);
-
-        file_put_contents($_filePath . "/" . $_fileName, $_content);
-
-        return true;
+        else return self::ERROR_FILE_NOT_EXISTS;
     }
 
     /**
      * Read text from file
      *
      * @param string $_filePath     The file path
-     * @return array|bool|int       File Content or Error Code
+     *
+     * @return array|int            File Content or Error
      */
     function readFile(string $_filePath)
     {
@@ -103,12 +107,27 @@ class FileSystemHandler
     }
 
     /**
-     * Deletes a file
+     * Write text to file
      *
-     * @param string $_filePath
+     * @param string $_filePath         The file path
+     * @param string $_fileName         The name of the new file
+     * @param string $_content          The file content
+     * @param bool $_overwriteIfExists  Overwrite existing file
+     *
+     * @return int  Error
      */
-    function deleteFile(string $_filePath)
+    function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
     {
-        if (file_exists($_filePath)) unlink($_filePath);
+        // Create directory if it doesn't exist
+        if (file_exists($_filePath . "/" . $_fileName))
+        {
+            if (! $_overwriteIfExists) return self::ERROR_FILE_EXISTS;
+            else $this->deleteFile($_filePath . "/" . $_fileName);
+        }
+        else $this->createDirectory($_filePath);
+
+        file_put_contents($_filePath . "/" . $_fileName, $_content);
+
+        return self::NO_ERROR;
     }
 }

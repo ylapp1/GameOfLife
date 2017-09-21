@@ -61,9 +61,9 @@ class UserInput extends BaseInput
         $fileSystemHandler->createDirectory($this->customTemplatesDirectory);
         $fileName = $_templateName . ".txt";
 
-        $success = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
+        $error = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
 
-        if ($success !== true)
+        if ($error !== FileSystemHandler::NO_ERROR)
         {
             echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)";
             $input = $this->catchUserInput('php://stdin');
