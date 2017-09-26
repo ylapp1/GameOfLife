@@ -27,6 +27,8 @@ class PNGOutput extends BaseOutput
     private $imageCreator;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+
+
     /**
      * add output specific options to the option list
      *
@@ -80,7 +82,7 @@ class PNGOutput extends BaseOutput
     }
 
     /**
-     * Output one game step
+     * Outputs one game step
      *
      * @param Board $_board     Current board
      */
@@ -91,7 +93,7 @@ class PNGOutput extends BaseOutput
     }
 
     /**
-     * Finish output (write to file)
+     * Displays a text which tells the user that the simulation is finished
      */
     public function finishOutput()
     {

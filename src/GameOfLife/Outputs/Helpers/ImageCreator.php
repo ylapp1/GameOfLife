@@ -29,7 +29,9 @@ class ImageCreator
     private $fileSystemHandler;
 
     /**
-     * @return string
+     * Returns the base output directory
+     *
+     * @return string   The base output directory
      */
     public function basePath(): string
     {
@@ -37,15 +39,19 @@ class ImageCreator
     }
 
     /**
-     * @param string $basePath
+     * Sets the base output directory
+     *
+     * @param string $_basePath     The base output directory
      */
-    public function setBasePath(string $basePath)
+    public function setBasePath(string $_basePath)
     {
-        $this->basePath = $basePath;
+        $this->basePath = $_basePath;
     }
 
     /**
-     * @return ImageColor
+     * Returns the background color of the image
+     *
+     * @return ImageColor   Background color of the image
      */
     public function backgroundColor(): ImageColor
     {
@@ -53,15 +59,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $backgroundColor
+     * Sets the background color of the image
+     *
+     * @param ImageColor $_backgroundColor      Background color of the image
      */
-    public function setBackgroundColor(ImageColor $backgroundColor)
+    public function setBackgroundColor(ImageColor $_backgroundColor)
     {
-        $this->backgroundColor = $backgroundColor;
+        $this->backgroundColor = $_backgroundColor;
     }
 
     /**
-     * @return ImageColor
+     * Returns the grid color of the image
+     *
+     * @return ImageColor   Grid color of the image
      */
     public function gridColor(): ImageColor
     {
@@ -69,15 +79,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $gridColor
+     * Sets the grid color of the image
+     *
+     * @param ImageColor $_gridColor    Grid color of the image
      */
-    public function setGridColor(ImageColor $gridColor)
+    public function setGridColor(ImageColor $_gridColor)
     {
-        $this->gridColor = $gridColor;
+        $this->gridColor = $_gridColor;
     }
 
     /**
-     * @return ImageColor
+     * Returns the cell color of the image
+     *
+     * @return ImageColor   Cell color of the image
      */
     public function cellAliveColor(): ImageColor
     {
@@ -85,15 +99,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $cellAliveColor
+     * Sets the cell color of the image
+     *
+     * @param ImageColor $_cellAliveColor   Cell color of the image
      */
-    public function setCellAliveColor(ImageColor $cellAliveColor)
+    public function setCellAliveColor(ImageColor $_cellAliveColor)
     {
-        $this->cellAliveColor = $cellAliveColor;
+        $this->cellAliveColor = $_cellAliveColor;
     }
 
     /**
-     * @return int
+     * Returns the cell size of the image
+     *
+     * @return int  The cell size of the image
      */
     public function cellSize(): int
     {
@@ -101,15 +119,19 @@ class ImageCreator
     }
 
     /**
-     * @param int $cellSize
+     * Sets the cell size of the image
+     *
+     * @param int $_cellSize    The cell size of the image
      */
-    public function setCellSize(int $cellSize)
+    public function setCellSize(int $_cellSize)
     {
-        $this->cellSize = $cellSize;
+        $this->cellSize = $_cellSize;
     }
 
     /**
-     * @return string
+     * Returns the game folder in which the images will be saved
+     *
+     * @return string   The game folder in which the images will be saved
      */
     public function gameFolder(): string
     {
@@ -117,15 +139,19 @@ class ImageCreator
     }
 
     /**
-     * @param string $gameFolder
+     * Sets the game folder in which the images will be saved
+     *
+     * @param string $_gameFolder   The game folder in which the images will be saved
      */
-    public function setGameFolder(string $gameFolder)
+    public function setGameFolder(string $_gameFolder)
     {
-        $this->gameFolder = $gameFolder;
+        $this->gameFolder = $_gameFolder;
     }
 
     /**
-     * @return resource
+     * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator)
+     *
+     * @return resource     The base image for all images
      */
     public function baseImage()
     {
@@ -133,15 +159,19 @@ class ImageCreator
     }
 
     /**
-     * @param resource $baseImage
+     * Sets the base image for all images
+     *
+     * @param resource $_baseImage  The base image for all images
      */
-    public function setBaseImage($baseImage)
+    public function setBaseImage($_baseImage)
     {
-        $this->baseImage = $baseImage;
+        $this->baseImage = $_baseImage;
     }
 
     /**
-     * @return resource
+     * Returns the cell image for all images (a smiley with the colors that were defined in the ImageCreator)
+     *
+     * @return resource     The cell image for all images
      */
     public function cellImage()
     {
@@ -149,22 +179,25 @@ class ImageCreator
     }
 
     /**
-     * @param resource $cellImage
+     * Sets the cell image for all images
+     *
+     * @param resource $_cellImage  The cell image for all images
      */
-    public function setCellImage($cellImage)
+    public function setCellImage($_cellImage)
     {
-        $this->cellImage = $cellImage;
+        $this->cellImage = $_cellImage;
     }
 
     /**
      * ImageCreator constructor.
-     * @param $_boardHeight
-     * @param $_boardWidth
-     * @param Integer $_cellSize            Width and Height of a single cell
+     *
+     * @param int $_boardHeight             The height of the board
+     * @param int $_boardWidth              The width of the board
+     * @param int $_cellSize                Width and Height of a single cell
      * @param ImageColor $_cellAliveColor   Cell color of the images
      * @param ImageColor $_backgroundColor  Background Color of the images
      * @param ImageColor $_gridColor        Grid color of the images
-     * @param String $_gameFolder           The complete game folder path of a png output
+     * @param string $_gameFolder           The complete game folder path of a png output
      */
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
                                 ImageColor $_backgroundColor, ImageColor $_gridColor, string $_gameFolder = null)
@@ -236,9 +269,10 @@ class ImageCreator
     /**
      * Creates and returns an image of the current board
      *
-     * @param Board $_board     Current board
-     * @param String $_imageType            Type of Image that shall be returned
-     * @return String                       Path to image
+     * @param Board $_board                 Current board
+     * @param string $_imageType            Type of Image that shall be returned
+     *
+     * @return string                       Path to image
      */
     public function createImage ($_board, $_imageType)
     {

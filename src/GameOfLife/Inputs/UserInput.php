@@ -239,6 +239,12 @@ class UserInput extends BaseInput
         echo 'You can set/unset more cells or start the simulation by typing "start"' . "\n\n";
     }
 
+    /**
+     * Sets a field on the board and displays the updated board or displays an error in case of invalid coordinates
+     *
+     * @param Board $_board                 The board
+     * @param String $_inputCoordinates     The user input coordinates in the format "x,y"
+     */
     public function setField(Board $_board, String $_inputCoordinates)
     {
         $inputSplits = explode(",", $_inputCoordinates);

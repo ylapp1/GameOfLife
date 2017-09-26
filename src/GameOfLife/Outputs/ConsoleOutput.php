@@ -19,7 +19,7 @@ use GameOfLife\Board;
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * add output specific options to the option list
+     * Adds output specific options to the option list
      *
      * @param Getopt $_options     Current option list
      * @codeCoverageIgnore
@@ -29,7 +29,7 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Start output
+     * Initializes the output
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -40,7 +40,7 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Output one game step
+     * Outputs one game step
      *
      * @param Board $_board     Current board
      */

@@ -32,8 +32,9 @@ class VideoOutput extends BaseOutput
     /** @var FileSystemHandler */
     private $fileSystemHandler;
 
+
     /**
-     * Adds VideoOutputs specific option to an option list
+     * Adds VideoOutputs specific options to an option list
      *
      * @param Getopt $_options      The option list to which the options are added
      */
@@ -89,7 +90,7 @@ class VideoOutput extends BaseOutput
     }
 
     /**
-     * Creates single Gif files to compile
+     * Creates PNG files which will later be combined to a video
      *
      * @param Board $_board
      */
@@ -101,9 +102,7 @@ class VideoOutput extends BaseOutput
     }
 
     /**
-     * Creates the video file from the frames and adds a sound
-     * Uses GIFEncoder class
-     *
+     * Creates the video file from the frames and adds a sound per game step
      */
     public function finishOutput()
     {

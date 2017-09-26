@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Fills the board with configuration which is loaded from template files
+ * Fills the board with cells whose positions are loaded from a template file
  *
  * @package Input
  */

@@ -84,9 +84,9 @@ class BaseInput
     /**
      * Adds object specific options
      *
-     * @codeCoverageIgnore
-     *
      * @param Getopt $_options     Option list to which the objects options are added
+     *
+     * @codeCoverageIgnore
      */
     public function addOptions(Getopt $_options)
     {
@@ -95,10 +95,10 @@ class BaseInput
     /**
      * Fills a given board with cells
      *
-     * @codeCoverageIgnore
-     *
      * @param Board $_board       The board which shall be filled with cells
      * @param Getopt $_options    Object specific options (e.g. posX, posY, fillPercent)
+     *
+     * @codeCoverageIgnore
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
@@ -106,6 +106,8 @@ class BaseInput
 
     /**
      * Checks whether the object is out of bounds
+     *
+     * Uses the class attributes "objectWidth" and "objectHeight" to calculate the object dimensions
      *
      * @param int $_boardWidth  Board width
      * @param int $_boardHeight Board height

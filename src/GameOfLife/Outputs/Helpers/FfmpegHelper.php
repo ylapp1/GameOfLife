@@ -19,13 +19,21 @@ class FfmpegHelper
     private $options = array();
     private $outputPath;
 
+
+    /**
+     * FfmpegHelper constructor.
+     *
+     * @param string $_binaryPath   Path to the ffmpeg binary file
+     */
     public function __construct(string $_binaryPath)
     {
         $this->binaryPath = $_binaryPath;
     }
 
     /**
-     * @return string
+     * Returns the ffmpeg binary path
+     *
+     * @return string   Path to the ffmpeg binary file
      */
     public function binaryPath()
     {
@@ -33,7 +41,9 @@ class FfmpegHelper
     }
 
     /**
-     * @param string $_binaryPath
+     * Sets the ffmpeg binary path
+     *
+     * @param string $_binaryPath   Path to the ffmpeg binary file
      */
     public function setBinaryPath(string $_binaryPath)
     {
@@ -41,7 +51,9 @@ class FfmpegHelper
     }
 
     /**
-     * @return array
+     * Returns the ffmpeg option list
+     *
+     * @return array    Ffmpeg option list
      */
     public function options()
     {
@@ -49,7 +61,9 @@ class FfmpegHelper
     }
 
     /**
-     * @param array $_options
+     * Sets the ffmpeg option list
+     *
+     * @param array $_options   Ffmpeg option list
      */
     public function setOptions(array $_options)
     {
@@ -57,7 +71,9 @@ class FfmpegHelper
     }
 
     /**
-     * @return string
+     * Returns the ffmpeg output path
+     *
+     * @return string   Ffmpeg output path
      */
     public function outputPath()
     {
@@ -65,17 +81,20 @@ class FfmpegHelper
     }
 
     /**
-     * @param string $_outputPath
+     * Sets the ffmpeg output path
+     *
+     * @param string $_outputPath   Ffmpeg output path
      */
     public function setOutputPath(string $_outputPath)
     {
         $this->outputPath = $_outputPath;
     }
 
+
     /**
      * Add an option to the option list
      *
-     * @param string $_option
+     * @param string $_option   The new option in the format "-<option> <value>"
      */
     public function addOption(string $_option)
     {
@@ -83,7 +102,7 @@ class FfmpegHelper
     }
 
     /**
-     * Reset the option list to an empty array
+     * Resets the option list to an empty array
      */
     public function resetOptions()
     {
@@ -93,7 +112,8 @@ class FfmpegHelper
     /**
      * Generates a ffmpeg command that can be executed by using exec
      *
-     * @param string $_outputPath   Path where result of ffmpeg shall be saved
+     * @param string $_outputPath   Ffmpeg output path
+     *
      * @return string               The ffmpeg command
      */
     public function generateCommand(string $_outputPath)

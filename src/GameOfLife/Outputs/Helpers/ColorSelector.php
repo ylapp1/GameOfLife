@@ -18,7 +18,7 @@ namespace Output\Helpers;
 class ColorSelector
 {
     /**
-     * parse color user input
+     * Parses a user input color and returns the selected color as ImageColor object
      *
      * @param String $_colorInput   User input
      *

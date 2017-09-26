@@ -31,7 +31,7 @@ class GIFOutput extends BaseOutput
     private $fileSystemHandler;
 
     /**
-     * Adds GIFOutputs specific option to an option list
+     * Adds GIFOutputs specific options to a Getopt object
      *
      * @param Getopt $_options      The option list to which the options are added
      */
@@ -47,7 +47,7 @@ class GIFOutput extends BaseOutput
     }
 
     /**
-     * Start output
+     * Initializes the output
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -84,9 +84,9 @@ class GIFOutput extends BaseOutput
     }
 
     /**
-     * Creates single Gif files to compile
+     * Creates a single Gif file for the current game step
      *
-     * @param Board $_board
+     * @param Board $_board     The board which will be output
      */
     public function outputBoard(Board $_board)
     {
@@ -95,9 +95,7 @@ class GIFOutput extends BaseOutput
     }
 
     /**
-     * Creates the animated Gif from single files
-     * Uses GIFEncoder class
-     *
+     * Creates an animated Gif from the gif files that were created by outputBoard()
      */
     public function finishOutput()
     {

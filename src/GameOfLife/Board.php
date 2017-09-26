@@ -305,6 +305,7 @@ class Board
      *
      * @param int $_x   X-Coordinate of the cell that is inspected
      * @param int $_y   Y-Coordinate of the cell that is inspected
+     *
      * @return int      Amount of living neighbour cells
      */
     public function getAmountNeighboursAlive(int $_x, int $_y): int

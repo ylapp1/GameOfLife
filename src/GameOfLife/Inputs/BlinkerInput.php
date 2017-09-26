@@ -16,7 +16,7 @@ use Ulrichsg\Getopt;
  *
  * Usage:
  *   - Call addOptions($_options) to add the objects options to the main option list
- *   - Call fillBoard to set the blinker on the board
+ *   - Call fillBoard() to set the blinker on the board
  */
 class BlinkerInput extends BaseInput
 {
