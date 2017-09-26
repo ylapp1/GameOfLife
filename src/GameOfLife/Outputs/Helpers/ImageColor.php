@@ -9,9 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Class ImageColor
- *
- * Stores a color for the image creator
+ * Stores a color for image creator
  *
  * @package Output
  */

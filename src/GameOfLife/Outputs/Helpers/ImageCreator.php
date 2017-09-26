@@ -12,9 +12,7 @@ use GameOfLife\Board;
 use Utils\FileSystemHandler;
 
 /**
- * Class ImageCreator
- *
- * Create an image of a board and return it
+ * Creates an image of a board and returns its output path
  *
  * @package Output
  */

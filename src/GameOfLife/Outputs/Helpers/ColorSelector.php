@@ -9,9 +9,9 @@
 namespace Output\Helpers;
 
 /**
- * Class ColorSelector
- *
  * Parses color selections
+ *
+ * Accepts either RGB values or predefined color names (e.g. "red", "green" or "blue")
  *
  * @package Output
  */

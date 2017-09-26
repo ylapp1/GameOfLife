@@ -13,7 +13,7 @@ use GameOfLife\Board;
 use GameOfLife\RuleSet;
 
 /**
- * Class SpaceShipInputTest
+ * Checks whether \Input\SpaceShipInput works as expected
  */
 class SpaceShipInputTest extends TestCase
 {

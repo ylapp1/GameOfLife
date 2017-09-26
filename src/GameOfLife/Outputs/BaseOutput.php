@@ -12,7 +12,12 @@ use Ulrichsg\Getopt;
 use GameOfLife\Board;
 
 /**
- * Class BaseOutput
+ * BaseOutput from which all other outputs must inherit
+ *
+ * addOptions() adds options to a Getopt object
+ * startOutput() initializes variables that are necessary for the output
+ * outputBoard() outputs a single board
+ * finishOutput() processes the output boards to create the final file
  *
  * @package Output
  */

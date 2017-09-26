@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use Output\ConsoleOutput;
 
 /**
- * Class ConsoleOutputTest
+ * Checks whether \Output\ConsoleOutput works as expected
  */
 class ConsoleOutputTest extends TestCase
 {

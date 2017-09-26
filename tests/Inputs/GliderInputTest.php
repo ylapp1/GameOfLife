@@ -13,7 +13,7 @@ use GameOfLife\Board;
 use GameOfLife\RuleSet;
 
 /**
- * Class GliderInputTest
+ * Checks whether \Input\GliderInput works as expected
  */
 class GliderInputTest extends TestCase
 {

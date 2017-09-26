@@ -14,7 +14,7 @@ use Utils\FileSystemHandler;
 use Ulrichsg\Getopt;
 
 /**
- * Class VideoOutputTest
+ * Checks whether \Output\VideoOutput works as expected
  */
 class VideoOutputTest extends TestCase
 {

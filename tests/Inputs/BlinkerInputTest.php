@@ -6,14 +6,15 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\BlinkerInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\BlinkerInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
+
 
 /**
- * Class BlinkerInputTest
+ * Checks whether \Input\BlinkerInput works as expected
  */
 class BlinkerInputTest extends TestCase
 {

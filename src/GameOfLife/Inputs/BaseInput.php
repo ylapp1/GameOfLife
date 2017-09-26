@@ -12,10 +12,10 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class BaseInput
+ * BaseInput from which all other inputs must inherit
  *
- * Fills the board with cells
- * Used as base for child classes which fill the board with specific sets of cells
+ * addOptions() Adds options to a Getopt object
+ * fillBoard() Fills the board with cells
  */
 class BaseInput
 {

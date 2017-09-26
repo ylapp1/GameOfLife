@@ -10,7 +10,7 @@ use GameOfLife\RuleSet;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RuleSetTest
+ * Checks whether \GameOfLife\RuleSet works as expected
  */
 class RuleSetTest extends TestCase
 {

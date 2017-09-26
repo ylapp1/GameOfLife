@@ -17,9 +17,7 @@ use Output\Helpers\ImageColor;
 use Output\Helpers\FfmpegHelper;
 
 /**
- * Class VideoOutput
- *
- * Create a video with sound from the game of life boards
+ * Creates a video with sound from the boards
  *
  * @package Output
  */

@@ -14,7 +14,7 @@ use Input\BlinkerInput;
 use Ulrichsg\Getopt;
 
 /**
- * Class BoardTest
+ * Checks whether \GameOfLife\Board works as expected
  *
  * @covers \GameOfLife\Board
  */

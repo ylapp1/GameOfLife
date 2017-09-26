@@ -14,7 +14,7 @@ use Input\UserInput;
 use Ulrichsg\Getopt;
 
 /**
- * Class UserInputTest
+ * Checks whether \Input\UserInput works as expected
  */
 class UserInputTest extends TestCase
 {

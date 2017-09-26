@@ -13,7 +13,7 @@ use GameOfLife\Board;
 use GameOfLife\RuleSet;
 
 /**
- * Class BlinkerInputTest
+ * Checks whether \Input\RandomInput works as expected
  */
 class RandomInputTest extends TestCase
 {

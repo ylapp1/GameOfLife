@@ -10,7 +10,7 @@ use Output\Helpers\FfmpegHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class FfmpegHelperTest
+ * Checks whether \Output\Helpers\FfmpegHelper works as expected
  */
 class FfmpegHelperTest extends TestCase
 {

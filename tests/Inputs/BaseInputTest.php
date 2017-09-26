@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Input\BaseInput;
 
 /**
- * Class BaseInputTest
+ * Checks whether \Input\BaseInput works as expected
  */
 class BaseInputTest extends TestCase
 {

@@ -17,7 +17,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class BaseOutputTest
+ * Checks whether \Output\BaseOutput works as expected
  */
 class BaseOutputTest extends TestCase
 {

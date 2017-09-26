@@ -13,7 +13,7 @@ use GameOfLife\Board;
 use GameOfLife\RuleSet;
 
 /**
- * Class FileInputTest
+ * Checks whether \Input\FileInput works as expected
  */
 class FileInputTest extends TestCase
 {

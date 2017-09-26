@@ -10,7 +10,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class FileSystemHandlerTest
+ * Checks whether \Utils\FileSystemHandler works as expected
  */
 class FileSystemHandlerTest extends TestCase
 {

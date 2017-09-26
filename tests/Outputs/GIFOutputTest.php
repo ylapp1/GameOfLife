@@ -14,7 +14,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Class GIFOutputTest
+ * Checks whether \Output\GIFOutput works as expected
  */
 class GIFOutputTest extends TestCase
 {

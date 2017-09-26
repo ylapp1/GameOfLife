@@ -12,8 +12,6 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class BlinkerInput
- *
  * Places a 1x3 blinker on the board
  *
  * Usage:

@@ -14,7 +14,7 @@ use GameOfLife\RuleSet;
 use Utils\FileSystemHandler;
 
 /**
- * Class ImageCreatorTest
+ * Checks whether \Output\Helpers\ImageCreator works as expected
  */
 class ImageCreatorTest extends TestCase
 {

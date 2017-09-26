@@ -12,8 +12,6 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class SpaceShipInput
- *
  * Places a spaceship on the board
  *
  * Usage:

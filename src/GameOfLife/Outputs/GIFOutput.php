@@ -17,7 +17,7 @@ use Output\Helpers\ImageColor;
 use GIFEncoder\GIFEncoder;
 
 /**
- * Class GIFOutput
+ * Saves the boards in an animated gif file
  *
  * @package Output
  */

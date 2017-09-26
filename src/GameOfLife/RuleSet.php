@@ -9,8 +9,6 @@
 namespace GameOfLife;
 
 /**
- * Class RuleSet
- *
  * Stores the birth/death rules for the game of life
  */
 class RuleSet

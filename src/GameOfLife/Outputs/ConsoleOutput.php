@@ -12,7 +12,7 @@ use Ulrichsg\Getopt;
 use GameOfLife\Board;
 
 /**
- * Class ConsoleOutput
+ * Prints boards to the console
  *
  * @package Output
  */

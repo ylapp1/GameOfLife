@@ -9,8 +9,6 @@
 namespace Utils;
 
 /**
- * Class FileSystemHandler
- *
  * Handles directory and file creation/deletion
  *
  * @package Output\Helpers

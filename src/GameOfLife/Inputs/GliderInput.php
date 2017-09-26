@@ -12,8 +12,6 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class GliderInput
- *
  * Places a glider on the board
  *
  * Usage:

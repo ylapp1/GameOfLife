@@ -12,8 +12,6 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class RandomInput
- *
  * Fills the board with random set cells
  */
 class RandomInput extends BaseInput

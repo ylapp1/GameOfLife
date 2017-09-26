@@ -9,7 +9,7 @@
 namespace GameOfLife;
 
 /**
- * Class Board
+ * Stores the configuration and the logic of a game of life simulation
  *
  * call calculateStep() to calculate one game step for the entire board
  * call isFinished() to check whether the board is finished

@@ -13,9 +13,13 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Class UserInput
+ * Prompts the user to input which cells shall be set/unset
  *
- * Lets the user input which cells shall be set/unset
+ * Asks for coordinates which must be entered in the format "x,y"
+ * When the user is finished setting cells he can type one of these words:
+ *   - exit    Exit the simulation without calculating anything
+ *   - start   Start the simulation with the created board
+ *   - save    Save the created board as a template for later usage
  */
 class UserInput extends BaseInput
 {

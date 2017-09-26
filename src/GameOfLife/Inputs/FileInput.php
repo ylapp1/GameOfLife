@@ -13,9 +13,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Class FileInput
- *
- * Fills the board with cells whose positions are loaded from template files
+ * Fills the board with configuration which is loaded from template files
  *
  * @package Input
  */

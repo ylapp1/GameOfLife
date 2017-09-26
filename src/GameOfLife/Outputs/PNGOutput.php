@@ -17,7 +17,7 @@ use Output\Helpers\ImageColor;
 
 
 /**
- * Class PNGOutput
+ * Saves the boards as .png files
  *
  * @package Output
  */

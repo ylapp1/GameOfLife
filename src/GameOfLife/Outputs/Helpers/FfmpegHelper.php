@@ -9,9 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Class FfmpegHelper
- *
- * Helper for using ffmpeg in VideoOutput
+ * Stores ffmpeg configuration and generates a usable command
  *
  * @package Output
  */

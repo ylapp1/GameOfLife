@@ -14,7 +14,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PNGOutputTest
+ * Checks whether \Output\PNGOutput works as expected
  */
 class PNGOutputTest extends TestCase
 {
