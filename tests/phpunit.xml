@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="testboot.php"
+         verbose="true">
+
+    <filter>
+        <whitelist>
+            <directory>../src/GameOfLife</directory>
+        </whitelist>
+    </filter>
+
+</phpunit>

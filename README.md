@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ylapp1/GameOfLife.svg?branch=feature%2Fphase-5)](https://travis-ci.org/ylapp1/GameOfLife)
+
 # GameOfLife
 
 Usage: gameoflife.php [options] [operands]  <br /><br />

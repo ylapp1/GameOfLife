@@ -1,4 +1,5 @@
 .idea
-Output/*
-Input/Templates/Custom/*
-Tools/*
+Output
+Input/Templates/Custom
+Tools
+vendor

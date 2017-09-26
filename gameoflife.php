@@ -6,15 +6,13 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-require_once("Psr4Autoloader.php");
-
-$loader = new Psr4Autoloader();
-$loader->addNamespace("GameOfLife", __DIR__ . "/src/Classes/");
-$loader->addNamespace("Ulrichsg", __DIR__ . "/src/Ulrichsg/");
-$loader->addNameSpace("Input", __DIR__ . "/src/Classes/Inputs");
-$loader->addnameSpace("Output", __DIR__ . "/src/Classes/Outputs");
-$loader->register();
-
+$loader = require_once(__DIR__ . "/vendor/autoload.php");
+$loader->addPsr4("GameOfLife\\", __DIR__ . "/src/GameOfLife");
+$loader->addPsr4("GIFEncoder\\", __DIR__ . "/src/GIFEncoder");
+$loader->addPsr4("Input\\", __DIR__ . "/src/GameOfLife/Inputs");
+$loader->addPsr4("Output\\", __DIR__ . "/src/GameOfLife/Outputs");
+$loader->addPsr4("Ulrichsg\\", __DIR__ . "/src/Ulrichsg");
+$loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
@@ -41,7 +39,7 @@ $options = new Getopt(
 // save which options refer to which input/output type
 $linkedOptions = array();
 
-$classes = array_merge(glob(__DIR__ . "/src/Classes/Inputs/*Input.php"), glob(__DIR__ . "/src/Classes/Outputs/*Output.php"));
+$classes = array_merge(glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"), glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"));
 
 // find every input class
 foreach ($classes as $inputClass)
