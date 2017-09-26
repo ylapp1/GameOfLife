@@ -8,8 +8,8 @@
 
 namespace Output;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 
 /**
  * BaseOutput from which all other outputs must inherit

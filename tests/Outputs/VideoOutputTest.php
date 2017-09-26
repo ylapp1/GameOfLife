@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Output\VideoOutput;
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Utils\FileSystemHandler;
+use Output\VideoOutput;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Output\VideoOutput works as expected

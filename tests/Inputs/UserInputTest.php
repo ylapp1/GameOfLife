@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Utils\FileSystemHandler;
 use Input\UserInput;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Input\UserInput works as expected

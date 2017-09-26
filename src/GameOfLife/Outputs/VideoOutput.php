@@ -8,13 +8,13 @@
 
 namespace Output;
 
-use Utils\FileSystemHandler;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
-use Output\Helpers\ImageCreator;
 use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
 use Output\Helpers\FfmpegHelper;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
+use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 
 /**
  * Creates a video with sound from the boards

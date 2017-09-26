@@ -8,9 +8,9 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Utils\FileSystemHandler;
 use Output\PNGOutput;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**

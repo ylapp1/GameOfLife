@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
+use GameOfLife\Board;
+use GameOfLife\RuleSet;
 use Output\BaseOutput;
 use Output\PNGOutput;
 use Output\VideoOutput;
 use Output\GIFOutput;
-use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;

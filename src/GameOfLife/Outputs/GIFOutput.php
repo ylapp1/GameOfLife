@@ -8,13 +8,13 @@
 
 namespace Output;
 
-use Utils\FileSystemHandler;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
-use Output\Helpers\ImageCreator;
+use GIFEncoder\GIFEncoder;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageColor;
-use GIFEncoder\GIFEncoder;
+use Output\Helpers\ImageCreator;
+use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 
 /**
  * Saves the boards in an animated gif file

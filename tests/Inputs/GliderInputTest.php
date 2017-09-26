@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\GliderInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\GliderInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Input\GliderInput works as expected

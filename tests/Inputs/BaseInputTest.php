@@ -6,8 +6,8 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
 use Input\BaseInput;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Input\BaseInput works as expected

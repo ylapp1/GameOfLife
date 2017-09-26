@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn.consult.eu>
  */
 
-use Output\Helpers\ImageCreator;
-use Output\Helpers\ImageColor;
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
 use Utils\FileSystemHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Output\Helpers\ImageCreator works as expected

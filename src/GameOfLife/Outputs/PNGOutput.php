@@ -8,13 +8,12 @@
 
 namespace Output;
 
-use Utils\FileSystemHandler;
-use Ulrichsg\Getopt;
-Use GameOfLife\Board;
-use Output\Helpers\ImageCreator;
+use GameOfLife\Board;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageColor;
-
+use Output\Helpers\ImageCreator;
+use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 
 /**
  * Saves the boards as .png files

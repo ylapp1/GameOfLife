@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Output\GIFOutput;
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Output\GIFOutput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Output\GIFOutput works as expected

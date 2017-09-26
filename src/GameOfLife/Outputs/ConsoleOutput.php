@@ -8,8 +8,8 @@
 
 namespace Output;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 
 /**
  * Prints boards to the console

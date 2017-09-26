@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Ulrichsg\Getopt;
 use Output\ConsoleOutput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Output\ConsoleOutput works as expected

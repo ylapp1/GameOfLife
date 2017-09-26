@@ -12,7 +12,6 @@ use Input\BlinkerInput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
-
 /**
  * Checks whether \Input\BlinkerInput works as expected
  */

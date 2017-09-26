@@ -6,12 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-
-use GameOfLife\RuleSet;
 use GameOfLife\Board;
+use GameOfLife\RuleSet;
 use Input\BlinkerInput;
 use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \GameOfLife\Board works as expected
