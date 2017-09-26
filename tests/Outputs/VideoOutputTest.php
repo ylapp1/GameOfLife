@@ -8,6 +8,8 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
 use Output\VideoOutput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
@@ -51,6 +53,55 @@ class VideoOutputTest extends TestCase
         unset($this->fileSystemHandler);
     }
 
+
+    /**
+     * @dataProvider setAttributesProvider()
+     * @covers \Output\VideoOutput::fileSystemHandler()
+     * @covers \Output\VideoOutput::setFileSystemHandler()
+     * @covers \Output\VideoOutput::fillPercentages()
+     * @covers \Output\VideoOutput::setFillPercentages()
+     * @covers \Output\VideoOutput::fps()
+     * @covers \Output\VideoOutput::setFps()
+     * @covers \Output\VideoOutput::frames()
+     * @covers \Output\VideoOutput::setFrames()
+     * @covers \Output\VideoOutput::imageCreator()
+     * @covers \Output\VideoOutput::setImageCreator()
+     * @covers \Output\VideoOutput::secondsPerFrame()
+     * @covers \Output\VideoOutput::setSecondsPerFrame()
+     *
+     * @param array $_fillPercentages
+     * @param int $_fps
+     * @param array $_frames
+     * @param float $_secondsPerFrame
+     */
+    public function testCanSetAttributes(array $_fillPercentages, int $_fps, array $_frames, float $_secondsPerFrame)
+    {
+        $fileSystemHandler = new FileSystemHandler();
+        $colorBlack = new ImageColor(0, 0, 0);
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
+
+        $this->output->setFileSystemHandler($fileSystemHandler);
+        $this->output->setFillPercentages($_fillPercentages);
+        $this->output->setFps($_fps);
+        $this->output->setFrames($_frames);
+        $this->output->setImageCreator($imageCreator);
+        $this->output->setSecondsPerFrame($_secondsPerFrame);
+
+        $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
+        $this->assertEquals($_fillPercentages, $this->output->fillPercentages());
+        $this->assertEquals($_fps, $this->output->fps());
+        $this->assertEquals($_frames, $this->output->frames());
+        $this->assertEquals($imageCreator, $this->output->imageCreator());
+        $this->assertEquals($_secondsPerFrame, $this->output->secondsPerFrame());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            [array(1, 2, 3), 15, array("a/2", "a/3", "a/4"), 40.6],
+            [array(4, 5, 6), 234, array("b/2", "b/4", "b/6/6"), 70.3]
+        ];
+    }
 
     /**
      * @covers \Output\VideoOutput::addOptions()

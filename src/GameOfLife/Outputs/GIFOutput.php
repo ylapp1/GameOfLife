@@ -23,12 +23,93 @@ use Utils\FileSystemHandler;
  */
 class GIFOutput extends BaseOutput
 {
-    private $frameTime = 20;
     private $frames = array();
-    /** @var ImageCreator $imageCreator */
-    private $imageCreator;
+    private $frameTime = 20;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+    /** @var ImageCreator $imageCreator */
+    private $imageCreator;
+
+
+    /**
+     * Returns the frame save paths
+     *
+     * @return array    Frame save paths
+     */
+    public function frames(): array
+    {
+        return $this->frames;
+    }
+
+    /**
+     * Sets the frame save paths
+     *
+     * @param array $_frames    Frame save paths
+     */
+    public function setFrames(array $_frames)
+    {
+        $this->frames = $_frames;
+    }
+
+    /**
+     * Returns the time per frame
+     *
+     * @return int      Time per frame
+     */
+    public function frameTime(): int
+    {
+        return $this->frameTime;
+    }
+
+    /**
+     * Sets the time per frame
+     *
+     * @param int $_frameTime   Time per frame
+     */
+    public function setFrameTime(int $_frameTime)
+    {
+        $this->frameTime = $_frameTime;
+    }
+
+    /**
+     * Returns the filesystem handler of this gif output
+     *
+     * @return FileSystemHandler    filesystem handler
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the filesystem handler of this gif output
+     *
+     * @param FileSystemHandler $_fileSystemHandler     filesystem handler
+     */
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
+    /**
+     * Returns the image creator of this gif output
+     *
+     * @return ImageCreator     The image creator
+     */
+    public function imageCreator(): ImageCreator
+    {
+        return $this->imageCreator;
+    }
+
+    /**
+     * Sets the image creator of this gif output
+     *
+     * @param ImageCreator $_imageCreator   The image creator
+     */
+    public function setImageCreator(ImageCreator $_imageCreator)
+    {
+        $this->imageCreator = $_imageCreator;
+    }
 
     /**
      * Adds GIFOutputs specific options to a Getopt object

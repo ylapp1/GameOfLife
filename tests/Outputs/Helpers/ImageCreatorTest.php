@@ -110,6 +110,8 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::baseImage()
      * @covers \Output\Helpers\ImageCreator::setCellImage()
      * @covers \Output\Helpers\ImageCreator::cellImage()
+     * @covers \Output\Helpers\ImageCreator::setFileSystemHandler()
+     * @covers \Output\Helpers\ImageCreator::fileSystemHandler()
      *
      * @param string $_basePath
      * @param int $_cellSize
@@ -124,6 +126,7 @@ class ImageCreatorTest extends TestCase
         $cellAliveColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
         $gridColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
 
+        $fileSystemHandler = new FileSystemHandler();
 
         $this->imageCreator->setBasePath($_basePath);
         $this->imageCreator->setCellSize($_cellSize);
@@ -133,6 +136,7 @@ class ImageCreatorTest extends TestCase
         $this->imageCreator->setGameFolder($_gameFolder);
         $this->imageCreator->setBaseImage($baseImage);
         $this->imageCreator->setCellImage($cellImage);
+        $this->imageCreator->setFileSystemHandler($fileSystemHandler);
 
         $this->assertEquals($_basePath, $this->imageCreator->basePath());
         $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
@@ -142,6 +146,7 @@ class ImageCreatorTest extends TestCase
         $this->assertEquals($_gameFolder, $this->imageCreator->gameFolder());
         $this->assertEquals($baseImage, $this->imageCreator->baseImage());
         $this->assertEquals($cellImage, $this->imageCreator->cellImage());
+        $this->assertEquals($fileSystemHandler, $this->imageCreator->fileSystemHandler());
     }
 
     public function setAttributesProvider()

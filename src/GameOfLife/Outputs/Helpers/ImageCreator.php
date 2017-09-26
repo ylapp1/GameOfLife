@@ -189,6 +189,27 @@ class ImageCreator
     }
 
     /**
+     * Returns the filesystem handler of this ImageCreator
+     *
+     * @return FileSystemHandler    The filesystem handler
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the filesystem handler of this ImageCreator
+     *
+     * @param FileSystemHandler $_fileSystemHandler     The filesystem handler
+     */
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
+
+    /**
      * ImageCreator constructor.
      *
      * @param int $_boardHeight             The height of the board

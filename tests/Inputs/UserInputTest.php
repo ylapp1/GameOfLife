@@ -57,6 +57,28 @@ class UserInputTest extends TestCase
     }
 
     /**
+     * @dataProvider setAttributesProvider()
+     * @covers \Input\UserInput::templateDirectory()
+     * @covers \Input\UserInput::setTemplateDirectory()
+     *
+     * @param string $_templateDirectory    Directory where templates are saved
+     */
+    public function testCanSetAttributes(string $_templateDirectory)
+    {
+        $this->input->setTemplateDirectory($_templateDirectory);
+        $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            ["test"],
+            ["myTest"],
+            ["mySpecialTest"]
+        ];
+    }
+
+    /**
      * @covers \Input\UserInput::addOptions()
      */
     public function testCanAddOptions()

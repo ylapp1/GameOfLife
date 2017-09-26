@@ -9,6 +9,8 @@
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Output\GIFOutput;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -51,6 +53,46 @@ class GIFOutputTest extends TestCase
         unset($this->fileSystemHandler);
     }
 
+
+    /**
+     * @dataProvider setAttributesProvider()
+     * @covers \Output\GIFOutput::frames()
+     * @covers \Output\GIFOutput::setFrames()
+     * @covers \Output\GIFOutput::frameTime()
+     * @covers \Output\GIFOutput::setFrameTime()
+     * @covers \Output\GIFOutput::fileSystemHandler()
+     * @covers \Output\GIFOutput::setFileSystemHandler()
+     * @covers \Output\GIFOutput::imageCreator()
+     * @covers \Output\GIFOutput::setImageCreator()
+     *
+     * @param array $_frames    Frame save paths
+     * @param int $_frameTime   Time per frame
+     */
+    public function testCanSetAttributes(array $_frames, int $_frameTime)
+    {
+        $fileSystemHandler = new FileSystemHandler();
+        $colorBlack = new ImageColor(0, 0, 0);
+        $imageCreator = new ImageCreator(2, 2, 2, $colorBlack, $colorBlack, $colorBlack);
+
+        $this->output->setFrames($_frames);
+        $this->output->setFrameTime($_frameTime);
+        $this->output->setFileSystemHandler($fileSystemHandler);
+        $this->output->setImageCreator($imageCreator);
+
+        $this->assertEquals($_frames, $this->output->frames());
+        $this->assertEquals($_frameTime, $this->output->frameTime());
+        $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
+        $this->assertEquals($imageCreator, $this->output->imageCreator());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            [array("a/b", "a/c"), 20],
+            [array("1/2", "1/3", "1/1"), 123],
+            [array("hallo/be", "hallo/ggg", "asd/sdfs", "asdaf/sdfsdf"), 676]
+        ];
+    }
 
     /**
      * @covers \Output\GIFOutput::addOptions()

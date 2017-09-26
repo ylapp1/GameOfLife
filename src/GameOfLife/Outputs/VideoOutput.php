@@ -23,15 +23,135 @@ use Utils\FileSystemHandler;
  */
 class VideoOutput extends BaseOutput
 {
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
+    private $fillPercentages = array();
     private $fps = 15;
-    private $secondsPerFrame;
     private $frames = array();
     /** @var ImageCreator $imageCreator */
     private $imageCreator;
-    private $fillPercentages = array();
-    /** @var FileSystemHandler */
-    private $fileSystemHandler;
+    private $secondsPerFrame;
 
+
+    /**
+     * Returns the filesystem handler of this video output
+     *
+     * @return FileSystemHandler    Filesystem handler of this video output
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the filesystem handler of this video output
+     *
+     * @param FileSystemHandler $_fileSystemHandler      Filesystem handler of this video output
+     */
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
+    /**
+     * Returns the fill percentage list of this video output
+     *
+     * @return array    Fill percentage list
+     */
+    public function fillPercentages(): array
+    {
+        return $this->fillPercentages;
+    }
+
+    /**
+     * Sets the fill percentage list of this video output
+     *
+     * @param array $_fillPercentages   Fill percentage list
+     */
+    public function setFillPercentages(array $_fillPercentages)
+    {
+        $this->fillPercentages = $_fillPercentages;
+    }
+
+    /**
+     * Returns the frames per second of this video output
+     *
+     * @return int     Frames per second of this video output
+     */
+    public function fps(): int
+    {
+        return $this->fps;
+    }
+
+    /**
+     * Sets the frames per second of this video output
+     *
+     * @param int $_fps    Frames per second of this video output
+     */
+    public function setFps(int $_fps)
+    {
+        $this->fps = $_fps;
+    }
+
+    /**
+     * Returns the frame path list of this video output
+     *
+     * @return array    Frame path list
+     */
+    public function frames(): array
+    {
+        return $this->frames;
+    }
+
+    /**
+     * Sets the frame path list of this video output
+     *
+     * @param array $_frames    Frame path list
+     */
+    public function setFrames(array $_frames)
+    {
+        $this->frames = $_frames;
+    }
+
+    /**
+     * Returns the image creator of this video output
+     *
+     * @return ImageCreator     Image creator of this video output
+     */
+    public function imageCreator(): ImageCreator
+    {
+        return $this->imageCreator;
+    }
+
+    /**
+     * Sets the image creator of this video output
+     *
+     * @param ImageCreator $_imageCreator   Image creator of this video output
+     */
+    public function setImageCreator(ImageCreator $_imageCreator)
+    {
+        $this->imageCreator = $_imageCreator;
+    }
+
+    /**
+     * Returns the seconds per frame of this video output
+     *
+     * @return float      Seconds per frame of this video output
+     */
+    public function secondsPerFrame(): float
+    {
+        return $this->secondsPerFrame;
+    }
+
+    /**
+     * Sets the seconds per frame of this video output
+     *
+     * @param float $_secondsPerFrame     Seconds per frame of this video output
+     */
+    public function setSecondsPerFrame(float $_secondsPerFrame)
+    {
+        $this->secondsPerFrame = $_secondsPerFrame;
+    }
 
     /**
      * Adds VideoOutputs specific options to an option list

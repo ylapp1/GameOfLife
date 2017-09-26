@@ -9,6 +9,8 @@
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Output\PNGOutput;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -49,6 +51,25 @@ class PNGOutputTest extends TestCase
         unset($this->board);
         unset($this->optionsMock);
         unset($this->fileSystemHandler);
+    }
+
+    /**
+     * @covers \Output\PNGOutput::fileSystemHandler()
+     * @covers \Output\PNGOutput::setFileSystemHandler()
+     * @covers \Output\PNGOutput::imageCreator()
+     * @covers \Output\PNGOutput::setImageCreator()
+     */
+    public function testCanSetAttributes()
+    {
+        $fileSystemHandler = new FileSystemHandler();
+        $colorBlack = new ImageColor(0, 0, 0);
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
+
+        $this->output->setFileSystemHandler($fileSystemHandler);
+        $this->output->setImageCreator($imageCreator);
+
+        $this->assertEquals($fileSystemHandler,  $this->output->fileSystemHandler());
+        $this->assertEquals($imageCreator, $this->output->imageCreator());
     }
 
     /**

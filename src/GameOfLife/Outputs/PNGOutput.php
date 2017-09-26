@@ -22,10 +22,31 @@ use Utils\FileSystemHandler;
  */
 class PNGOutput extends BaseOutput
 {
-    /** @var  ImageCreator $imageCreator */
-    private $imageCreator;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+    /** @var  ImageCreator $imageCreator */
+    private $imageCreator;
+
+
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
+    public function imageCreator(): ImageCreator
+    {
+        return $this->imageCreator;
+    }
+
+    public function setImageCreator(ImageCreator $_imageCreator)
+    {
+        $this->imageCreator = $_imageCreator;
+    }
 
 
     /**

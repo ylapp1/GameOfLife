@@ -23,7 +23,28 @@ use Utils\FileSystemHandler;
  */
 class UserInput extends BaseInput
 {
-    private $customTemplatesDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+    private $templateDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+
+
+    /**
+     * Returns the template directory in which UserInput will save custom templates
+     *
+     * @return string   Template directory
+     */
+    public function templateDirectory(): string
+    {
+        return $this->templateDirectory;
+    }
+
+    /**
+     * Sets the template directory
+     *
+     * @param string $_templateDirectory    Template directory
+     */
+    public function setTemplateDirectory(string $_templateDirectory)
+    {
+        $this->templateDirectory = $_templateDirectory;
+    }
 
     /**
      * Adds UserInputs specific options to the option list
@@ -218,10 +239,10 @@ class UserInput extends BaseInput
     public function saveCustomTemplate(String $_templateName, Board $_board)
     {
         $fileSystemHandler = new FileSystemHandler();
-        $fileSystemHandler->createDirectory($this->customTemplatesDirectory);
+        $fileSystemHandler->createDirectory($this->templateDirectory);
         $fileName = $_templateName . ".txt";
 
-        $error = $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board);
+        $error = $fileSystemHandler->writeFile($this->templateDirectory, $fileName, $_board);
 
         if ($error !== FileSystemHandler::NO_ERROR)
         {
@@ -229,7 +250,7 @@ class UserInput extends BaseInput
             $input = $this->catchUserInput('php://stdin');
             if (strtolower($input) == "y" or strtolower($input) == "yes")
             {
-                $fileSystemHandler->writeFile($this->customTemplatesDirectory, $fileName, $_board, true);
+                $fileSystemHandler->writeFile($this->templateDirectory, $fileName, $_board, true);
                 echo "Template successfully replaced!\n\n";
             }
             else echo "Saving aborted.\n\n";
