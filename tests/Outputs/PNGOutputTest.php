@@ -85,8 +85,8 @@ class PNGOutputTest extends TestCase
         );
 
         $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($pngOutputOptions);
+                          ->method("addOptions")
+                          ->with($pngOutputOptions);
 
         $this->output->addOptions($this->optionsMock);
     }
@@ -96,11 +96,11 @@ class PNGOutputTest extends TestCase
      */
     public function testCanCreateOutputDirectory()
     {
-        $this->assertEquals(false, file_exists($this->outputDirectory));
+        $this->assertFalse(file_exists($this->outputDirectory));
 
         $this->expectOutputString("Starting simulation ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
-        $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0"));
+        $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_0"));
     }
 
     /**
@@ -117,7 +117,7 @@ class PNGOutputTest extends TestCase
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();
-            $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_0/" . $i . ".png"));
         }
     }
 

@@ -92,9 +92,10 @@ class GliderInputTest extends TestCase
      */
     public function testCanFillBoardWithCustomPositions(int $_gliderPosX, int $_gliderPosY, bool $_expectsError)
     {
-        $this->optionsMock->method("getOption")
-            ->withConsecutive(["gliderPosX"], ["gliderPosX"], ["gliderPosY"], ["gliderPosY"])
-            ->willReturn($_gliderPosX, $_gliderPosX, $_gliderPosY, $_gliderPosY);
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
+                          ->withConsecutive(["gliderPosX"], ["gliderPosX"], ["gliderPosY"], ["gliderPosY"])
+                          ->willReturn($_gliderPosX, $_gliderPosX, $_gliderPosY, $_gliderPosY);
 
         if ($_expectsError) $this->expectOutputString("Error: Glider exceeds field borders.\n");
 

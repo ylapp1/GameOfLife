@@ -85,7 +85,7 @@ class BoardTest extends TestCase
 
         $this->assertEquals(17, count($this->board->currentBoard()));
         $this->assertEquals(0, count($this->board->historyOfBoards()));
-        $this->assertEquals(false, $this->board->hasBorder());
+        $this->assertFalse($this->board->hasBorder());
         $this->assertEquals(17, $this->board->height());
         $this->assertEquals(250, $this->board->maxSteps());
         $this->assertEquals(20, $this->board->width());
@@ -282,15 +282,15 @@ class BoardTest extends TestCase
     public function testDetectsFinish()
     {
         // check whether empty board is detected
-        $this->assertEquals(true, $this->board->isFinished());
+        $this->assertTrue($this->board->isFinished());
 
         // check whether living cells are detected
         $this->board->setField(0, 0, true);
-        $this->assertEquals(false, $this->board->isFinished());
+        $this->assertFalse($this->board->isFinished());
 
         // check whether max step makes the board stop
         $this->board->setGameStep(250);
-        $this->assertEquals(true, $this->board->isFinished());
+        $this->assertTrue($this->board->isFinished());
 
         // Check whether repeating pattern is detected
         $this->board->setGameStep(0);
@@ -302,7 +302,7 @@ class BoardTest extends TestCase
         $this->board->calculateStep();
         $this->board->calculateStep();
 
-        $this->assertEquals(true, $this->board->isFinished());
+        $this->assertTrue($this->board->isFinished());
     }
 
     /**

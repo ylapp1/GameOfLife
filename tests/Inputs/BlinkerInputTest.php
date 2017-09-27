@@ -85,7 +85,8 @@ class BlinkerInputTest extends TestCase
      */
     public function testCanFillBoardWithCustomPositions(int $_blinkerPosX, int $_blinkerPosY, bool $_expectsError)
     {
-        $this->optionsMock->method("getOption")
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
                           ->withConsecutive(["blinkerPosX"], ["blinkerPosX"], ["blinkerPosY"], ["blinkerPosY"])
                           ->willReturn($_blinkerPosX, $_blinkerPosX, $_blinkerPosY, $_blinkerPosY);
 

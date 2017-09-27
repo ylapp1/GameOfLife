@@ -132,9 +132,9 @@ class VideoOutputTest extends TestCase
 
         $this->expectOutputString("Starting video output ...\n");
         $this->output->startOutput(new Getopt(), $this->board);
-        $this->assertEquals(true, file_exists($this->outputDirectory . "Video"));
-        $this->assertEquals(true, file_exists($this->outputDirectory . "tmp/Frames"));
-        $this->assertEquals(true, file_exists($this->outputDirectory . "tmp/Audio"));
+        $this->assertTrue(file_exists($this->outputDirectory . "Video"));
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Audio"));
     }
 
     /**
@@ -152,7 +152,7 @@ class VideoOutputTest extends TestCase
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();
-            $this->assertEquals(true, file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".png"));
         }
 
         // Check whether finishOutput creates the final gif
@@ -171,7 +171,7 @@ class VideoOutputTest extends TestCase
         $this->output->finishOutput();
 
         //$this->assertEquals(true, file_exists($this->outputDirectory . "Video/Game_0.mp4"));
-        $this->assertEquals(false, file_exists($this->outputDirectory . "tmp"));
+        $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 
     /**

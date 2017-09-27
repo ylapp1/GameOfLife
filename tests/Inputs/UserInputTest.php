@@ -127,7 +127,7 @@ class UserInputTest extends TestCase
     {
         $this->expectOutputRegex("/.*Template successfully saved!\n\n.*/");
         $this->input->saveCustomTemplate("unitTest", $this->board);
-        $this->assertEquals(true, file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
+        $this->assertTrue(file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
 
         $this->userInputMock->expects($this->exactly(3))
                             ->method("catchUserInput")
@@ -249,7 +249,8 @@ class UserInputTest extends TestCase
      */
     public function testCanFillBoard(int $_inputX, int $_inputY)
     {
-        $this->userInputMock->method("catchUserInput")
+        $this->userInputMock->expects($this->exactly(2))
+                            ->method("catchUserInput")
                             ->withConsecutive()
                             ->willReturn($_inputX . "," . $_inputY, "start");
 
@@ -268,7 +269,7 @@ class UserInputTest extends TestCase
         $this->userInputMock->fillBoard($this->board, new Getopt());
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertEquals(true, $this->board->getField($_inputX, $_inputY));
+        $this->assertTrue($this->board->getField($_inputX, $_inputY));
     }
 
     public function fillBoardProvider()
@@ -309,7 +310,7 @@ class UserInputTest extends TestCase
         $this->userInputMock->fillBoard($this->board, $this->optionsMock);
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertEquals(true, $this->board->getField(0, 0));
+        $this->assertTrue($this->board->getField(0, 0));
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
     }

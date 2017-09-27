@@ -55,15 +55,15 @@ class ImageCreatorTest extends TestCase
         $this->expectOutputRegex("/.*Gamestep: 1.*/");
 
         $this->imageCreator->createImage($this->board, "png");
-        $this->assertEquals(true, file_exists($this->outputDirectory . "0.png"));
+        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->imageCreator->createImage($this->board, "video");
-        $this->assertEquals(true, file_exists($this->outputDirectory . "0.png"));
+        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->imageCreator->createImage($this->board, "gif");
-        $this->assertEquals(true, file_exists($this->outputDirectory . "0.gif"));
+        $this->assertTrue(file_exists($this->outputDirectory . "0.gif"));
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
@@ -88,8 +88,8 @@ class ImageCreatorTest extends TestCase
         $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
         $this->assertEquals($colorBlack, $imageCreator->gridColor());
         $this->assertEquals("tmp/Frames", $imageCreator->gameFolder());
-        $this->assertEquals(true, is_resource($imageCreator->baseImage()));
-        $this->assertEquals(true, is_resource($imageCreator->cellImage()));
+        $this->assertTrue(is_resource($imageCreator->baseImage()));
+        $this->assertTrue(is_resource($imageCreator->cellImage()));
         $this->assertEquals(new FileSystemHandler(), $imageCreator->fileSystemHandler());
     }
 

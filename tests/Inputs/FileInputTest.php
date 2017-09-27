@@ -85,8 +85,8 @@ class FileInputTest extends TestCase
         );
 
         $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($fileInputOptions);
+                          ->method("addOptions")
+                          ->with($fileInputOptions);
         $this->input->addOptions($this->optionsMock);
     }
 
@@ -101,10 +101,10 @@ class FileInputTest extends TestCase
         $this->assertEquals(2, $this->input->templateWidth());
         $this->assertEquals(2, $this->input->templateHeight());
 
-        $this->assertEquals(true, $board[0][0]);
-        $this->assertEquals(null, @$board[0][1]);
-        $this->assertEquals(null, @$board[1][0]);
-        $this->assertEquals(null, @$board[1][1]);
+        $this->assertTrue($board[0][0]);
+        $this->assertNull(@$board[0][1]);
+        $this->assertNull(@$board[1][0]);
+        $this->assertNull(@$board[1][1]);
     }
 
     /**

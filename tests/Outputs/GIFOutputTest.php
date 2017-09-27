@@ -107,8 +107,8 @@ class GIFOutputTest extends TestCase
             array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)"));
 
         $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($pngOutputOptions);
+                          ->method("addOptions")
+                          ->with($pngOutputOptions);
 
         $this->output->addOptions($this->optionsMock);
     }
@@ -119,12 +119,12 @@ class GIFOutputTest extends TestCase
      */
     public function testCanCreateOutputDirectory()
     {
-        $this->assertEquals(false, file_exists($this->outputDirectory));
+        $this->assertFalse(file_exists($this->outputDirectory));
 
         $this->expectOutputString("Starting GIF Output...\n");
         $this->output->startOutput(new Getopt(), $this->board);
-        $this->assertEquals(true, file_exists($this->outputDirectory . "Gif"));
-        $this->assertEquals(true, file_exists($this->outputDirectory . "tmp/Frames"));
+        $this->assertTrue(file_exists($this->outputDirectory . "Gif"));
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));
     }
 
     /**
@@ -142,7 +142,7 @@ class GIFOutputTest extends TestCase
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();
-            $this->assertEquals(true, file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
+            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
         }
 
         // Check whether finishOutput creates the final gif
@@ -153,8 +153,8 @@ class GIFOutputTest extends TestCase
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
         $this->output->finishOutput();
 
-        $this->assertEquals(true, file_exists($this->outputDirectory . "Gif/Game_0.gif"));
-        $this->assertEquals(false, file_exists($this->outputDirectory . "tmp"));
+        $this->assertTrue(file_exists($this->outputDirectory . "Gif/Game_0.gif"));
+        $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 
     /**
