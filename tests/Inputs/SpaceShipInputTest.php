@@ -51,22 +51,6 @@ class SpaceShipInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\SpaceShipInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $spaceShipOptions = array(
-            array(null, "spaceShipPosX", Getopt::REQUIRED_ARGUMENT, "X position of the spaceship"),
-            array(null, "spaceShipPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the spaceship")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-                          ->method("addOptions")
-                          ->with($spaceShipOptions);
-        $this->input->addOptions($this->optionsMock);
-    }
-
-    /**
      * @dataProvider setCellsProvider
      *
      * @param int $_x            X-Coordinate of the cell

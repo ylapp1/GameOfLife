@@ -51,22 +51,6 @@ class GliderInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\GliderInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $gliderOptions = array(
-            array(null, "gliderPosX", Getopt::REQUIRED_ARGUMENT, "X position of the glider"),
-            array(null, "gliderPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the glider")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($gliderOptions);
-        $this->input->addOptions($this->optionsMock);
-    }
-
-    /**
      * @dataProvider setCellsProvider
      * @covers \Input\GliderInput::fillBoard()
      *

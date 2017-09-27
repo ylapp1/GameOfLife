@@ -51,22 +51,6 @@ class BlinkerInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\BlinkerInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $blinkerOptions = array(
-            array(null, "blinkerPosX", Getopt::REQUIRED_ARGUMENT, "X position of the blinker"),
-            array(null, "blinkerPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-                          ->method("addOptions")
-                          ->with($blinkerOptions);
-        $this->input->addOptions($this->optionsMock);
-    }
-
-    /**
      * @dataProvider setCellsProvider
      * @covers \Input\BlinkerInput::fillBoard()
      *

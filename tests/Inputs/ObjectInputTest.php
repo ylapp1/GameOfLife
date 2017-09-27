@@ -6,58 +6,88 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Input\BaseInput;
+use Input\ObjectInput;
+use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\BaseInput works as expected
+ * Checks whether \Input\ObjectInput works as expected
  */
-class BaseInputTest extends TestCase
+class ObjectInputTest extends TestCase
 {
-    /** @var BaseInput */
+    /** @var ObjectInput */
     private $input;
+    /** @var \PHPUnit_Framework_MockObject_MockObject */
+    private $optionsMock;
 
     protected function setUp()
     {
-        $this->input = new BaseInput();
+        $this->input = new ObjectInput(1, 2, "testObject");
+        $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                                  ->getMock();
     }
 
     protected function tearDown()
     {
         unset($this->input);
+        unset($this->optionsMock);
     }
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \Input\BaseInput::setObjectWidth
-     * @covers \Input\BaseInput::objectWidth
-     * @covers \Input\BaseInput::setObjectHeight
-     * @covers \Input\BaseInput::objectHeight
+     * @covers \Input\ObjectInput::setObjectWidth
+     * @covers \Input\ObjectInput::objectWidth
+     * @covers \Input\ObjectInput::setObjectHeight
+     * @covers \Input\ObjectInput::objectHeight
+     * @covers \Input\ObjectInput::setObjectName()
+     * @covers \Input\ObjectInput::objectName()
      *
      * @param int $_objectWidth     Object Width
      * @param int $_objectHeight    Object Height
+     * @param string $_objectName   Object name
      */
-    public function testCanSetAttributes($_objectWidth, $_objectHeight)
+    public function testCanSetAttributes($_objectWidth, $_objectHeight, $_objectName)
     {
         $this->input->setObjectWidth($_objectWidth);
         $this->assertEquals($_objectWidth, $this->input->objectWidth());
 
         $this->input->setObjectHeight($_objectHeight);
         $this->assertEquals($_objectHeight, $this->input->objectHeight());
+
+        $this->input->setObjectName($_objectName);
+        $this->assertEquals($_objectName, $this->input->objectName());
     }
 
     public function setAttributesProvider()
     {
         return [
-            [10, 12],
-            [15, 275],
-            [203, 846]
+            [10, 12, "myname"],
+            [15, 275, "tetsname"],
+            [203, 846, "helloMy"]
         ];
     }
 
     /**
+     * @covers \Input\ObjectInput::addOptions()
+     */
+    public function testCanAddOptions()
+    {
+        $testObjectInput = new ObjectInput(2, 3, "myObjectName");
+
+        $gliderOptions = array(
+            array(null, "myObjectNamePosX", Getopt::REQUIRED_ARGUMENT, "X position of the myObjectName"),
+            array(null, "myObjectNamePosY", Getopt::REQUIRED_ARGUMENT, "Y position of the myObjectName")
+        );
+
+        $this->optionsMock->expects($this->exactly(1))
+                          ->method("addOptions")
+                          ->with($gliderOptions);
+        $testObjectInput->addOptions($this->optionsMock);
+    }
+
+    /**
      * @dataProvider objectOutOfBoundsProvider
-     * @covers \Input\BaseInput::isObjectOutOfBounds
+     * @covers \Input\ObjectInput::isObjectOutOfBounds
      *
      * @param int $_objectPosX      X-Coordinate of top left corner of the object
      * @param int $_objectPosY      Y-Coordinate of top left corner of the object
@@ -69,9 +99,7 @@ class BaseInputTest extends TestCase
      */
     public function testDetectsObjectOutOfBounds($_objectPosX, $_objectPosY, $_objectWidth, $_objectHeight, $_boardWidth, $_boardHeight, $_expected)
     {
-        $input = new BaseInput();
-        $input->setObjectWidth($_objectWidth);
-        $input->setObjectHeight($_objectHeight);
+        $input = new ObjectInput($_objectWidth, $_objectHeight, "testObject");
 
         $this->assertEquals($_expected, $input->isObjectOutOfBounds($_boardWidth, $_boardHeight, $_objectPosX, $_objectPosY));
     }
