@@ -33,6 +33,35 @@ class ObjectInputTest extends TestCase
         unset($this->optionsMock);
     }
 
+
+    /**
+     * @dataProvider constructionProvider()
+     * @covers \Input\ObjectInput::__construct()
+     *
+     * @param int $_width       Object width
+     * @param int $_height      Object height
+     * @param string $_name     Object name
+     */
+    public function testCanBeConstructed(int $_width, int $_height, string $_name)
+    {
+        $input = new ObjectInput($_width, $_height, $_name);
+
+        $this->assertEquals($_width, $input->objectWidth());
+        $this->assertEquals($_height, $input->objectHeight());
+        $this->assertEquals($_name, $input->objectName());
+    }
+
+    public function constructionProvider()
+    {
+        return [
+            [0, 0, "hello"],
+            [1, 2, "mytest"],
+            [3, 4, "thisIsATest"],
+            [5, 6, "test-me"],
+            [7, 8, "this test will test you"]
+        ];
+    }
+
     /**
      * @dataProvider setAttributesProvider
      * @covers \Input\ObjectInput::setObjectWidth

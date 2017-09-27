@@ -36,6 +36,40 @@ class BoardTest extends TestCase
 
 
     /**
+     * @dataProvider constructionProvider()
+     * @covers \GameOfLife\Board::__construct()
+     *
+     * @param int $_width       Board width
+     * @param int $_height      Board height
+     * @param int $_maxSteps    Maximum amount of steps
+     * @param bool $_hasBorder  Defines whether board has a border
+     */
+    public function testCanBeConstructed(int $_width, int $_height, int $_maxSteps, bool $_hasBorder)
+    {
+        $testRuleSet = new RuleSet(array(1, 2), array(3, 4));
+        $testBoard = new Board($_width, $_height, $_maxSteps, $_hasBorder, $testRuleSet);
+
+        $this->assertEquals(0, $testBoard->gameStep());
+        $this->assertEquals($_hasBorder, $testBoard->hasBorder());
+        $this->assertEquals($_height, $testBoard->height());
+        $this->assertEquals(array(), $testBoard->historyOfBoards());
+        $this->assertEquals($_maxSteps, $testBoard->maxSteps());
+        $this->assertEquals($testRuleSet, $testBoard->rules());
+        $this->assertEquals($_width, $testBoard->width());
+        $this->assertEquals($testBoard->initializeEmptyBoard(), $testBoard->currentBoard());
+    }
+
+    public function constructionProvider()
+    {
+        return [
+            [0, 1, 200, true],
+            [2, 3, 100, true],
+            [4, 5, 57, false],
+            [6, 7, 34, false]
+        ];
+    }
+
+    /**
      * @covers \GameOfLife\Board::currentBoard()
      * @covers \GameOfLife\Board::historyOfBoards()
      * @covers \GameOfLife\Board::hasBorder()

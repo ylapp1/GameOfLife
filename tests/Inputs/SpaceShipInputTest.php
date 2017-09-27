@@ -48,6 +48,7 @@ class SpaceShipInputTest extends TestCase
         $input = new SpaceShipInput();
         $this->assertEquals(5, $input->objectWidth());
         $this->assertEquals(4, $input->objectHeight());
+        $this->assertEquals("spaceShip", $input->objectName());
     }
 
     /**

@@ -90,6 +90,7 @@ class ImageCreatorTest extends TestCase
         $this->assertEquals("tmp/Frames", $imageCreator->gameFolder());
         $this->assertEquals(true, is_resource($imageCreator->baseImage()));
         $this->assertEquals(true, is_resource($imageCreator->cellImage()));
+        $this->assertEquals(new FileSystemHandler(), $imageCreator->fileSystemHandler());
     }
 
     /**

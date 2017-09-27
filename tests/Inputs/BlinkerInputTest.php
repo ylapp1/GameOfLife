@@ -48,6 +48,7 @@ class BlinkerInputTest extends TestCase
         $input = new BlinkerInput();
         $this->assertEquals(1, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
+        $this->assertEquals("blinker", $input->objectName());
     }
 
     /**

@@ -48,6 +48,7 @@ class GliderInputTest extends TestCase
         $input = new GliderInput();
         $this->assertEquals(3, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
+        $this->assertEquals("glider", $input->objectName());
     }
 
     /**

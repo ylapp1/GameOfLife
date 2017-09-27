@@ -27,6 +27,30 @@ class FfmpegHelperTest extends TestCase
         unset($this->ffmpegHelper);
     }
 
+
+    /**
+     * @dataProvider constructionProvider
+     * @covers \Output\Helpers\FfmpegHelper::__construct()
+     *
+     * @param string $_binaryPath   The binary path
+     */
+    public function testCanBeConstructed(string $_binaryPath)
+    {
+        $input = new FfmpegHelper($_binaryPath);
+
+        $this->assertEquals($_binaryPath, $input->binaryPath());
+    }
+
+    public function constructionProvider()
+    {
+        return [
+            ["testPath"],
+            ["I/am/a/file/path"],
+            ["Test/this/path"],
+            ["Special/File/Path (Not Really)"]
+        ];
+    }
+
     /**
      * @dataProvider setAttributesProvider
      *
@@ -59,15 +83,6 @@ class FfmpegHelperTest extends TestCase
             ["dflgkjsdlfgs", [1, 2, 3], "kajdfhldsf"],
             ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"], "Hello world!"]
         ];
-    }
-
-    /**
-     * @covers \Output\Helpers\FfmpegHelper::__construct
-     */
-    public function testCanBeConstructed()
-    {
-        $ffmpegHelper = new FfmpegHelper("test");
-        $this->assertEquals("test", $ffmpegHelper->binaryPath());
     }
 
     /**
