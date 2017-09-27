@@ -233,7 +233,6 @@ class ImageCreator
         $this->backgroundColor = $_backgroundColor;
         $this->gridColor = $_gridColor;
         $this->cellAliveColor = $_cellAliveColor;
-        $this->gridColor = $_gridColor;
 
         imagefill($baseImage, 0, 0, $this->backgroundColor->getColor($baseImage));
 
@@ -261,7 +260,7 @@ class ImageCreator
 
         $transparentColor = new ImageColor($red, 0, 0);
 
-
+        // Create Smiley Image for living cells
         $cellImage = imagecreatetruecolor($_cellSize, $_cellSize);
         imagefill($cellImage, 0, 0, $transparentColor->getColor($cellImage));
 
@@ -270,14 +269,11 @@ class ImageCreator
 
         // Head
         imagefilledellipse($cellImage, $_cellSize / 2, $_cellSize / 2, $headSize, $headSize, $this->cellAliveColor->getColor($cellImage));
-
         // Eyes
         imagefilledellipse($cellImage, $padding + $headSize * 1/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
         imagefilledellipse($cellImage, $padding + $headSize * 3/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
-
-        imagesetthickness($cellImage, 5);
-
         // Mouth
+        imagesetthickness($cellImage, 5);
         imagearc($cellImage, $padding + $headSize / 2, $padding + $headSize / 2, $headSize * 3/4,$headSize * 3/4, 25, 155, $this->backgroundColor->getColor($cellImage));
 
         imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));

@@ -16,6 +16,8 @@ $loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\BaseInput;
+use Output\BaseOutput;
 use Ulrichsg\Getopt;
 
 // Create command line options
@@ -58,8 +60,12 @@ foreach ($classes as $class)
         $previousOptions = $options->getOptionList();
 
         // initialize the class
-        $input = new $classPath;
-        $input->addOptions($options);
+        $instance = new $classPath;
+        if (stristr($classPath, "Input") && $instance instanceof BaseInput ||
+            stristr($classPath, "Output") && $instance instanceof BaseOutput)
+        {
+            $instance->addOptions($options);
+        }
 
         // get options after the class added its options
         $newOptions = $options->getOptionList();
@@ -132,7 +138,7 @@ else
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
     // initialize new input with default value
-    $input = new Input\RandomInput;
+    $instance = new Input\RandomInput;
     $output = new Output\ConsoleOutput;
 
     // find out whether user used the --input option
@@ -140,7 +146,7 @@ else
     {
         $className = "Input\\" . $options->getOption("input") . "Input";
 
-        if (class_exists($className)) $input = new $className;
+        if (class_exists($className)) $instance = new $className;
     }
 
     // find out whether user used the --output option
@@ -157,12 +163,12 @@ else
         // if input specific option is set initialize new input of the class which the input refers to
         if ($options->getOption($option))
         {
-            if (stristr($className, "Input") != false) $input = new $className;
+            if (stristr($className, "Input") != false) $instance = new $className;
             elseif (stristr($className, "Output") != false) $output = new $className;
         }
     }
 
-    $input->fillBoard($board, $options);
+    $instance->fillBoard($board, $options);
     $output->startOutput($options, $board);
 
     // Game loop

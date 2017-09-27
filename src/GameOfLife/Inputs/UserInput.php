@@ -4,6 +4,7 @@
  * @version 0.1
  * @copyright 2017 CN-Consult GmbH
  * @author Tim Schreindl <tim.schreindl@cn-consult.eu>
+ * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
 namespace Input;
@@ -23,7 +24,7 @@ use Utils\FileSystemHandler;
  */
 class UserInput extends BaseInput
 {
-    private $templateDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+    private $customTemplateDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
 
 
     /**
@@ -31,19 +32,19 @@ class UserInput extends BaseInput
      *
      * @return string   Template directory
      */
-    public function templateDirectory(): string
+    public function customTemplateDirectory(): string
     {
-        return $this->templateDirectory;
+        return $this->customTemplateDirectory;
     }
 
     /**
      * Sets the template directory
      *
-     * @param string $_templateDirectory    Template directory
+     * @param string $_customTemplateDirectory    Template directory
      */
-    public function setTemplateDirectory(string $_templateDirectory)
+    public function setCustomTemplateDirectory(string $_customTemplateDirectory)
     {
-        $this->templateDirectory = $_templateDirectory;
+        $this->customTemplateDirectory = $_customTemplateDirectory;
     }
 
     /**
@@ -239,10 +240,10 @@ class UserInput extends BaseInput
     public function saveCustomTemplate(String $_templateName, Board $_board)
     {
         $fileSystemHandler = new FileSystemHandler();
-        $fileSystemHandler->createDirectory($this->templateDirectory);
+        $fileSystemHandler->createDirectory($this->customTemplateDirectory);
         $fileName = $_templateName . ".txt";
 
-        $error = $fileSystemHandler->writeFile($this->templateDirectory, $fileName, $_board);
+        $error = $fileSystemHandler->writeFile($this->customTemplateDirectory, $fileName, $_board);
 
         if ($error !== FileSystemHandler::NO_ERROR)
         {
@@ -250,7 +251,7 @@ class UserInput extends BaseInput
             $input = $this->catchUserInput('php://stdin');
             if (strtolower($input) == "y" or strtolower($input) == "yes")
             {
-                $fileSystemHandler->writeFile($this->templateDirectory, $fileName, $_board, true);
+                $fileSystemHandler->writeFile($this->customTemplateDirectory, $fileName, $_board, true);
                 echo "Template successfully replaced!\n\n";
             }
             else echo "Saving aborted.\n\n";
