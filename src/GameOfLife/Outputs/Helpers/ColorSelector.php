@@ -31,9 +31,11 @@ class ColorSelector
         {
             $parts = explode(",", $_colorInput);
 
-            $red = intval($parts[0]);
-            $green = intval($parts[1]);
-            $blue = intval($parts[2]);
+            $red = $this->validateColorAmount(intval($parts[0]));
+            $green = $this->validateColorAmount(intval($parts[1]));
+            $blue = $this->validateColorAmount(intval($parts[2]));
+
+            if ($red < 0) $red = 0;
 
             $color = new ImageColor($red, $green, $blue);
         }
@@ -68,5 +70,23 @@ class ColorSelector
         }
 
         return $color;
+    }
+
+    /**
+     * Checks whether the color amount is less than 0 or more than 255 and adjusts the color accordingly
+     *
+     * @param int $_colorAmount     Amount of red, green or blue
+     *
+     * @return int  Fixed color if input was a invalid color
+     *              Input color if input was a valid color
+     */
+    public function validateColorAmount(int $_colorAmount)
+    {
+        $colorAmount = $_colorAmount;
+
+        if ($_colorAmount < 0) $colorAmount = 0;
+        if ($_colorAmount > 255) $colorAmount = 255;
+
+        return $colorAmount;
     }
 }
