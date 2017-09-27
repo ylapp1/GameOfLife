@@ -58,30 +58,25 @@ class FfmpegHelperTest extends TestCase
      * @covers \Output\Helpers\FfmpegHelper::binaryPath()
      * @covers \Output\Helpers\FfmpegHelper::setOptions()
      * @covers \Output\Helpers\FfmpegHelper::options()
-     * @covers \Output\Helpers\FfmpegHelper::setOutputPath()
-     * @covers \Output\Helpers\FfmpegHelper::outputPath()
      *
      * @param string $_binaryPath   Binary path
      * @param array $_options       Option list
-     * @param string $_outputPath   Output path
      */
-    public function testCanSetAttributes(string $_binaryPath, array $_options, string $_outputPath)
+    public function testCanSetAttributes(string $_binaryPath, array $_options)
     {
         $this->ffmpegHelper->setBinaryPath($_binaryPath);
         $this->ffmpegHelper->setOptions($_options);
-        $this->ffmpegHelper->setOutputPath($_outputPath);
 
         $this->assertEquals($_binaryPath, $this->ffmpegHelper->binaryPath());
         $this->assertEquals($_options, $this->ffmpegHelper->options());
-        $this->assertEquals($_outputPath, $this->ffmpegHelper->outputPath());
     }
 
     public function setAttributesProvider()
     {
         return [
-            ["sdfsdf", [0, 1, 2, 3], "adfkgjdasgfk"],
-            ["dflgkjsdlfgs", [1, 2, 3], "kajdfhldsf"],
-            ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"], "Hello world!"]
+            ["sdfsdf", [0, 1, 2, 3]],
+            ["dflgkjsdlfgs", [1, 2, 3]],
+            ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"]]
         ];
     }
 

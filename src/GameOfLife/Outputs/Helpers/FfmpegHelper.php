@@ -17,7 +17,6 @@ class FfmpegHelper
 {
     private $binaryPath;
     private $options = array();
-    private $outputPath;
 
 
     /**
@@ -29,6 +28,7 @@ class FfmpegHelper
     {
         $this->binaryPath = $_binaryPath;
     }
+
 
     /**
      * Returns the ffmpeg binary path
@@ -68,26 +68,6 @@ class FfmpegHelper
     public function setOptions(array $_options)
     {
         $this->options = $_options;
-    }
-
-    /**
-     * Returns the ffmpeg output path
-     *
-     * @return string   Ffmpeg output path
-     */
-    public function outputPath()
-    {
-        return $this->outputPath;
-    }
-
-    /**
-     * Sets the ffmpeg output path
-     *
-     * @param string $_outputPath   Ffmpeg output path
-     */
-    public function setOutputPath(string $_outputPath)
-    {
-        $this->outputPath = $_outputPath;
     }
 
 
