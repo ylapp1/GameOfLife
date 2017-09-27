@@ -35,50 +35,55 @@ $options = new Getopt(
     )
 );
 
-
 // save which options refer to which input/output type
 $linkedOptions = array();
 
 $classes = array_merge(glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"), glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"));
+$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput");
 
 // find every input class
-foreach ($classes as $inputClass)
+foreach ($classes as $class)
 {
-    // get class name with namespace prefix
-    if (stristr($inputClass, "Input") != false) $className = "Input\\";
-    elseif (stristr($inputClass, "Output") != false) $className = "Output\\";
+    $className = basename($class, ".php");
 
-    $className .= basename($inputClass, ".php");
-
-    // get options before class adds its options
-    $previousOptions = $options->getOptionList();
-
-    // initialize the class
-    $input = new $className;
-    $input->addOptions($options);
-
-    // get options after the class added its options
-    $newOptions = $options->getOptionList();
-
-    // save new options in $inputOptions
-    // cannot use array_diff because it doesn't work with multidimensional arrays
-    foreach ($newOptions as $newOption)
+    if (! in_array($className, $excludeClasses))
     {
-        $isNewOption = true;
+        // get class name with namespace prefix
+        if (stristr($class, "Input") != false) $classPath = "Input\\";
+        elseif (stristr($class, "Output") != false) $classPath = "Output\\";
 
-        foreach ($previousOptions as $previousOption)
+        $classPath .= $className;
+
+        // get options before class adds its options
+        $previousOptions = $options->getOptionList();
+
+        // initialize the class
+        $input = new $classPath;
+        $input->addOptions($options);
+
+        // get options after the class added its options
+        $newOptions = $options->getOptionList();
+
+        // save new options in $inputOptions
+        // cannot use array_diff because it doesn't work with multidimensional arrays
+        foreach ($newOptions as $newOption)
         {
-            if ($previousOption == $newOption)
+            $isNewOption = true;
+
+            foreach ($previousOptions as $previousOption)
             {
-                $isNewOption = false;
-                break;
+                if ($previousOption == $newOption)
+                {
+                    $isNewOption = false;
+                    break;
+                }
             }
-        }
 
-        if ($isNewOption)
-        {
-            $optionName = $newOption[1];
-            $linkedOptions[$optionName] = $className;
+            if ($isNewOption)
+            {
+                $optionName = $newOption[1];
+                $linkedOptions[$optionName] = $classPath;
+            }
         }
     }
 }
