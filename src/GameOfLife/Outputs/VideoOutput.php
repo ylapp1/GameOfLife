@@ -213,7 +213,7 @@ class VideoOutput extends BaseOutput
     /**
      * Creates PNG files which will later be combined to a video
      *
-     * @param Board $_board
+     * @param Board $_board     The board from which the ImageCreator will create an image
      */
     public function outputBoard(Board $_board)
     {
@@ -227,7 +227,7 @@ class VideoOutput extends BaseOutput
      */
     public function finishOutput()
     {
-        echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
+        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
         echo "\nStarting video creation ...\n";
 
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";

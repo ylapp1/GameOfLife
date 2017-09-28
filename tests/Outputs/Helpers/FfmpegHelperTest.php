@@ -102,6 +102,9 @@ class FfmpegHelperTest extends TestCase
         $this->assertEquals(0, count($this->ffmpegHelper->options()));
     }
 
+    /**
+     * @covers \Output\Helpers\FfmpegHelper::generateCommand()
+     */
     public function testCanGenerateCommand()
     {
         $this->ffmpegHelper->addOption("myTest");

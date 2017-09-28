@@ -127,7 +127,7 @@ class FileInput extends BaseInput
      *
      * @param string $_templateName     Template name
      *
-     * @return array  The board
+     * @return array  The board that was loaded from the template file
      */
     public function loadTemplate(string $_templateName): array
     {

@@ -76,7 +76,8 @@ class RandomInputTest extends TestCase
      * @covers \Input\RandomInput::fillBoard()
      *
      * @param int $_fillPercentage  Fill Percentage
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError   True: Expects error message
+     *                              False: Expects no error message
      * @param string $_errorMessage The expected error message
      */
     public function testCanFillBoardCustomPercentage(int $_fillPercentage, bool $_expectsError, string $_errorMessage = null)

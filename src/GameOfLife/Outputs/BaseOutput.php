@@ -28,7 +28,7 @@ class BaseOutput
     /**
      * Returns the output directory of the output
      *
-     * @return string   output directory of the output
+     * @return string   Output directory of the output
      */
     public function outputDirectory(): string
     {
@@ -38,7 +38,7 @@ class BaseOutput
     /**
      * Sets the output directory of the output
      *
-     * @param string $_outputDirectory      output directory of the output
+     * @param string $_outputDirectory      Output directory of the output
      */
     public function setOutputDirectory(string $_outputDirectory)
     {

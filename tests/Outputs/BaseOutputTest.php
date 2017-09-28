@@ -76,7 +76,7 @@ class BaseOutputTest extends TestCase
 
         $pngOutput->startOutput(new Getopt(), $this->board);
 
-        $outputRegex = "Simulation finished. All cells are dead or a repeating pattern was detected.\n";
+        $outputRegex = "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n\n";
         $outputRegex .= "Starting GIF creation. One moment please...\n";
         $outputRegex .= "GIF creation complete.";
 

@@ -70,10 +70,10 @@ class VideoOutputTest extends TestCase
      * @covers \Output\VideoOutput::secondsPerFrame()
      * @covers \Output\VideoOutput::setSecondsPerFrame()
      *
-     * @param array $_fillPercentages
-     * @param int $_fps
-     * @param array $_frames
-     * @param float $_secondsPerFrame
+     * @param array $_fillPercentages       Fill percentage of each gamestep
+     * @param int $_fps                     Frames per second
+     * @param array $_frames                Frame paths
+     * @param float $_secondsPerFrame       Seconds per frame
      */
     public function testCanSetAttributes(array $_fillPercentages, int $_fps, array $_frames, float $_secondsPerFrame)
     {
@@ -157,7 +157,7 @@ class VideoOutputTest extends TestCase
         }
 
         // Check whether finishOutput creates the final gif
-        $outputRegex = "\nSimulation finished. All cells are dead or a repeating pattern was detected.";
+        $outputRegex = "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
         $outputRegex .= "\nStarting video creation ...\n";
 
         for ($i = 0; $i < 10; $i++)

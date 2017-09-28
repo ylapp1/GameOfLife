@@ -128,7 +128,7 @@ class PNGOutputTest extends TestCase
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\n\nSimulation finished. All cells are dead or a repeating pattern was detected.");
+        $this->expectOutputString("\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n");
         $this->output->finishOutput();
     }
 }

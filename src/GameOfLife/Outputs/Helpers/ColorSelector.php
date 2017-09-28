@@ -22,7 +22,7 @@ class ColorSelector
      *
      * @param String $_colorInput   User input
      *
-     * @return ImageColor           Color
+     * @return ImageColor           The resulting color
      */
     public function getColor (string $_colorInput): ImageColor
     {

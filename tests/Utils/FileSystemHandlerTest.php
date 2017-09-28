@@ -91,8 +91,8 @@ class FileSystemHandlerTest extends TestCase
      * @covers \Utils\FileSystemHandler::readFile()
      * @covers \Utils\FileSystemHandler::deleteFile()
      *
-     * @param string $_fileName     File name of the test file
-     * @param string $_content      Content of the test file
+     * @param string $_fileName         File name of the test file
+     * @param string $_content          Content of the test file
      * @param array $_expectedContent   Expected content that is read by FileSystemHandler::readFile()
      */
     public function testCanHandleFiles(string $_fileName, string $_content, array $_expectedContent)

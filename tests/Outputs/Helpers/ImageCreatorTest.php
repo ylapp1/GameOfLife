@@ -113,8 +113,8 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::setFileSystemHandler()
      * @covers \Output\Helpers\ImageCreator::fileSystemHandler()
      *
-     * @param int $_cellSize
-     * @param string $_outputPath
+     * @param int $_cellSize        Diameter/Width/Height of a single cell
+     * @param string $_outputPath   Path where images are saved
      */
     public function testCanSetAttributes(int $_cellSize, string $_outputPath)
     {

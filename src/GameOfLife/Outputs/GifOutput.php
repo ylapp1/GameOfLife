@@ -75,7 +75,7 @@ class GifOutput extends BaseOutput
     /**
      * Returns the filesystem handler of this gif output
      *
-     * @return FileSystemHandler    filesystem handler
+     * @return FileSystemHandler    Filesystem handler
      */
     public function fileSystemHandler(): FileSystemHandler
     {
@@ -85,7 +85,7 @@ class GifOutput extends BaseOutput
     /**
      * Sets the filesystem handler of this gif output
      *
-     * @param FileSystemHandler $_fileSystemHandler     filesystem handler
+     * @param FileSystemHandler $_fileSystemHandler     Filesystem handler
      */
     public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
     {
@@ -181,7 +181,7 @@ class GifOutput extends BaseOutput
      */
     public function finishOutput()
     {
-        echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
+        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
         echo "\nStarting GIF creation. One moment please...";
 
         if (count($this->frames) == 0)

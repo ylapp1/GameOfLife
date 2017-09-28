@@ -156,10 +156,10 @@ class UserInputTest extends TestCase
      * @dataProvider getInputCoordinatesProvider
      * @covers \Input\UserInput::getInputCoordinate()
      *
-     * @param int $_expected
+     * @param int $_expected        Expected return value of getInputCoordinate()
      * @param string $_testInput    Single coordinate in a string
-     * @param int $_minValue
-     * @param int $_maxValue
+     * @param int $_minValue        The value that the inputted value must be at least
+     * @param int $_maxValue        The value that the inputted value may be at most
      */
     public function testCanGetInputCoordinates(int $_expected, string $_testInput, int $_minValue, int $_maxValue)
     {
@@ -181,8 +181,8 @@ class UserInputTest extends TestCase
      * @dataProvider processInputProvider()
      * @covers \Input\UserInput::processInput()
      *
-     * @param bool $_expected   Expected return value
-     * @param string $_input    User input
+     * @param bool $_expected               Expected return value
+     * @param string $_input                User input
      * @param string $_expectOutputString   Expected output string
      */
     public function testCanProcessInput(bool $_expected, string $_input, string $_expectOutputString = null)

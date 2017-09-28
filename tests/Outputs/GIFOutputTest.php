@@ -66,7 +66,7 @@ class GIFOutputTest extends TestCase
      * @covers \Output\GifOutput::imageCreator()
      * @covers \Output\GifOutput::setImageCreator()
      *
-     * @param array $_frames    Frame save paths
+     * @param array $_frames    Frame paths
      * @param int $_frameTime   Time per frame
      */
     public function testCanSetAttributes(array $_frames, int $_frameTime)
@@ -147,8 +147,8 @@ class GIFOutputTest extends TestCase
         }
 
         // Check whether finishOutput creates the final gif
-        $outputRegex = "Simulation finished. All cells are dead or a repeating pattern was detected.\n";
-        $outputRegex .= "Starting GIF creation. One moment please...\n";
+        $outputRegex = "Simulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        $outputRegex .= "\nStarting GIF creation. One moment please...\n";
         $outputRegex .= "GIF creation complete.";
 
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");

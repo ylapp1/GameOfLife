@@ -118,6 +118,6 @@ class PngOutput extends BaseOutput
     public function finishOutput()
     {
         unset($this->imageCreator);
-        echo "\n\nSimulation finished. All cells are dead or a repeating pattern was detected.";
+        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
     }
 }

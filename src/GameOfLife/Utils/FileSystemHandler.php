@@ -33,7 +33,7 @@ class FileSystemHandler
     {
         if (! file_exists($_directoryPath))
         {
-            // create all directories in the directory path (if they don't exist)
+            // create all directories in the directory path recursively (if they don't exist)
             mkdir($_directoryPath, 0777, true);
             return self::NO_ERROR;
         }

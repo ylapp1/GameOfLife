@@ -87,7 +87,8 @@ class SpaceShipInputTest extends TestCase
      *
      * @param int $_spaceShipPosX     X-Position of the top left corner of the spaceship
      * @param int $_spaceShipPosY     Y-Position of the top left corner of the spaceship
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError     True: Expects error message
+     *                                False: Expects no error message
      */
     public function testCanFillBoardWithCustomPositions(int $_spaceShipPosX, int $_spaceShipPosY, bool $_expectsError)
     {

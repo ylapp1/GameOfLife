@@ -79,8 +79,8 @@ class UserInput extends BaseInput
      * Catches input from keyboard to create an own generation
      * Put Numbers in like 5,5 to set to true
      *
-     * @param \GameOfLife\Board $_board
-     * @param Getopt $_options
+     * @param \GameOfLife\Board $_board     The board which will be filled
+     * @param Getopt $_options              Options (edit, template)
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
@@ -114,7 +114,7 @@ class UserInput extends BaseInput
      * @param int $_minValue            The lowest value that the input coordinate may be
      * @param int $_maxValue            The highest value that the input coordinate may be
      *
-     * @return int   Input coordinate
+     * @return int|bool   Input coordinate | Error
      */
     public function getInputCoordinate(string $_inputCoordinate, int $_minValue, int $_maxValue)
     {
@@ -133,7 +133,8 @@ class UserInput extends BaseInput
      *
      * @param String $_input    User input
      * @param Board $_board     Game Board
-     * @return bool isInputFinished
+     *
+     * @return bool isInputFinished     Indicates whether the simulation shall be started or not
      */
     public function processInput(String $_input, Board $_board): bool
     {
@@ -236,7 +237,7 @@ class UserInput extends BaseInput
      * Saves current board to a custom template file
      *
      * @param string $_templateName    User input in the format "<save> <templateName>"
-     * @param Board $_board     Current board
+     * @param Board $_board            Current board
      */
     public function saveCustomTemplate(String $_templateName, Board $_board)
     {

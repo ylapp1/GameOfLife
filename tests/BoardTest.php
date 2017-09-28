@@ -153,10 +153,10 @@ class BoardTest extends TestCase
      * @dataProvider setFieldsProvider
      * @covers \GameOfLife\Board::setField()
      *
-     * @param int $_x    X-Coordinate of test field
-     * @param int $_y    Y-Coordinate of test field
-     * @param bool $_value  Value that the test field will be set to
-     * @param bool $_expected  Expected value that is stored in the array $currentBoard
+     * @param int $_x           X-Coordinate of test field
+     * @param int $_y           Y-Coordinate of test field
+     * @param bool $_value      Value that the test field will be set to
+     * @param bool $_expected   Expected value that is stored in the array $currentBoard
      */
     public function testCanSetField(int $_x, int $_y, bool $_value = null, bool $_expected = null)
     {
@@ -178,10 +178,10 @@ class BoardTest extends TestCase
      * @dataProvider readFieldsProvider
      * @covers \GameOfLife\Board::getField()
      *
-     * @param int $_x    X-Coordinate of test field
-     * @param int $_y    Y-Coordinate of test field
-     * @param bool $_value  Value that the test field will be set to
-     * @param bool $_expected  Expected value that is read with getField()
+     * @param int $_x           X-Coordinate of test field
+     * @param int $_y           Y-Coordinate of test field
+     * @param bool $_value      Value that the test field will be set to
+     * @param bool $_expected   Expected value that is read with getField()
      */
     public function testCanReadField(int $_x, int $_y, bool $_value = null, bool $_expected)
     {
@@ -368,7 +368,7 @@ class BoardTest extends TestCase
      *
      * @param int $_boardWidth      Board width
      * @param int $_boardHeight     Board height
-     * @param array $_expected       Coordinates of the center
+     * @param array $_expected      Coordinates of the center
      */
     public function testCanCalculateCenter(int $_boardWidth, int $_boardHeight, array $_expected)
     {

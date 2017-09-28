@@ -88,7 +88,8 @@ class GliderInputTest extends TestCase
      *
      * @param int $_gliderPosX     X-Position of the top left corner of the glider
      * @param int $_gliderPosY     Y-Position of the top left corner of the glider
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError  True: Expects error message
+     *                             False: Expects no error message
      */
     public function testCanFillBoardWithCustomPositions(int $_gliderPosX, int $_gliderPosY, bool $_expectsError)
     {

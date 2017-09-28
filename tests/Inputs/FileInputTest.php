@@ -51,8 +51,8 @@ class FileInputTest extends TestCase
      * @covers \Input\FileInput::templateWidth()
      *
      * @param string $_templateDirectory    Template directory
-     * @param int $_templateWidth   New width of board after reading template
-     * @param int $_templateHeight  New height of board after reading template
+     * @param int $_templateWidth           New width of board after reading template
+     * @param int $_templateHeight          New height of board after reading template
      */
     public function testCanSetAttributes(string $_templateDirectory, int $_templateWidth, int $_templateHeight)
     {
@@ -112,7 +112,7 @@ class FileInputTest extends TestCase
      * @dataProvider invalidTemplateNamesProvider
      * @covers \Input\FileInput::loadTemplate()
      *
-     * @param string $_templateName
+     * @param string $_templateName     Name of the template
      */
     public function testDetectsInvalidTemplateNames(string $_templateName)
     {

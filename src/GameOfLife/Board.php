@@ -56,7 +56,7 @@ class Board
     /**
      * Converts the board to string
      *
-     * @return string
+     * @return string   A string representing the board
      */
     public function __toString(): string
     {

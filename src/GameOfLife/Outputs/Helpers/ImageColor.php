@@ -36,7 +36,7 @@ class ImageColor
     /**
      * Returns the amount red of the color
      *
-     * @return int          amount red of the color
+     * @return int          Amount red of the color
      */
     public function red(): int
     {
@@ -46,7 +46,7 @@ class ImageColor
     /**
      * Sets the amount red of the color
      *
-     * @param int $_red     amount red of the color
+     * @param int $_red     Amount red of the color
      */
     public function setRed(int $_red)
     {
@@ -56,7 +56,7 @@ class ImageColor
     /**
      * Returns the amount green of the color
      *
-     * @return int      amount green of the color
+     * @return int      Amount green of the color
      */
     public function green(): int
     {
@@ -66,7 +66,7 @@ class ImageColor
     /**
      * Sets the amount green of the color
      *
-     * @param int $_green   amount green of the color
+     * @param int $_green   Amount green of the color
      */
     public function setGreen(int $_green)
     {
@@ -76,7 +76,7 @@ class ImageColor
     /**
      * Returns the amount blue of the color
      *
-     * @return int      amount blue of the color
+     * @return int      Amount blue of the color
      */
     public function blue(): int
     {
@@ -86,7 +86,7 @@ class ImageColor
     /**
      * Sets the amount blue of the color
      *
-     * @param int $_blue    amount blue of the color
+     * @param int $_blue    Amount blue of the color
      */
     public function setBlue(int $_blue)
     {

@@ -77,10 +77,10 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Finish output (write to file)
+     * Prints a message saying that the simulation is finished
      */
     public function finishOutput()
     {
-        echo "\nSimulation finished. All cells are dead or a repeating pattern was detected.\n\n";
+        echo "\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
     }
 }
