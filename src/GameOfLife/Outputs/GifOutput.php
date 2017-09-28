@@ -22,7 +22,7 @@ use Utils\FileSystemHandler;
  *
  * @package Output
  */
-class GIFOutput extends BaseOutput
+class GifOutput extends BaseOutput
 {
     private $frames = array();
     private $frameTime = 20;

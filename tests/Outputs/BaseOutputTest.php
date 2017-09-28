@@ -9,9 +9,9 @@
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Output\BaseOutput;
-use Output\PNGOutput;
+use Output\PngOutput;
 use Output\VideoOutput;
-use Output\GIFOutput;
+use Output\GifOutput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -63,9 +63,9 @@ class BaseOutputTest extends TestCase
      */
     public function testCanGetNewGameId()
     {
-        $pngOutput = new PNGOutput();
+        $pngOutput = new PngOutput();
         $pngOutput->setOutputDirectory($this->outputDirectory);
-        $gifOutput = new GIFOutput();
+        $gifOutput = new GifOutput();
         $gifOutput->setOutputDirectory($this->outputDirectory);
         $videoOutput = new VideoOutput();
         $videoOutput->setOutputDirectory($this->outputDirectory);

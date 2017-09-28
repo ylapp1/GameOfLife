@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Output\PNGOutput;
+use Output\PngOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
@@ -16,11 +16,11 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\PNGOutput works as expected
+ * Checks whether \Output\PngOutput works as expected
  */
 class PNGOutputTest extends TestCase
 {
-    /** @var PNGOutput $output */
+    /** @var PngOutput $output */
     private $output;
     /** @var Board $board */
     private $board;
@@ -33,7 +33,7 @@ class PNGOutputTest extends TestCase
 
     protected function setUp()
     {
-        $this->output = new PNGOutput();
+        $this->output = new PngOutput();
         $this->output->setOutputDirectory($this->outputDirectory);
         $this->fileSystemHandler = new FileSystemHandler();
 
@@ -55,10 +55,10 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PNGOutput::fileSystemHandler()
-     * @covers \Output\PNGOutput::setFileSystemHandler()
-     * @covers \Output\PNGOutput::imageCreator()
-     * @covers \Output\PNGOutput::setImageCreator()
+     * @covers \Output\PngOutput::fileSystemHandler()
+     * @covers \Output\PngOutput::setFileSystemHandler()
+     * @covers \Output\PngOutput::imageCreator()
+     * @covers \Output\PngOutput::setImageCreator()
      */
     public function testCanSetAttributes()
     {
@@ -74,7 +74,7 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PNGOutput::addOptions()
+     * @covers \Output\PngOutput::addOptions()
      */
     public function testCanAddOptions()
     {
@@ -93,7 +93,7 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PNGOutput::startOutput()
+     * @covers \Output\PngOutput::startOutput()
      */
     public function testCanCreateOutputDirectory()
     {
@@ -106,7 +106,7 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PNGOutput::outputBoard()
+     * @covers \Output\PngOutput::outputBoard()
      */
     public function testCanCreatePNG()
     {
@@ -124,7 +124,7 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PNGOutput::finishOutput()
+     * @covers \Output\PngOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {

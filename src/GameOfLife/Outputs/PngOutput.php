@@ -20,7 +20,7 @@ use Utils\FileSystemHandler;
  *
  * @package Output
  */
-class PNGOutput extends BaseOutput
+class PngOutput extends BaseOutput
 {
     /** @var FileSystemHandler */
     private $fileSystemHandler;
@@ -95,7 +95,7 @@ class PNGOutput extends BaseOutput
         $imageOutputPath = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
         $this->fileSystemHandler->createDirectory($imageOutputPath);
 
-        // initialize ImageCreator for this PNGOutput
+        // initialize ImageCreator for this PngOutput
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
 
         echo "Starting simulation ...\n\n";

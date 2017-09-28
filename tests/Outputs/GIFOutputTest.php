@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Output\GIFOutput;
+use Output\GifOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
@@ -16,11 +16,11 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\GIFOutput works as expected
+ * Checks whether \Output\GifOutput works as expected
  */
 class GIFOutputTest extends TestCase
 {
-    /** @var GIFOutput $output */
+    /** @var GifOutput $output */
     private $output;
     /** @var Board $board */
     private $board;
@@ -57,14 +57,14 @@ class GIFOutputTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider()
-     * @covers \Output\GIFOutput::frames()
-     * @covers \Output\GIFOutput::setFrames()
-     * @covers \Output\GIFOutput::frameTime()
-     * @covers \Output\GIFOutput::setFrameTime()
-     * @covers \Output\GIFOutput::fileSystemHandler()
-     * @covers \Output\GIFOutput::setFileSystemHandler()
-     * @covers \Output\GIFOutput::imageCreator()
-     * @covers \Output\GIFOutput::setImageCreator()
+     * @covers \Output\GifOutput::frames()
+     * @covers \Output\GifOutput::setFrames()
+     * @covers \Output\GifOutput::frameTime()
+     * @covers \Output\GifOutput::setFrameTime()
+     * @covers \Output\GifOutput::fileSystemHandler()
+     * @covers \Output\GifOutput::setFileSystemHandler()
+     * @covers \Output\GifOutput::imageCreator()
+     * @covers \Output\GifOutput::setImageCreator()
      *
      * @param array $_frames    Frame save paths
      * @param int $_frameTime   Time per frame
@@ -96,7 +96,7 @@ class GIFOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\GIFOutput::addOptions()
+     * @covers \Output\GifOutput::addOptions()
      */
     public function testCanAddOptions()
     {
@@ -116,7 +116,7 @@ class GIFOutputTest extends TestCase
 
 
     /**
-     * @covers \Output\GIFOutput::startOutput()
+     * @covers \Output\GifOutput::startOutput()
      */
     public function testCanCreateOutputDirectory()
     {
@@ -129,8 +129,8 @@ class GIFOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\GIFOutput::outputBoard()
-     * @covers \Output\GIFOutput::finishOutput()
+     * @covers \Output\GifOutput::outputBoard()
+     * @covers \Output\GifOutput::finishOutput()
      */
     public function testCanCreateGif()
     {
@@ -159,7 +159,7 @@ class GIFOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\GIFOutput::finishOutput()
+     * @covers \Output\GifOutput::finishOutput()
      */
     public function testDetectsEmptyFramesFolder()
     {
@@ -168,7 +168,7 @@ class GIFOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\GIFOutput::finishOutput()
+     * @covers \Output\GifOutput::finishOutput()
      */
     public function testDetectsOutputFolderNotExisting()
     {
