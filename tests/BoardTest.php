@@ -424,4 +424,56 @@ class BoardTest extends TestCase
             "9 of 50 cells" => [[[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [1,0], [1, 1], [1, 2], [1, 3]], 0.18]
         ];
     }
+
+    /**
+     * @covers \GameOfLife\Board::calculateStep()
+     *
+     * Checks whether border passthrough and solid work as expected
+     *
+     * Places a 3 x 1 Blinker next to the right border of the board and checks the game step calculation results
+     */
+    public function testCanChangeBorderType()
+    {
+        $this->board->setWidth(10);
+        $this->board->setHeight(10);
+        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+
+        // solid border
+        $this->board->setHasBorder(true);
+
+        $this->board->setField(9, 4, true);
+        $this->board->setField(9, 5, true);
+        $this->board->setField(9, 6, true);
+        $this->assertEquals(3, $this->board->getAmountCellsAlive());
+        $this->board->calculateStep();
+
+        $this->assertEquals(2, $this->board->getAmountCellsAlive());
+        $this->assertTrue($this->board->getField(9, 5));
+        $this->assertTrue($this->board->getField(8, 5));
+
+        $this->board->calculateStep();
+        $this->assertEquals(0, $this->board->getAmountCellsAlive());
+
+
+        // passthrough border
+        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->setHasBorder(false);
+
+        $this->board->setField(9, 4, true);
+        $this->board->setField(9, 5, true);
+        $this->board->setField(9, 6, true);
+        $this->assertEquals(3, $this->board->getAmountCellsAlive());
+        $this->board->calculateStep();
+
+        $this->assertEquals(3, $this->board->getAmountCellsAlive());
+        $this->assertTrue($this->board->getField(0, 5));
+        $this->assertTrue($this->board->getField(9, 5));
+        $this->assertTrue($this->board->getField(8, 5));
+
+        $this->board->calculateStep();
+        $this->assertEquals(3, $this->board->getAmountCellsAlive());
+        $this->assertTrue($this->board->getField(9, 4));
+        $this->assertTrue($this->board->getField(9, 5));
+        $this->assertTrue($this->board->getField(9, 6));
+    }
 }
