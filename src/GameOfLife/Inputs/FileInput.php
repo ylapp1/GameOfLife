@@ -140,6 +140,8 @@ class FileInput extends BaseInput
         else
         {
             echo "Error: Template file not found!\n";
+            $this->templateHeight = 0;
+            $this->templateWidth = 0;
             return array();
         }
 

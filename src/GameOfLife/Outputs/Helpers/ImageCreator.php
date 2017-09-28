@@ -18,7 +18,7 @@ use Utils\FileSystemHandler;
  */
 class ImageCreator
 {
-    private $basePath = __DIR__ . "/../../../../Output/";
+    private $outputPath;
     private $backgroundColor;
     private $gridColor;
     private $cellAliveColor;
@@ -29,23 +29,23 @@ class ImageCreator
     private $fileSystemHandler;
 
     /**
-     * Returns the base output directory
+     * Returns the output directory in which ImageCreator saves the images
      *
      * @return string   The base output directory
      */
-    public function basePath(): string
+    public function outputPath(): string
     {
-        return $this->basePath;
+        return $this->outputPath;
     }
 
     /**
-     * Sets the base output directory
+     * Sets the base output directory in which ImageCreator saves the images
      *
-     * @param string $_basePath     The base output directory
+     * @param string $_outputPath     The base output directory
      */
-    public function setBasePath(string $_basePath)
+    public function setOutputPath(string $_outputPath)
     {
-        $this->basePath = $_basePath;
+        $this->outputPath = $_outputPath;
     }
 
     /**
@@ -308,7 +308,7 @@ class ImageCreator
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 
-        $filePath = $this->basePath;
+        $filePath = $this->outputPath;
         $fileName = $_board->gameStep();
 
         switch ($_imageType)

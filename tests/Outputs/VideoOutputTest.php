@@ -29,11 +29,12 @@ class VideoOutputTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../Output/";
+    private $outputDirectory = __DIR__ . "/../VideoOutputTest/";
 
     protected function setUp()
     {
         $this->output = new VideoOutput();
+        $this->output->setOutputDirectory($this->outputDirectory);
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -119,7 +120,7 @@ class VideoOutputTest extends TestCase
                           ->method("addOptions")
                           ->with($pngOutputOptions);
 
-        $this->output->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
 
 

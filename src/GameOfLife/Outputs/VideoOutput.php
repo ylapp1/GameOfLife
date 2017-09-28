@@ -205,6 +205,7 @@ class VideoOutput extends BaseOutput
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
 
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "tmp/Frames");
+        $this->imageCreator->setOutputPath($this->outputDirectory);
 
         $this->secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
     }

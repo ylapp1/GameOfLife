@@ -29,11 +29,12 @@ class GIFOutputTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../Output/";
+    private $outputDirectory = __DIR__ . "/../GifOutputTest/";
 
     protected function setUp()
     {
         $this->output = new GifOutput();
+        $this->output->setOutputDirectory($this->outputDirectory);
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -110,7 +111,7 @@ class GIFOutputTest extends TestCase
                           ->method("addOptions")
                           ->with($pngOutputOptions);
 
-        $this->output->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
 
 
@@ -153,7 +154,7 @@ class GIFOutputTest extends TestCase
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
         $this->output->finishOutput();
 
-        $this->assertTrue(file_exists($this->outputDirectory . "Gif/Game_0.gif"));
+        $this->assertTrue(file_exists($this->outputDirectory . "Gif/Game_1.gif"));
         $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 

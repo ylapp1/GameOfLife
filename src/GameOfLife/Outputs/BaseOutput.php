@@ -99,7 +99,7 @@ class BaseOutput
     {
         $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
 
-        if (count($fileNames) == 0) $newGameId = 0;
+        if (count($fileNames) == 0) $newGameId = 1;
         else
         {
             $fileIds = array();

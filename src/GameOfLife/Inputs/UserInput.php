@@ -24,27 +24,27 @@ use Utils\FileSystemHandler;
  */
 class UserInput extends BaseInput
 {
-    private $customTemplateDirectory = __DIR__ . "/../../../Input/Templates/Custom/";
+    private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
 
 
     /**
-     * Returns the template directory in which UserInput will save custom templates
+     * Returns the template directory in which UserInput will create the folder Custom where it saves custom templates
      *
      * @return string   Template directory
      */
-    public function customTemplateDirectory(): string
+    public function templateDirectory(): string
     {
-        return $this->customTemplateDirectory;
+        return $this->templateDirectory;
     }
 
     /**
      * Sets the template directory
      *
-     * @param string $_customTemplateDirectory    Template directory
+     * @param string $_templateDirectory    Template directory
      */
-    public function setCustomTemplateDirectory(string $_customTemplateDirectory)
+    public function setTemplateDirectory(string $_templateDirectory)
     {
-        $this->customTemplateDirectory = $_customTemplateDirectory;
+        $this->templateDirectory = $_templateDirectory;
     }
 
     /**
@@ -87,6 +87,7 @@ class UserInput extends BaseInput
         if ($_options->getOption("edit"))
         {
             $fileInput = new FileInput();
+            $fileInput->setTemplateDirectory($this->templateDirectory());
             $fileInput->fillBoard($_board, $_options);
             $this->printBoardEditor($_board);
         }
@@ -240,10 +241,10 @@ class UserInput extends BaseInput
     public function saveCustomTemplate(String $_templateName, Board $_board)
     {
         $fileSystemHandler = new FileSystemHandler();
-        $fileSystemHandler->createDirectory($this->customTemplateDirectory);
+        $fileSystemHandler->createDirectory($this->templateDirectory . "/Custom");
         $fileName = $_templateName . ".txt";
 
-        $error = $fileSystemHandler->writeFile($this->customTemplateDirectory, $fileName, $_board);
+        $error = $fileSystemHandler->writeFile($this->templateDirectory . "/Custom", $fileName, $_board);
 
         if ($error !== FileSystemHandler::NO_ERROR)
         {
@@ -251,7 +252,7 @@ class UserInput extends BaseInput
             $input = $this->catchUserInput('php://stdin');
             if (strtolower($input) == "y" or strtolower($input) == "yes")
             {
-                $fileSystemHandler->writeFile($this->customTemplateDirectory, $fileName, $_board, true);
+                $fileSystemHandler->writeFile($this->templateDirectory . "/Custom", $fileName, $_board, true);
                 echo "Template successfully replaced!\n\n";
             }
             else echo "Saving aborted.\n\n";

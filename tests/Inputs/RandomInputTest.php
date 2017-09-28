@@ -52,7 +52,7 @@ class RandomInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($randomInputOptions);
-        $this->input->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -87,7 +87,7 @@ class RandomInputTest extends TestCase
                           ->willReturn($_fillPercentage);
 
         if ($_expectsError) $this->expectOutputString($_errorMessage);
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {

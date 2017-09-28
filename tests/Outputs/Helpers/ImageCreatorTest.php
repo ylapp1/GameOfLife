@@ -25,7 +25,7 @@ class ImageCreatorTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../../Output/tmp/Frames/";
+    private $outputDirectory = __DIR__ . "/../../ImageCreatorTest/";
 
     protected function setUp()
     {
@@ -37,6 +37,7 @@ class ImageCreatorTest extends TestCase
 
         $this->imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                                 $colorWhite, $colorBlack, "tmp/Frames");
+        $this->imageCreator->setOutputPath($this->outputDirectory);
         $this->fileSystemHandler = new FileSystemHandler();
     }
 
@@ -55,16 +56,16 @@ class ImageCreatorTest extends TestCase
         $this->expectOutputRegex("/.*Gamestep: 1.*/");
 
         $this->imageCreator->createImage($this->board, "png");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.png"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
 
         $this->imageCreator->createImage($this->board, "video");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.png"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
 
         $this->imageCreator->createImage($this->board, "gif");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.gif"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.gif"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
 
         $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
         $this->imageCreator->createImage($this->board, "myInvalidImageType");
@@ -82,7 +83,6 @@ class ImageCreatorTest extends TestCase
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                          $colorWhite, $colorBlack, "tmp/Frames");
 
-        $this->assertStringEndsWith('/../../../../Output/', $imageCreator->basePath());
         $this->assertEquals(15, $imageCreator->cellSize());
         $this->assertEquals($colorWhite, $imageCreator->backgroundColor());
         $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
@@ -95,8 +95,8 @@ class ImageCreatorTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \Output\Helpers\ImageCreator::setBasePath()
-     * @covers \Output\Helpers\ImageCreator::basePath()
+     * @covers \Output\Helpers\ImageCreator::setOutputPath()
+     * @covers \Output\Helpers\ImageCreator::outputPath()
      * @covers \Output\Helpers\ImageCreator::setCellSize()
      * @covers \Output\Helpers\ImageCreator::cellSize()
      * @covers \Output\Helpers\ImageCreator::setBackgroundColor()
@@ -129,7 +129,7 @@ class ImageCreatorTest extends TestCase
 
         $fileSystemHandler = new FileSystemHandler();
 
-        $this->imageCreator->setBasePath($_basePath);
+        $this->imageCreator->setOutputPath($_basePath);
         $this->imageCreator->setCellSize($_cellSize);
         $this->imageCreator->setBackgroundColor($backgroundColor);
         $this->imageCreator->setCellAliveColor($cellAliveColor);
@@ -139,7 +139,7 @@ class ImageCreatorTest extends TestCase
         $this->imageCreator->setCellImage($cellImage);
         $this->imageCreator->setFileSystemHandler($fileSystemHandler);
 
-        $this->assertEquals($_basePath, $this->imageCreator->basePath());
+        $this->assertEquals($_basePath, $this->imageCreator->outputPath());
         $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
         $this->assertEquals($backgroundColor, $this->imageCreator->backgroundColor());
         $this->assertEquals($cellAliveColor, $this->imageCreator->cellAliveColor());

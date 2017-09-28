@@ -111,7 +111,7 @@ class ObjectInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($gliderOptions);
-        $testObjectInput->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $testObjectInput->addOptions($this->optionsMock);
     }
 
     /**

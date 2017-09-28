@@ -29,9 +29,12 @@ class UserInputTest extends TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
 
+    private $testTemplatesDirectory = __DIR__ . "/../InputTemplates";
+
     protected function setUp()
     {
         $this->input = new UserInput();
+        $this->input->setTemplateDirectory($this->testTemplatesDirectory);
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(2, 2, 50, true, $rules);
         $this->board->setField(0, 0, true);
@@ -40,6 +43,7 @@ class UserInputTest extends TestCase
         $this->userInputMock = $this->getMockBuilder(\Input\UserInput::class)
                                     ->setMethods(["catchUserInput"])
                                     ->getMock();
+        if ($this->userInputMock instanceof UserInput) $this->userInputMock->setTemplateDirectory($this->testTemplatesDirectory);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -47,7 +51,7 @@ class UserInputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory(__DIR__ . "/../../Input/Templates/Custom", true);
+        $this->fileSystemHandler->deleteDirectory($this->testTemplatesDirectory . "/Custom", true);
 
         unset($this->fileSystemHandler);
         unset($this->input);
@@ -58,15 +62,15 @@ class UserInputTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider()
-     * @covers \Input\UserInput::customTemplateDirectory()
-     * @covers \Input\UserInput::setCustomTemplateDirectory()
+     * @covers \Input\UserInput::templateDirectory()
+     * @covers \Input\UserInput::setTemplateDirectory()
      *
      * @param string $_customTemplateDirectory    Directory where templates are saved
      */
     public function testCanSetAttributes(string $_customTemplateDirectory)
     {
-        $this->input->setCustomTemplateDirectory($_customTemplateDirectory);
-        $this->assertEquals($_customTemplateDirectory, $this->input->customTemplateDirectory());
+        $this->input->setTemplateDirectory($_customTemplateDirectory);
+        $this->assertEquals($_customTemplateDirectory, $this->input->templateDirectory());
     }
 
     public function setAttributesProvider()
@@ -90,7 +94,7 @@ class UserInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($userInputOptions);
-        $this->input->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -127,21 +131,24 @@ class UserInputTest extends TestCase
     {
         $this->expectOutputRegex("/.*Template successfully saved!\n\n.*/");
         $this->input->saveCustomTemplate("unitTest", $this->board);
-        $this->assertTrue(file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
+        $this->assertTrue(file_exists($this->testTemplatesDirectory . "/Custom/unitTest.txt"));
 
         $this->userInputMock->expects($this->exactly(3))
                             ->method("catchUserInput")
                             ->withConsecutive()
                             ->willReturn("n", "y", "yes");
 
-        $this->expectOutputRegex("/.*Saving aborted.\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+        if ($this->userInputMock instanceof UserInput)
+        {
+            $this->expectOutputRegex("/.*Saving aborted.\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
 
-        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+            $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
 
-        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+            $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+        }
     }
 
 
@@ -266,7 +273,7 @@ class UserInputTest extends TestCase
                                  "You can save your board configuration before starting the simulation by typing \"save\"\n" .
                                  "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        $this->userInputMock->fillBoard($this->board, new Getopt());
+        if ($this->userInputMock instanceof UserInput) $this->userInputMock->fillBoard($this->board, new Getopt());
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
         $this->assertTrue($this->board->getField($_inputX, $_inputY));
@@ -307,7 +314,10 @@ class UserInputTest extends TestCase
                                 "You can save your board configuration before starting the simulation by typing \"save\"\n" .
                                 "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        $this->userInputMock->fillBoard($this->board, $this->optionsMock);
+        if ( $this->userInputMock instanceof UserInput)
+        {
+            if ($this->optionsMock instanceof Getopt) $this->userInputMock->fillBoard($this->board, $this->optionsMock);
+        }
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
         $this->assertTrue($this->board->getField(0, 0));
@@ -323,7 +333,7 @@ class UserInputTest extends TestCase
      */
     public function testCanCatchUserInput(string $_fileContent)
     {
-        $testDirectory = __DIR__ . "/../unitTest";
+        $testDirectory = __DIR__ . "/../userInputTest";
         $this->fileSystemHandler->createDirectory($testDirectory);
 
         $testFile = "testInput.txt";

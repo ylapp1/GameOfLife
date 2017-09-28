@@ -97,6 +97,7 @@ class PNGOutput extends BaseOutput
 
         // initialize ImageCreator for this PNGOutput
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $gameFolderName);
+        $this->imageCreator->setOutputPath($this->outputDirectory);
 
         echo "Starting simulation ...\n\n";
     }

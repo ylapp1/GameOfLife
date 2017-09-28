@@ -27,18 +27,22 @@ class BaseOutputTest extends TestCase
     private $board;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+    /** @var string */
+    private $outputDirectory = __DIR__ . "/../BaseOutputTest/";
 
     protected function setUp()
     {
         $this->output = new BaseOutput();
+        $this->output->setOutputDirectory($this->outputDirectory);
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
         $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler->createDirectory($this->outputDirectory);
     }
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->output->outputDirectory(), true);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
         unset($this->output);
         unset($this->board);
         unset($this->fileSystemHandler);
@@ -60,15 +64,17 @@ class BaseOutputTest extends TestCase
     public function testCanGetNewGameId()
     {
         $pngOutput = new PNGOutput();
+        $pngOutput->setOutputDirectory($this->outputDirectory);
         $gifOutput = new GIFOutput();
+        $gifOutput->setOutputDirectory($this->outputDirectory);
         $videoOutput = new VideoOutput();
+        $videoOutput->setOutputDirectory($this->outputDirectory);
 
-        $this->assertEquals(0, $this->output->getNewGameId("PNG"));
-        $this->assertEquals(0, $this->output->getNewGameId("Gif"));
-        $this->assertEquals(0, $this->output->getNewGameId("Video"));
+        $this->assertEquals(1, $this->output->getNewGameId("PNG"));
+        $this->assertEquals(1, $this->output->getNewGameId("Gif"));
+        $this->assertEquals(1, $this->output->getNewGameId("Video"));
 
         $pngOutput->startOutput(new Getopt(), $this->board);
-
 
         $outputRegex = "Simulation finished. All cells are dead or a repeating pattern was detected.\n";
         $outputRegex .= "Starting GIF creation. One moment please...\n";
@@ -83,8 +89,8 @@ class BaseOutputTest extends TestCase
         $videoOutput->outputBoard($this->board);
         $videoOutput->finishOutput();
 */
-        $this->assertEquals(1, $this->output->getNewGameId("PNG"));
-        $this->assertEquals(1, $this->output->getNewGameId("Gif"));
-        $this->assertEquals(0, $this->output->getNewGameId("Video"));
+        $this->assertEquals(2, $this->output->getNewGameId("PNG"));
+        $this->assertEquals(2, $this->output->getNewGameId("Gif"));
+        $this->assertEquals(1, $this->output->getNewGameId("Video"));
     }
 }

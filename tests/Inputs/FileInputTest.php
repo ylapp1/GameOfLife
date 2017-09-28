@@ -27,6 +27,7 @@ class FileInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new FileInput();
+        $this->input->setTemplateDirectory(__DIR__ . "/../InputTemplates/");
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
@@ -87,7 +88,7 @@ class FileInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($fileInputOptions);
-        $this->input->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -145,7 +146,7 @@ class FileInputTest extends TestCase
             array()
         );
 
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());

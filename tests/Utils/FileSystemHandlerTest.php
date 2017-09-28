@@ -17,7 +17,7 @@ class FileSystemHandlerTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $testDirectory = __DIR__ . "/../unitTest";
+    private $testDirectory = __DIR__ . "/../FileSystemHandlerTest";
 
     protected function setUp()
     {

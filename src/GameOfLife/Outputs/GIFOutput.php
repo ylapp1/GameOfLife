@@ -163,6 +163,7 @@ class GIFOutput extends BaseOutput
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames/");
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "Gif");
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "tmp/Frames");
+        $this->imageCreator->setOutputPath($this->outputDirectory);
     }
 
     /**

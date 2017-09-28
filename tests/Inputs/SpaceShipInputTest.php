@@ -98,7 +98,7 @@ class SpaceShipInputTest extends TestCase
 
         if ($_expectsError) $this->expectOutputString("Error: Spaceship exceeds field borders.\n");
 
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
