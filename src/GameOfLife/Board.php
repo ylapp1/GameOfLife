@@ -442,6 +442,8 @@ class Board
     /**
      * Returns an empty board
      *
+     * Uses the height attribute of this board to determine the amount of nested arrays
+     *
      * @return bool[][]      Empty board
      */
     public function initializeEmptyBoard(): array

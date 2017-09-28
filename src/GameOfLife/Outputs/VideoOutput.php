@@ -30,7 +30,6 @@ class VideoOutput extends BaseOutput
     private $frames = array();
     /** @var ImageCreator $imageCreator */
     private $imageCreator;
-    private $secondsPerFrame;
 
 
     /**
@@ -133,25 +132,6 @@ class VideoOutput extends BaseOutput
         $this->imageCreator = $_imageCreator;
     }
 
-    /**
-     * Returns the seconds per frame of this video output
-     *
-     * @return float      Seconds per frame of this video output
-     */
-    public function secondsPerFrame(): float
-    {
-        return $this->secondsPerFrame;
-    }
-
-    /**
-     * Sets the seconds per frame of this video output
-     *
-     * @param float $_secondsPerFrame     Seconds per frame of this video output
-     */
-    public function setSecondsPerFrame(float $_secondsPerFrame)
-    {
-        $this->secondsPerFrame = $_secondsPerFrame;
-    }
 
     /**
      * Adds VideoOutputs specific options to an option list
@@ -206,8 +186,6 @@ class VideoOutput extends BaseOutput
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
 
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
-
-        $this->secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
     }
 
     /**
@@ -245,6 +223,7 @@ class VideoOutput extends BaseOutput
         }
 
         $amountFrames = count($this->frames);
+        $secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
@@ -255,7 +234,7 @@ class VideoOutput extends BaseOutput
             $ffmpegHelper->resetOptions();
             $ffmpegHelper->addOption("-f lavfi");
             $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
-            $ffmpegHelper->addOption("-t " . $this->secondsPerFrame);
+            $ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
             exec($ffmpegHelper->generateCommand($this->outputDirectory . $outputPath));
 
