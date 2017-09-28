@@ -25,7 +25,7 @@ class ImageCreatorTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../ImageCreatorTest/";
+    private $outputDirectory = __DIR__ . "/../../ImageCreatorTest/tmp/Frames/";
 
     protected function setUp()
     {
@@ -36,7 +36,7 @@ class ImageCreatorTest extends TestCase
         $colorWhite = new ImageColor(255, 255, 255);
 
         $this->imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
-                                                $colorWhite, $colorBlack, "tmp/Frames");
+                                                $colorWhite, $colorBlack, $this->outputDirectory);
         $this->imageCreator->setOutputPath($this->outputDirectory);
         $this->fileSystemHandler = new FileSystemHandler();
     }
@@ -56,16 +56,16 @@ class ImageCreatorTest extends TestCase
         $this->expectOutputRegex("/.*Gamestep: 1.*/");
 
         $this->imageCreator->createImage($this->board, "png");
-        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
+        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->imageCreator->createImage($this->board, "video");
-        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
+        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->imageCreator->createImage($this->board, "gif");
-        $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/0.gif"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "tmp/Frames");
+        $this->assertTrue(file_exists($this->outputDirectory . "0.gif"));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
 
         $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
         $this->imageCreator->createImage($this->board, "myInvalidImageType");
@@ -87,7 +87,7 @@ class ImageCreatorTest extends TestCase
         $this->assertEquals($colorWhite, $imageCreator->backgroundColor());
         $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
         $this->assertEquals($colorBlack, $imageCreator->gridColor());
-        $this->assertEquals("tmp/Frames", $imageCreator->gameFolder());
+        $this->assertEquals("tmp/Frames", $imageCreator->outputPath());
         $this->assertTrue(is_resource($imageCreator->baseImage()));
         $this->assertTrue(is_resource($imageCreator->cellImage()));
         $this->assertEquals(new FileSystemHandler(), $imageCreator->fileSystemHandler());
@@ -105,8 +105,6 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::cellAliveColor()
      * @covers \Output\Helpers\ImageCreator::setGridColor()
      * @covers \Output\Helpers\ImageCreator::gridColor()
-     * @covers \Output\Helpers\ImageCreator::setGameFolder()
-     * @covers \Output\Helpers\ImageCreator::gameFolder()
      * @covers \Output\Helpers\ImageCreator::setBaseImage()
      * @covers \Output\Helpers\ImageCreator::baseImage()
      * @covers \Output\Helpers\ImageCreator::setCellImage()
@@ -114,11 +112,10 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::setFileSystemHandler()
      * @covers \Output\Helpers\ImageCreator::fileSystemHandler()
      *
-     * @param string $_basePath
      * @param int $_cellSize
-     * @param string $_gameFolder
+     * @param string $_outputPath
      */
-    public function testCanSetAttributes(string $_basePath, int $_cellSize, string $_gameFolder)
+    public function testCanSetAttributes(int $_cellSize, string $_outputPath)
     {
         $baseImage = imagecreate(rand(1, 10), rand(1, 10));
         $cellImage = imagecreate(rand(1, 10), rand(1, 10));
@@ -129,22 +126,20 @@ class ImageCreatorTest extends TestCase
 
         $fileSystemHandler = new FileSystemHandler();
 
-        $this->imageCreator->setOutputPath($_basePath);
         $this->imageCreator->setCellSize($_cellSize);
         $this->imageCreator->setBackgroundColor($backgroundColor);
         $this->imageCreator->setCellAliveColor($cellAliveColor);
         $this->imageCreator->setGridColor($gridColor);
-        $this->imageCreator->setGameFolder($_gameFolder);
+        $this->imageCreator->setOutputPath($_outputPath);
         $this->imageCreator->setBaseImage($baseImage);
         $this->imageCreator->setCellImage($cellImage);
         $this->imageCreator->setFileSystemHandler($fileSystemHandler);
 
-        $this->assertEquals($_basePath, $this->imageCreator->outputPath());
         $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
         $this->assertEquals($backgroundColor, $this->imageCreator->backgroundColor());
         $this->assertEquals($cellAliveColor, $this->imageCreator->cellAliveColor());
         $this->assertEquals($gridColor, $this->imageCreator->gridColor());
-        $this->assertEquals($_gameFolder, $this->imageCreator->gameFolder());
+        $this->assertEquals($_outputPath, $this->imageCreator->outputPath());
         $this->assertEquals($baseImage, $this->imageCreator->baseImage());
         $this->assertEquals($cellImage, $this->imageCreator->cellImage());
         $this->assertEquals($fileSystemHandler, $this->imageCreator->fileSystemHandler());
@@ -153,9 +148,9 @@ class ImageCreatorTest extends TestCase
     public function setAttributesProvider()
     {
         return [
-            ["path", 4, "other/path"],
-            ["path/to/file", 444, "my/other/path"],
-            ["a/test/path", 123, "my/path"]
+            [4, "other/path"],
+            [444, "my/other/path"],
+            [123, "my/path"]
         ];
     }
 }

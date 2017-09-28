@@ -79,7 +79,7 @@ class VideoOutputTest extends TestCase
     {
         $fileSystemHandler = new FileSystemHandler();
         $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack, "tmp");
 
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setFillPercentages($_fillPercentages);

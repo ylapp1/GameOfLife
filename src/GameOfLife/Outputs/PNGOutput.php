@@ -92,12 +92,11 @@ class PNGOutput extends BaseOutput
         else $gridColor = new ImageColor(0, 0, 0);
 
         // Create new folder for current game
-        $gameFolderName = "/PNG/Game_" . $this->getNewGameId("PNG");
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . $gameFolderName);
+        $imageOutputPath = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
+        $this->fileSystemHandler->createDirectory($imageOutputPath);
 
         // initialize ImageCreator for this PNGOutput
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $gameFolderName);
-        $this->imageCreator->setOutputPath($this->outputDirectory);
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
 
         echo "Starting simulation ...\n\n";
     }

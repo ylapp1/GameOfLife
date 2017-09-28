@@ -200,12 +200,12 @@ class VideoOutput extends BaseOutput
 
         if ($_options->getOption("videoOutputFPS")) $this->fps = intval($_options->getOption("videoOutputFPS"));
 
+        $imageOutputPath = $this->outputDirectory . "tmp/Frames";
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "Video");
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Frames");
+        $this->fileSystemHandler->createDirectory($imageOutputPath);
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
 
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, "tmp/Frames");
-        $this->imageCreator->setOutputPath($this->outputDirectory);
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
 
         $this->secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
     }

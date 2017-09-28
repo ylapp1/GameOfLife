@@ -23,7 +23,6 @@ class ImageCreator
     private $gridColor;
     private $cellAliveColor;
     private $cellSize;
-    private $gameFolder;
     private $baseImage;
     private $cellImage;
     private $fileSystemHandler;
@@ -129,26 +128,6 @@ class ImageCreator
     }
 
     /**
-     * Returns the game folder in which the images will be saved
-     *
-     * @return string   The game folder in which the images will be saved
-     */
-    public function gameFolder(): string
-    {
-        return $this->gameFolder;
-    }
-
-    /**
-     * Sets the game folder in which the images will be saved
-     *
-     * @param string $_gameFolder   The game folder in which the images will be saved
-     */
-    public function setGameFolder(string $_gameFolder)
-    {
-        $this->gameFolder = $_gameFolder;
-    }
-
-    /**
      * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator)
      *
      * @return resource     The base image for all images
@@ -218,14 +197,14 @@ class ImageCreator
      * @param ImageColor $_cellAliveColor   Cell color of the images
      * @param ImageColor $_backgroundColor  Background Color of the images
      * @param ImageColor $_gridColor        Grid color of the images
-     * @param string $_gameFolder           The complete game folder path of a png output
+     * @param string $_outPutPath           Path where images will be saved
      */
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
-                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_gameFolder = null)
+                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_outPutPath)
     {
         // Create a base image (empty grid) on which all the other images will be based
         $this->cellSize = $_cellSize;
-        $this->gameFolder = $_gameFolder;
+        $this->outputPath = $_outPutPath;
 
         $baseImage = imagecreate($_boardWidth * $this->cellSize, $_boardHeight * $this->cellSize);
 
@@ -308,14 +287,13 @@ class ImageCreator
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 
-        $filePath = $this->outputPath;
         $fileName = $_board->gameStep();
+        $filePath = $this->outputPath();
 
         switch ($_imageType)
         {
             case "png":
             case "video":
-                $filePath .= $this->gameFolder;
                 $this->fileSystemHandler->createDirectory($filePath);
 
                 $filePath .= "/" . $fileName . ".png";
@@ -323,7 +301,6 @@ class ImageCreator
                 break;
 
             case "gif":
-                $filePath .= $this->gameFolder;
                 $this->fileSystemHandler->createDirectory($filePath);
 
                 $filePath .= "/" . $fileName . ".gif";
