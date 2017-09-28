@@ -24,7 +24,7 @@ class ColorSelectorTest extends TestCase
      * @param int $_expectedBlue    Expected blue
      * @param int $_expectedGreen   Expected green
      */
-    public function testCanParseColors($_input, $_expectedRed, $_expectedGreen, $_expectedBlue)
+    public function testCanParseColors(string $_input, int $_expectedRed, int $_expectedGreen, int $_expectedBlue)
     {
         $colorSelector = new ColorSelector();
         $color = $colorSelector->getColor($_input);

@@ -270,7 +270,7 @@ class ImageCreator
      *
      * @return string                       Path to image
      */
-    public function createImage ($_board, $_imageType)
+    public function createImage (Board $_board, string $_imageType): string
     {
         $image = imagecreate(imagesx($this->baseImage), imagesy($this->baseImage));
 

@@ -54,7 +54,7 @@ class FileInputTest extends TestCase
      * @param int $_templateWidth   New width of board after reading template
      * @param int $_templateHeight  New height of board after reading template
      */
-    public function testCanSetAttributes($_templateDirectory, $_templateWidth, $_templateHeight)
+    public function testCanSetAttributes(string $_templateDirectory, int $_templateWidth, int $_templateHeight)
     {
         $this->input->setTemplateDirectory($_templateDirectory);
         $this->assertEquals($_templateDirectory, $this->input->templateDirectory());

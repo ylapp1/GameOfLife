@@ -19,16 +19,6 @@ use Ulrichsg\Getopt;
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * Adds output specific options to the option list
-     *
-     * @param Getopt $_options     Current option list
-     * @codeCoverageIgnore
-     */
-    public function addOptions(Getopt $_options)
-    {
-    }
-
-    /**
      * Initializes the output
      *
      * @param Getopt $_options  User inputted option list

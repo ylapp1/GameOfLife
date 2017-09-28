@@ -95,7 +95,7 @@ class BaseOutput
      *
      * @return int      New Game id
      */
-    public function getNewGameId(string $_outputType)
+    public function getNewGameId(string $_outputType): int
     {
         $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
 

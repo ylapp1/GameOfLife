@@ -66,7 +66,7 @@ class UserInput extends BaseInput
      * @param string $_inputSource  Input source (e.g. php://stdin)
      * @return string   User Input
      */
-    public function catchUserInput(string $_inputSource)
+    public function catchUserInput(string $_inputSource): string
     {
         $fileOpen = fopen($_inputSource,'r');
         $inputLine = fgets($fileOpen,1024);
@@ -116,9 +116,9 @@ class UserInput extends BaseInput
      *
      * @return int   Input coordinate
      */
-    public function getInputCoordinate(String $_inputCoordinate, int $_minValue, int $_maxValue)
+    public function getInputCoordinate(string $_inputCoordinate, int $_minValue, int $_maxValue)
     {
-        if (strlen($_inputCoordinate) == 0) return false;
+        if ($_inputCoordinate == "") return false;
 
         // convert coordinate to integer
         $coordinate = (int)$_inputCoordinate;
@@ -135,7 +135,7 @@ class UserInput extends BaseInput
      * @param Board $_board     Game Board
      * @return bool isInputFinished
      */
-    public function processInput(String $_input, Board $_board)
+    public function processInput(String $_input, Board $_board): bool
     {
         if (stristr($_input, "exit"))
         {

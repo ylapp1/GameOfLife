@@ -444,7 +444,7 @@ class Board
      *
      * @return bool[][]      Empty board
      */
-    public function initializeEmptyBoard (): array
+    public function initializeEmptyBoard(): array
     {
         $board = array();
 

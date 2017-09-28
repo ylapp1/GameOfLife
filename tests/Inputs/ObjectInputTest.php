@@ -75,7 +75,7 @@ class ObjectInputTest extends TestCase
      * @param int $_objectHeight    Object Height
      * @param string $_objectName   Object name
      */
-    public function testCanSetAttributes($_objectWidth, $_objectHeight, $_objectName)
+    public function testCanSetAttributes(int $_objectWidth, int $_objectHeight, string $_objectName)
     {
         $this->input->setObjectWidth($_objectWidth);
         $this->assertEquals($_objectWidth, $this->input->objectWidth());
@@ -126,7 +126,8 @@ class ObjectInputTest extends TestCase
      * @param int $_boardHeight     Board height
      * @param bool $_expected       Expected result
      */
-    public function testDetectsObjectOutOfBounds($_objectPosX, $_objectPosY, $_objectWidth, $_objectHeight, $_boardWidth, $_boardHeight, $_expected)
+    public function testDetectsObjectOutOfBounds(int $_objectPosX, int $_objectPosY, int $_objectWidth,
+                                                 int $_objectHeight, int $_boardWidth, int $_boardHeight, bool $_expected)
     {
         $input = new ObjectInput($_objectWidth, $_objectHeight, "testObject");
 

@@ -157,11 +157,11 @@ class UserInputTest extends TestCase
      * @covers \Input\UserInput::getInputCoordinate()
      *
      * @param int $_expected
-     * @param String $_testInput    Single coordinate in a string
+     * @param string $_testInput    Single coordinate in a string
      * @param int $_minValue
      * @param int $_maxValue
      */
-    public function testCanGetInputCoordinates(int $_expected, String $_testInput, int $_minValue, int $_maxValue)
+    public function testCanGetInputCoordinates(int $_expected, string $_testInput, int $_minValue, int $_maxValue)
     {
         $this->assertEquals($_expected, $this->input->getInputCoordinate($_testInput, $_minValue, $_maxValue));
     }
@@ -221,12 +221,12 @@ class UserInputTest extends TestCase
      * @dataProvider setFieldProvider
      * @covers \Input\UserInput::setField()
      *
-     * @param String $_inputCoordinates     Input coordinates in the format <x>,<y>
-     * @param String $_expectedString       Expected Error message
+     * @param string $_inputCoordinates     Input coordinates in the format <x>,<y>
+     * @param string $_expectedString       Expected Error message
      * @param int $_expectedX               Expected x position of new set cell
      * @param int $_expectedY               Expected y positoin of new set cell
      */
-    public function testCanSetField(String $_inputCoordinates, String $_expectedString, int $_expectedX = null, int $_expectedY = null)
+    public function testCanSetField(string $_inputCoordinates, string $_expectedString, int $_expectedX = null, int $_expectedY = null)
     {
         $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
         $this->expectOutputRegex("/.*" . $_expectedString . ".*/");

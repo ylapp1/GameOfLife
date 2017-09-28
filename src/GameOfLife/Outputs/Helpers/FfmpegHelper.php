@@ -35,7 +35,7 @@ class FfmpegHelper
      *
      * @return string   Path to the ffmpeg binary file
      */
-    public function binaryPath()
+    public function binaryPath(): string
     {
         return $this->binaryPath;
     }
@@ -55,7 +55,7 @@ class FfmpegHelper
      *
      * @return array    Ffmpeg option list
      */
-    public function options()
+    public function options(): array
     {
         return $this->options;
     }
@@ -96,7 +96,7 @@ class FfmpegHelper
      *
      * @return string               The ffmpeg command
      */
-    public function generateCommand(string $_outputPath)
+    public function generateCommand(string $_outputPath): string
     {
         $command = "\"" . $this->binaryPath . "\"";
         foreach ($this->options as $option)

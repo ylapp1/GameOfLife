@@ -115,8 +115,8 @@ class BoardTest extends TestCase
      * @param RuleSet $_rules           Birth/Death rules
      * @param int $_gameStep            Current game step
      */
-    public function testCanSetAttributes($_board, $_historyOfBoards, $_hasBorder, $_height, $_maxSteps, $_width,
-                                         $_rules, $_gameStep)
+    public function testCanSetAttributes(array $_board, array $_historyOfBoards, bool $_hasBorder, int $_height,
+                                         int $_maxSteps, int $_width, RuleSet $_rules, int $_gameStep)
     {
         $this->board->setCurrentBoard($_board);
         $this->board->setHistoryOfBoards($_historyOfBoards);
@@ -158,7 +158,7 @@ class BoardTest extends TestCase
      * @param bool $_value  Value that the test field will be set to
      * @param bool $_expected  Expected value that is stored in the array $currentBoard
      */
-    public function testCanSetField($_x, $_y, $_value, $_expected)
+    public function testCanSetField(int $_x, int $_y, bool $_value = null, bool $_expected = null)
     {
         $this->board->setField($_x, $_y, $_value);
 
@@ -183,7 +183,7 @@ class BoardTest extends TestCase
      * @param bool $_value  Value that the test field will be set to
      * @param bool $_expected  Expected value that is read with getField()
      */
-    public function testCanReadField($_x, $_y, $_value, $_expected)
+    public function testCanReadField(int $_x, int $_y, bool $_value = null, bool $_expected)
     {
         $testBoard = $this->board->initializeEmptyBoard();
         $testBoard[$_y][$_x] = $_value;
@@ -256,7 +256,7 @@ class BoardTest extends TestCase
      * @param array(array) $_cells      Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_expected            Amount of set cells that are expected
      */
-    public function testCanCalculateAmountCellsAlive($_cells, $_expected)
+    public function testCanCalculateAmountCellsAlive(array $_cells, int $_expected)
     {
         foreach ($_cells as $cell)
         {
@@ -314,7 +314,7 @@ class BoardTest extends TestCase
      * @param int $_y                    Y-Coordinate of inspected cell
      * @param int $_expected             Expected amount of neighbours
      */
-    public function testCanCalculateAmountNeighboursAlive($_cells, $_x, $_y, $_expected)
+    public function testCanCalculateAmountNeighboursAlive(array $_cells, int $_x, int $_y, int $_expected)
     {
         foreach ($_cells as $cell)
         {
@@ -342,7 +342,7 @@ class BoardTest extends TestCase
      * @param int $_amountNeighboursAlive   Amount of living neighbours (0 - 8)
      * @param bool $_expected               Expected new cell state
      */
-    public function testCanCalculateNewCellState($_currentCellState, $_amountNeighboursAlive, $_expected)
+    public function testCanCalculateNewCellState(bool $_currentCellState, int $_amountNeighboursAlive, bool $_expected)
     {
         $this->assertEquals($_expected, $this->board->getNewCellState($_currentCellState, $_amountNeighboursAlive));
     }
@@ -370,7 +370,7 @@ class BoardTest extends TestCase
      * @param int $_boardHeight     Board height
      * @param array $_expected       Coordinates of the center
      */
-    public function testCanCalculateCenter($_boardWidth, $_boardHeight, $_expected)
+    public function testCanCalculateCenter(int $_boardWidth, int $_boardHeight, array $_expected)
     {
         $this->board->setWidth($_boardWidth);
         $this->board->setHeight($_boardHeight);

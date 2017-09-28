@@ -38,7 +38,7 @@ class ImageColor
      *
      * @return int          amount red of the color
      */
-    public function red()
+    public function red(): int
     {
         return $this->red;
     }
@@ -58,7 +58,7 @@ class ImageColor
      *
      * @return int      amount green of the color
      */
-    public function green()
+    public function green(): int
     {
         return $this->green;
     }
@@ -78,7 +78,7 @@ class ImageColor
      *
      * @return int      amount blue of the color
      */
-    public function blue()
+    public function blue(): int
     {
         return $this->blue;
     }
@@ -100,7 +100,7 @@ class ImageColor
      *
      * @return int  The image color id
      */
-    public function getColor($_image)
+    public function getColor($_image): int
     {
         return imagecolorallocate($_image, $this->red, $this->green, $this->blue);
     }

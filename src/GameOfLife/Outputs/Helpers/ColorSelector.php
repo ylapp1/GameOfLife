@@ -24,7 +24,7 @@ class ColorSelector
      *
      * @return ImageColor           Color
      */
-    public function getColor (string $_colorInput)
+    public function getColor (string $_colorInput): ImageColor
     {
         // if color input is a "R,G,B" string
         if (stristr($_colorInput, ",") != false)
@@ -80,7 +80,7 @@ class ColorSelector
      * @return int  Fixed color if input was a invalid color
      *              Input color if input was a valid color
      */
-    public function validateColorAmount(int $_colorAmount)
+    public function validateColorAmount(int $_colorAmount): int
     {
         $colorAmount = $_colorAmount;
 

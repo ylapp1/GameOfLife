@@ -59,7 +59,7 @@ class BlinkerInputTest extends TestCase
      * @param int $_y            Y-Coordinate of the cell
      * @param bool $_expected    Expected value of the cell
      */
-    public function testCanSetCells($_x, $_y, $_expected)
+    public function testCanSetCells(int $_x, int $_y, bool $_expected)
     {
         $this->input->fillBoard($this->board, new Getopt());
         $this->assertEquals(3, $this->board->getAmountCellsAlive());
