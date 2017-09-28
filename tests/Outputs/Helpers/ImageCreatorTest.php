@@ -25,7 +25,7 @@ class ImageCreatorTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../ImageCreatorTest/tmp/Frames/";
+    private $outputDirectory = __DIR__ . "/../../ImageCreatorTest";
 
     protected function setUp()
     {
@@ -37,7 +37,7 @@ class ImageCreatorTest extends TestCase
 
         $this->imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                                 $colorWhite, $colorBlack, $this->outputDirectory);
-        $this->imageCreator->setOutputPath($this->outputDirectory);
+        $this->imageCreator->setOutputPath($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
     }
 
@@ -53,19 +53,20 @@ class ImageCreatorTest extends TestCase
      */
     public function testCanCreateImage()
     {
+        $outputPath = $this->outputDirectory . "/tmp/Frames/";
         $this->expectOutputRegex("/.*Gamestep: 1.*/");
 
         $this->imageCreator->createImage($this->board, "png");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($outputPath . "0.png"));
+        $this->fileSystemHandler->deleteDirectory($outputPath);
 
         $this->imageCreator->createImage($this->board, "video");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($outputPath . "0.png"));
+        $this->fileSystemHandler->deleteDirectory($outputPath);
 
         $this->imageCreator->createImage($this->board, "gif");
-        $this->assertTrue(file_exists($this->outputDirectory . "0.gif"));
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory);
+        $this->assertTrue(file_exists($outputPath . "0.gif"));
+        $this->fileSystemHandler->deleteDirectory($outputPath);
 
         $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
         $this->imageCreator->createImage($this->board, "myInvalidImageType");
