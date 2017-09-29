@@ -44,6 +44,7 @@ class ImageCreatorTest extends TestCase
     protected function tearDown()
     {
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        unset($this->fileSystemHandler);
         unset($this->imageCreator);
         unset($this->board);
     }
