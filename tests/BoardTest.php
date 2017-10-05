@@ -436,7 +436,7 @@ class BoardTest extends TestCase
     {
         $this->board->setWidth(10);
         $this->board->setHeight(10);
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
 
         // solid border
         $this->board->setHasBorder(true);
@@ -456,7 +456,7 @@ class BoardTest extends TestCase
 
 
         // passthrough border
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
         $this->board->setHasBorder(false);
 
         $this->board->setField(9, 4, true);
@@ -475,5 +475,19 @@ class BoardTest extends TestCase
         $this->assertTrue($this->board->getField(9, 4));
         $this->assertTrue($this->board->getField(9, 5));
         $this->assertTrue($this->board->getField(9, 6));
+    }
+
+    /**
+     * @covers \GameOfLife\Board::resetCurrentBoard()
+     */
+    public function testCanResetCurrentBoard()
+    {
+        $this->board->setField(1, 1, true);
+        $this->board->setField(0, 1, true);
+
+        $this->assertEquals(2, $this->board->getAmountCellsAlive());
+
+        $this->board->resetCurrentBoard();
+        $this->assertEquals(0, $this->board->getAmountCellsAlive());
     }
 }

@@ -228,7 +228,7 @@ class UserInputTest extends TestCase
      */
     public function testCanSetField(string $_inputCoordinates, string $_expectedString, int $_expectedX = null, int $_expectedY = null)
     {
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
         $this->expectOutputRegex("/.*" . $_expectedString . ".*/");
         $this->input->setField($this->board, $_inputCoordinates);
 
@@ -264,7 +264,7 @@ class UserInputTest extends TestCase
         $this->userInputMock->expects($this->exactly(2))
                             ->method("catchUserInput");
 
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
 
         $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
                                  "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
@@ -299,7 +299,7 @@ class UserInputTest extends TestCase
         $this->userInputMock->expects($this->exactly(1))
                             ->method("catchUserInput");
 
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
         $this->assertEquals(0, $this->board->getAmountCellsAlive());
 
         $this->optionsMock->expects($this->exactly(3))

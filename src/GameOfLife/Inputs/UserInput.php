@@ -140,7 +140,7 @@ class UserInput extends BaseInput
     {
         if (stristr($_input, "exit"))
         {
-            $_board->setCurrentBoard($_board->initializeEmptyBoard());
+            $_board->resetCurrentBoard();
             return true;
         }
         elseif (stristr($_input, "start")) return true;

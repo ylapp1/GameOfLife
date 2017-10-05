@@ -486,6 +486,14 @@ class Board
     }
 
     /**
+     * Resets the current board to an empty board
+     */
+    public function resetCurrentBoard()
+    {
+        $this->currentBoard = $this->initializeEmptyBoard();
+    }
+
+    /**
      * Sets a field on the board.
      *
      * @param int $_x   X-Coordinate of the cell which shall be set
@@ -494,7 +502,7 @@ class Board
      *                                  true: alive
      *                                  false: dead
      */
-    public function setField (int $_x, int $_y, bool $_isAlive)
+    public function setField(int $_x, int $_y, bool $_isAlive)
     {
         if ($_isAlive) $this->currentBoard[$_y][$_x] = $_isAlive;
         else unset($this->currentBoard[$_y][$_x]);
