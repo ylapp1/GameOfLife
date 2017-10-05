@@ -129,7 +129,7 @@ class FileInput extends BaseInput
      *
      * @return array  The board that was loaded from the template file
      */
-    public function loadTemplate(string $_templateName): array
+    private function loadTemplate(string $_templateName): array
     {
         $fileNameOfficial =  $this->templateDirectory . "/" . $_templateName . ".txt";
         $fileNameCustom = $this->templateDirectory . "/Custom/" . $_templateName . ".txt";

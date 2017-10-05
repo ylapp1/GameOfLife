@@ -92,54 +92,15 @@ class FileInputTest extends TestCase
     }
 
     /**
+     * @covers \Input\FileInput::fillBoard
      * @covers \Input\FileInput::loadTemplate()
      */
     public function testCanLoadTemplate()
     {
-        $board = $this->input->loadTemplate("unittest");
-
-        $this->assertNotEmpty($board);
-        $this->assertEquals(2, $this->input->templateWidth());
-        $this->assertEquals(2, $this->input->templateHeight());
-
-        $this->assertTrue($board[0][0]);
-        $this->assertNull(@$board[0][1]);
-        $this->assertNull(@$board[1][0]);
-        $this->assertNull(@$board[1][1]);
-    }
-
-    /**
-     * @dataProvider invalidTemplateNamesProvider
-     * @covers \Input\FileInput::loadTemplate()
-     *
-     * @param string $_templateName     Name of the template
-     */
-    public function testDetectsInvalidTemplateNames(string $_templateName)
-    {
-        $this->input->loadTemplate($_templateName);
-        $this->expectOutputString("Error: Template file not found!\n");
-    }
-
-    public function invalidTemplateNamesProvider()
-    {
-        return [
-            ["test"],
-            ["mytest"],
-            ["notexisting"],
-            ["mytemplate"],
-            ["hello"]
-        ];
-    }
-
-    /**
-     * @covers \Input\FileInput::fillBoard
-     */
-    public function testCanFillBoard()
-    {
         $this->optionsMock->expects($this->exactly(2))
-                          ->method("getOption")
-                          ->with("template")
-                          ->willReturn("unittest");
+            ->method("getOption")
+            ->with("template")
+            ->willReturn("unittest");
 
         $unitTestBoard = array(
             array(0 => true),
@@ -160,5 +121,33 @@ class FileInputTest extends TestCase
     {
         $this->expectOutputString("Error: No template file specified\n");
         $this->input->fillBoard($this->board, new Getopt());
+    }
+
+    /**
+     * @dataProvider invalidTemplateNamesProvider
+     * @covers \Input\FileInput::loadTemplate()
+     *
+     * @param string $_templateName     Name of the template
+     */
+    public function testDetectsInvalidTemplateNames(string $_templateName)
+    {
+        $this->optionsMock->expects($this->exactly(2))
+                          ->method("getOption")
+                          ->with("template")
+                          ->willReturn($_templateName);
+
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+        $this->expectOutputString("Error: Template file not found!\n");
+    }
+
+    public function invalidTemplateNamesProvider()
+    {
+        return [
+            ["test"],
+            ["mytest"],
+            ["notexisting"],
+            ["mytemplate"],
+            ["hello"]
+        ];
     }
 }
