@@ -41,7 +41,7 @@ $options = new Getopt(
 $linkedOptions = array();
 
 $classes = array_merge(glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"), glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"));
-$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput");
+$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "ImageOutput");
 
 // find every input class
 foreach ($classes as $class)

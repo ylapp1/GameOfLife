@@ -20,85 +20,28 @@ use Utils\FileSystemHandler;
  *
  * @package Output
  */
-class PngOutput extends BaseOutput
+class PngOutput extends ImageOutput
 {
-    /** @var FileSystemHandler */
-    private $fileSystemHandler;
-    /** @var  ImageCreator $imageCreator */
-    private $imageCreator;
-
-
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
-
-    public function imageCreator(): ImageCreator
-    {
-        return $this->imageCreator;
-    }
-
-    public function setImageCreator(ImageCreator $_imageCreator)
-    {
-        $this->imageCreator = $_imageCreator;
-    }
-
-
     /**
-     * add output specific options to the option list
-     *
-     * @param Getopt $_options     Current option list
+     * PngOutput constructor
      */
-    public function addOptions(Getopt $_options)
+    public function __construct()
     {
-        $_options->addOptions(
-            array(
-                array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for PNG outputs"),
-                array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for PNG outputs"),
-                array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Color of the background for PNG outputs"),
-                array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Color of the grid for PNG outputs")));
+        $outputDirectory = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
+        parent::__construct("png", $outputDirectory);
     }
 
+
     /**
-     * Fetches the options and creates the necessary directories if they do not exist yet
+     * Displays a text to the user that the simulation now starts
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        $colorSelector = new ColorSelector();
-        $this->fileSystemHandler = new FileSystemHandler();
-
-        // fetch options
-        if ($_options->getOption("pngOutputSize") !== null) $cellSize = (int)$_options->getOption("pngOutputSize");
-        else $cellSize = 100;
-
-        $cellColor = $_options->getOption("pngOutputCellColor");
-        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
-        else $cellColor = new ImageColor(0,0,0);
-
-        $backgroundColor = $_options->getoption("pngOutputBackgroundColor");
-        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
-        else $backgroundColor = new ImageColor(255, 255,255);
-
-        $gridColor = $_options->getoption("pngOutputGridColor");
-        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
-        else $gridColor = new ImageColor(0, 0, 0);
-
-        // Create new folder for current game
-        $imageOutputPath = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
-        $this->fileSystemHandler->createDirectory($imageOutputPath);
-
-        // initialize ImageCreator for this PngOutput
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
-
-        echo "Starting simulation ...\n\n";
+        parent::startOutput($_options, $_board);
+        echo "Starting PNG Output ...\n\n";
     }
 
     /**

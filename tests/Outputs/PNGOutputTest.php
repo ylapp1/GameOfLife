@@ -35,6 +35,7 @@ class PNGOutputTest extends TestCase
     {
         $this->output = new PngOutput();
         $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setImageOutputDirectory($this->outputDirectory . "/PNG/Game_1/");
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -52,6 +53,18 @@ class PNGOutputTest extends TestCase
         unset($this->board);
         unset($this->optionsMock);
         unset($this->fileSystemHandler);
+    }
+
+
+    /**
+     * @covers \Output\PngOutput::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $output = new PngOutput();
+
+        $this->assertEquals("png", $output->optionPrefix());
+        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/PNG/"));
     }
 
     /**
@@ -79,10 +92,10 @@ class PNGOutputTest extends TestCase
     public function testCanAddOptions()
     {
         $pngOutputOptions = array(
-            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for PNG outputs"),
-            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for PNG outputs"),
-            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Color of the background for PNG outputs"),
-            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Color of the grid for PNG outputs")
+            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
         );
 
         $this->optionsMock->expects($this->exactly(1))
@@ -100,7 +113,7 @@ class PNGOutputTest extends TestCase
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting simulation ...\n\n");
+        $this->expectOutputString("Starting PNG Output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1"));
     }

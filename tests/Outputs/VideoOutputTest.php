@@ -35,6 +35,7 @@ class VideoOutputTest extends TestCase
     {
         $this->output = new VideoOutput();
         $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -54,6 +55,17 @@ class VideoOutputTest extends TestCase
         unset($this->fileSystemHandler);
     }
 
+
+    /**
+     * @covers \Output\VideoOutput::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $output = new VideoOutput();
+
+        $this->assertEquals("video", $output->optionPrefix());
+        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/tmp/Frames"));
+    }
 
     /**
      * @dataProvider setAttributesProvider()
@@ -104,16 +116,19 @@ class VideoOutputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $pngOutputOptions = array(
-            array(null, "videoOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for video outputs"),
-            array(null, "videoOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for video outputs"),
-            array(null, "videoOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for video outputs"),
-            array(null, "videoOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for video outputs"),
-            array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos"));
+        $imageOutputOptions = array(
+            array(null, "videoOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "videoOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "videoOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "videoOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color"));
 
-        $this->optionsMock->expects($this->exactly(1))
+        $videoOutputOptions = array(
+            array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos")
+        );
+
+        $this->optionsMock->expects($this->exactly(2))
                           ->method("addOptions")
-                          ->with($pngOutputOptions);
+                          ->withConsecutive([$imageOutputOptions], [$videoOutputOptions]);
 
         if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
@@ -126,7 +141,7 @@ class VideoOutputTest extends TestCase
     {
         $this->assertEquals(false, file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting video output ...\n");
+        $this->expectOutputString("Starting video output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "Video"));
         $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));
@@ -139,7 +154,7 @@ class VideoOutputTest extends TestCase
      */
     public function testCanCreateVideo()
     {
-        $this->expectOutputRegex("Starting video output ...\n");
+        $this->expectOutputRegex("Starting video output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
 
         // Create video frames and check whether the files are created
@@ -166,7 +181,7 @@ class VideoOutputTest extends TestCase
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
         $this->output->finishOutput();
 
-        //$this->assertEquals(true, file_exists($this->outputDirectory . "Video/Game_0.mp4"));
+        //$this->assertEquals(true, file_exists($this->outputDirectory . "/Video/Game_1.mp4"));
         $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 

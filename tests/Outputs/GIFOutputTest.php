@@ -35,6 +35,7 @@ class GIFOutputTest extends TestCase
     {
         $this->output = new GifOutput();
         $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -54,6 +55,17 @@ class GIFOutputTest extends TestCase
         unset($this->fileSystemHandler);
     }
 
+
+    /**
+     * @covers \Output\GifOutput::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $output = new GifOutput();
+
+        $this->assertEquals("gif", $output->optionPrefix());
+        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/tmp/Frames"));
+    }
 
     /**
      * @dataProvider setAttributesProvider()
@@ -100,16 +112,20 @@ class GIFOutputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $pngOutputOptions = array(
-            array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for gif outputs"),
-            array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for gif outputs"),
-            array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for gif outputs"),
-            array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for gif outputs"),
-            array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)"));
+        $imageOutputOptions = array(
+            array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+        );
 
-        $this->optionsMock->expects($this->exactly(1))
+        $gifOutputOptions = array(
+            array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
+        );
+
+        $this->optionsMock->expects($this->exactly(2))
                           ->method("addOptions")
-                          ->with($pngOutputOptions);
+                          ->withConsecutive([$imageOutputOptions], [$gifOutputOptions]);
 
         if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
@@ -122,7 +138,7 @@ class GIFOutputTest extends TestCase
     {
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting GIF Output...\n");
+        $this->expectOutputString("Starting GIF Output...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "Gif"));
         $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));
@@ -134,7 +150,7 @@ class GIFOutputTest extends TestCase
      */
     public function testCanCreateGif()
     {
-        $this->expectOutputRegex("/.*Starting GIF Output...\n.*/");
+        $this->expectOutputRegex("/.*Starting GIF Output...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
         // Create gif frames and check whether the files are created

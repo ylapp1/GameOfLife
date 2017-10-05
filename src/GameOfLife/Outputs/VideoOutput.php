@@ -21,36 +21,22 @@ use Utils\FileSystemHandler;
  *
  * @package Output
  */
-class VideoOutput extends BaseOutput
+class VideoOutput extends ImageOutput
 {
-    /** @var FileSystemHandler */
-    private $fileSystemHandler;
     private $fillPercentages = array();
     private $fps;
     private $frames = array();
-    /** @var ImageCreator $imageCreator */
-    private $imageCreator;
 
 
     /**
-     * Returns the filesystem handler of this video output
-     *
-     * @return FileSystemHandler    Filesystem handler of this video output
+     * VideoOutput constructor
      */
-    public function fileSystemHandler(): FileSystemHandler
+    public function __construct()
     {
-        return $this->fileSystemHandler;
+        $outputDirectory = $this->outputDirectory . "tmp/Frames";
+        parent::__construct("video", $outputDirectory);
     }
 
-    /**
-     * Sets the filesystem handler of this video output
-     *
-     * @param FileSystemHandler $_fileSystemHandler      Filesystem handler of this video output
-     */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
 
     /**
      * Returns the fill percentage list of this video output
@@ -112,26 +98,6 @@ class VideoOutput extends BaseOutput
         $this->frames = $_frames;
     }
 
-    /**
-     * Returns the image creator of this video output
-     *
-     * @return ImageCreator     Image creator of this video output
-     */
-    public function imageCreator(): ImageCreator
-    {
-        return $this->imageCreator;
-    }
-
-    /**
-     * Sets the image creator of this video output
-     *
-     * @param ImageCreator $_imageCreator   Image creator of this video output
-     */
-    public function setImageCreator(ImageCreator $_imageCreator)
-    {
-        $this->imageCreator = $_imageCreator;
-    }
-
 
     /**
      * Adds VideoOutputs specific options to an option list
@@ -140,13 +106,8 @@ class VideoOutput extends BaseOutput
      */
     public function addOptions(Getopt $_options)
     {
-        $_options->addOptions(
-            array(
-                array(null, "videoOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for video outputs"),
-                array(null, "videoOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for video outputs"),
-                array(null, "videoOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for video outputs"),
-                array(null, "videoOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for video outputs"),
-                array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos")));
+        parent::addOptions($_options);
+        $_options->addOptions(array(array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos")));
     }
 
     /**
@@ -157,36 +118,16 @@ class VideoOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        echo "Starting video output ...\n";
+        parent::startOutput($_options, $_board);
+        echo "Starting video output ...\n\n";
 
-        $colorSelector = new ColorSelector();
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/Video");
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/tmp/Audio");
 
         // fetch options
-        if ($_options->getOption("videoOutputSize") !== null) $cellSize = (int)$_options->getOption("videoOutputSize");
-        else $cellSize = 100;
-
-        $cellColor = $_options->getOption("videoOutputCellColor");
-        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
-        else $cellColor = new ImageColor(0, 0, 0);
-
-        $backgroundColor = $_options->getOption("videoOutputBackgroundColor");
-        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
-        else $backgroundColor = new ImageColor(255, 255,255);
-
-        $gridColor = $_options->getOption("videoOutputGridColor");
-        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
-        else $gridColor = new ImageColor(0,0,0);
-
-        if ($_options->getOption("videoOutputFPS") !== null) $this->fps = (int)$_options->getOption("videoOutputFPS");
+        $fps = $_options->getOption("videoOutputFPS");
+        if ($fps !== null) $this->fps = (int)$fps;
         else $this->fps = 15;
-
-        $imageOutputPath = $this->outputDirectory . "tmp/Frames";
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "Video");
-        $this->fileSystemHandler->createDirectory($imageOutputPath);
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "tmp/Audio");
-
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
     }
 
     /**
@@ -225,6 +166,8 @@ class VideoOutput extends BaseOutput
 
         $amountFrames = count($this->frames);
         $secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
+        $audioListPath = $this->outputDirectory . "tmp/Audio/list.txt";
+        $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
@@ -237,11 +180,9 @@ class VideoOutput extends BaseOutput
             $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
             $ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-            exec($ffmpegHelper->generateCommand($this->outputDirectory . $outputPath));
+            exec($ffmpegHelper->generateCommand($ffmpegOutputDirectory . $outputPath));
 
-            $audioFiles[] = $outputPath;
-
-            file_put_contents($this->outputDirectory . "tmp/Audio/list.txt", "file Output/'" . $outputPath . "'\r\n", FILE_APPEND);
+            file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
         }
 
         echo "\nGenerating video file ...";
@@ -252,15 +193,15 @@ class VideoOutput extends BaseOutput
         // Create single sound from sound frames
         $ffmpegHelper->addOption("-f concat");
         $ffmpegHelper->addOption("-safe 0");
-        $ffmpegHelper->addOption("-i \"Output\\tmp\\Audio\\list.txt\"");
+        $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
 
         // Create video from image frames
         $ffmpegHelper->addOption("-framerate " . $this->fps);
-        $ffmpegHelper->addOption("-i \"Output\\tmp\\Frames\\%d.png\""); // Input Images
+        $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
         $ffmpegHelper->addOption("-pix_fmt yuv420p");
 
         // Save video in output folder
-        exec($ffmpegHelper->generateCommand("\"Output\\Video\\" . $fileName . "\""));
+        exec($ffmpegHelper->generateCommand("\"" . $this->outputDirectory . "/Video/" . $fileName . "\""));
 
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);

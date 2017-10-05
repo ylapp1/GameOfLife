@@ -22,14 +22,20 @@ use Utils\FileSystemHandler;
  *
  * @package Output
  */
-class GifOutput extends BaseOutput
+class GifOutput extends ImageOutput
 {
     private $frames = array();
     private $frameTime;
-    /** @var FileSystemHandler */
-    private $fileSystemHandler;
-    /** @var ImageCreator $imageCreator */
-    private $imageCreator;
+
+
+    /**
+     * GifOutput constructor
+     */
+    public function __construct()
+    {
+        $outputDirectory = $this->outputDirectory . "/tmp/Frames";
+        parent::__construct("gif", $outputDirectory);
+    }
 
 
     /**
@@ -72,45 +78,6 @@ class GifOutput extends BaseOutput
         $this->frameTime = $_frameTime;
     }
 
-    /**
-     * Returns the filesystem handler of this gif output
-     *
-     * @return FileSystemHandler    Filesystem handler
-     */
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    /**
-     * Sets the filesystem handler of this gif output
-     *
-     * @param FileSystemHandler $_fileSystemHandler     Filesystem handler
-     */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
-
-    /**
-     * Returns the image creator of this gif output
-     *
-     * @return ImageCreator     The image creator
-     */
-    public function imageCreator(): ImageCreator
-    {
-        return $this->imageCreator;
-    }
-
-    /**
-     * Sets the image creator of this gif output
-     *
-     * @param ImageCreator $_imageCreator   The image creator
-     */
-    public function setImageCreator(ImageCreator $_imageCreator)
-    {
-        $this->imageCreator = $_imageCreator;
-    }
 
     /**
      * Adds GIFOutputs specific options to a Getopt object
@@ -119,13 +86,11 @@ class GifOutput extends BaseOutput
      */
     public function addOptions(Getopt $_options)
     {
-        $_options->addOptions(
-            array(
-                array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for gif outputs"),
-                array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for gif outputs"),
-                array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color for gif outputs"),
-                array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color for gif outputs"),
-                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")));
+        parent::addOptions($_options);
+        $_options->addOptions(array(
+                                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
+                              )
+        );
     }
 
     /**
@@ -136,35 +101,15 @@ class GifOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        echo "Starting GIF Output...\n";
+        parent::startOutput($_options, $_board);
+        echo "Starting GIF Output...\n\n";
 
-        $colorSelector = new ColorSelector();
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/Gif");
 
         // fetch options
-        if ($_options->getOption("gifOutputSize") !== null) $cellSize = (int)$_options->getOption("gifOutputSize");
-        else $cellSize = 100;
-
-        $cellColor = $_options->getOption("gifOutputCellColor");
-        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
-        else $cellColor = new ImageColor(0, 0, 0);
-
-        $backgroundColor = $_options->getOption("gifOutputBackgroundColor");
-        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
-        else $backgroundColor = new ImageColor(255, 255,255);
-
-        $gridColor = $_options->getOption("gifOutputGridColor");
-        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
-        else $gridColor = new ImageColor(0,0,0);
-
         $frameTime = $_options->getOption("gifOutputFrameTime");
         if ($frameTime !== null) $this->frameTime = (int)$frameTime;
         else $this->frameTime = 20;
-
-        $imageOutputPath = $this->outputDirectory . "tmp/Frames";
-        $this->fileSystemHandler->createDirectory($imageOutputPath);
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "Gif");
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $imageOutputPath);
     }
 
     /**
