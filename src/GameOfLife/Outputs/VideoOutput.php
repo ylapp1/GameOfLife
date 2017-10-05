@@ -166,22 +166,16 @@ class VideoOutput extends BaseOutput
         if ($_options->getOption("videoOutputSize") !== null) $cellSize = (int)$_options->getOption("videoOutputSize");
         else $cellSize = 100;
 
-        if ($_options->getOption("videoOutputCellColor") !== null)
-        {
-            $cellColor = $colorSelector->getColor($_options->getOption("videoOutputCellColor"));
-        }
+        $cellColor = $_options->getOption("videoOutputCellColor");
+        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
         else $cellColor = new ImageColor(0, 0, 0);
 
-        if ($_options->getOption("videoOutputBackgroundColor") !== null)
-        {
-            $backgroundColor = $colorSelector->getColor($_options->getOption("videoOutputBackgroundColor"));
-        }
+        $backgroundColor = $_options->getOption("videoOutputBackgroundColor");
+        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        if ($_options->getOption("videoOutputGridColor") !== null)
-        {
-            $gridColor = $colorSelector->getColor($_options->getOption("videoOutputGridColor"));
-        }
+        $gridColor = $_options->getOption("videoOutputGridColor");
+        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
         else $gridColor = new ImageColor(0,0,0);
 
         if ($_options->getOption("videoOutputFPS") !== null) $this->fps = (int)$_options->getOption("videoOutputFPS");

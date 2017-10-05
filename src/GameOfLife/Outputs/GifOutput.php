@@ -145,28 +145,20 @@ class GifOutput extends BaseOutput
         if ($_options->getOption("gifOutputSize") !== null) $cellSize = (int)$_options->getOption("gifOutputSize");
         else $cellSize = 100;
 
-        if ($_options->getOption("gifOutputCellColor") !== null)
-        {
-            $cellColor = $colorSelector->getColor($_options->getOption("gifOutputCellColor"));
-        }
+        $cellColor = $_options->getOption("gifOutputCellColor");
+        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
         else $cellColor = new ImageColor(0, 0, 0);
 
-        if ($_options->getOption("gifOutputBackgroundColor") !== null)
-        {
-            $backgroundColor = $colorSelector->getColor($_options->getOption("gifOutputBackgroundColor"));
-        }
+        $backgroundColor = $_options->getOption("gifOutputBackgroundColor");
+        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        if ($_options->getOption("gifOutputGridColor") !== null)
-        {
-            $gridColor = $colorSelector->getColor($_options->getOption("gifOutputGridColor"));
-        }
+        $gridColor = $_options->getOption("gifOutputGridColor");
+        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
         else $gridColor = new ImageColor(0,0,0);
 
-        if ($_options->getOption("gifOutputFrameTime") !== null)
-        {
-            $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
-        }
+        $frameTime = $_options->getOption("gifOutputFrameTime");
+        if ($frameTime !== null) $this->frameTime = (int)$frameTime;
         else $this->frameTime = 20;
 
         $imageOutputPath = $this->outputDirectory . "tmp/Frames";

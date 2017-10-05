@@ -79,22 +79,16 @@ class PngOutput extends BaseOutput
         if ($_options->getOption("pngOutputSize") !== null) $cellSize = (int)$_options->getOption("pngOutputSize");
         else $cellSize = 100;
 
-        if ($_options->getOption("pngOutputCellColor") !== null)
-        {
-            $cellColor = $colorSelector->getColor($_options->getOption("pngOutputCellColor"));
-        }
+        $cellColor = $_options->getOption("pngOutputCellColor");
+        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
         else $cellColor = new ImageColor(0,0,0);
 
-        if ($_options->getoption("pngOutputBackgroundColor") !== null)
-        {
-            $backgroundColor = $colorSelector->getColor($_options->getoption("pngOutputBackgroundColor"));
-        }
+        $backgroundColor = $_options->getoption("pngOutputBackgroundColor");
+        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        if ($_options->getoption("pngOutputGridColor") !== null)
-        {
-            $gridColor = $colorSelector->getColor($_options->getoption("pngOutputGridColor"));
-        }
+        $gridColor = $_options->getoption("pngOutputGridColor");
+        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
         else $gridColor = new ImageColor(0, 0, 0);
 
         // Create new folder for current game
