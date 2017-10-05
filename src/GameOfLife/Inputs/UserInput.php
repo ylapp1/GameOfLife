@@ -84,7 +84,7 @@ class UserInput extends BaseInput
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("edit"))
+        if ($_options->getOption("edit") !== null)
         {
             $fileInput = new FileInput();
             $fileInput->setTemplateDirectory($this->templateDirectory());

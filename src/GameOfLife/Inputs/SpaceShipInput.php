@@ -43,8 +43,8 @@ class SpaceShipInput extends ObjectInput
         $posX = $boardCenter["x"];
         $posY = $boardCenter["y"];
 
-        if ($_options->getOption("spaceShipPosX")) $posX = (int)$_options->getOption("spaceShipPosX");
-        if ($_options->getOption("spaceShipPosY")) $posY = (int)$_options->getOption("spaceShipPosY");
+        if ($_options->getOption("spaceShipPosX") !== null) $posX = (int)$_options->getOption("spaceShipPosX");
+        if ($_options->getOption("spaceShipPosY") !== null) $posY = (int)$_options->getOption("spaceShipPosY");
 
         // check whether the spaceship is inside board dimensions
         if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))

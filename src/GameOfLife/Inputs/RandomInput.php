@@ -39,7 +39,7 @@ class RandomInput extends BaseInput
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("fillPercent")) $fillPercent = (float)$_options->getOption("fillPercent");
+        if ($_options->getOption("fillPercent") !== null) $fillPercent = (float)$_options->getOption("fillPercent");
         else $fillPercent = (float)(rand(15000, 70000) / 1000);
 
         if ($fillPercent > 100)

@@ -42,8 +42,8 @@ class BlinkerInput extends ObjectInput
         $posX = $boardCenter["x"];
         $posY = $boardCenter["y"];
 
-        if ($_options->getOption("blinkerPosX")) $posX = (int)$_options->getOption("blinkerPosX");
-        if ($_options->getOption("blinkerPosY")) $posY = (int)$_options->getOption("blinkerPosY");
+        if ($_options->getOption("blinkerPosX") !== null) $posX = (int)$_options->getOption("blinkerPosX");
+        if ($_options->getOption("blinkerPosY") !== null) $posY = (int)$_options->getOption("blinkerPosY");
 
         // check whether the blinker is inside the board dimensions
         if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))

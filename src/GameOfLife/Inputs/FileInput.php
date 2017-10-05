@@ -110,7 +110,7 @@ class FileInput extends BaseInput
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("template"))
+        if ($_options->getOption("template") !== null)
         {
             $board = $this->loadTemplate($_options->getOption("template"));
 

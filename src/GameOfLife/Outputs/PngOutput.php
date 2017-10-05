@@ -76,19 +76,25 @@ class PngOutput extends BaseOutput
         $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
-        if ($_options->getOption("pngOutputSize")) $cellSize = intval($_options->getOption("pngOutputSize"));
+        if ($_options->getOption("pngOutputSize") !== null) $cellSize = (int)$_options->getOption("pngOutputSize");
         else $cellSize = 100;
 
-        $inputCellColor = $_options->getOption("pngOutputCellColor");
-        if ($inputCellColor != false) $cellColor = $colorSelector->getColor($inputCellColor);
+        if ($_options->getOption("pngOutputCellColor") !== null)
+        {
+            $cellColor = $colorSelector->getColor($_options->getOption("pngOutputCellColor"));
+        }
         else $cellColor = new ImageColor(0,0,0);
 
-        $inputBackgroundColor = $_options->getoption("pngOutputBackgroundColor");
-        if ($inputBackgroundColor != false) $backgroundColor = $colorSelector->getColor($inputBackgroundColor);
+        if ($_options->getoption("pngOutputBackgroundColor") !== null)
+        {
+            $backgroundColor = $colorSelector->getColor($_options->getoption("pngOutputBackgroundColor"));
+        }
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        $inputGridColor = $_options->getoption("pngOutputGridColor");
-        if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
+        if ($_options->getoption("pngOutputGridColor") !== null)
+        {
+            $gridColor = $colorSelector->getColor($_options->getoption("pngOutputGridColor"));
+        }
         else $gridColor = new ImageColor(0, 0, 0);
 
         // Create new folder for current game

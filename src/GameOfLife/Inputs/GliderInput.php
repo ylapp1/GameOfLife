@@ -42,8 +42,8 @@ class GliderInput extends ObjectInput
         $posX = $boardCenter["x"];
         $posY = $boardCenter["y"];
 
-        if ($_options->getOption("gliderPosX")) $posX = (int)$_options->getOption("gliderPosX");
-        if ($_options->getOption("gliderPosY")) $posY = (int)$_options->getOption("gliderPosY");
+        if ($_options->getOption("gliderPosX") !== null) $posX = (int)$_options->getOption("gliderPosX");
+        if ($_options->getOption("gliderPosY") !== null) $posY = (int)$_options->getOption("gliderPosY");
 
         // check whether the glider is inside board dimensions
         if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))

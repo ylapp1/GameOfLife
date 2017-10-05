@@ -97,13 +97,13 @@ foreach ($classes as $class)
 // parse options
 $options->parse();
 
-if ($options->getOption("version"))
+if ($options->getOption("version") !== null)
 {
     // Show game version
     echo "Game of life version 0.1\n";
     return;
 }
-elseif ($options->getOption("help"))
+elseif ($options->getOption("help") !== null)
 {
     // Show help screen
     echo "\n";
@@ -112,24 +112,29 @@ elseif ($options->getOption("help"))
 }
 else
 {
-    // Fetch game options
-    $width = $options->getOption("width");
-    $height = $options->getOption("height");
-    $maxSteps = $options->getOption("maxSteps");
-    $border = $options->getOption("border");
+    // Fetch options
+    if ($options->getOption("width") !== null) $width = (int)$options->getOption("width");
+    else $width = 20;
 
-    // Fill with default values if options not set
-    if ($width == null) $width = 20;
-    if ($height == null) $height = 10;
-    if ($maxSteps == null) $maxSteps = 50;
+    if ($options->getOption("height") !== null) $height = (int)$options->getOption("height");
+    else $height = 10;
 
-    if ($border == null or $border == "solid") $hasBorder = true;
-    elseif ($border == "passthrough") $hasBorder = false;
-    else
+    if ($options->getOption("maxSteps") !== null) $maxSteps = (int)$options->getOption("maxSteps");
+    else $maxSteps = 50;
+
+    if ($options->getOption("border") !== null)
     {
-        echo "Error: Invalid border type specified";
-        return;
+        $borderType = $options->getOption("border");
+        if ($borderType == "solid") $hasBorder = true;
+        elseif ($borderType == "passthrough") $hasBorder = false;
+        else
+        {
+            echo "Error: Invalid border type specified";
+            return;
+        }
     }
+    else $hasBorder = true;
+
 
     // define rules for conways game of life
     $rulesConway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -142,7 +147,7 @@ else
     $output = new Output\ConsoleOutput;
 
     // find out whether user used the --input option
-    if ($options->getOption("input"))
+    if ($options->getOption("input") !== null)
     {
         $className = "Input\\" . $options->getOption("input") . "Input";
 
@@ -150,7 +155,7 @@ else
     }
 
     // find out whether user used the --output option
-    if ($options->getOption("output"))
+    if ($options->getOption("output") !== null)
     {
         $className = "Output\\" . $options->getOption("output") . "Output";
 
@@ -161,7 +166,7 @@ else
     foreach ($linkedOptions as $option => $className)
     {
         // if input specific option is set initialize new input of the class which the input refers to
-        if ($options->getOption($option))
+        if ($options->getOption($option) !== null)
         {
             if (stristr($className, "Input") != false) $instance = new $className;
             elseif (stristr($className, "Output") != false) $output = new $className;

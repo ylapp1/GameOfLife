@@ -101,6 +101,7 @@ class RandomInputTest extends TestCase
     {
         return [
             "-1% filled" => ["-1", true, "Error: There can't be less living cells than 0% of the fields.\n"],
+            "0% filled" => ["0", false],
             "20% filled" => ["20", false],
             "50% filled" => ["50", false],
             "76% filled" => ["76", false],

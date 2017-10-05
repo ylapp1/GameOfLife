@@ -26,7 +26,7 @@ class VideoOutput extends BaseOutput
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     private $fillPercentages = array();
-    private $fps = 15;
+    private $fps;
     private $frames = array();
     /** @var ImageCreator $imageCreator */
     private $imageCreator;
@@ -163,22 +163,29 @@ class VideoOutput extends BaseOutput
         $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
-        if ($_options->getOption("videoOutputSize")) $cellSize = intval($_options->getOption("videoOutputSize"));
+        if ($_options->getOption("videoOutputSize") !== null) $cellSize = (int)$_options->getOption("videoOutputSize");
         else $cellSize = 100;
 
-        $inputCellColor = $_options->getOption("videoOutputCellColor");
-        if ($inputCellColor != false) $cellColor = $colorSelector->getColor($inputCellColor);
+        if ($_options->getOption("videoOutputCellColor") !== null)
+        {
+            $cellColor = $colorSelector->getColor($_options->getOption("videoOutputCellColor"));
+        }
         else $cellColor = new ImageColor(0, 0, 0);
 
-        $inputBackgroundColor = $_options->getOption("videoOutputBackgroundColor");
-        if ($inputBackgroundColor != false) $backgroundColor = $colorSelector->getColor($inputBackgroundColor);
+        if ($_options->getOption("videoOutputBackgroundColor") !== null)
+        {
+            $backgroundColor = $colorSelector->getColor($_options->getOption("videoOutputBackgroundColor"));
+        }
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        $inputGridColor = $_options->getOption("videoOutputGridColor");
-        if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
+        if ($_options->getOption("videoOutputGridColor") !== null)
+        {
+            $gridColor = $colorSelector->getColor($_options->getOption("videoOutputGridColor"));
+        }
         else $gridColor = new ImageColor(0,0,0);
 
-        if ($_options->getOption("videoOutputFPS")) $this->fps = intval($_options->getOption("videoOutputFPS"));
+        if ($_options->getOption("videoOutputFPS") !== null) $this->fps = (int)$_options->getOption("videoOutputFPS");
+        else $this->fps = 15;
 
         $imageOutputPath = $this->outputDirectory . "tmp/Frames";
         $this->fileSystemHandler->createDirectory($this->outputDirectory . "Video");

@@ -25,7 +25,7 @@ use Utils\FileSystemHandler;
 class GifOutput extends BaseOutput
 {
     private $frames = array();
-    private $frameTime = 20;
+    private $frameTime;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var ImageCreator $imageCreator */
@@ -142,22 +142,32 @@ class GifOutput extends BaseOutput
         $this->fileSystemHandler = new FileSystemHandler();
 
         // fetch options
-        if ($_options->getOption("gifOutputSize")) $cellSize = intval($_options->getOption("gifOutputSize"));
+        if ($_options->getOption("gifOutputSize") !== null) $cellSize = (int)$_options->getOption("gifOutputSize");
         else $cellSize = 100;
 
-        $inputCellColor = $_options->getOption("gifOutputCellColor");
-        if ($inputCellColor != false) $cellColor = $colorSelector->getColor($inputCellColor);
+        if ($_options->getOption("gifOutputCellColor") !== null)
+        {
+            $cellColor = $colorSelector->getColor($_options->getOption("gifOutputCellColor"));
+        }
         else $cellColor = new ImageColor(0, 0, 0);
 
-        $inputBackgroundColor = $_options->getOption("gifOutputBackgroundColor");
-        if ($inputBackgroundColor != false) $backgroundColor = $colorSelector->getColor($inputBackgroundColor);
+        if ($_options->getOption("gifOutputBackgroundColor") !== null)
+        {
+            $backgroundColor = $colorSelector->getColor($_options->getOption("gifOutputBackgroundColor"));
+        }
         else $backgroundColor = new ImageColor(255, 255,255);
 
-        $inputGridColor = $_options->getOption("gifOutputGridColor");
-        if ($inputGridColor != false) $gridColor = $colorSelector->getColor($inputGridColor);
+        if ($_options->getOption("gifOutputGridColor") !== null)
+        {
+            $gridColor = $colorSelector->getColor($_options->getOption("gifOutputGridColor"));
+        }
         else $gridColor = new ImageColor(0,0,0);
 
-        if ($_options->getOption("gifOutputFrameTime")) $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
+        if ($_options->getOption("gifOutputFrameTime") !== null)
+        {
+            $this->frameTime = intval($_options->getOption("gifOutputFrameTime"));
+        }
+        else $this->frameTime = 20;
 
         $imageOutputPath = $this->outputDirectory . "tmp/Frames";
         $this->fileSystemHandler->createDirectory($imageOutputPath);
