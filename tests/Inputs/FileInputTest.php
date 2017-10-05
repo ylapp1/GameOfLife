@@ -98,9 +98,9 @@ class FileInputTest extends TestCase
     public function testCanLoadTemplate()
     {
         $this->optionsMock->expects($this->exactly(2))
-            ->method("getOption")
-            ->with("template")
-            ->willReturn("unittest");
+                          ->method("getOption")
+                          ->with("template")
+                          ->willReturn("unittest");
 
         $unitTestBoard = array(
             array(0 => true),
