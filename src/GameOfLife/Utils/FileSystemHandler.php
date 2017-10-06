@@ -139,7 +139,7 @@ class FileSystemHandler
      *
      * @return array    File list
      */
-    public function getFileList($_filePath, $_fileEnding = null)
+    public function getFileList(string $_filePath, string $_fileEnding = null): array
     {
         return glob($_filePath . '/*' . $_fileEnding, GLOB_MARK);
     }
