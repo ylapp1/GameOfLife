@@ -194,42 +194,69 @@ class UserInputTest extends TestCase
     public function processInputProvider()
     {
         return [
-            [true, "exit"],
-            [true, "exit dkfjghdkfjgskfghsdk dksfjghsdfkgjs dfhgkjsdhfg ksdfjg sdfhgkjh"],
-            [true, "start"],
-            [true, "start kdasfjhasdkf asdhkf jasdkhfjasd kf"],
-            [true, "startjkjjjkkjkjkj"],
-            [false, "save", "Error: Invalid template name!\n"],
-            [false, "save my file is test.txt", "Error: Invalid template name!\n"],
-            [false, "1,1", "\n" .
-                           "  1\n" .
-                           " ----\n" .
-                           "|o| |\n" .
-                           "|----|\n" .
-                           "| |X|1\n" .
-                           " ----\n"
+            "Exit" => [true, "exit"],
+            "Exit with random arguments" => [true, "exit dkfjghdkfjgskfghsdk dksfjghsdfkgjs dfhgkjsdhfg ksdfjg sdfhgkjh"],
+            "Start" => [true, "start"],
+            "Start with random arguments" => [true, "start kdasfjhasdkf asdhkf jasdkhfjasd kf"],
+            "Start embedded in a string" => [true, "startjkjjjkkjkjkj"],
+            "Save - Empty template name" => [false, "save", "Error: Invalid template name!\n"],
+            "Save - Template name with empty spaces" => [false, "save my file is test.txt", "Error: Invalid template name!\n"],
+            "Valid Coordinates, Toggle Dead Cell" => [false, "1,1",
+                                                             "\n" .
+                                                             "  1\n" .
+                                                             " ----\n" .
+                                                             "|o| |\n" .
+                                                             "|----|\n" .
+                                                             "| |X|1\n" .
+                                                             " ----\n"
             ],
-            [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
-            [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
-            [false, "1,1,1", "Error: Please input exactly two values!\n"],
-            [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
-            [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"],
-            [false, "reset", "\n" .
-                             " --\n" .
-                             "|  |\n" .
-                             "|  |\n" .
-                             " --\n"],
-            [false, "setHeight 1", "\n" .
-                                   " --\n" .
-                                   "|o |\n" .
-                                   " --\n"
+            "Valid Coordinates, Toggle Living Cell" => [false, "0,0",
+                                                               "\n" .
+                                                               " 0\n" .
+                                                               " ---\n" .
+                                                               "| | |0\n" .
+                                                               "|---|\n" .
+                                                               "| | |\n" .
+                                                               " ---\n"
             ],
-            [false, "setWidth 1", "\n" .
-                                  " -\n" .
-                                  "|o|\n" .
-                                  "| |\n" .
-                                  " -\n"
-            ]
+            "Empty y" => [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
+            "Empty x" => [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
+            "More than two values" => [false, "1,1,1", "Error: Please input exactly two values!\n"],
+            "Random string input" => [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
+            "Save" => [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"],
+            "Reset" => [false, "reset",
+                               "\n" .
+                              " --\n" .
+                              "|  |\n" .
+                              "|  |\n" .
+                              " --\n"],
+            "Set height" => [false, "setHeight 1",
+                                    "\n" .
+                                    " --\n" .
+                                    "|o |\n" .
+                                    " --\n"
+            ],
+            "Set width" => [false, "setWidth 1",
+                                    "\n" .
+                                    " -\n" .
+                                    "|o|\n" .
+                                    "| |\n" .
+                                    " -\n"
+            ],
+            "Options" => [false, "options",
+                              "\n\nOptions: " .
+                              "\n - exit:      Exit the application" .
+                              "\n - help:      Display help" .
+                              "\n - options:   Show available options" .
+                              "\n - setHeight: Change the board height" .
+                              "\n - setWidth:  Change the board width" .
+                              "\n - save:      Save the current board to a custom template" .
+                              "\n - start:     Star the simulation\n\n"
+            ],
+            "Help" => [false, "help",
+                              "Set the coordinates for the living cells as below:\n" .
+                              "<X-Coordinate>,<Y-Coordinate>\n" .
+                              "Enter the coordinates of a set field to unset it.\n"]
         ];
     }
 
@@ -287,6 +314,7 @@ class UserInputTest extends TestCase
                                  "Enter the coordinates of a set field to unset it.\n" .
                                  "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
                                  "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                 "Type \"options\" to see a list of all valid options\n" .
                                  "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
         if ($this->userInputMock instanceof UserInput) $this->userInputMock->fillBoard($this->board, new Getopt());
@@ -328,6 +356,7 @@ class UserInputTest extends TestCase
                                 "Enter the coordinates of a set field to unset it.\n" .
                                 "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
                                 "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                "Type \"options\" to see a list of all valid options\n" .
                                 "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
         if ( $this->userInputMock instanceof UserInput)

@@ -96,10 +96,11 @@ class UserInput extends BaseInput
         }
 
         echo "Set the coordinates for the living cells as below:\n";
-        echo "<X-Coordinate" . ">,<Y-Coordinate" . ">\n";
+        echo "<X-Coordinate>,<Y-Coordinate>\n";
         echo "Enter the coordinates of a set field to unset it.\n";
         echo "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
         echo "You can save your board configuration before starting the simulation by typing \"save\"\n";
+        echo "Type \"options\" to see a list of all valid options\n";
         echo "Let's Go:\n";
 
         $isInputFinished = false;
@@ -145,6 +146,27 @@ class UserInput extends BaseInput
         {
             $_board->resetCurrentBoard();
             return true;
+        }
+        elseif (stristr($_input, "help"))
+        {
+            echo "Set the coordinates for the living cells as below:\n";
+            echo "<X-Coordinate>,<Y-Coordinate>\n";
+            echo "Enter the coordinates of a set field to unset it.\n";
+
+            return false;
+        }
+        elseif (stristr($_input, "options"))
+        {
+            echo "\n\nOptions: ";
+            echo "\n - exit:      Exit the application";
+            echo "\n - help:      Display help";
+            echo "\n - options:   Show available options";
+            echo "\n - setHeight: Change the board height";
+            echo "\n - setWidth:  Change the board width";
+            echo "\n - save:      Save the current board to a custom template";
+            echo "\n - start:     Star the simulation\n\n";
+
+            return false;
         }
         elseif (stristr($_input, "reset"))
         {
