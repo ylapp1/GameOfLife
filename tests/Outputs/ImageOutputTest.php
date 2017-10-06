@@ -22,14 +22,20 @@ class ImageOutputTest extends TestCase
 {
     /** @var ImageOutput */
     private $output;
+    private $testDirectory = __DIR__ . "/../ImageOutputTest";
+    /** @var FileSystemHandler */
+    private $fileSystemHandler;
 
     protected function setUp()
     {
-        $this->output = new ImageOutput("test", "anothertest");
+        $this->fileSystemHandler = new FileSystemHandler();
+        $this->output = new ImageOutput("test", $this->testDirectory);
     }
 
     protected function tearDown()
     {
+        $this->fileSystemHandler->deleteDirectory($this->testDirectory, true);
+        unset($this->fileSystemHandler);
         unset($this->output);
     }
 
