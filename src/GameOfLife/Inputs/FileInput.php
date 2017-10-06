@@ -19,12 +19,42 @@ use Utils\FileSystemHandler;
  */
 class FileInput extends BaseInput
 {
+    private $fileSystemHandler;
     private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
     private $templateHeight;
     private $templateWidth;
 
 
+    /**
+     * FileInput constructor
+     */
+    public function __construct()
+    {
+        $this->fileSystemHandler = new FileSystemHandler();
+    }
+
+
     // Getters and Setters
+
+    /**
+     * Returns the file system handler of this file input
+     *
+     * @return FileSystemHandler    The file system handler
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the file system handler of this file input
+     *
+     * @param FileSystemHandler $_fileSystemHandler     The file system handler
+     */
+    public function setFileSystemHandler(FileSystemhandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
 
     /**
      * Returns the template directory
@@ -97,7 +127,8 @@ class FileInput extends BaseInput
         $_options->addOptions(
             array
             (
-                array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration")
+                array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
+                array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates")
             )
         );
     }
@@ -118,6 +149,31 @@ class FileInput extends BaseInput
             $_board->setHeight($this->templateHeight);
             $_board->setWidth($this->templateWidth);
             $_board->setCurrentBoard($board);
+        }
+        elseif ($_options->getOption("list-templates") !== null)
+        {
+            $defaultTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory, ".txt");
+            $customTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory. "/Custom", ".txt");
+
+            echo "\n\nDefault templates:\n";
+            if (count($defaultTemplates) == 0) echo "  None\n";
+            else
+            {
+                foreach ($defaultTemplates as $index => $templateName)
+                {
+                    echo "  " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
+                }
+            }
+
+            echo "\nCustom templates:\n";
+            if (count($customTemplates) == 0) echo "  None\n";
+            else
+            {
+                foreach ($customTemplates as $index => $templateName)
+                {
+                    echo " " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
+                }
+            }
         }
         else echo "Error: No template file specified\n";
     }

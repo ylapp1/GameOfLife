@@ -10,6 +10,7 @@ use GameOfLife\Board;
 use GameOfLife\RuleSet;
 use Input\FileInput;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,11 +24,12 @@ class FileInputTest extends TestCase
     private $board;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
+    private $testTemplateDirectory = __DIR__ . "/../InputTemplates/";
 
     protected function setUp()
     {
         $this->input = new FileInput();
-        $this->input->setTemplateDirectory(__DIR__ . "/../InputTemplates/");
+        $this->input->setTemplateDirectory($this->testTemplateDirectory);
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
@@ -42,7 +44,18 @@ class FileInputTest extends TestCase
     }
 
     /**
+     * @covers \Input\FileInput::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $input = new FileInput();
+        $this->assertEquals(new FileSystemHandler(), $input->fileSystemhandler());
+    }
+
+    /**
      * @dataProvider setAttributesProvider
+     * @covers \Input\FileInput::setFileSystemHandler()
+     * @covers \Input\FileInput::fileSystemHandler()
      * @covers \Input\FileInput::setTemplateDirectory()
      * @covers \Input\FileInput::templateDirectory()
      * @covers \Input\FileInput::setTemplateHeight()
@@ -56,6 +69,10 @@ class FileInputTest extends TestCase
      */
     public function testCanSetAttributes(string $_templateDirectory, int $_templateWidth, int $_templateHeight)
     {
+        $fileSystemHandler = new FileSystemHandler();
+        $this->input->setFileSystemHandler($fileSystemHandler);
+        $this->assertEquals($fileSystemHandler, $this->input->fileSystemHandler());
+
         $this->input->setTemplateDirectory($_templateDirectory);
         $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
 
@@ -82,7 +99,8 @@ class FileInputTest extends TestCase
     public function testCanAddOptions()
     {
         $fileInputOptions = array(
-            array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration")
+            array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
+            array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates")
         );
 
         $this->optionsMock->expects($this->exactly(1))
@@ -149,5 +167,38 @@ class FileInputTest extends TestCase
             ["mytemplate"],
             ["hello"]
         ];
+    }
+
+    /**
+     * @covers \Input\FileInput::fillBoard()
+     */
+    public function testCanListTemplates()
+    {
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
+                          ->withConsecutive(["template"], ["list-templates"], ["template"], ["list-templates"])
+                          ->willReturn(null, true, null, true);
+
+        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler->createDirectory($this->testTemplateDirectory . "/Custom");
+        touch($this->testTemplateDirectory . "/Custom/mytest.txt");
+
+        $expectedOutput = "Default templates:\n"
+                        . "  1\) unittest\n\n"
+                        . "Custom templates:\n"
+                        . "  1\) mytest\n";
+
+        $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+        $fileSystemHandler->deleteDirectory($this->testTemplateDirectory . "/Custom");
+
+        $this->input->setTemplateDirectory(__DIR__);
+        $expectedOutput = "Default templates:\n"
+            . "  None\n\n"
+            . "Custom templates:\n"
+            . "  None\n";
+
+        $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
     }
 }

@@ -31,6 +31,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --spaceShipPosY <arg> | Y position of the spaceship                  | Integer | Default: Center             |
 | --fillPercent <arg>   | Percentage of living cells on a random board | Integer | Default: rand(1,70)         |
 | -- template <arg>     | Load board configuration from a txt file     | String  | glidergun, custom templates |
+| --list-templates      | Display a list of all templates              | -       | -                           |
 | -- edit               | Edit a template selected with --template     | -       | -                           |
 
 

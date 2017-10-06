@@ -148,4 +148,29 @@ class FileSystemHandlerTest extends TestCase
         $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($filePath));
         $this->assertFalse(file_exists($filePath));
     }
+
+    /**
+     * @covers \Utils\Filesystemhandler::getFileList()
+     */
+    public function testCanGetFileList()
+    {
+        $fileNames = array("Hello", "myFile", "myPersonalFile", "myPersonalTest", "thisIsAFile", "ThisIsMyFile");
+        sort($fileNames);
+
+        foreach ($fileNames as $index => $fileName)
+        {
+            touch($this->testDirectory . "/" . $fileName);
+        }
+
+        $files = $this->fileSystemHandler->getFileList($this->testDirectory);
+
+        foreach ($files as $index => $file)
+        {
+            $fileName = $this->testDirectory . "/" . $fileNames[$index];
+            $this->assertEquals($this->testDirectory . "/" . $fileNames[$index], $file);
+            unlink($fileName);
+        }
+    }
+
+
 }
