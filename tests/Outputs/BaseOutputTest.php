@@ -59,7 +59,7 @@ class BaseOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\ImageOutput::getNewGameId()
+     * @covers \Output\BaseOutput::getNewGameId()
      */
     public function testCanGetNewGameId()
     {

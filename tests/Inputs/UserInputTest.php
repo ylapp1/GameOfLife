@@ -302,10 +302,10 @@ class UserInputTest extends TestCase
         $this->board->resetCurrentBoard();
         $this->assertEquals(0, $this->board->getAmountCellsAlive());
 
-        $this->optionsMock->expects($this->exactly(3))
+        $this->optionsMock->expects($this->exactly(5))
                           ->method("getOption")
-                          ->withConsecutive(["edit"], ["template"], ["template"])
-                          ->willReturn(true, "unittest", "unittest");
+                          ->withConsecutive(["edit"], ["template"], ["templatePosX"], ["templatePosY"], ["template"])
+                          ->willReturn(true, "unittest", null, null, "unittest");
 
         $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
                                 "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .

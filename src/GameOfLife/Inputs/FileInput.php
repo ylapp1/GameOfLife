@@ -128,13 +128,17 @@ class FileInput extends BaseInput
             array
             (
                 array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
-                array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates")
+                array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
+                array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
+                array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
             )
         );
     }
 
     /**
      * Places the cells on the board
+     *
+     * If the template position is specified the function assumes that the user wants to keep the original board dimensions
      *
      * @param Board $_board      The Board
      * @param Getopt $_options   Options (template)
@@ -143,17 +147,29 @@ class FileInput extends BaseInput
     {
         if ($_options->getOption("template") !== null)
         {
-            $board = $this->loadTemplate($_options->getOption("template"));
+            $isDimensionsAdjustment = true;
+            $boardCenter = $_board->getCenter();
+            $templatePosX = $boardCenter["x"];
+            $templatePosY = $boardCenter["y"];
 
-            // Reconfigure the board dimensions
-            $_board->setHeight($this->templateHeight);
-            $_board->setWidth($this->templateWidth);
-            $_board->setCurrentBoard($board);
+            if ($_options->getOption("templatePosX") !== null)
+            {
+                $templatePosX = (int)$_options->getOption("templatePosX");
+                $isDimensionsAdjustment = false;
+            }
+
+            if ($_options->getOption("templatePosY") !== null)
+            {
+                $templatePosY = (int)$_options->getOption("templatePosY");
+                $isDimensionsAdjustment = false;
+            }
+
+            $this->placeTemplate($_board, $_options->getOption("template"), $templatePosX, $templatePosY, $isDimensionsAdjustment);
         }
         elseif ($_options->getOption("list-templates") !== null)
         {
             $defaultTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory, ".txt");
-            $customTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory. "/Custom", ".txt");
+            $customTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory . "/Custom", ".txt");
 
             echo "\n\nDefault templates:\n";
             if (count($defaultTemplates) == 0) echo "  None\n";
@@ -183,7 +199,7 @@ class FileInput extends BaseInput
      *
      * @param string $_templateName     Template name
      *
-     * @return array  The board that was loaded from the template file
+     * @return array  The template converted to an array
      */
     private function loadTemplate(string $_templateName): array
     {
@@ -205,21 +221,87 @@ class FileInput extends BaseInput
         $fileSystemHandler = new FileSystemHandler();
         $lines = $fileSystemHandler->readFile($fileName);
 
-        $board = array();
+        $templateBoard = array();
         $this->templateHeight = count($lines);
         $this->templateWidth = count(str_split($lines[0]));
 
         for ($y = 0; $y < count($lines); $y++)
         {
-            $board[$y] = array();
+            $templateBoard[$y] = array();
             $cells = str_split($lines[$y]);
 
             for ($x = 0; $x < count($cells); $x++)
             {
-                if ($cells[$x] == "X") $board[$y][$x] = true;
+                if ($cells[$x] == "X") $templateBoard[$y][$x] = true;
             }
         }
 
-        return $board;
+        return $templateBoard;
+    }
+
+    /**
+     * Calls loadTemplate() and places the template on the board
+     *
+     * @param Board $_board                     Board on which the template will be placed
+     * @param string $_template                 Template name
+     * @param int $_posX                        X-Coordinate of the top left corner of the template position
+     * @param int $_posY                        Y-Coordinate of the top right corner of the template position
+     * @param bool $_isDimensionsAdjustment     Indicates that the board dimensions shall be reconfigured to match the template width and height
+     */
+    private function placeTemplate(Board $_board, string $_template, int $_posX, int $_posY, bool $_isDimensionsAdjustment)
+    {
+        $templateBoard = $this->loadTemplate($_template);
+        $board = $_board->currentBoard();
+
+        if ($_isDimensionsAdjustment)
+        {
+            $_board->setWidth($this->templateWidth);
+            $_board->setHeight($this->templateHeight);
+            $board = $templateBoard;
+        }
+        else
+        {
+            if ($this->isTemplateOutOfBounds($_board->width(), $_board->height(), $_posX, $_posY))
+            {
+                echo "Error, the template may not exceed the field borders!\n";
+            }
+            else
+            {
+                for ($y = 0; $y < $this->templateHeight; $y++)
+                {
+                    for ($x = 0; $x < $this->templateWidth; $x++)
+                    {
+                        if (isset($templateBoard[$y][$x])) $board[$y + $_posY][$x + $_posX] = true;
+                    }
+                }
+            }
+        }
+
+        $_board->setCurrentBoard($board);
+    }
+
+    /**
+     * Checks whether the template is out of bounds
+     *
+     * Uses the class attributes "templateWidth" and "templateHeight" to check the template dimensions
+     *
+     * @param int $_boardWidth  Board width
+     * @param int $_boardHeight Board height
+     * @param int $_posX        X-Coordinate of the top left border of the template
+     * @param int $_posY        Y-Coordinate of the top left border of the template
+     *
+     * @return bool     True: Template is out of bounds
+     *                  False: Template is not out of bounds
+     */
+    private function isTemplateOutOfBounds(int $_boardWidth, int $_boardHeight, int $_posX, int $_posY): bool
+    {
+        if ($_posX < 0 ||
+            $_posY < 0 ||
+            $_posX + $this->templateWidth > $_boardWidth ||
+            $_posY + $this->templateHeight > $_boardHeight)
+        {
+            return true;
+        }
+        else return false;
     }
 }

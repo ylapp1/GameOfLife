@@ -100,7 +100,9 @@ class FileInputTest extends TestCase
     {
         $fileInputOptions = array(
             array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
-            array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates")
+            array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
+            array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
+            array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
         );
 
         $this->optionsMock->expects($this->exactly(1))
@@ -112,13 +114,14 @@ class FileInputTest extends TestCase
     /**
      * @covers \Input\FileInput::fillBoard
      * @covers \Input\FileInput::loadTemplate()
+     * @covers \Input\FileInput::placeTemplate()
      */
     public function testCanLoadTemplate()
     {
-        $this->optionsMock->expects($this->exactly(2))
-                          ->method("getOption")
-                          ->with("template")
-                          ->willReturn("unittest");
+        $this->optionsMock->expects($this->exactly(4))
+            ->method("getOption")
+            ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
+            ->willReturn("unittest",null, null, "unittest");
 
         $unitTestBoard = array(
             array(0 => true),
@@ -149,10 +152,10 @@ class FileInputTest extends TestCase
      */
     public function testDetectsInvalidTemplateNames(string $_templateName)
     {
-        $this->optionsMock->expects($this->exactly(2))
+        $this->optionsMock->expects($this->exactly(4))
                           ->method("getOption")
-                          ->with("template")
-                          ->willReturn($_templateName);
+                          ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
+                          ->willReturn($_templateName,null, null, $_templateName);
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
         $this->expectOutputString("Error: Template file not found!\n");
@@ -190,7 +193,7 @@ class FileInputTest extends TestCase
 
         $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
-        $fileSystemHandler->deleteDirectory($this->testTemplateDirectory . "/Custom");
+        $fileSystemHandler->deleteDirectory($this->testTemplateDirectory . "/Custom", true);
 
         $this->input->setTemplateDirectory(__DIR__);
         $expectedOutput = "Default templates:\n"
@@ -200,5 +203,51 @@ class FileInputTest extends TestCase
 
         $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+    }
+
+    /**
+     * @dataProvider placeTemplateProvider()
+     * @covers \Input\FileInput::fillBoard()
+     * @covers \Input\FileInput::placeTemplate()
+     * @covers \Input\FileInput::isTemplateOutOfBounds()
+     *
+     * @param int $_posX                X-Position of top left corner of the template
+     * @param int $_posY                Y-Position of top left corner of the template
+     * @param string $_expectedString   Expected error message
+     */
+    public function testCanPlaceTemplate(int $_posX, int $_posY, string $_expectedString = null)
+    {
+        $this->board->setWidth(10);
+        $this->board->setWidth(10);
+        $this->board->resetCurrentBoard();
+
+        $this->optionsMock->expects($this->exactly(6))
+                          ->method("getOption")
+                          ->withConsecutive(["template"], ["templatePosX"], ["templatePosX"], ["templatePosY"], ["templatePosY"], ["template"])
+                          ->willReturn("unittest", $_posX, $_posX, $_posY, $_posY, "unittest");
+
+        if ($_expectedString !== null) $this->expectOutputString($_expectedString);
+
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+
+        if ($_expectedString === null)
+        {
+            $this->assertEquals(1, $this->board->getAmountCellsAlive());
+            $this->assertTrue($this->board->getField($_posX, $_posY));
+        }
+    }
+
+    public function placeTemplateProvider()
+    {
+        $error = "Error, the template may not exceed the field borders!\n";
+
+        return [
+            [9, 0, $error],
+            [0 , 9, $error],
+            [0 , -1, $error],
+            [-1 , 0, $error],
+            [0, 0],
+            [1, 2]
+        ];
     }
 }
