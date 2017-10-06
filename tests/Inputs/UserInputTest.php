@@ -213,7 +213,23 @@ class UserInputTest extends TestCase
             [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
             [false, "1,1,1", "Error: Please input exactly two values!\n"],
             [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
-            [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"]
+            [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"],
+            [false, "reset", "\n" .
+                             " --\n" .
+                             "|  |\n" .
+                             "|  |\n" .
+                             " --\n"],
+            [false, "setHeight 1", "\n" .
+                                   " --\n" .
+                                   "|o |\n" .
+                                   " --\n"
+            ],
+            [false, "setWidth 1", "\n" .
+                                  " -\n" .
+                                  "|o|\n" .
+                                  "| |\n" .
+                                  " -\n"
+            ]
         ];
     }
 

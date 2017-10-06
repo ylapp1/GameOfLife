@@ -17,10 +17,13 @@ use Utils\FileSystemHandler;
  * Prompts the user to input which cells shall be set/unset
  *
  * Asks for coordinates which must be entered in the format "x,y"
- * When the user is finished setting cells he can type one of these words:
- *   - exit    Exit the simulation without calculating anything
- *   - start   Start the simulation with the created board
- *   - save    Save the created board as a template for later usage
+ * The user can use the following commands while editing:
+ *   - exit       Exit the simulation without calculating anything
+ *   - reset      Reset the board to an empty board
+ *   - setHeight  Change the height of the board
+ *   - setWidth   Change the width of the board
+ *   - save       Save the created board as a template for later usage
+ *   - start      Start the simulation with the created board
  */
 class UserInput extends BaseInput
 {
@@ -142,6 +145,46 @@ class UserInput extends BaseInput
         {
             $_board->resetCurrentBoard();
             return true;
+        }
+        elseif (stristr($_input, "reset"))
+        {
+            $_board->resetCurrentBoard();
+            $this->printBoardEditor($_board);
+            return false;
+        }
+        elseif (stristr($_input, "setHeight") || stristr($_input, "setWidth"))
+        {
+            $parts = explode(" ", $_input);
+            $dimension = $parts[0];
+            $value = (int)$parts[1];
+
+            if ($value < 1) echo "Error, the board " . $dimension . " may not be less than 1";
+            else
+            {
+                // copy the current board
+                $board = $_board->currentBoard();
+                $boardWidth = $_board->width();
+                $boardHeight = $_board->height();
+
+                // update board dimensions
+                if ($dimension == "setWidth") $_board->setWidth($value);
+                elseif ($dimension == "setHeight") $_board->setHeight($value);
+
+                // reset board to an empty board with new dimensions
+                $_board->resetCurrentBoard();
+
+                // paste current board
+                for ($y = 0; $y < $boardHeight; $y++)
+                {
+                    for ($x = 0; $x < $boardWidth; $x++)
+                    {
+                        if (isset($board[$y][$x])) $_board->setField($x, $y, true);
+                    }
+                }
+            }
+
+            $this->printBoardEditor($_board);
+            return false;
         }
         elseif (stristr($_input, "start")) return true;
         elseif (stristr($_input, "save"))
