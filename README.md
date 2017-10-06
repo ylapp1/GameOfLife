@@ -55,6 +55,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --videoOutputBackgroundColor <arg> | Background color for video outputs         | String  | R,G,B or color names (e.g. "blue", "red", "green") |
 | --videoOutputGridColor <arg>       | Grid color for video outputs               | String  | R,G,B or color names (e.g. "blue", "red", "green") |
 | --videoOutputFPS <arg>             | Frames per second of videos                | Integer | Default: 1                                         |
+| --videoOutputAddSound              | Add sound to the video                     | -       | -                                                  |
 
 
 You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output.

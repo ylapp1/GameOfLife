@@ -26,6 +26,7 @@ class VideoOutput extends ImageOutput
     private $fillPercentages = array();
     private $fps;
     private $frames = array();
+    private $hasSound;
 
 
     /**
@@ -35,6 +36,8 @@ class VideoOutput extends ImageOutput
     {
         $outputDirectory = $this->outputDirectory . "tmp/Frames";
         parent::__construct("video", $outputDirectory);
+
+        $this->hasSound = false;
     }
 
 
@@ -98,6 +101,26 @@ class VideoOutput extends ImageOutput
         $this->frames = $_frames;
     }
 
+    /**
+     * Returns whether this video output will add sound to the video file
+     *
+     * @return bool    Indicates whether the video has sound or not
+     */
+    public function hasSound(): bool
+    {
+        return $this->hasSound;
+    }
+
+    /**
+     * Sets whether this video output will add sound to the video file
+     *
+     * @param bool $hasSound    Indicates whether the video has sound or not
+     */
+    public function setHasSound(bool $hasSound)
+    {
+        $this->hasSound = $hasSound;
+    }
+
 
     /**
      * Adds VideoOutputs specific options to an option list
@@ -107,7 +130,10 @@ class VideoOutput extends ImageOutput
     public function addOptions(Getopt $_options)
     {
         parent::addOptions($_options);
-        $_options->addOptions(array(array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos")));
+        $_options->addOptions(array(
+            array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos"),
+            array(null, "videoOutputAddSound", Getopt::NO_ARGUMENT, "Add sound to the video"))
+        );
     }
 
     /**
@@ -128,6 +154,9 @@ class VideoOutput extends ImageOutput
         $fps = $_options->getOption("videoOutputFPS");
         if ($fps !== null) $this->fps = (int)$fps;
         else $this->fps = 15;
+
+        if ($_options->getOption("videoOutputAddSound") !== null) $this->hasSound = true;
+        else $this->hasSound = false;
     }
 
     /**
@@ -154,9 +183,7 @@ class VideoOutput extends ImageOutput
 
         // Initialize ffmpeg helper
         $ffmpegHelper = new FfmpegHelper("Tools/ffmpeg/bin/ffmpeg.exe");
-
-        // generate Audio files for each frame
-        $audioFiles = array();
+        $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
 
         if (count($this->frames) == 0)
         {
@@ -164,36 +191,42 @@ class VideoOutput extends ImageOutput
             return;
         }
 
-        $amountFrames = count($this->frames);
-        $secondsPerFrame = floatval(ceil(1000/$this->fps) / 1000);
-        $audioListPath = $this->outputDirectory . "tmp/Audio/list.txt";
-        $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
-
-        for ($i = 0; $i < count($this->frames); $i++)
+        // generate Audio files for each frame
+        if ($this->hasSound == true)
         {
-            echo "\rGenerating audio ... " . ($i + 1) . "/" . $amountFrames;
-            $outputPath = "tmp/Audio/" . $i . ".wav";
+            $amountFrames = count($this->frames);
+            $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
+            $audioListPath = $this->outputDirectory . "tmp/Audio/list.txt";
 
-            // Generate random beep sound
-            $ffmpegHelper->resetOptions();
-            $ffmpegHelper->addOption("-f lavfi");
-            $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
-            $ffmpegHelper->addOption("-t " . $secondsPerFrame);
+            for ($i = 0; $i < count($this->frames); $i++)
+            {
+                echo "\rGenerating audio ... " . ($i + 1) . "/" . $amountFrames;
+                $outputPath = "tmp/Audio/" . $i . ".wav";
 
-            exec($ffmpegHelper->generateCommand($ffmpegOutputDirectory . $outputPath));
+                // Generate random beep sound
+                $ffmpegHelper->resetOptions();
+                $ffmpegHelper->addOption("-f lavfi");
+                $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
+                $ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-            file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
+                exec($ffmpegHelper->generateCommand($ffmpegOutputDirectory . $outputPath));
+
+                file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
+            }
         }
 
         echo "\nGenerating video file ...";
 
-        // Create video with sound
+        // Create video
         $ffmpegHelper->resetOptions();
 
-        // Create single sound from sound frames
-        $ffmpegHelper->addOption("-f concat");
-        $ffmpegHelper->addOption("-safe 0");
-        $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
+        if ($this->hasSound == true)
+        {
+            // Create single sound from sound frames
+            $ffmpegHelper->addOption("-f concat");
+            $ffmpegHelper->addOption("-safe 0");
+            $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
+        }
 
         // Create video from image frames
         $ffmpegHelper->addOption("-framerate " . $this->fps);
