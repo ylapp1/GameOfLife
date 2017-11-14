@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\ConsoleOutput works as expected
+ * Checks whether \Output\ConsoleOutput works as expected.
  */
 class ConsoleOutputTest extends TestCase
 {

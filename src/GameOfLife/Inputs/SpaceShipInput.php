@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Places a spaceship on the board
+ * Places a spaceship on the board.
  *
  * Usage:
  *   - Call addOptions($_options) to add the objects options to the main option list
@@ -32,7 +32,7 @@ class SpaceShipInput extends ObjectInput
 
 
     /**
-     * Places the spaceship on the board
+     * Places the spaceship on the board.
      *
      * @param Board $_board     The Board
      * @param Getopt $_options  Options (posX, posY)

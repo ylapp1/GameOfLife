@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\RandomInput works as expected
+ * Checks whether \Input\RandomInput works as expected.
  */
 class RandomInputTest extends TestCase
 {

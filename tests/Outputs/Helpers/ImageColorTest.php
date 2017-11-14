@@ -10,7 +10,7 @@ use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\Helpers\ImageColor works as expected
+ * Checks whether \Output\Helpers\ImageColor works as expected.
  */
 class ImageColorTest extends TestCase
 {

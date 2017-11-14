@@ -18,7 +18,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Saves the boards in an animated gif file
+ * Saves the boards in an animated gif file.
  *
  * @package Output
  */
@@ -29,7 +29,7 @@ class GifOutput extends ImageOutput
 
 
     /**
-     * GifOutput constructor
+     * GifOutput constructor.
      */
     public function __construct()
     {
@@ -39,7 +39,7 @@ class GifOutput extends ImageOutput
 
 
     /**
-     * Returns the frame save paths
+     * Returns the frame save paths.
      *
      * @return array    Frame save paths
      */
@@ -49,7 +49,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Sets the frame save paths
+     * Sets the frame save paths.
      *
      * @param array $_frames    Frame save paths
      */
@@ -59,7 +59,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Returns the time per frame
+     * Returns the time per frame.
      *
      * @return int      Time per frame
      */
@@ -69,7 +69,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Sets the time per frame
+     * Sets the time per frame.
      *
      * @param int $_frameTime   Time per frame
      */
@@ -80,7 +80,7 @@ class GifOutput extends ImageOutput
 
 
     /**
-     * Adds GIFOutputs specific options to a Getopt object
+     * Adds GIFOutputs specific options to a Getopt object.
      *
      * @param Getopt $_options      The option list to which the options are added
      */
@@ -94,7 +94,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Initializes the output
+     * Initializes the output.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -113,7 +113,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Creates a single Gif file for the current game step
+     * Creates a single Gif file for the current game step.
      *
      * @param Board $_board     The board which will be output
      */
@@ -124,7 +124,7 @@ class GifOutput extends ImageOutput
     }
 
     /**
-     * Creates an animated Gif from the gif files that were created by outputBoard()
+     * Creates an animated Gif from the gif files that were created by outputBoard().
      */
     public function finishOutput()
     {

@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Fills the board with cells whose positions are loaded from a template file
+ * Fills the board with cells whose positions are loaded from a template file.
  *
  * @package Input
  */
@@ -26,7 +26,7 @@ class FileInput extends BaseInput
 
 
     /**
-     * FileInput constructor
+     * FileInput constructor.
      */
     public function __construct()
     {
@@ -37,7 +37,7 @@ class FileInput extends BaseInput
     // Getters and Setters
 
     /**
-     * Returns the file system handler of this file input
+     * Returns the file system handler of this file input.
      *
      * @return FileSystemHandler    The file system handler
      */
@@ -47,7 +47,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Sets the file system handler of this file input
+     * Sets the file system handler of this file input.
      *
      * @param FileSystemHandler $_fileSystemHandler     The file system handler
      */
@@ -57,7 +57,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Returns the template directory
+     * Returns the template directory.
      *
      * @return string   Template directory
      */
@@ -67,7 +67,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Sets the template directory
+     * Sets the template directory.
      *
      * @param string $_templateDirectory    Template directory
      */
@@ -77,7 +77,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Returns the height of the template board
+     * Returns the height of the template board.
      *
      * @return int  Height of the template board
      */
@@ -87,7 +87,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Sets the height of the template board
+     * Sets the height of the template board.
      *
      * @param int $_templateHeight  Height of the template board
      */
@@ -97,7 +97,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * returns the width ot the template board
+     * Returns the width ot the template board.
      *
      * @return int  Width of the template board
      */
@@ -107,7 +107,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Sets the width of the template board
+     * Sets the width of the template board.
      *
      * @param int $_templateWidth   Width of the template board
      */
@@ -118,7 +118,7 @@ class FileInput extends BaseInput
 
 
     /**
-     * Adds FileInputs specific options to the option list
+     * Adds FileInputs specific options to the option list.
      *
      * @param Getopt $_options     Option list to which the objects options are added
      */
@@ -136,7 +136,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Places the cells on the board
+     * Places the cells on the board.
      *
      * If the template position is specified the function assumes that the user wants to keep the original board dimensions
      *
@@ -195,7 +195,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Load board from txt file
+     * Load board from txt file.
      *
      * @param string $_templateName     Template name
      *
@@ -240,7 +240,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Calls loadTemplate() and places the template on the board
+     * Calls loadTemplate() and places the template on the board.
      *
      * @param Board $_board                     Board on which the template will be placed
      * @param string $_template                 Template name
@@ -281,7 +281,7 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Checks whether the template is out of bounds
+     * Checks whether the template is out of bounds.
      *
      * Uses the class attributes "templateWidth" and "templateHeight" to check the template dimensions
      *

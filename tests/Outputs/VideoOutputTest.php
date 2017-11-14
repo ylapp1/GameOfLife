@@ -16,7 +16,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\VideoOutput works as expected
+ * Checks whether \Output\VideoOutput works as expected.
  */
 class VideoOutputTest extends TestCase
 {

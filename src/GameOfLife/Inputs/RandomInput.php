@@ -12,12 +12,12 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Fills the board with random set cells
+ * Fills the board with random set cells.
  */
 class RandomInput extends BaseInput
 {
     /**
-     * Adds RandomInputs specific options to the option list
+     * Adds RandomInputs specific options to the option list.
      *
      * @param Getopt $_options  Option list to which the objects options are added
      */
@@ -32,7 +32,7 @@ class RandomInput extends BaseInput
     }
 
     /**
-     * Fills the board with random cells until a specific percentage of the field is filled
+     * Fills the board with random cells until a specific percentage of the field is filled.
      *
      * @param Board $_board     The Board
      * @param Getopt $_options  Options (fillPercent)

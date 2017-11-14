@@ -9,7 +9,7 @@
 namespace GameOfLife;
 
 /**
- * Stores the configuration and the logic of a game of life simulation
+ * Stores the configuration and the logic of a game of life simulation.
  *
  * call calculateStep() to calculate one game step for the entire board
  * call isFinished() to check whether the board is finished
@@ -54,7 +54,7 @@ class Board
     }
 
     /**
-     * Converts the board to string
+     * Converts the board to string.
      *
      * @return string   A string representing the board
      */
@@ -80,7 +80,7 @@ class Board
     // Getters and Setters
 
     /**
-     * Returns current Board
+     * Returns current Board.
      *
      * @return array   Current board
      */
@@ -90,7 +90,7 @@ class Board
     }
 
     /**
-     * Sets current board
+     * Sets current board.
      *
      * @param array $_currentBoard   Current board
      */
@@ -100,7 +100,7 @@ class Board
     }
 
     /**
-     * Returns the current game step
+     * Returns the current game step.
      *
      * @return int  Current game step
      */
@@ -110,7 +110,7 @@ class Board
     }
 
     /**
-     * Sets the current game step
+     * Sets the current game step.
      *
      * @param int $_gameStep Current game step
      */
@@ -120,7 +120,7 @@ class Board
     }
 
     /**
-     * Returns the border type
+     * Returns the border type.
      *
      * @return bool     Border type
      *                      true: The border is made of cells that are constantly dead
@@ -132,7 +132,7 @@ class Board
     }
 
     /**
-     * Sets the border type
+     * Sets the border type.
      *
      * @param bool $_hasBorder   Border type
      *                              true: The border is made of cells that are constantly dead
@@ -144,7 +144,7 @@ class Board
     }
 
     /**
-     * Returns the board height
+     * Returns the board height.
      *
      * @return int  Board height
      */
@@ -154,7 +154,7 @@ class Board
     }
 
     /**
-     * Sets the board height
+     * Sets the board height.
      *
      * @param int $_height   Board height
      */
@@ -164,7 +164,7 @@ class Board
     }
 
     /**
-     * Returns the history of boards
+     * Returns the history of boards.
      *
      * @return array   History of boards
      */
@@ -174,7 +174,7 @@ class Board
     }
 
     /**
-     * Sets the history of boards
+     * Sets the history of boards.
      *
      * @param array $_historyOfBoards    History of boards
      */
@@ -184,7 +184,7 @@ class Board
     }
 
     /**
-     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps
+     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps.
      *
      * @return int   Maximum amount of game steps
      */
@@ -194,7 +194,7 @@ class Board
     }
 
     /**
-     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps
+     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps.
      *
      * @param int $_maxSteps     Maximum amount of game steps
      */
@@ -204,7 +204,7 @@ class Board
     }
 
     /**
-     * Returns the rule set
+     * Returns the rule set.
      *
      * @return RuleSet  Death/Birth rules of the current board
      */
@@ -214,7 +214,7 @@ class Board
     }
 
     /**
-     * Sets the rule set
+     * Sets the rule set.
      *
      * @param RuleSet $_rules    Death/Birth rules of the current board
      */
@@ -224,7 +224,7 @@ class Board
     }
 
     /**
-     * Returns the board width
+     * Returns the board width.
      *
      * @return int  Board width
      */
@@ -234,7 +234,7 @@ class Board
     }
 
     /**
-     * Sets the board width
+     * Sets the board width.
      *
      * @param int $_width    Board width
      */
@@ -246,7 +246,8 @@ class Board
 
 
     /**
-     * Adds a board to the history of boards
+     * Adds a board to the history of boards.
+     *
      * The history of boards stores the last 15 boards of a game
      *
      * @param bool[][] $_board  The board that will be added to the history of boards
@@ -258,7 +259,7 @@ class Board
     }
 
     /**
-     * Calculates a single step of the board
+     * Calculates a single step of the board.
      *
      *   - Calculates the new cell state for each cell
      *   - Adds last board to history of boards
@@ -286,7 +287,7 @@ class Board
     }
 
     /**
-     * Returns the total amount of living cells on the board
+     * Returns the total amount of living cells on the board.
      *
      * @return int      Amount of living cells
      */
@@ -301,7 +302,7 @@ class Board
     }
 
     /**
-     * Returns the amount of living neighbour cells of a cell
+     * Returns the amount of living neighbour cells of a cell.
      *
      * @param int $_x   X-Coordinate of the cell that is inspected
      * @param int $_y   Y-Coordinate of the cell that is inspected
@@ -359,7 +360,7 @@ class Board
     }
 
     /**
-     * Calculates and returns the center of the board
+     * Calculates and returns the center of the board.
      *
      * @return int[][]  Coordinates of the center (array structure: [["x"] => X-Coordinate, ["y"] => Y-Coordinate])
      */
@@ -372,7 +373,7 @@ class Board
     }
 
     /**
-     * Returns the status of a specific field
+     * Returns the status of a specific field.
      *
      * @param int $_x   X-Coordinate of the field
      * @param int $_y   Y-Coordinate of the field
@@ -385,7 +386,7 @@ class Board
     }
 
     /**
-     * Returns the percentage of cells that are alive
+     * Returns the percentage of cells that are alive.
      *
      * @return float    Fill percentage
      */
@@ -395,7 +396,7 @@ class Board
     }
 
     /**
-     * Calculate the new cell state based on the current cell state and the amount of living neighbours
+     * Calculate the new cell state based on the current cell state and the amount of living neighbours.
      *
      * Cell states:
      *
@@ -440,7 +441,7 @@ class Board
     }
 
     /**
-     * Returns an empty board
+     * Returns an empty board.
      *
      * Uses the height attribute of this board to determine the amount of nested arrays
      *
@@ -459,7 +460,7 @@ class Board
     }
 
     /**
-     * Checks whether the board is finished
+     * Checks whether the board is finished.
      *
      * The board is finished when either:
      *   - all cells are dead
@@ -486,7 +487,7 @@ class Board
     }
 
     /**
-     * Resets the current board to an empty board
+     * Resets the current board to an empty board.
      */
     public function resetCurrentBoard()
     {

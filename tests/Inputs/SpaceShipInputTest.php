@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\SpaceShipInput works as expected
+ * Checks whether \Input\SpaceShipInput works as expected.
  */
 class SpaceShipInputTest extends TestCase
 {

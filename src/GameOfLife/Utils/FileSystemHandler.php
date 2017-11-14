@@ -9,7 +9,7 @@
 namespace Utils;
 
 /**
- * Handles directory and file creation/deletion
+ * Handles directory and file creation/deletion.
  *
  * @package Output\Helpers
  */
@@ -23,7 +23,7 @@ class FileSystemHandler
     const ERROR_FILE_NOT_EXISTS = 5;
 
     /**
-     * Creates a directory if it doesn't exist yet
+     * Creates a directory if it doesn't exist yet.
      *
      * @param string $_directoryPath    The directory path
      *
@@ -41,7 +41,7 @@ class FileSystemHandler
     }
 
     /**
-     * Deletes a directory
+     * Deletes a directory.
      *
      * @param string $_directoryPath        The directory path
      * @param bool $_deleteWhenNotEmpty     If set to true all files inside the directory will be deleted
@@ -77,7 +77,7 @@ class FileSystemHandler
     }
 
     /**
-     * Deletes a file
+     * Deletes a file.
      *
      * @param string $_filePath    Path to the file that shall be deleted
      *
@@ -94,7 +94,7 @@ class FileSystemHandler
     }
 
     /**
-     * Read text from file
+     * Read text from file.
      *
      * @param string $_filePath     The file path
      *
@@ -107,7 +107,7 @@ class FileSystemHandler
     }
 
     /**
-     * Write text to file
+     * Write text to file.
      *
      * @param string $_filePath         The file path
      * @param string $_fileName         The name of the new file
@@ -132,7 +132,7 @@ class FileSystemHandler
     }
 
     /**
-     * Returns an array of files in a directory
+     * Returns an array of files in a directory.
      *
      * @param string $_filePath     Directory of which a file list shall be returned
      * @param string $_fileEnding   File type (optional)

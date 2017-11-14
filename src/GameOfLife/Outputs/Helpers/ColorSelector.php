@@ -9,7 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Parses color selections
+ * Parses color selections.
  *
  * Accepts either RGB values or predefined color names (e.g. "red", "green" or "blue")
  *
@@ -18,7 +18,7 @@ namespace Output\Helpers;
 class ColorSelector
 {
     /**
-     * Parses a user input color and returns the selected color as ImageColor object
+     * Parses a user input color and returns the selected color as ImageColor object.
      *
      * @param String $_colorInput   User input
      *
@@ -73,7 +73,7 @@ class ColorSelector
     }
 
     /**
-     * Checks whether the color amount is less than 0 or more than 255 and adjusts the color accordingly
+     * Checks whether the color amount is less than 0 or more than 255 and adjusts the color accordingly.
      *
      * @param int $_colorAmount     Amount of red, green or blue
      *

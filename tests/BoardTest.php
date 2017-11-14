@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \GameOfLife\Board works as expected
+ * Checks whether \GameOfLife\Board works as expected.
  *
  * @covers \GameOfLife\Board
  */
@@ -426,11 +426,11 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\Board::calculateStep()
-     *
-     * Checks whether border passthrough and solid work as expected
+     * Checks whether border passthrough and solid work as expected.
      *
      * Places a 3 x 1 Blinker next to the right border of the board and checks the game step calculation results
+     *
+     * @covers \GameOfLife\Board::calculateStep()
      */
     public function testCanChangeBorderType()
     {

@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * BaseInput from which all other inputs must inherit
+ * BaseInput from which all other inputs must inherit.
  *
  * addOptions() Adds options to a Getopt object
  * fillBoard() Fills the board with cells
@@ -20,7 +20,7 @@ use Ulrichsg\Getopt;
 class BaseInput
 {
     /**
-     * Adds object specific options
+     * Adds object specific options.
      *
      * @param Getopt $_options     Option list to which the objects options are added
      *
@@ -31,7 +31,7 @@ class BaseInput
     }
 
     /**
-     * Fills a given board with cells
+     * Fills a given board with cells.
      *
      * @param Board $_board       The board which shall be filled with cells
      * @param Getopt $_options    Object specific options (e.g. posX, posY, fillPercent)

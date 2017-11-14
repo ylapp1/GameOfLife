@@ -9,7 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Stores ffmpeg configuration and generates a usable command
+ * Stores ffmpeg configuration and generates a usable command.
  *
  * @package Output
  */
@@ -31,7 +31,7 @@ class FfmpegHelper
 
 
     /**
-     * Returns the ffmpeg binary path
+     * Returns the ffmpeg binary path.
      *
      * @return string   Path to the ffmpeg binary file
      */
@@ -41,7 +41,7 @@ class FfmpegHelper
     }
 
     /**
-     * Sets the ffmpeg binary path
+     * Sets the ffmpeg binary path.
      *
      * @param string $_binaryPath   Path to the ffmpeg binary file
      */
@@ -51,7 +51,7 @@ class FfmpegHelper
     }
 
     /**
-     * Returns the ffmpeg option list
+     * Returns the ffmpeg option list.
      *
      * @return array    Ffmpeg option list
      */
@@ -61,7 +61,7 @@ class FfmpegHelper
     }
 
     /**
-     * Sets the ffmpeg option list
+     * Sets the ffmpeg option list.
      *
      * @param array $_options   Ffmpeg option list
      */
@@ -72,7 +72,7 @@ class FfmpegHelper
 
 
     /**
-     * Add an option to the option list
+     * Add an option to the option list.
      *
      * @param string $_option   The new option in the format "-<option> <value>"
      */
@@ -82,7 +82,7 @@ class FfmpegHelper
     }
 
     /**
-     * Resets the option list to an empty array
+     * Resets the option list to an empty array.
      */
     public function resetOptions()
     {
@@ -90,7 +90,7 @@ class FfmpegHelper
     }
 
     /**
-     * Generates a ffmpeg command that can be executed by using exec
+     * Generates a ffmpeg command that can be executed by using exec.
      *
      * @param string $_outputPath   Ffmpeg output path
      *

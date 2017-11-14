@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Places a 1x3 blinker on the board
+ * Places a 1x3 blinker on the board.
  *
  * Usage:
  *   - Call addOptions($_options) to add the objects options to the main option list
@@ -31,7 +31,7 @@ class BlinkerInput extends ObjectInput
     }
 
     /**
-     * Places the blinker on the board
+     * Places the blinker on the board.
      *
      * @param Board $_board     The Board
      * @param Getopt $_options  Options (posX, posY)

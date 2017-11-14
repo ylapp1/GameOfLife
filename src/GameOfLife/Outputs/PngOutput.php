@@ -16,14 +16,14 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Saves the boards as .png files
+ * Saves the boards as .png files.
  *
  * @package Output
  */
 class PngOutput extends ImageOutput
 {
     /**
-     * PngOutput constructor
+     * PngOutput constructor.
      */
     public function __construct()
     {
@@ -33,7 +33,7 @@ class PngOutput extends ImageOutput
 
 
     /**
-     * Displays a text to the user that the simulation now starts
+     * Displays a text to the user that the simulation now starts.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -45,7 +45,7 @@ class PngOutput extends ImageOutput
     }
 
     /**
-     * Outputs one game step
+     * Outputs one game step.
      *
      * @param Board $_board     Current board
      */
@@ -56,7 +56,7 @@ class PngOutput extends ImageOutput
     }
 
     /**
-     * Displays a text which tells the user that the simulation is finished
+     * Displays a text which tells the user that the simulation is finished.
      */
     public function finishOutput()
     {

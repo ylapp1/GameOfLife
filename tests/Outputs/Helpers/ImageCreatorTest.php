@@ -14,7 +14,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\Helpers\ImageCreator works as expected
+ * Checks whether \Output\Helpers\ImageCreator works as expected.
  */
 class ImageCreatorTest extends TestCase
 {

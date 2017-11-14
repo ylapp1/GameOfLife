@@ -9,7 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Stores a color for image creator
+ * Stores a color for image creator.
  *
  * @package Output
  */
@@ -34,7 +34,7 @@ class ImageColor
     }
 
     /**
-     * Returns the amount red of the color
+     * Returns the amount red of the color.
      *
      * @return int          Amount red of the color
      */
@@ -44,7 +44,7 @@ class ImageColor
     }
 
     /**
-     * Sets the amount red of the color
+     * Sets the amount red of the color.
      *
      * @param int $_red     Amount red of the color
      */
@@ -54,7 +54,7 @@ class ImageColor
     }
 
     /**
-     * Returns the amount green of the color
+     * Returns the amount green of the color.
      *
      * @return int      Amount green of the color
      */
@@ -64,7 +64,7 @@ class ImageColor
     }
 
     /**
-     * Sets the amount green of the color
+     * Sets the amount green of the color.
      *
      * @param int $_green   Amount green of the color
      */
@@ -74,7 +74,7 @@ class ImageColor
     }
 
     /**
-     * Returns the amount blue of the color
+     * Returns the amount blue of the color.
      *
      * @return int      Amount blue of the color
      */
@@ -84,7 +84,7 @@ class ImageColor
     }
 
     /**
-     * Sets the amount blue of the color
+     * Sets the amount blue of the color.
      *
      * @param int $_blue    Amount blue of the color
      */
@@ -94,7 +94,7 @@ class ImageColor
     }
 
     /**
-     * Returns a color that can be used only on a specific image
+     * Returns a color that can be used only on a specific image.
      *
      * @param resource $_image  The image on which the color will be used
      *

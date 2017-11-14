@@ -16,7 +16,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\PngOutput works as expected
+ * Checks whether \Output\PngOutput works as expected.
  */
 class PNGOutputTest extends TestCase
 {

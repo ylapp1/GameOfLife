@@ -11,7 +11,7 @@ use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\Helpers\ColorSelector works as expected
+ * Checks whether \Output\Helpers\ColorSelector works as expected.
  */
 class ColorSelectorTest extends TestCase
 {

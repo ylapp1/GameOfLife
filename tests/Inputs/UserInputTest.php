@@ -14,7 +14,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\UserInput works as expected
+ * Checks whether \Input\UserInput works as expected.
  */
 class UserInputTest extends TestCase
 {

@@ -9,7 +9,7 @@
 namespace GameOfLife;
 
 /**
- * Stores the birth/death rules for the game of life
+ * Stores the birth/death rules for the game of life.
  */
 class RuleSet
 {
@@ -35,7 +35,7 @@ class RuleSet
     // Getters and Setters
 
     /**
-     * Returns the birth rules
+     * Returns the birth rules.
      *
      * @return array    Amount of living neighbours which will rebirth a dead cell
      */
@@ -45,7 +45,7 @@ class RuleSet
     }
 
     /**
-     * Sets the birth rules
+     * Sets the birth rules.
      *
      * @param array $_birth   Amount of living neighbours which will rebirth a dead cell
      */
@@ -55,7 +55,7 @@ class RuleSet
     }
 
     /**
-     * Returns the death rules
+     * Returns the death rules.
      *
      * @return array    Amount of living neighbours which will kill a living cell
      */
@@ -65,7 +65,7 @@ class RuleSet
     }
 
     /**
-     * Sets the death rules
+     * Sets the death rules.
      *
      * @param array $_death  Amount of living neighbours which will kill a living cell
      */

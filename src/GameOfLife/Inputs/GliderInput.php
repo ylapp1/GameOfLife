@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Places a glider on the board
+ * Places a glider on the board.
  *
  * Usage:
  *   - Call addOptions($_options) to add the objects options to the main option list
@@ -31,7 +31,7 @@ class GliderInput extends ObjectInput
     }
 
     /**
-     * Places the glider on the board
+     * Places the glider on the board.
      *
      * @param Board $_board     The board
      * @param Getopt $_options  Options (posX, posY)

@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\GliderInput works as expected
+ * Checks whether \Input\GliderInput works as expected.
  */
 class GliderInputTest extends TestCase
 {

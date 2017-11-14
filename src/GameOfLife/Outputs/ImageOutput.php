@@ -16,7 +16,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Parent class for all classes that output images or process temporary output images
+ * Parent class for all classes that output images or process temporary output images.
  *
  * @package Output
  */
@@ -30,7 +30,7 @@ class ImageOutput extends BaseOutput
     private $optionPrefix;
 
     /**
-     * ImageOutput constructor
+     * ImageOutput constructor.
      *
      * @param string $_optionPrefix          Prefix for all options of this output
      * @param string $_imageOutputDirectory  The directory in which the images will be saved
@@ -44,7 +44,7 @@ class ImageOutput extends BaseOutput
 
 
     /**
-     * Returns the filesystem handler of this output
+     * Returns the filesystem handler of this output.
      *
      * @return FileSystemHandler    Filesystem handler
      */
@@ -54,7 +54,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Sets the filesystem handler of this output
+     * Sets the filesystem handler of this output.
      *
      * @param FileSystemHandler $_fileSystemHandler     Filesystem handler
      */
@@ -64,7 +64,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Returns the image creator of this output
+     * Returns the image creator of this output.
      *
      * @return ImageCreator     The image creator
      */
@@ -74,7 +74,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Sets the image creator of this output
+     * Sets the image creator of this output.
      *
      * @param ImageCreator $_imageCreator   The image creator
      */
@@ -84,7 +84,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Returns the image output directory
+     * Returns the image output directory.
      *
      * @return string   Image output directory
      */
@@ -94,7 +94,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Sets the image output directory
+     * Sets the image output directory.
      *
      * @param string $_imageOutputDirectory     Image output directory
      */
@@ -104,7 +104,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Returns the option prefix of this image output
+     * Returns the option prefix of this image output.
      *
      * @return string   Option prefix
      */
@@ -114,7 +114,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Sets the option prefix for this image output
+     * Sets the option prefix for this image output.
      *
      * @param string $_optionPrefix     Option prefix
      */
@@ -125,7 +125,7 @@ class ImageOutput extends BaseOutput
 
 
     /**
-     * Adds the image options to the option list
+     * Adds the image options to the option list.
      *
      * @param Getopt $_options     Current option list
      */
@@ -142,7 +142,7 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Initializes the image creator
+     * Initializes the image creator.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board

@@ -11,7 +11,7 @@ namespace Input;
 use Ulrichsg\Getopt;
 
 /**
- * Parent class for classes that place an object (e.g. blinker, glider, spaceship) on the board
+ * Parent class for classes that place an object (e.g. blinker, glider, spaceship) on the board.
  *
  * @package Input
  */
@@ -42,7 +42,7 @@ class ObjectInput extends BaseInput
     // Getters and Setters
 
     /**
-     * Returns the object height
+     * Returns the object height.
      *
      * @return int  Object height
      */
@@ -52,7 +52,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Sets the object height
+     * Sets the object height.
      *
      * @param int $_objectHeight    Object height
      */
@@ -62,7 +62,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Returns the object width
+     * Returns the object width.
      *
      * @return int  Object width
      */
@@ -72,7 +72,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Sets the object width
+     * Sets the object width.
      *
      * @param int $_objectWidth     Object width
      */
@@ -82,7 +82,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Returns the object name
+     * Returns the object name.
      *
      * @return string   Object name
      */
@@ -92,7 +92,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Sets the object name
+     * Sets the object name.
      *
      * @param string $_objectName   Object name
      */
@@ -103,7 +103,7 @@ class ObjectInput extends BaseInput
 
 
     /**
-     * Adds the object specific options (X- and Y-Position) to the option list
+     * Adds the object specific options (X- and Y-Position) to the option list.
      *
      * Uses the objectName attribute to generate a option name and description
      *
@@ -121,7 +121,7 @@ class ObjectInput extends BaseInput
     }
 
     /**
-     * Checks whether the object is out of bounds
+     * Checks whether the object is out of bounds.
      *
      * Uses the class attributes "objectWidth" and "objectHeight" to calculate the object dimensions
      *

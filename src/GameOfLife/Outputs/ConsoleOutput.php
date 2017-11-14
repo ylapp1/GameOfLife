@@ -12,14 +12,14 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Prints boards to the console
+ * Prints boards to the console.
  *
  * @package Output
  */
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * Initializes the output
+     * Initializes the output.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -30,7 +30,7 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Outputs one game step
+     * Outputs one game step.
      *
      * @param Board $_board     Current board
      */
@@ -77,7 +77,7 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Prints a message saying that the simulation is finished
+     * Prints a message saying that the simulation is finished.
      */
     public function finishOutput()
     {

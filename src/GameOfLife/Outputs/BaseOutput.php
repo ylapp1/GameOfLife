@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * BaseOutput from which all other outputs must inherit
+ * BaseOutput from which all other outputs must inherit.
  *
  * addOptions() adds options to a Getopt object
  * startOutput() initializes variables that are necessary for the output
@@ -26,7 +26,7 @@ class BaseOutput
     protected $outputDirectory = __DIR__ . "/../../../Output/";
 
     /**
-     * Returns the output directory of the output
+     * Returns the output directory of the output.
      *
      * @return string   Output directory of the output
      */
@@ -36,7 +36,7 @@ class BaseOutput
     }
 
     /**
-     * Sets the output directory of the output
+     * Sets the output directory of the output.
      *
      * @param string $_outputDirectory      Output directory of the output
      */
@@ -46,7 +46,7 @@ class BaseOutput
     }
 
     /**
-     * Adds output specific options to the option list
+     * Adds output specific options to the option list.
      *
      * @param Getopt $_options     Current option list
      *
@@ -57,7 +57,7 @@ class BaseOutput
     }
 
     /**
-     * Start output
+     * Start output.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -69,7 +69,7 @@ class BaseOutput
     }
 
     /**
-     * Output one game step
+     * Output one game step.
      *
      * @param Board $_board     Current board
      *
@@ -80,7 +80,7 @@ class BaseOutput
     }
 
     /**
-     * Finish output (Display that simulation is finished, write files and delete temporary files)
+     * Finish output (Display that simulation is finished, write files and delete temporary files).
      *
      * @codeCoverageIgnore
      */
@@ -89,7 +89,7 @@ class BaseOutput
     }
 
     /**
-     * Returns a new game id
+     * Returns a new game id.
      *
      * @param string $_outputType    Output Type (PNG, Gif, Video)
      *

@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Utils\FileSystemHandler;
 
 /**
- * Creates an image of a board and returns its output path
+ * Creates an image of a board and returns its output path.
  *
  * @package Output
  */
@@ -28,7 +28,7 @@ class ImageCreator
     private $fileSystemHandler;
 
     /**
-     * Returns the output directory in which ImageCreator saves the images
+     * Returns the output directory in which ImageCreator saves the images.
      *
      * @return string   The base output directory
      */
@@ -38,7 +38,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the base output directory in which ImageCreator saves the images
+     * Sets the base output directory in which ImageCreator saves the images.
      *
      * @param string $_outputPath     The base output directory
      */
@@ -48,7 +48,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the background color of the image
+     * Returns the background color of the image.
      *
      * @return ImageColor   Background color of the image
      */
@@ -58,7 +58,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the background color of the image
+     * Sets the background color of the image.
      *
      * @param ImageColor $_backgroundColor      Background color of the image
      */
@@ -68,7 +68,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the grid color of the image
+     * Returns the grid color of the image.
      *
      * @return ImageColor   Grid color of the image
      */
@@ -78,7 +78,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the grid color of the image
+     * Sets the grid color of the image.
      *
      * @param ImageColor $_gridColor    Grid color of the image
      */
@@ -88,7 +88,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the cell color of the image
+     * Returns the cell color of the image.
      *
      * @return ImageColor   Cell color of the image
      */
@@ -98,7 +98,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the cell color of the image
+     * Sets the cell color of the image.
      *
      * @param ImageColor $_cellAliveColor   Cell color of the image
      */
@@ -108,7 +108,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the cell size of the image
+     * Returns the cell size of the image.
      *
      * @return int  The cell size of the image
      */
@@ -118,7 +118,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the cell size of the image
+     * Sets the cell size of the image.
      *
      * @param int $_cellSize    The cell size of the image
      */
@@ -128,7 +128,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator)
+     * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator).
      *
      * @return resource     The base image for all images
      */
@@ -138,7 +138,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the base image for all images
+     * Sets the base image for all images.
      *
      * @param resource $_baseImage  The base image for all images
      */
@@ -148,7 +148,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the cell image for all images (a smiley with the colors that were defined in the ImageCreator)
+     * Returns the cell image for all images (a smiley with the colors that were defined in the ImageCreator).
      *
      * @return resource     The cell image for all images
      */
@@ -158,7 +158,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the cell image for all images
+     * Sets the cell image for all images.
      *
      * @param resource $_cellImage  The cell image for all images
      */
@@ -168,7 +168,7 @@ class ImageCreator
     }
 
     /**
-     * Returns the filesystem handler of this ImageCreator
+     * Returns the filesystem handler of this ImageCreator.
      *
      * @return FileSystemHandler    The filesystem handler
      */
@@ -178,7 +178,7 @@ class ImageCreator
     }
 
     /**
-     * Sets the filesystem handler of this ImageCreator
+     * Sets the filesystem handler of this ImageCreator.
      *
      * @param FileSystemHandler $_fileSystemHandler     The filesystem handler
      */
@@ -263,7 +263,7 @@ class ImageCreator
     }
 
     /**
-     * Creates and returns an image of the current board
+     * Creates and returns an image of the current board.
      *
      * @param Board $_board                 Current board
      * @param string $_imageType            Type of Image that shall be returned

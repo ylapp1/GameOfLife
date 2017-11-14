@@ -11,7 +11,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\ObjectInput works as expected
+ * Checks whether \Input\ObjectInput works as expected.
  */
 class ObjectInputTest extends TestCase
 {

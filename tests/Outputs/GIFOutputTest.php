@@ -16,7 +16,7 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\GifOutput works as expected
+ * Checks whether \Output\GifOutput works as expected.
  */
 class GIFOutputTest extends TestCase
 {

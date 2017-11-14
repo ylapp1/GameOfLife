@@ -16,7 +16,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Checks whether \Output\ImageOutput works as expected
+ * Checks whether \Output\ImageOutput works as expected.
  */
 class ImageOutputTest extends TestCase
 {

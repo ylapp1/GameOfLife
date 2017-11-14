@@ -14,7 +14,7 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Prompts the user to input which cells shall be set/unset
+ * Prompts the user to input which cells shall be set/unset.
  *
  * Asks for coordinates which must be entered in the format "x,y"
  * The user can use the following commands while editing:
@@ -31,7 +31,7 @@ class UserInput extends BaseInput
 
 
     /**
-     * Returns the template directory in which UserInput will create the folder Custom where it saves custom templates
+     * Returns the template directory in which UserInput will create the folder Custom where it saves custom templates.
      *
      * @return string   Template directory
      */
@@ -41,7 +41,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Sets the template directory
+     * Sets the template directory.
      *
      * @param string $_templateDirectory    Template directory
      */
@@ -51,7 +51,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Adds UserInputs specific options to the option list
+     * Adds UserInputs specific options to the option list.
      *
      * @param Getopt $_options  Option list to which the objects options are added
      */
@@ -64,7 +64,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Catches User Inputs from input source
+     * Catches User Inputs from input source.
      *
      * @param string $_inputSource  Input source (e.g. php://stdin)
      * @return string   User Input
@@ -79,7 +79,8 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Catches input from keyboard to create an own generation
+     * Catches input from keyboard to create an own generation.
+     *
      * Put Numbers in like 5,5 to set to true
      *
      * @param \GameOfLife\Board $_board     The board which will be filled
@@ -112,7 +113,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Converts user input to int and checks whether coordinate is inside field borders
+     * Converts user input to int and checks whether coordinate is inside field borders.
      *
      * @param string $_inputCoordinate  User input string (a single coordinate)
      * @param int $_minValue            The lowest value that the input coordinate may be
@@ -133,7 +134,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Processes the user input
+     * Processes the user input.
      *
      * @param String $_input    User input
      * @param Board $_board     Game Board
@@ -231,7 +232,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Print the board to the console and highlights the cell at ($_curX | $_curY) if both values are set
+     * Print the board to the console and highlights the cell at ($_curX | $_curY) if both values are set.
      *
      * @param Board $_board     Current board
      * @param Integer $_curX    X-Coordinate of the cell that shall be highlighted
@@ -299,7 +300,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Saves current board to a custom template file
+     * Saves current board to a custom template file.
      *
      * @param string $_templateName    User input in the format "<save> <templateName>"
      * @param Board $_board            Current board
@@ -329,7 +330,7 @@ class UserInput extends BaseInput
     }
 
     /**
-     * Sets a field on the board and displays the updated board or displays an error in case of invalid coordinates
+     * Sets a field on the board and displays the updated board or displays an error in case of invalid coordinates.
      *
      * @param Board $_board                 The board
      * @param String $_inputCoordinates     The user input coordinates in the format "x,y"

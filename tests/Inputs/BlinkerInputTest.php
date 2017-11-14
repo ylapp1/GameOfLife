@@ -13,7 +13,7 @@ use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\BlinkerInput works as expected
+ * Checks whether \Input\BlinkerInput works as expected.
  */
 class BlinkerInputTest extends TestCase
 {
