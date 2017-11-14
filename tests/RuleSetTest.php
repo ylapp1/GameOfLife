@@ -10,7 +10,7 @@ use GameOfLife\RuleSet;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RuleSetTest
+ * Checks whether \GameOfLife\RuleSet works as expected.
  */
 class RuleSetTest extends TestCase
 {
@@ -47,7 +47,7 @@ class RuleSetTest extends TestCase
      * @param array $_rulesBirth    Birth rules
      * @param array $_rulesDeath    Death rules
      */
-    public function testCanSetAttributes($_rulesBirth, $_rulesDeath)
+    public function testCanSetAttributes(array $_rulesBirth, array $_rulesDeath)
     {
         $this->ruleSet->setBirth($_rulesBirth);
         $this->ruleSet->setDeath($_rulesDeath);

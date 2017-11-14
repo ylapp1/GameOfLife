@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\RandomInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\RandomInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class BlinkerInputTest
+ * Checks whether \Input\RandomInput works as expected.
  */
 class RandomInputTest extends TestCase
 {
@@ -52,7 +52,7 @@ class RandomInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($randomInputOptions);
-        $this->input->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -76,7 +76,8 @@ class RandomInputTest extends TestCase
      * @covers \Input\RandomInput::fillBoard()
      *
      * @param int $_fillPercentage  Fill Percentage
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError   True: Expects error message
+     *                              False: Expects no error message
      * @param string $_errorMessage The expected error message
      */
     public function testCanFillBoardCustomPercentage(int $_fillPercentage, bool $_expectsError, string $_errorMessage = null)
@@ -87,7 +88,7 @@ class RandomInputTest extends TestCase
                           ->willReturn($_fillPercentage);
 
         if ($_expectsError) $this->expectOutputString($_errorMessage);
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
@@ -100,6 +101,7 @@ class RandomInputTest extends TestCase
     {
         return [
             "-1% filled" => ["-1", true, "Error: There can't be less living cells than 0% of the fields.\n"],
+            "0% filled" => ["0", false],
             "20% filled" => ["20", false],
             "50% filled" => ["50", false],
             "76% filled" => ["76", false],

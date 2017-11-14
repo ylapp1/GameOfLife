@@ -8,28 +8,18 @@
 
 namespace Output;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 
 /**
- * Class ConsoleOutput
+ * Prints boards to the console.
  *
  * @package Output
  */
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * add output specific options to the option list
-     *
-     * @param Getopt $_options     Current option list
-     * @codeCoverageIgnore
-     */
-    public function addOptions(Getopt $_options)
-    {
-    }
-
-    /**
-     * Start output
+     * Initializes the output.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
@@ -40,7 +30,7 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Output one game step
+     * Outputs one game step.
      *
      * @param Board $_board     Current board
      */
@@ -87,10 +77,10 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Finish output (write to file)
+     * Prints a message saying that the simulation is finished.
      */
     public function finishOutput()
     {
-        echo "\nSimulation finished. All cells are dead or a repeating pattern was detected.\n\n";
+        echo "\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
     }
 }

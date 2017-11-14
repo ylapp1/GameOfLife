@@ -10,7 +10,7 @@ use Output\Helpers\FfmpegHelper;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class FfmpegHelperTest
+ * Checks whether \Output\Helpers\FfmpegHelper works as expected.
  */
 class FfmpegHelperTest extends TestCase
 {
@@ -27,6 +27,30 @@ class FfmpegHelperTest extends TestCase
         unset($this->ffmpegHelper);
     }
 
+
+    /**
+     * @dataProvider constructionProvider
+     * @covers \Output\Helpers\FfmpegHelper::__construct()
+     *
+     * @param string $_binaryPath   The binary path
+     */
+    public function testCanBeConstructed(string $_binaryPath)
+    {
+        $input = new FfmpegHelper($_binaryPath);
+
+        $this->assertEquals($_binaryPath, $input->binaryPath());
+    }
+
+    public function constructionProvider()
+    {
+        return [
+            ["testPath"],
+            ["I/am/a/file/path"],
+            ["Test/this/path"],
+            ["Special/File/Path (Not Really)"]
+        ];
+    }
+
     /**
      * @dataProvider setAttributesProvider
      *
@@ -34,40 +58,26 @@ class FfmpegHelperTest extends TestCase
      * @covers \Output\Helpers\FfmpegHelper::binaryPath()
      * @covers \Output\Helpers\FfmpegHelper::setOptions()
      * @covers \Output\Helpers\FfmpegHelper::options()
-     * @covers \Output\Helpers\FfmpegHelper::setOutputPath()
-     * @covers \Output\Helpers\FfmpegHelper::outputPath()
      *
      * @param string $_binaryPath   Binary path
      * @param array $_options       Option list
-     * @param string $_outputPath   Output path
      */
-    public function testCanSetAttributes(string $_binaryPath, array $_options, string $_outputPath)
+    public function testCanSetAttributes(string $_binaryPath, array $_options)
     {
         $this->ffmpegHelper->setBinaryPath($_binaryPath);
         $this->ffmpegHelper->setOptions($_options);
-        $this->ffmpegHelper->setOutputPath($_outputPath);
 
         $this->assertEquals($_binaryPath, $this->ffmpegHelper->binaryPath());
         $this->assertEquals($_options, $this->ffmpegHelper->options());
-        $this->assertEquals($_outputPath, $this->ffmpegHelper->outputPath());
     }
 
     public function setAttributesProvider()
     {
         return [
-            ["sdfsdf", [0, 1, 2, 3], "adfkgjdasgfk"],
-            ["dflgkjsdlfgs", [1, 2, 3], "kajdfhldsf"],
-            ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"], "Hello world!"]
+            ["sdfsdf", [0, 1, 2, 3]],
+            ["dflgkjsdlfgs", [1, 2, 3]],
+            ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"]]
         ];
-    }
-
-    /**
-     * @covers \Output\Helpers\FfmpegHelper::__construct
-     */
-    public function testCanBeConstructed()
-    {
-        $ffmpegHelper = new FfmpegHelper("test");
-        $this->assertEquals("test", $ffmpegHelper->binaryPath());
     }
 
     /**
@@ -92,6 +102,9 @@ class FfmpegHelperTest extends TestCase
         $this->assertEquals(0, count($this->ffmpegHelper->options()));
     }
 
+    /**
+     * @covers \Output\Helpers\FfmpegHelper::generateCommand()
+     */
     public function testCanGenerateCommand()
     {
         $this->ffmpegHelper->addOption("myTest");

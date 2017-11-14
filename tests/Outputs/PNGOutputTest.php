@@ -8,17 +8,19 @@
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Utils\FileSystemHandler;
-use Output\PNGOutput;
+use Output\PngOutput;
+use Output\Helpers\ImageColor;
+use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class PNGOutputTest
+ * Checks whether \Output\PngOutput works as expected.
  */
 class PNGOutputTest extends TestCase
 {
-    /** @var PNGOutput $output */
+    /** @var PngOutput $output */
     private $output;
     /** @var Board $board */
     private $board;
@@ -27,11 +29,13 @@ class PNGOutputTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $outputDirectory = __DIR__ . "/../../Output/";
+    private $outputDirectory = __DIR__ . "/../PNGOutputTest/";
 
     protected function setUp()
     {
-        $this->output = new PNGOutput();
+        $this->output = new PngOutput();
+        $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setImageOutputDirectory($this->outputDirectory . "/PNG/Game_1/");
         $this->fileSystemHandler = new FileSystemHandler();
 
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -51,39 +55,71 @@ class PNGOutputTest extends TestCase
         unset($this->fileSystemHandler);
     }
 
+
     /**
-     * @covers \Output\PNGOutput::addOptions()
+     * @covers \Output\PngOutput::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $output = new PngOutput();
+
+        $this->assertEquals("png", $output->optionPrefix());
+        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/PNG/"));
+    }
+
+    /**
+     * @covers \Output\PngOutput::fileSystemHandler()
+     * @covers \Output\PngOutput::setFileSystemHandler()
+     * @covers \Output\PngOutput::imageCreator()
+     * @covers \Output\PngOutput::setImageCreator()
+     */
+    public function testCanSetAttributes()
+    {
+        $fileSystemHandler = new FileSystemHandler();
+        $colorBlack = new ImageColor(0, 0, 0);
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack, "tmp");
+
+        $this->output->setFileSystemHandler($fileSystemHandler);
+        $this->output->setImageCreator($imageCreator);
+
+        $this->assertEquals($fileSystemHandler,  $this->output->fileSystemHandler());
+        $this->assertEquals($imageCreator, $this->output->imageCreator());
+    }
+
+    /**
+     * @covers \Output\PngOutput::addOptions()
      */
     public function testCanAddOptions()
     {
         $pngOutputOptions = array(
-            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels for PNG outputs"),
-            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell for PNG outputs"),
-            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Color of the background for PNG outputs"),
-            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Color of the grid for PNG outputs")
+            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
         );
 
         $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($pngOutputOptions);
+                          ->method("addOptions")
+                          ->with($pngOutputOptions);
 
-        $this->output->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
 
     /**
-     * @covers \Output\PNGOutput::startOutput()
+     * @covers \Output\PngOutput::startOutput()
      */
     public function testCanCreateOutputDirectory()
     {
-        $this->assertEquals(false, file_exists($this->outputDirectory));
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting simulation ...\n\n");
+        $this->expectOutputString("Starting PNG Output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
-        $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0"));
+        $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1"));
     }
 
     /**
-     * @covers \Output\PNGOutput::outputBoard()
+     * @covers \Output\PngOutput::outputBoard()
      */
     public function testCanCreatePNG()
     {
@@ -96,16 +132,16 @@ class PNGOutputTest extends TestCase
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $this->board->calculateStep();
-            $this->assertEquals(true, file_exists($this->outputDirectory . "PNG/Game_0/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1/" . $i . ".png"));
         }
     }
 
     /**
-     * @covers \Output\PNGOutput::finishOutput()
+     * @covers \Output\PngOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\n\nSimulation finished. All cells are dead or a repeating pattern was detected.");
+        $this->expectOutputString("\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n");
         $this->output->finishOutput();
     }
 }

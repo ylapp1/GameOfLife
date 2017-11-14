@@ -6,18 +6,18 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Output\BaseOutput;
-use Output\PNGOutput;
-use Output\VideoOutput;
-use Output\GIFOutput;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Output\BaseOutput;
+use Output\PngOutput;
+use Output\VideoOutput;
+use Output\GifOutput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class BaseOutputTest
+ * Checks whether \Output\BaseOutput works as expected.
  */
 class BaseOutputTest extends TestCase
 {
@@ -27,18 +27,22 @@ class BaseOutputTest extends TestCase
     private $board;
     /** @var FileSystemHandler */
     private $fileSystemHandler;
+    /** @var string */
+    private $outputDirectory = __DIR__ . "/../BaseOutputTest/";
 
     protected function setUp()
     {
         $this->output = new BaseOutput();
+        $this->output->setOutputDirectory($this->outputDirectory);
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(10, 10, 50, true, $rules);
         $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler->createDirectory($this->outputDirectory);
     }
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->output->outputDirectory(), true);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
         unset($this->output);
         unset($this->board);
         unset($this->fileSystemHandler);
@@ -59,18 +63,23 @@ class BaseOutputTest extends TestCase
      */
     public function testCanGetNewGameId()
     {
-        $pngOutput = new PNGOutput();
-        $gifOutput = new GIFOutput();
+        $pngOutput = new PngOutput();
+        $pngOutput->setOutputDirectory($this->outputDirectory);
+        $pngOutput->setImageOutputDirectory($this->outputDirectory . "/PNG/Game_1");
+        $gifOutput = new GifOutput();
+        $gifOutput->setOutputDirectory($this->outputDirectory);
+        $gifOutput->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $videoOutput = new VideoOutput();
+        $videoOutput->setOutputDirectory($this->outputDirectory);
+        $videoOutput->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
 
-        $this->assertEquals(0, $this->output->getNewGameId("PNG"));
-        $this->assertEquals(0, $this->output->getNewGameId("Gif"));
-        $this->assertEquals(0, $this->output->getNewGameId("Video"));
+        $this->assertEquals(1, $this->output->getNewGameId("PNG"));
+        $this->assertEquals(1, $this->output->getNewGameId("Gif"));
+        $this->assertEquals(1, $this->output->getNewGameId("Video"));
 
         $pngOutput->startOutput(new Getopt(), $this->board);
 
-
-        $outputRegex = "Simulation finished. All cells are dead or a repeating pattern was detected.\n";
+        $outputRegex = "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n\n";
         $outputRegex .= "Starting GIF creation. One moment please...\n";
         $outputRegex .= "GIF creation complete.";
 
@@ -79,12 +88,12 @@ class BaseOutputTest extends TestCase
         $gifOutput->outputBoard($this->board);
         $gifOutput->finishOutput();
 
-        /*$videoOutput->startOutput(new Getopt(), $this->board);
+        $videoOutput->startOutput(new Getopt(), $this->board);
         $videoOutput->outputBoard($this->board);
         $videoOutput->finishOutput();
-*/
-        $this->assertEquals(1, $this->output->getNewGameId("PNG"));
-        $this->assertEquals(1, $this->output->getNewGameId("Gif"));
-        $this->assertEquals(0, $this->output->getNewGameId("Video"));
+
+        $this->assertEquals(2, $this->output->getNewGameId("PNG"));
+        $this->assertEquals(2, $this->output->getNewGameId("Gif"));
+        //$this->assertEquals(2, $this->output->getNewGameId("Video"));
     }
 }

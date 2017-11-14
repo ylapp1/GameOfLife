@@ -10,7 +10,7 @@ use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ImageColorTest
+ * Checks whether \Output\Helpers\ImageColor works as expected.
  */
 class ImageColorTest extends TestCase
 {
@@ -21,9 +21,9 @@ class ImageColorTest extends TestCase
      * @covers \Output\Helpers\ImageColor::green()
      * @covers \Output\Helpers\ImageColor::blue()
      *
-     * @param int $_red
-     * @param int $_green
-     * @param int $_blue
+     * @param int $_red     Amount red
+     * @param int $_green   Amount green
+     * @param int $_blue    Amount blue
      */
     public function testCanBeConstructed(int $_red, int $_green, int $_blue)
     {
@@ -43,9 +43,9 @@ class ImageColorTest extends TestCase
      * @covers \Output\Helpers\ImageColor::setBlue()
      * @covers \Output\Helpers\ImageColor::blue()
      *
-     * @param int $_red
-     * @param int $_green
-     * @param int $_blue
+     * @param int $_red     Amount red
+     * @param int $_green   Amount green
+     * @param int $_blue    Amount blue
      */
     public function testCanSetAttributes(int $_red, int $_green, int $_blue)
     {
@@ -81,9 +81,9 @@ class ImageColorTest extends TestCase
     /**
      * @dataProvider returnColorProvider
      *
-     * @param int $_red
-     * @param int $_green
-     * @param int $_blue
+     * @param int $_red     Amount red
+     * @param int $_green   Amount green
+     * @param int $_blue    Amount blue
      */
     public function testCanReturnColor(int $_red, int $_green, int $_blue)
     {

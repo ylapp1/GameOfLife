@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\GliderInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\GliderInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class GliderInputTest
+ * Checks whether \Input\GliderInput works as expected.
  */
 class GliderInputTest extends TestCase
 {
@@ -48,22 +48,7 @@ class GliderInputTest extends TestCase
         $input = new GliderInput();
         $this->assertEquals(3, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
-    }
-
-    /**
-     * @covers \Input\GliderInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $gliderOptions = array(
-            array(null, "gliderPosX", Getopt::REQUIRED_ARGUMENT, "X position of the glider"),
-            array(null, "gliderPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the glider")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-            ->method("addOptions")
-            ->with($gliderOptions);
-        $this->input->addOptions($this->optionsMock);
+        $this->assertEquals("glider", $input->objectName());
     }
 
     /**
@@ -103,17 +88,19 @@ class GliderInputTest extends TestCase
      *
      * @param int $_gliderPosX     X-Position of the top left corner of the glider
      * @param int $_gliderPosY     Y-Position of the top left corner of the glider
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError  True: Expects error message
+     *                             False: Expects no error message
      */
     public function testCanFillBoardWithCustomPositions(int $_gliderPosX, int $_gliderPosY, bool $_expectsError)
     {
-        $this->optionsMock->method("getOption")
-            ->withConsecutive(["gliderPosX"], ["gliderPosX"], ["gliderPosY"], ["gliderPosY"])
-            ->willReturn($_gliderPosX, $_gliderPosX, $_gliderPosY, $_gliderPosY);
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
+                          ->withConsecutive(["gliderPosX"], ["gliderPosX"], ["gliderPosY"], ["gliderPosY"])
+                          ->willReturn($_gliderPosX, $_gliderPosX, $_gliderPosY, $_gliderPosY);
 
         if ($_expectsError) $this->expectOutputString("Error: Glider exceeds field borders.\n");
 
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {

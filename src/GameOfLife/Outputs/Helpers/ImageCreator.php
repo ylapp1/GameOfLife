@@ -12,42 +12,45 @@ use GameOfLife\Board;
 use Utils\FileSystemHandler;
 
 /**
- * Class ImageCreator
- *
- * Create an image of a board and return it
+ * Creates an image of a board and returns its output path.
  *
  * @package Output
  */
 class ImageCreator
 {
-    private $basePath = __DIR__ . "/../../../../Output/";
+    private $outputPath;
     private $backgroundColor;
     private $gridColor;
     private $cellAliveColor;
     private $cellSize;
-    private $gameFolder;
     private $baseImage;
     private $cellImage;
     private $fileSystemHandler;
 
     /**
-     * @return string
+     * Returns the output directory in which ImageCreator saves the images.
+     *
+     * @return string   The base output directory
      */
-    public function basePath(): string
+    public function outputPath(): string
     {
-        return $this->basePath;
+        return $this->outputPath;
     }
 
     /**
-     * @param string $basePath
+     * Sets the base output directory in which ImageCreator saves the images.
+     *
+     * @param string $_outputPath     The base output directory
      */
-    public function setBasePath(string $basePath)
+    public function setOutputPath(string $_outputPath)
     {
-        $this->basePath = $basePath;
+        $this->outputPath = $_outputPath;
     }
 
     /**
-     * @return ImageColor
+     * Returns the background color of the image.
+     *
+     * @return ImageColor   Background color of the image
      */
     public function backgroundColor(): ImageColor
     {
@@ -55,15 +58,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $backgroundColor
+     * Sets the background color of the image.
+     *
+     * @param ImageColor $_backgroundColor      Background color of the image
      */
-    public function setBackgroundColor(ImageColor $backgroundColor)
+    public function setBackgroundColor(ImageColor $_backgroundColor)
     {
-        $this->backgroundColor = $backgroundColor;
+        $this->backgroundColor = $_backgroundColor;
     }
 
     /**
-     * @return ImageColor
+     * Returns the grid color of the image.
+     *
+     * @return ImageColor   Grid color of the image
      */
     public function gridColor(): ImageColor
     {
@@ -71,15 +78,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $gridColor
+     * Sets the grid color of the image.
+     *
+     * @param ImageColor $_gridColor    Grid color of the image
      */
-    public function setGridColor(ImageColor $gridColor)
+    public function setGridColor(ImageColor $_gridColor)
     {
-        $this->gridColor = $gridColor;
+        $this->gridColor = $_gridColor;
     }
 
     /**
-     * @return ImageColor
+     * Returns the cell color of the image.
+     *
+     * @return ImageColor   Cell color of the image
      */
     public function cellAliveColor(): ImageColor
     {
@@ -87,15 +98,19 @@ class ImageCreator
     }
 
     /**
-     * @param ImageColor $cellAliveColor
+     * Sets the cell color of the image.
+     *
+     * @param ImageColor $_cellAliveColor   Cell color of the image
      */
-    public function setCellAliveColor(ImageColor $cellAliveColor)
+    public function setCellAliveColor(ImageColor $_cellAliveColor)
     {
-        $this->cellAliveColor = $cellAliveColor;
+        $this->cellAliveColor = $_cellAliveColor;
     }
 
     /**
-     * @return int
+     * Returns the cell size of the image.
+     *
+     * @return int  The cell size of the image
      */
     public function cellSize(): int
     {
@@ -103,31 +118,19 @@ class ImageCreator
     }
 
     /**
-     * @param int $cellSize
+     * Sets the cell size of the image.
+     *
+     * @param int $_cellSize    The cell size of the image
      */
-    public function setCellSize(int $cellSize)
+    public function setCellSize(int $_cellSize)
     {
-        $this->cellSize = $cellSize;
+        $this->cellSize = $_cellSize;
     }
 
     /**
-     * @return string
-     */
-    public function gameFolder(): string
-    {
-        return $this->gameFolder;
-    }
-
-    /**
-     * @param string $gameFolder
-     */
-    public function setGameFolder(string $gameFolder)
-    {
-        $this->gameFolder = $gameFolder;
-    }
-
-    /**
-     * @return resource
+     * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator).
+     *
+     * @return resource     The base image for all images
      */
     public function baseImage()
     {
@@ -135,15 +138,19 @@ class ImageCreator
     }
 
     /**
-     * @param resource $baseImage
+     * Sets the base image for all images.
+     *
+     * @param resource $_baseImage  The base image for all images
      */
-    public function setBaseImage($baseImage)
+    public function setBaseImage($_baseImage)
     {
-        $this->baseImage = $baseImage;
+        $this->baseImage = $_baseImage;
     }
 
     /**
-     * @return resource
+     * Returns the cell image for all images (a smiley with the colors that were defined in the ImageCreator).
+     *
+     * @return resource     The cell image for all images
      */
     public function cellImage()
     {
@@ -151,29 +158,53 @@ class ImageCreator
     }
 
     /**
-     * @param resource $cellImage
+     * Sets the cell image for all images.
+     *
+     * @param resource $_cellImage  The cell image for all images
      */
-    public function setCellImage($cellImage)
+    public function setCellImage($_cellImage)
     {
-        $this->cellImage = $cellImage;
+        $this->cellImage = $_cellImage;
     }
 
     /**
+     * Returns the filesystem handler of this ImageCreator.
+     *
+     * @return FileSystemHandler    The filesystem handler
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the filesystem handler of this ImageCreator.
+     *
+     * @param FileSystemHandler $_fileSystemHandler     The filesystem handler
+     */
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
+
+    /**
      * ImageCreator constructor.
-     * @param $_boardHeight
-     * @param $_boardWidth
-     * @param Integer $_cellSize            Width and Height of a single cell
+     *
+     * @param int $_boardHeight             The height of the board
+     * @param int $_boardWidth              The width of the board
+     * @param int $_cellSize                Width and Height of a single cell
      * @param ImageColor $_cellAliveColor   Cell color of the images
      * @param ImageColor $_backgroundColor  Background Color of the images
      * @param ImageColor $_gridColor        Grid color of the images
-     * @param String $_gameFolder           The complete game folder path of a png output
+     * @param string $_outPutPath           Path where images will be saved
      */
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
-                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_gameFolder = null)
+                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_outPutPath)
     {
         // Create a base image (empty grid) on which all the other images will be based
         $this->cellSize = $_cellSize;
-        $this->gameFolder = $_gameFolder;
+        $this->outputPath = $_outPutPath;
 
         $baseImage = imagecreate($_boardWidth * $this->cellSize, $_boardHeight * $this->cellSize);
 
@@ -181,7 +212,6 @@ class ImageCreator
         $this->backgroundColor = $_backgroundColor;
         $this->gridColor = $_gridColor;
         $this->cellAliveColor = $_cellAliveColor;
-        $this->gridColor = $_gridColor;
 
         imagefill($baseImage, 0, 0, $this->backgroundColor->getColor($baseImage));
 
@@ -209,7 +239,7 @@ class ImageCreator
 
         $transparentColor = new ImageColor($red, 0, 0);
 
-
+        // Create Smiley Image for living cells
         $cellImage = imagecreatetruecolor($_cellSize, $_cellSize);
         imagefill($cellImage, 0, 0, $transparentColor->getColor($cellImage));
 
@@ -218,14 +248,11 @@ class ImageCreator
 
         // Head
         imagefilledellipse($cellImage, $_cellSize / 2, $_cellSize / 2, $headSize, $headSize, $this->cellAliveColor->getColor($cellImage));
-
         // Eyes
         imagefilledellipse($cellImage, $padding + $headSize * 1/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
         imagefilledellipse($cellImage, $padding + $headSize * 3/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
-
-        imagesetthickness($cellImage, 5);
-
         // Mouth
+        imagesetthickness($cellImage, 5);
         imagearc($cellImage, $padding + $headSize / 2, $padding + $headSize / 2, $headSize * 3/4,$headSize * 3/4, 25, 155, $this->backgroundColor->getColor($cellImage));
 
         imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));
@@ -236,13 +263,14 @@ class ImageCreator
     }
 
     /**
-     * Creates and returns an image of the current board
+     * Creates and returns an image of the current board.
      *
-     * @param Board $_board     Current board
-     * @param String $_imageType            Type of Image that shall be returned
-     * @return String                       Path to image
+     * @param Board $_board                 Current board
+     * @param string $_imageType            Type of Image that shall be returned
+     *
+     * @return string                       Path to image
      */
-    public function createImage ($_board, $_imageType)
+    public function createImage (Board $_board, string $_imageType): string
     {
         $image = imagecreate(imagesx($this->baseImage), imagesy($this->baseImage));
 
@@ -259,14 +287,13 @@ class ImageCreator
 
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 
-        $filePath = $this->basePath;
         $fileName = $_board->gameStep();
+        $filePath = $this->outputPath();
 
         switch ($_imageType)
         {
             case "png":
             case "video":
-                $filePath .= $this->gameFolder;
                 $this->fileSystemHandler->createDirectory($filePath);
 
                 $filePath .= "/" . $fileName . ".png";
@@ -274,7 +301,6 @@ class ImageCreator
                 break;
 
             case "gif":
-                $filePath .= $this->gameFolder;
                 $this->fileSystemHandler->createDirectory($filePath);
 
                 $filePath .= "/" . $fileName . ".gif";

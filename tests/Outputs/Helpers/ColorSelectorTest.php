@@ -11,7 +11,7 @@ use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class ColorSelectorTest
+ * Checks whether \Output\Helpers\ColorSelector works as expected.
  */
 class ColorSelectorTest extends TestCase
 {
@@ -24,7 +24,7 @@ class ColorSelectorTest extends TestCase
      * @param int $_expectedBlue    Expected blue
      * @param int $_expectedGreen   Expected green
      */
-    public function testCanParseColors($_input, $_expectedRed, $_expectedGreen, $_expectedBlue)
+    public function testCanParseColors(string $_input, int $_expectedRed, int $_expectedGreen, int $_expectedBlue)
     {
         $colorSelector = new ColorSelector();
         $color = $colorSelector->getColor($_input);
@@ -46,6 +46,32 @@ class ColorSelectorTest extends TestCase
             "invalid" => ["invalid", 0, 0, 0],
             "black" => ["black", 0, 0, 0],
             "selectcolor" => ["selectcolor", 0, 0, 0]
+        ];
+    }
+
+    /**
+     * @dataProvider fixInvalidColorAmountsProvider
+     * @covers \Output\Helpers\ColorSelector::validateColorAmount()
+     *
+     * @param int $_colorAmount     Amount of red, green or blue
+     * @param int $_expected        Expected result
+     */
+    public function testCanFixInvalidColorAmounts(int $_colorAmount, int $_expected)
+    {
+        $colorSelector = new ColorSelector();
+
+        $this->assertEquals($_expected, $colorSelector->validateColorAmount($_colorAmount));
+    }
+
+    public function fixInvalidColorAmountsProvider()
+    {
+        return [
+            [256, 255],
+            [-5, 0],
+            [234, 234],
+            [-123, 0],
+            [23453, 255],
+            [12312, 255]
         ];
     }
 }

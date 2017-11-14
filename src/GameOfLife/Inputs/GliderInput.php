@@ -12,15 +12,13 @@ use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
- * Class GliderInput
- *
- * Places a glider on the board
+ * Places a glider on the board.
  *
  * Usage:
  *   - Call addOptions($_options) to add the objects options to the main option list
  *   - Call fillBoard to set the glider on the board
  */
-class GliderInput extends BaseInput
+class GliderInput extends ObjectInput
 {
     // Magic Methods
 
@@ -29,28 +27,11 @@ class GliderInput extends BaseInput
      */
     public function __construct()
     {
-        parent::__construct(3, 3);
-    }
-
-
-    /**
-     * Adds GliderInputs specific options to the option list
-     *
-     * @param Getopt $_options  Option list to which the objects options are added
-     */
-    public function addOptions(Getopt $_options)
-    {
-        $_options->addOptions(
-            array
-            (
-                array(null, "gliderPosX", Getopt::REQUIRED_ARGUMENT, "X position of the glider"),
-                array(null, "gliderPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the glider")
-            )
-        );
+        parent::__construct(3, 3, "glider");
     }
 
     /**
-     * Places the glider on the board
+     * Places the glider on the board.
      *
      * @param Board $_board     The board
      * @param Getopt $_options  Options (posX, posY)
@@ -61,8 +42,8 @@ class GliderInput extends BaseInput
         $posX = $boardCenter["x"];
         $posY = $boardCenter["y"];
 
-        if ($_options->getOption("gliderPosX")) $posX = (int)$_options->getOption("gliderPosX");
-        if ($_options->getOption("gliderPosY")) $posY = (int)$_options->getOption("gliderPosY");
+        if ($_options->getOption("gliderPosX") !== null) $posX = (int)$_options->getOption("gliderPosX");
+        if ($_options->getOption("gliderPosY") !== null) $posY = (int)$_options->getOption("gliderPosY");
 
         // check whether the glider is inside board dimensions
         if ($this->isObjectOutOfBounds($_board->width(), $_board->height(), $posX, $posY))

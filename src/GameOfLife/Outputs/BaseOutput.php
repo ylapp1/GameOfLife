@@ -8,11 +8,16 @@
 
 namespace Output;
 
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
+use Ulrichsg\Getopt;
 
 /**
- * Class BaseOutput
+ * BaseOutput from which all other outputs must inherit.
+ *
+ * addOptions() adds options to a Getopt object
+ * startOutput() initializes variables that are necessary for the output
+ * outputBoard() outputs a single board
+ * finishOutput() processes the output boards to create the final file
  *
  * @package Output
  */
@@ -21,7 +26,9 @@ class BaseOutput
     protected $outputDirectory = __DIR__ . "/../../../Output/";
 
     /**
-     * @return string
+     * Returns the output directory of the output.
+     *
+     * @return string   Output directory of the output
      */
     public function outputDirectory(): string
     {
@@ -29,49 +36,51 @@ class BaseOutput
     }
 
     /**
-     * @param string $outputDirectory
+     * Sets the output directory of the output.
+     *
+     * @param string $_outputDirectory      Output directory of the output
      */
-    public function setOutputDirectory(string $outputDirectory)
+    public function setOutputDirectory(string $_outputDirectory)
     {
-        $this->outputDirectory = $outputDirectory;
+        $this->outputDirectory = $_outputDirectory;
     }
 
     /**
-     * add output specific options to the option list
-     *
-     * @codeCoverageIgnore
+     * Adds output specific options to the option list.
      *
      * @param Getopt $_options     Current option list
+     *
+     * @codeCoverageIgnore
      */
     public function addOptions(Getopt $_options)
     {
     }
 
     /**
-     * Start output
-     *
-     * @codeCoverageIgnore
+     * Start output.
      *
      * @param Getopt $_options  User inputted option list
      * @param Board $_board     Initial board
+     *
+     * @codeCoverageIgnore
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
     }
 
     /**
-     * Output one game step
-     *
-     * @codeCoverageIgnore
+     * Output one game step.
      *
      * @param Board $_board     Current board
+     *
+     * @codeCoverageIgnore
      */
     public function outputBoard(Board $_board)
     {
     }
 
     /**
-     * Finish output (Display that simulation is finished, write files and delete temporary files)
+     * Finish output (Display that simulation is finished, write files and delete temporary files).
      *
      * @codeCoverageIgnore
      */
@@ -80,16 +89,17 @@ class BaseOutput
     }
 
     /**
-     * Returns a new game id
+     * Returns a new game id.
      *
-     * @param string $outputType    Output Type (PNG, Gif, Video)
+     * @param string $_outputType    Output Type (PNG, Gif, Video)
+     *
      * @return int      New Game id
      */
-    public function getNewGameId(string $outputType)
+    public function getNewGameId(string $_outputType): int
     {
-        $fileNames = glob($this->outputDirectory . "/" . $outputType . "/Game_*");
+        $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
 
-        if (count($fileNames) == 0) $newGameId = 0;
+        if (count($fileNames) == 0) $newGameId = 1;
         else
         {
             $fileIds = array();

@@ -16,6 +16,8 @@ $loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\BaseInput;
+use Output\BaseOutput;
 use Ulrichsg\Getopt;
 
 // Create command line options
@@ -35,50 +37,59 @@ $options = new Getopt(
     )
 );
 
-
 // save which options refer to which input/output type
 $linkedOptions = array();
 
 $classes = array_merge(glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"), glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"));
+$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "ImageOutput");
 
 // find every input class
-foreach ($classes as $inputClass)
+foreach ($classes as $class)
 {
-    // get class name with namespace prefix
-    if (stristr($inputClass, "Input") != false) $className = "Input\\";
-    elseif (stristr($inputClass, "Output") != false) $className = "Output\\";
+    $className = basename($class, ".php");
 
-    $className .= basename($inputClass, ".php");
-
-    // get options before class adds its options
-    $previousOptions = $options->getOptionList();
-
-    // initialize the class
-    $input = new $className;
-    $input->addOptions($options);
-
-    // get options after the class added its options
-    $newOptions = $options->getOptionList();
-
-    // save new options in $inputOptions
-    // cannot use array_diff because it doesn't work with multidimensional arrays
-    foreach ($newOptions as $newOption)
+    if (! in_array($className, $excludeClasses))
     {
-        $isNewOption = true;
+        // get class name with namespace prefix
+        if (stristr($class, "Input") != false) $classPath = "Input\\";
+        elseif (stristr($class, "Output") != false) $classPath = "Output\\";
 
-        foreach ($previousOptions as $previousOption)
+        $classPath .= $className;
+
+        // get options before class adds its options
+        $previousOptions = $options->getOptionList();
+
+        // initialize the class
+        $instance = new $classPath;
+        if (stristr($classPath, "Input") && $instance instanceof BaseInput ||
+            stristr($classPath, "Output") && $instance instanceof BaseOutput)
         {
-            if ($previousOption == $newOption)
-            {
-                $isNewOption = false;
-                break;
-            }
+            $instance->addOptions($options);
         }
 
-        if ($isNewOption)
+        // get options after the class added its options
+        $newOptions = $options->getOptionList();
+
+        // save new options in $inputOptions
+        // cannot use array_diff because it doesn't work with multidimensional arrays
+        foreach ($newOptions as $newOption)
         {
-            $optionName = $newOption[1];
-            $linkedOptions[$optionName] = $className;
+            $isNewOption = true;
+
+            foreach ($previousOptions as $previousOption)
+            {
+                if ($previousOption == $newOption)
+                {
+                    $isNewOption = false;
+                    break;
+                }
+            }
+
+            if ($isNewOption)
+            {
+                $optionName = $newOption[1];
+                $linkedOptions[$optionName] = $classPath;
+            }
         }
     }
 }
@@ -86,13 +97,13 @@ foreach ($classes as $inputClass)
 // parse options
 $options->parse();
 
-if ($options->getOption("version"))
+if ($options->getOption("version") !== null)
 {
     // Show game version
     echo "Game of life version 0.1\n";
     return;
 }
-elseif ($options->getOption("help"))
+elseif ($options->getOption("help") !== null)
 {
     // Show help screen
     echo "\n";
@@ -101,24 +112,29 @@ elseif ($options->getOption("help"))
 }
 else
 {
-    // Fetch game options
-    $width = $options->getOption("width");
-    $height = $options->getOption("height");
-    $maxSteps = $options->getOption("maxSteps");
-    $border = $options->getOption("border");
+    // Fetch options
+    if ($options->getOption("width") !== null) $width = (int)$options->getOption("width");
+    else $width = 20;
 
-    // Fill with default values if options not set
-    if ($width == null) $width = 20;
-    if ($height == null) $height = 10;
-    if ($maxSteps == null) $maxSteps = 50;
+    if ($options->getOption("height") !== null) $height = (int)$options->getOption("height");
+    else $height = 10;
 
-    if ($border == null or $border == "solid") $hasBorder = true;
-    elseif ($border == "passthrough") $hasBorder = false;
-    else
+    if ($options->getOption("maxSteps") !== null) $maxSteps = (int)$options->getOption("maxSteps");
+    else $maxSteps = 50;
+
+    if ($options->getOption("border") !== null)
     {
-        echo "Error: Invalid border type specified";
-        return;
+        $borderType = $options->getOption("border");
+        if ($borderType == "solid") $hasBorder = true;
+        elseif ($borderType == "passthrough") $hasBorder = false;
+        else
+        {
+            echo "Error: Invalid border type specified";
+            return;
+        }
     }
+    else $hasBorder = true;
+
 
     // define rules for conways game of life
     $rulesConway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
@@ -127,19 +143,19 @@ else
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
 
     // initialize new input with default value
-    $input = new Input\RandomInput;
+    $instance = new Input\RandomInput;
     $output = new Output\ConsoleOutput;
 
     // find out whether user used the --input option
-    if ($options->getOption("input"))
+    if ($options->getOption("input") !== null)
     {
         $className = "Input\\" . $options->getOption("input") . "Input";
 
-        if (class_exists($className)) $input = new $className;
+        if (class_exists($className)) $instance = new $className;
     }
 
     // find out whether user used the --output option
-    if ($options->getOption("output"))
+    if ($options->getOption("output") !== null)
     {
         $className = "Output\\" . $options->getOption("output") . "Output";
 
@@ -150,14 +166,14 @@ else
     foreach ($linkedOptions as $option => $className)
     {
         // if input specific option is set initialize new input of the class which the input refers to
-        if ($options->getOption($option))
+        if ($options->getOption($option) !== null)
         {
-            if (stristr($className, "Input") != false) $input = new $className;
+            if (stristr($className, "Input") != false) $instance = new $className;
             elseif (stristr($className, "Output") != false) $output = new $className;
         }
     }
 
-    $input->fillBoard($board, $options);
+    $instance->fillBoard($board, $options);
     $output->startOutput($options, $board);
 
     // Game loop

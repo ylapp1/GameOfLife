@@ -10,14 +10,14 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class FileSystemHandlerTest
+ * Checks whether \Utils\FileSystemHandler works as expected.
  */
 class FileSystemHandlerTest extends TestCase
 {
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $testDirectory = __DIR__ . "/../unitTest";
+    private $testDirectory = __DIR__ . "/../FileSystemHandlerTest";
 
     protected function setUp()
     {
@@ -91,8 +91,8 @@ class FileSystemHandlerTest extends TestCase
      * @covers \Utils\FileSystemHandler::readFile()
      * @covers \Utils\FileSystemHandler::deleteFile()
      *
-     * @param string $_fileName     File name of the test file
-     * @param string $_content      Content of the test file
+     * @param string $_fileName         File name of the test file
+     * @param string $_content          Content of the test file
      * @param array $_expectedContent   Expected content that is read by FileSystemHandler::readFile()
      */
     public function testCanHandleFiles(string $_fileName, string $_content, array $_expectedContent)
@@ -148,4 +148,29 @@ class FileSystemHandlerTest extends TestCase
         $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($filePath));
         $this->assertFalse(file_exists($filePath));
     }
+
+    /**
+     * @covers \Utils\Filesystemhandler::getFileList()
+     */
+    public function testCanGetFileList()
+    {
+        $fileNames = array("Hello", "myFile", "myPersonalFile", "myPersonalTest", "thisIsAFile", "ThisIsMyFile");
+        sort($fileNames);
+
+        foreach ($fileNames as $index => $fileName)
+        {
+            touch($this->testDirectory . "/" . $fileName);
+        }
+
+        $files = $this->fileSystemHandler->getFileList($this->testDirectory);
+
+        foreach ($files as $index => $file)
+        {
+            $fileName = $this->testDirectory . "/" . $fileNames[$index];
+            $this->assertEquals($this->testDirectory . "/" . $fileNames[$index], $file);
+            unlink($fileName);
+        }
+    }
+
+
 }

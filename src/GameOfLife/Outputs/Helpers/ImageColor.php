@@ -9,9 +9,7 @@
 namespace Output\Helpers;
 
 /**
- * Class ImageColor
- *
- * Stores a color for the image creator
+ * Stores a color for image creator.
  *
  * @package Output
  */
@@ -21,6 +19,13 @@ class ImageColor
     private $green;
     private $blue;
 
+    /**
+     * ImageColor constructor.
+     *
+     * @param int $_red     Amount Red of the color (0-255)
+     * @param int $_green   Amount Green of the color (0-255)
+     * @param int $_blue    Amount Blue of the color (0-255)
+     */
     public function __construct(int $_red, int $_green, int $_blue)
     {
         $this->red = $_red;
@@ -29,15 +34,19 @@ class ImageColor
     }
 
     /**
-     * @return int
+     * Returns the amount red of the color.
+     *
+     * @return int          Amount red of the color
      */
-    public function red()
+    public function red(): int
     {
         return $this->red;
     }
 
     /**
-     * @param int $_red
+     * Sets the amount red of the color.
+     *
+     * @param int $_red     Amount red of the color
      */
     public function setRed(int $_red)
     {
@@ -45,15 +54,19 @@ class ImageColor
     }
 
     /**
-     * @return int
+     * Returns the amount green of the color.
+     *
+     * @return int      Amount green of the color
      */
-    public function green()
+    public function green(): int
     {
         return $this->green;
     }
 
     /**
-     * @param int $_green
+     * Sets the amount green of the color.
+     *
+     * @param int $_green   Amount green of the color
      */
     public function setGreen(int $_green)
     {
@@ -61,15 +74,19 @@ class ImageColor
     }
 
     /**
-     * @return int
+     * Returns the amount blue of the color.
+     *
+     * @return int      Amount blue of the color
      */
-    public function blue()
+    public function blue(): int
     {
         return $this->blue;
     }
 
     /**
-     * @param int $_blue
+     * Sets the amount blue of the color.
+     *
+     * @param int $_blue    Amount blue of the color
      */
     public function setBlue(int $_blue)
     {
@@ -77,12 +94,13 @@ class ImageColor
     }
 
     /**
-     * Returns a color that can be used only on a specific image
+     * Returns a color that can be used only on a specific image.
      *
-     * @param resource $_image
-     * @return int
+     * @param resource $_image  The image on which the color will be used
+     *
+     * @return int  The image color id
      */
-    public function getColor($_image)
+    public function getColor($_image): int
     {
         return imagecolorallocate($_image, $this->red, $this->green, $this->blue);
     }

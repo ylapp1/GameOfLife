@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\BlinkerInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\BlinkerInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class BlinkerInputTest
+ * Checks whether \Input\BlinkerInput works as expected.
  */
 class BlinkerInputTest extends TestCase
 {
@@ -48,22 +48,7 @@ class BlinkerInputTest extends TestCase
         $input = new BlinkerInput();
         $this->assertEquals(1, $input->objectWidth());
         $this->assertEquals(3, $input->objectHeight());
-    }
-
-    /**
-     * @covers \Input\BlinkerInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $blinkerOptions = array(
-            array(null, "blinkerPosX", Getopt::REQUIRED_ARGUMENT, "X position of the blinker"),
-            array(null, "blinkerPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the blinker")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-                          ->method("addOptions")
-                          ->with($blinkerOptions);
-        $this->input->addOptions($this->optionsMock);
+        $this->assertEquals("blinker", $input->objectName());
     }
 
     /**
@@ -74,7 +59,7 @@ class BlinkerInputTest extends TestCase
      * @param int $_y            Y-Coordinate of the cell
      * @param bool $_expected    Expected value of the cell
      */
-    public function testCanSetCells($_x, $_y, $_expected)
+    public function testCanSetCells(int $_x, int $_y, bool $_expected)
     {
         $this->input->fillBoard($this->board, new Getopt());
         $this->assertEquals(3, $this->board->getAmountCellsAlive());
@@ -100,13 +85,14 @@ class BlinkerInputTest extends TestCase
      */
     public function testCanFillBoardWithCustomPositions(int $_blinkerPosX, int $_blinkerPosY, bool $_expectsError)
     {
-        $this->optionsMock->method("getOption")
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
                           ->withConsecutive(["blinkerPosX"], ["blinkerPosX"], ["blinkerPosY"], ["blinkerPosY"])
                           ->willReturn($_blinkerPosX, $_blinkerPosX, $_blinkerPosY, $_blinkerPosY);
 
         if ($_expectsError) $this->expectOutputString("Error: Blinker exceeds field borders.\n");
 
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {

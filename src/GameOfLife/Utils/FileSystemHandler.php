@@ -9,9 +9,7 @@
 namespace Utils;
 
 /**
- * Class FileSystemHandler
- *
- * Handles directory and file creation/deletion
+ * Handles directory and file creation/deletion.
  *
  * @package Output\Helpers
  */
@@ -25,7 +23,7 @@ class FileSystemHandler
     const ERROR_FILE_NOT_EXISTS = 5;
 
     /**
-     * Creates a directory if it doesn't exist yet
+     * Creates a directory if it doesn't exist yet.
      *
      * @param string $_directoryPath    The directory path
      *
@@ -35,7 +33,7 @@ class FileSystemHandler
     {
         if (! file_exists($_directoryPath))
         {
-            // create all directories in the directory path (if they don't exist)
+            // create all directories in the directory path recursively (if they don't exist)
             mkdir($_directoryPath, 0777, true);
             return self::NO_ERROR;
         }
@@ -43,7 +41,7 @@ class FileSystemHandler
     }
 
     /**
-     * Deletes a directory
+     * Deletes a directory.
      *
      * @param string $_directoryPath        The directory path
      * @param bool $_deleteWhenNotEmpty     If set to true all files inside the directory will be deleted
@@ -55,7 +53,7 @@ class FileSystemHandler
         if (! file_exists($_directoryPath)) return self::ERROR_DIRECTORY_NOT_EXISTS;
 
         if (substr($_directoryPath, strlen($_directoryPath) - 1, 1) != '/') $_directoryPath .= '/';
-        $files = glob($_directoryPath . '*', GLOB_MARK);
+        $files = $this->getFileList($_directoryPath);
 
         if (count($files) !== 0)
         {
@@ -79,13 +77,13 @@ class FileSystemHandler
     }
 
     /**
-     * Deletes a file
+     * Deletes a file.
      *
      * @param string $_filePath    Path to the file that shall be deleted
      *
      * @return int  Error
      */
-    function deleteFile(string $_filePath): int
+    public function deleteFile(string $_filePath): int
     {
         if (file_exists($_filePath))
         {
@@ -96,20 +94,20 @@ class FileSystemHandler
     }
 
     /**
-     * Read text from file
+     * Read text from file.
      *
      * @param string $_filePath     The file path
      *
      * @return array|int            File Content or Error
      */
-    function readFile(string $_filePath)
+    public function readFile(string $_filePath)
     {
         if (! file_exists($_filePath)) return self::ERROR_FILE_NOT_EXISTS;
         else return file($_filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
     }
 
     /**
-     * Write text to file
+     * Write text to file.
      *
      * @param string $_filePath         The file path
      * @param string $_fileName         The name of the new file
@@ -118,7 +116,7 @@ class FileSystemHandler
      *
      * @return int  Error
      */
-    function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false): int
+    public function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false): int
     {
         // Create directory if it doesn't exist
         if (file_exists($_filePath . "/" . $_fileName))
@@ -131,5 +129,18 @@ class FileSystemHandler
         file_put_contents($_filePath . "/" . $_fileName, $_content);
 
         return self::NO_ERROR;
+    }
+
+    /**
+     * Returns an array of files in a directory.
+     *
+     * @param string $_filePath     Directory of which a file list shall be returned
+     * @param string $_fileEnding   File type (optional)
+     *
+     * @return array    File list
+     */
+    public function getFileList(string $_filePath, string $_fileEnding = null): array
+    {
+        return glob($_filePath . '/*' . $_fileEnding, GLOB_MARK);
     }
 }

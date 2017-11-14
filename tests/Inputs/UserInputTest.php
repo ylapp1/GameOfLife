@@ -6,15 +6,15 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
-use Utils\FileSystemHandler;
 use Input\UserInput;
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class UserInputTest
+ * Checks whether \Input\UserInput works as expected.
  */
 class UserInputTest extends TestCase
 {
@@ -29,9 +29,12 @@ class UserInputTest extends TestCase
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
 
+    private $testTemplatesDirectory = __DIR__ . "/../InputTemplates";
+
     protected function setUp()
     {
         $this->input = new UserInput();
+        $this->input->setTemplateDirectory($this->testTemplatesDirectory);
         $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
         $this->board = new Board(2, 2, 50, true, $rules);
         $this->board->setField(0, 0, true);
@@ -40,6 +43,7 @@ class UserInputTest extends TestCase
         $this->userInputMock = $this->getMockBuilder(\Input\UserInput::class)
                                     ->setMethods(["catchUserInput"])
                                     ->getMock();
+        if ($this->userInputMock instanceof UserInput) $this->userInputMock->setTemplateDirectory($this->testTemplatesDirectory);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -47,13 +51,35 @@ class UserInputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory(__DIR__ . "/../../Input/Templates/Custom", true);
+        $this->fileSystemHandler->deleteDirectory($this->testTemplatesDirectory . "/Custom", true);
 
         unset($this->fileSystemHandler);
         unset($this->input);
         unset($this->board);
         unset($this->userInputMock);
         unset($this->optionsMock);
+    }
+
+    /**
+     * @dataProvider setAttributesProvider()
+     * @covers \Input\UserInput::templateDirectory()
+     * @covers \Input\UserInput::setTemplateDirectory()
+     *
+     * @param string $_customTemplateDirectory    Directory where templates are saved
+     */
+    public function testCanSetAttributes(string $_customTemplateDirectory)
+    {
+        $this->input->setTemplateDirectory($_customTemplateDirectory);
+        $this->assertEquals($_customTemplateDirectory, $this->input->templateDirectory());
+    }
+
+    public function setAttributesProvider()
+    {
+        return [
+            ["test"],
+            ["myTest"],
+            ["mySpecialTest"]
+        ];
     }
 
     /**
@@ -68,7 +94,7 @@ class UserInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(1))
                           ->method("addOptions")
                           ->with($userInputOptions);
-        $this->input->addOptions($this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
     /**
@@ -105,21 +131,24 @@ class UserInputTest extends TestCase
     {
         $this->expectOutputRegex("/.*Template successfully saved!\n\n.*/");
         $this->input->saveCustomTemplate("unitTest", $this->board);
-        $this->assertEquals(true, file_exists(__DIR__ . "/../../Input/Templates/Custom/unitTest.txt"));
+        $this->assertTrue(file_exists($this->testTemplatesDirectory . "/Custom/unitTest.txt"));
 
         $this->userInputMock->expects($this->exactly(3))
                             ->method("catchUserInput")
                             ->withConsecutive()
                             ->willReturn("n", "y", "yes");
 
-        $this->expectOutputRegex("/.*Saving aborted.\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+        if ($this->userInputMock instanceof UserInput)
+        {
+            $this->expectOutputRegex("/.*Saving aborted.\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
 
-        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+            $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
 
-        $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
-        $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+            $this->expectOutputRegex("/.*Template successfully replaced!\n\n.*/");
+            $this->userInputMock->saveCustomTemplate("unitTest", $this->board);
+        }
     }
 
 
@@ -127,12 +156,12 @@ class UserInputTest extends TestCase
      * @dataProvider getInputCoordinatesProvider
      * @covers \Input\UserInput::getInputCoordinate()
      *
-     * @param int $_expected
-     * @param String $_testInput    Single coordinate in a string
-     * @param int $_minValue
-     * @param int $_maxValue
+     * @param int $_expected        Expected return value of getInputCoordinate()
+     * @param string $_testInput    Single coordinate in a string
+     * @param int $_minValue        The value that the inputted value must be at least
+     * @param int $_maxValue        The value that the inputted value may be at most
      */
-    public function testCanGetInputCoordinates(int $_expected, String $_testInput, int $_minValue, int $_maxValue)
+    public function testCanGetInputCoordinates(int $_expected, string $_testInput, int $_minValue, int $_maxValue)
     {
         $this->assertEquals($_expected, $this->input->getInputCoordinate($_testInput, $_minValue, $_maxValue));
     }
@@ -152,8 +181,8 @@ class UserInputTest extends TestCase
      * @dataProvider processInputProvider()
      * @covers \Input\UserInput::processInput()
      *
-     * @param bool $_expected   Expected return value
-     * @param string $_input    User input
+     * @param bool $_expected               Expected return value
+     * @param string $_input                User input
      * @param string $_expectOutputString   Expected output string
      */
     public function testCanProcessInput(bool $_expected, string $_input, string $_expectOutputString = null)
@@ -165,26 +194,69 @@ class UserInputTest extends TestCase
     public function processInputProvider()
     {
         return [
-            [true, "exit"],
-            [true, "exit dkfjghdkfjgskfghsdk dksfjghsdfkgjs dfhgkjsdhfg ksdfjg sdfhgkjh"],
-            [true, "start"],
-            [true, "start kdasfjhasdkf asdhkf jasdkhfjasd kf"],
-            [true, "startjkjjjkkjkjkj"],
-            [false, "save", "Error: Invalid template name!\n"],
-            [false, "save my file is test.txt", "Error: Invalid template name!\n"],
-            [false, "1,1", "\n" .
-                           "  1\n" .
-                           " ----\n" .
-                           "|o| |\n" .
-                           "|----|\n" .
-                           "| |X|1\n" .
-                           " ----\n"
+            "Exit" => [true, "exit"],
+            "Exit with random arguments" => [true, "exit dkfjghdkfjgskfghsdk dksfjghsdfkgjs dfhgkjsdhfg ksdfjg sdfhgkjh"],
+            "Start" => [true, "start"],
+            "Start with random arguments" => [true, "start kdasfjhasdkf asdhkf jasdkhfjasd kf"],
+            "Start embedded in a string" => [true, "startjkjjjkkjkjkj"],
+            "Save - Empty template name" => [false, "save", "Error: Invalid template name!\n"],
+            "Save - Template name with empty spaces" => [false, "save my file is test.txt", "Error: Invalid template name!\n"],
+            "Valid Coordinates, Toggle Dead Cell" => [false, "1,1",
+                                                             "\n" .
+                                                             "  1\n" .
+                                                             " ----\n" .
+                                                             "|o| |\n" .
+                                                             "|----|\n" .
+                                                             "| |X|1\n" .
+                                                             " ----\n"
             ],
-            [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
-            [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
-            [false, "1,1,1", "Error: Please input exactly two values!\n"],
-            [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
-            [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"]
+            "Valid Coordinates, Toggle Living Cell" => [false, "0,0",
+                                                               "\n" .
+                                                               " 0\n" .
+                                                               " ---\n" .
+                                                               "| | |0\n" .
+                                                               "|---|\n" .
+                                                               "| | |\n" .
+                                                               " ---\n"
+            ],
+            "Empty y" => [false, "1,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n"],
+            "Empty x" => [false, ",1", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"],
+            "More than two values" => [false, "1,1,1", "Error: Please input exactly two values!\n"],
+            "Random string input" => [false, "aasaaa", "Error: Input the coordinates in this format: <x" . ">,<y" . ">\n"],
+            "Save" => [false, "save atest", "Template successfully saved!\n\nYou can set/unset more cells or start the simulation by typing \"start\"\n\n"],
+            "Reset" => [false, "reset",
+                               "\n" .
+                              " --\n" .
+                              "|  |\n" .
+                              "|  |\n" .
+                              " --\n"],
+            "Set height" => [false, "setHeight 1",
+                                    "\n" .
+                                    " --\n" .
+                                    "|o |\n" .
+                                    " --\n"
+            ],
+            "Set width" => [false, "setWidth 1",
+                                    "\n" .
+                                    " -\n" .
+                                    "|o|\n" .
+                                    "| |\n" .
+                                    " -\n"
+            ],
+            "Options" => [false, "options",
+                              "\n\nOptions: " .
+                              "\n - exit:      Exit the application" .
+                              "\n - help:      Display help" .
+                              "\n - options:   Show available options" .
+                              "\n - setHeight: Change the board height" .
+                              "\n - setWidth:  Change the board width" .
+                              "\n - save:      Save the current board to a custom template" .
+                              "\n - start:     Star the simulation\n\n"
+            ],
+            "Help" => [false, "help",
+                              "Set the coordinates for the living cells as below:\n" .
+                              "<X-Coordinate>,<Y-Coordinate>\n" .
+                              "Enter the coordinates of a set field to unset it.\n"]
         ];
     }
 
@@ -192,14 +264,14 @@ class UserInputTest extends TestCase
      * @dataProvider setFieldProvider
      * @covers \Input\UserInput::setField()
      *
-     * @param String $_inputCoordinates     Input coordinates in the format <x>,<y>
-     * @param String $_expectedString       Expected Error message
+     * @param string $_inputCoordinates     Input coordinates in the format <x>,<y>
+     * @param string $_expectedString       Expected Error message
      * @param int $_expectedX               Expected x position of new set cell
      * @param int $_expectedY               Expected y positoin of new set cell
      */
-    public function testCanSetField(String $_inputCoordinates, String $_expectedString, int $_expectedX = null, int $_expectedY = null)
+    public function testCanSetField(string $_inputCoordinates, string $_expectedString, int $_expectedX = null, int $_expectedY = null)
     {
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
         $this->expectOutputRegex("/.*" . $_expectedString . ".*/");
         $this->input->setField($this->board, $_inputCoordinates);
 
@@ -227,26 +299,28 @@ class UserInputTest extends TestCase
      */
     public function testCanFillBoard(int $_inputX, int $_inputY)
     {
-        $this->userInputMock->method("catchUserInput")
+        $this->userInputMock->expects($this->exactly(2))
+                            ->method("catchUserInput")
                             ->withConsecutive()
                             ->willReturn($_inputX . "," . $_inputY, "start");
 
         $this->userInputMock->expects($this->exactly(2))
                             ->method("catchUserInput");
 
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
 
         $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
                                  "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
                                  "Enter the coordinates of a set field to unset it.\n" .
                                  "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
                                  "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                 "Type \"options\" to see a list of all valid options\n" .
                                  "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        $this->userInputMock->fillBoard($this->board, new Getopt());
+        if ($this->userInputMock instanceof UserInput) $this->userInputMock->fillBoard($this->board, new Getopt());
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertEquals(true, $this->board->getField($_inputX, $_inputY));
+        $this->assertTrue($this->board->getField($_inputX, $_inputY));
     }
 
     public function fillBoardProvider()
@@ -269,25 +343,29 @@ class UserInputTest extends TestCase
         $this->userInputMock->expects($this->exactly(1))
                             ->method("catchUserInput");
 
-        $this->board->setCurrentBoard($this->board->initializeEmptyBoard());
+        $this->board->resetCurrentBoard();
         $this->assertEquals(0, $this->board->getAmountCellsAlive());
 
-        $this->optionsMock->expects($this->exactly(3))
+        $this->optionsMock->expects($this->exactly(5))
                           ->method("getOption")
-                          ->withConsecutive(["edit"], ["template"], ["template"])
-                          ->willReturn(true, "unittest", "unittest");
+                          ->withConsecutive(["edit"], ["template"], ["templatePosX"], ["templatePosY"], ["template"])
+                          ->willReturn(true, "unittest", null, null, "unittest");
 
         $expectedOutputRegex =  "Set the coordinates for the living cells as below:\n" .
                                 "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
                                 "Enter the coordinates of a set field to unset it.\n" .
                                 "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
                                 "You can save your board configuration before starting the simulation by typing \"save\"\n" .
+                                "Type \"options\" to see a list of all valid options\n" .
                                 "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        $this->userInputMock->fillBoard($this->board, $this->optionsMock);
+        if ( $this->userInputMock instanceof UserInput)
+        {
+            if ($this->optionsMock instanceof Getopt) $this->userInputMock->fillBoard($this->board, $this->optionsMock);
+        }
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertEquals(true, $this->board->getField(0, 0));
+        $this->assertTrue($this->board->getField(0, 0));
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
     }
@@ -300,7 +378,7 @@ class UserInputTest extends TestCase
      */
     public function testCanCatchUserInput(string $_fileContent)
     {
-        $testDirectory = __DIR__ . "/../unitTest";
+        $testDirectory = __DIR__ . "/../userInputTest";
         $this->fileSystemHandler->createDirectory($testDirectory);
 
         $testFile = "testInput.txt";

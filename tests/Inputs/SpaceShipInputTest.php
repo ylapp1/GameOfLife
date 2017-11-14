@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use PHPUnit\Framework\TestCase;
-use Input\SpaceShipInput;
-use Ulrichsg\Getopt;
 use GameOfLife\Board;
 use GameOfLife\RuleSet;
+use Input\SpaceShipInput;
+use Ulrichsg\Getopt;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Class SpaceShipInputTest
+ * Checks whether \Input\SpaceShipInput works as expected.
  */
 class SpaceShipInputTest extends TestCase
 {
@@ -48,22 +48,7 @@ class SpaceShipInputTest extends TestCase
         $input = new SpaceShipInput();
         $this->assertEquals(5, $input->objectWidth());
         $this->assertEquals(4, $input->objectHeight());
-    }
-
-    /**
-     * @covers \Input\SpaceShipInput::addOptions()
-     */
-    public function testCanAddOptions()
-    {
-        $spaceShipOptions = array(
-            array(null, "spaceShipPosX", Getopt::REQUIRED_ARGUMENT, "X position of the spaceship"),
-            array(null, "spaceShipPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the spaceship")
-        );
-
-        $this->optionsMock->expects($this->exactly(1))
-                          ->method("addOptions")
-                          ->with($spaceShipOptions);
-        $this->input->addOptions($this->optionsMock);
+        $this->assertEquals("spaceShip", $input->objectName());
     }
 
     /**
@@ -102,31 +87,32 @@ class SpaceShipInputTest extends TestCase
      *
      * @param int $_spaceShipPosX     X-Position of the top left corner of the spaceship
      * @param int $_spaceShipPosY     Y-Position of the top left corner of the spaceship
-     * @param bool $_expectsError   Expects error message
+     * @param bool $_expectsError     True: Expects error message
+     *                                False: Expects no error message
      */
     public function testCanFillBoardWithCustomPositions(int $_spaceShipPosX, int $_spaceShipPosY, bool $_expectsError)
     {
-        $this->optionsMock->method("getOption")
+        $this->optionsMock->expects($this->exactly(4))
+                          ->method("getOption")
                           ->withConsecutive(["spaceShipPosX"], ["spaceShipPosX"], ["spaceShipPosY"], ["spaceShipPosY"])
                           ->willReturn($_spaceShipPosX, $_spaceShipPosX, $_spaceShipPosY, $_spaceShipPosY);
 
         if ($_expectsError) $this->expectOutputString("Error: Spaceship exceeds field borders.\n");
 
-        $this->input->fillBoard($this->board, $this->optionsMock);
+        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         if (! $_expectsError)
         {
             $this->assertEquals(9, $this->board->getAmountCellsAlive());
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 1, $_spaceShipPosY));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 2, $_spaceShipPosY));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX, $_spaceShipPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 1));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 2));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX, $_spaceShipPosY + 3));
-            $this->assertEquals(true, $this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY + 3));
-
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 1, $_spaceShipPosY));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 2, $_spaceShipPosY));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY));
+            $this->assertTrue($this->board->getField($_spaceShipPosX, $_spaceShipPosY + 1));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 1));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 4, $_spaceShipPosY + 2));
+            $this->assertTrue($this->board->getField($_spaceShipPosX, $_spaceShipPosY + 3));
+            $this->assertTrue($this->board->getField($_spaceShipPosX + 3, $_spaceShipPosY + 3));
         }
     }
 

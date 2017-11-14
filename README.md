@@ -21,17 +21,20 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 
 ## Input options
 
-| Option                | Description                                  | Type    | Possible values             |
-| --------------------- | -------------------------------------------- | ------- | --------------------------- |
-| --blinkerPosX <arg>   | X position of the blinker                    | Integer | Default: Center             |
-| --blinkerPosY <arg>   | Y position of the blinker                    | Integer | Default: Center             |
-| --gliderPosX <arg>    | X position of the glider                     | Integer | Default: Center             |
-| --gliderPosY <arg>    | Y position of the glider                     | Integer | Default: Center             |
-| --spaceShipPosX <arg> | X position of the spaceship                  | Integer | Default: Center             |
-| --spaceShipPosY <arg> | Y position of the spaceship                  | Integer | Default: Center             |
-| --fillPercent <arg>   | Percentage of living cells on a random board | Integer | Default: rand(1,70)         |
-| -- template <arg>     | Load board configuration from a txt file     | String  | glidergun, custom templates |
-| -- edit               | Edit a template selected with --template     | -       | -                           |
+| Option                | Description                                       | Type    | Possible values             |
+| --------------------- | ------------------------------------------------- | ------- | --------------------------- |
+| --blinkerPosX <arg>   | X position of the blinker                         | Integer | Default: Center             |
+| --blinkerPosY <arg>   | Y position of the blinker                         | Integer | Default: Center             |
+| --gliderPosX <arg>    | X position of the glider                          | Integer | Default: Center             |
+| --gliderPosY <arg>    | Y position of the glider                          | Integer | Default: Center             |
+| --spaceShipPosX <arg> | X position of the spaceship                       | Integer | Default: Center             |
+| --spaceShipPosY <arg> | Y position of the spaceship                       | Integer | Default: Center             |
+| --fillPercent <arg>   | Percentage of living cells on a random board      | Integer | Default: rand(1,70)         |
+| -- template <arg>     | Load board configuration from a txt file          | String  | glidergun, custom templates |
+| --list-templates      | Display a list of all templates                   | -       | -                           |
+| --templatePosX <arg>  | X-Position of the top left corner of the template | Integer | Default: Center             |
+| --templatePosY <arg>  | Y-Position of the top left corner of the template | Integer | Default: Center             |
+| -- edit               | Edit a template selected with --template          | -       | -                           |
 
 
 ## Output options
@@ -52,3 +55,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --videoOutputBackgroundColor <arg> | Background color for video outputs         | String  | R,G,B or color names (e.g. "blue", "red", "green") |
 | --videoOutputGridColor <arg>       | Grid color for video outputs               | String  | R,G,B or color names (e.g. "blue", "red", "green") |
 | --videoOutputFPS <arg>             | Frames per second of videos                | Integer | Default: 1                                         |
+| --videoOutputAddSound              | Add sound to the video                     | -       | -                                                  |
+
+
+You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output.
