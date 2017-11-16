@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Output\BaseOutput;
 use Output\PngOutput;
 use Output\VideoOutput;
@@ -34,8 +33,7 @@ class BaseOutputTest extends TestCase
     {
         $this->output = new BaseOutput();
         $this->output->setOutputDirectory($this->outputDirectory);
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rules);
+        $this->board = new Board(10, 10, 50, true);
         $this->fileSystemHandler = new FileSystemHandler();
         $this->fileSystemHandler->createDirectory($this->outputDirectory);
     }

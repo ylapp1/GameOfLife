@@ -11,12 +11,13 @@ $loader->addPsr4("GameOfLife\\", __DIR__ . "/src/GameOfLife");
 $loader->addPsr4("GIFEncoder\\", __DIR__ . "/src/GIFEncoder");
 $loader->addPsr4("Input\\", __DIR__ . "/src/GameOfLife/Inputs");
 $loader->addPsr4("Output\\", __DIR__ . "/src/GameOfLife/Outputs");
+$loader->addPsr4("Rule\\", __DIR__ . "/src/GameOfLife/Rules");
 $loader->addPsr4("Ulrichsg\\", __DIR__ . "/src/Ulrichsg");
 $loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
 use GameOfLife\GameLogic;
-use GameOfLife\RuleSet;
+use Rule\ComwayRule;
 use Input\BaseInput;
 use Output\BaseOutput;
 use Ulrichsg\Getopt;
@@ -137,12 +138,9 @@ else
     else $hasBorder = true;
 
 
-    // define rules for conways game of life
-    $rulesConway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-
     // initialize new board
-    $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
-    $gameLogic = new GameLogic();
+    $board = new Board($width, $height, $maxSteps, $hasBorder);
+    $gameLogic = new GameLogic(new ComwayRule());
 
     // initialize new input with default value
     $instance = new Input\RandomInput;

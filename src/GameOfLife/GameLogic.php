@@ -8,6 +8,8 @@
 
 namespace GameOfLife;
 
+use Rule\BaseRule;
+
 /**
  * Handles the game logic.
  *
@@ -29,6 +31,24 @@ class GameLogic
      * @var Field[][][] $historyOfBoards
      */
     private $historyOfBoards = array();
+
+    /**
+     * Birth/Death rules for this session
+     *
+     * @var BaseRule The birth/death rules
+     */
+    private $rule;
+
+
+    /**
+     * GameLogic constructor.
+     *
+     * @param BaseRule $_rule Rule for this session
+     */
+    public function __construct(BaseRule $_rule)
+    {
+        $this->rule = $_rule;
+    }
 
 
     /**
@@ -71,6 +91,26 @@ class GameLogic
         $this->historyOfBoards = $_historyOfBoards;
     }
 
+    /**
+     * Returns the birth/death rules for this session
+     *
+     * @return BaseRule The birth/death rules
+     */
+    public function rule(): BaseRule
+    {
+        return $this->rule;
+    }
+
+    /**
+     * Sets the birth/death rules for this session
+     *
+     * @param BaseRule $_rule The birth/death rules
+     */
+    public function setRule($_rule)
+    {
+        $this->rule = $_rule;
+    }
+
 
     /**
      * Adds a board to the history of boards.
@@ -91,7 +131,20 @@ class GameLogic
     public function calculateNextBoard(Board $_board)
     {
         $this->addToHistory($_board->fields());
-        $_board->calculateStep();
+
+        $newBoard = $_board->initializeEmptyBoard();
+
+        foreach ($_board->fields() as $line)
+        {
+            foreach ($line as $field)
+            {
+                $newState = $this->rule->calculateNewState($field);
+                $newBoard[$field->y()][$field->x()]->setValue($newState);
+            }
+        }
+
+        $_board->setFields($newBoard);
+        $_board->setGameStep($_board->gameStep() + 1);
         $this->currentBoard = $_board->fields();
     }
 

@@ -8,7 +8,6 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use GameOfLife\RuleSet;
 use Input\FileInput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
@@ -31,8 +30,7 @@ class FileInputTest extends TestCase
     {
         $this->input = new FileInput();
         $this->input->setTemplateDirectory($this->testTemplateDirectory);
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rules);
+        $this->board = new Board(10, 10, 50, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }

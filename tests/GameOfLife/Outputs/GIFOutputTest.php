@@ -7,10 +7,11 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
+use GameOfLife\GameLogic;
 use Output\GifOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
+use Rule\ComwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -38,8 +39,7 @@ class GIFOutputTest extends TestCase
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
 
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rules);
+        $this->board = new Board(10, 10, 50, true);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -150,6 +150,7 @@ class GIFOutputTest extends TestCase
      */
     public function testCanCreateGif()
     {
+        $gameLogic = new GameLogic(new ComwayRule());
         $this->expectOutputRegex("/.*Starting GIF Output...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
@@ -158,7 +159,7 @@ class GIFOutputTest extends TestCase
         {
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
-            $this->board->calculateStep();
+            $gameLogic->calculateNextBoard($this->board);
             $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
         }
 

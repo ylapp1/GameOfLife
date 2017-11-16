@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Utils\FileSystemHandler;
@@ -29,8 +28,7 @@ class ImageCreatorTest extends TestCase
 
     protected function setUp()
     {
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rules);
+        $this->board = new Board(10, 10, 50, true);
 
         $colorBlack = new ImageColor(0, 0, 0);
         $colorWhite = new ImageColor(255, 255, 255);

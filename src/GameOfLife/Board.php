@@ -21,7 +21,6 @@ class Board
     private $hasBorder;
     private $height;
     private $maxSteps;
-    private $rules;
     private $width;
 
 
@@ -36,15 +35,13 @@ class Board
      * @param bool $_hasBorder  defines the field border type
      *                              false: borders are dead cells
      *                              true: borders link to the opposite side of the field
-     * @param RuleSet $_rules   contains Birth/Death rules of the board
      */
-    public function __construct(int $_width, int $_height, int $_maxSteps, bool $_hasBorder, RuleSet $_rules)
+    public function __construct(int $_width, int $_height, int $_maxSteps, bool $_hasBorder)
     {
         $this->gameStep = 0;
         $this->hasBorder = $_hasBorder;
         $this->height = $_height;
         $this->maxSteps = $_maxSteps;
-        $this->rules = $_rules;
         $this->width = $_width;
 
         // must be called after board height is set
@@ -182,26 +179,6 @@ class Board
     }
 
     /**
-     * Returns the rule set.
-     *
-     * @return RuleSet  Death/Birth rules of the current board
-     */
-    public function rules(): RuleSet
-    {
-        return $this->rules;
-    }
-
-    /**
-     * Sets the rule set.
-     *
-     * @param RuleSet $_rules    Death/Birth rules of the current board
-     */
-    public function setRules(RuleSet $_rules)
-    {
-        $this->rules = $_rules;
-    }
-
-    /**
      * Returns the board width.
      *
      * @return int  Board width
@@ -221,34 +198,6 @@ class Board
         $this->width = $_width;
     }
 
-
-    /**
-     * Calculates a single step of the board.
-     *
-     *   - Calculates the new cell state for each cell
-     *   - Adds last board to history of boards
-     *   - Increments game step by 1
-     */
-    public function calculateStep()
-    {
-        $newBoard = $this->initializeEmptyBoard();
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                $amountNeighboursAlive = $this->fields[$y][$x]->numberOfLivingNeighbors();
-
-                $currentCellState = $this->getField($x, $y);
-                $newCellState = $this->getNewCellState($currentCellState, $amountNeighboursAlive);
-
-                if ($newCellState) $newBoard[$y][$x]->setValue(true);
-            }
-        }
-
-        $this->fields = $newBoard;
-        $this->gameStep ++;
-    }
 
     /**
      * Returns the total amount of living cells on the board.
@@ -302,51 +251,6 @@ class Board
     public function getFillPercentage(): float
     {
         return (float)($this->getAmountCellsAlive()/($this->width * $this->height));
-    }
-
-    /**
-     * Calculate the new cell state based on the current cell state and the amount of living neighbours.
-     *
-     * Cell states:
-     *
-     * true = alive
-     * false = dead
-     *
-     * @param bool $_currentCellState       Current Cell State
-     * @param int $_amountNeighboursAlive   Amount of living neighbour cells
-     *
-     * @return bool                         New Cell State
-     */
-    public function getNewCellState(bool $_currentCellState, int $_amountNeighboursAlive): bool
-    {
-        $newCellState = $_currentCellState;
-
-        // if current cell is alive
-        if ($_currentCellState)
-        {
-            foreach ($this->rules->death() as $amountDeath)
-            {
-                if ($_amountNeighboursAlive == $amountDeath)
-                {
-                    $newCellState = false;
-                    break;
-                }
-            }
-        }
-        // if current cell is dead
-        else
-        {
-            foreach ($this->rules->birth() as $amountBirth)
-            {
-                if ($_amountNeighboursAlive == $amountBirth)
-                {
-                    $newCellState = true;
-                    break;
-                }
-            }
-        }
-
-        return $newCellState;
     }
 
     /**

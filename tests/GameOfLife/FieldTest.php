@@ -8,7 +8,6 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use GameOfLife\RuleSet;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,7 +20,7 @@ class FieldTest extends TestCase
 
     public function setUp()
     {
-        $this->board = new Board(3, 3, 1, true, new RuleSet(array(), array()));
+        $this->board = new Board(3, 3, 1, true);
     }
 
     public function tearDown()

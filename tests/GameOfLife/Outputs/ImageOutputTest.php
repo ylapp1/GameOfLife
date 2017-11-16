@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Output\ImageOutput;
@@ -109,8 +108,7 @@ class ImageOutputTest extends TestCase
                     ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
                     ->willReturn("10", "white", "black", "red");
 
-        $ruleSet = new RuleSet(array(1), array(1));
-        $board = new Board(1,1,1,true, $ruleSet);
+        $board = new Board(1,1,1,true);
 
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
 
@@ -138,8 +136,7 @@ class ImageOutputTest extends TestCase
                     ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
                     ->willReturn(null, null, null, null);
 
-        $ruleSet = new RuleSet(array(1), array(1));
-        $board = new Board(1,1,1,true, $ruleSet);
+        $board = new Board(1,1,1,true);
 
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
 

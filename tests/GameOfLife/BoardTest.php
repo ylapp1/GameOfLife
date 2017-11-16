@@ -8,9 +8,6 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use GameOfLife\RuleSet;
-use Input\BlinkerInput;
-use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,8 +23,7 @@ class BoardTest extends TestCase
     // Called before and after each test
     protected function setUp()
     {
-        $rulesComway = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(20, 17, 250, false, $rulesComway);
+        $this->board = new Board(20, 17, 250, false);
     }
 
     protected function tearDown()
@@ -47,14 +43,12 @@ class BoardTest extends TestCase
      */
     public function testCanBeConstructed(int $_width, int $_height, int $_maxSteps, bool $_hasBorder)
     {
-        $testRuleSet = new RuleSet(array(1, 2), array(3, 4));
-        $testBoard = new Board($_width, $_height, $_maxSteps, $_hasBorder, $testRuleSet);
+        $testBoard = new Board($_width, $_height, $_maxSteps, $_hasBorder);
 
         $this->assertEquals(0, $testBoard->gameStep());
         $this->assertEquals($_hasBorder, $testBoard->hasBorder());
         $this->assertEquals($_height, $testBoard->height());
         $this->assertEquals($_maxSteps, $testBoard->maxSteps());
-        $this->assertEquals($testRuleSet, $testBoard->rules());
         $this->assertEquals($_width, $testBoard->width());
         $this->assertEquals($testBoard->initializeEmptyBoard(), $testBoard->fields());
     }
@@ -75,20 +69,16 @@ class BoardTest extends TestCase
      * @covers \GameOfLife\Board::height()
      * @covers \GameOfLife\Board::maxSteps()
      * @covers \GameOfLife\Board::width()
-     * @covers \GameOfLife\Board::rules()
      * @covers \GameOfLife\Board::gameStep()
      */
     public function testCanGetAttributes()
     {
-        $rules = $this->board->rules();
 
         $this->assertEquals(17, count($this->board->fields()));
         $this->assertFalse($this->board->hasBorder());
         $this->assertEquals(17, $this->board->height());
         $this->assertEquals(250, $this->board->maxSteps());
         $this->assertEquals(20, $this->board->width());
-        $this->assertEquals(array(3), $rules->birth());
-        $this->assertEquals(array(0, 1, 4, 5, 6, 7, 8), $rules->death());
         $this->assertEquals(0, $this->board->gameStep());
     }
 
@@ -100,7 +90,6 @@ class BoardTest extends TestCase
      * @covers \GameOfLife\Board::setHeight()
      * @covers \GameOfLife\Board::setMaxSteps()
      * @covers \GameOfLife\Board::setWidth()
-     * @covers \GameOfLife\Board::setRules()
      * @covers \GameOfLife\Board::setGameStep()
      *
      * @param array $_board             Current board
@@ -108,18 +97,16 @@ class BoardTest extends TestCase
      * @param int $_height              Board height
      * @param int $_maxSteps            Maximum amount of steps that are calculated
      * @param int $_width               Board width
-     * @param RuleSet $_rules           Birth/Death rules
      * @param int $_gameStep            Current game step
      */
     public function testCanSetAttributes(array $_board, bool $_hasBorder, int $_height,
-                                         int $_maxSteps, int $_width, RuleSet $_rules, int $_gameStep)
+                                         int $_maxSteps, int $_width, int $_gameStep)
     {
         $this->board->setFields($_board);
         $this->board->setHasBorder($_hasBorder);
         $this->board->setHeight($_height);
         $this->board->setMaxSteps($_maxSteps);
         $this->board->setWidth($_width);
-        $this->board->setRules($_rules);
         $this->board->setGameStep($_gameStep);
 
         $this->assertEquals($_board, $this->board->fields());
@@ -127,19 +114,17 @@ class BoardTest extends TestCase
         $this->assertEquals($_height, $this->board->height());
         $this->assertEquals($_maxSteps, $this->board->maxSteps());
         $this->assertEquals($_width, $this->board->width());
-        $this->assertEquals($_rules, $this->board->rules());
         $this->assertEquals($_gameStep, $this->board->gameStep());
     }
 
     public function setAttributesProvider()
     {
         $emptyBoard = array(array());
-        $rules = new RuleSet(array(0), array(1));
 
         return [
-            [$emptyBoard, true, 20, 10, 30, $rules, 200],
-            [$emptyBoard, false, 67, 13, 45, $rules, 384],
-            [$emptyBoard, true, 256, 124, 6, $rules, 1789]
+            [$emptyBoard, true, 20, 10, 30, 200],
+            [$emptyBoard, false, 67, 13, 45, 384],
+            [$emptyBoard, true, 256, 124, 6, 1789]
         ];
     }
 
@@ -268,34 +253,6 @@ class BoardTest extends TestCase
 
 
     /**
-     * @dataProvider calculateNewCellStateProvider
-     * @covers \GameOfLife\Board::getNewCellState()
-     *
-     * @param bool $_currentCellState       Current cell state (dead = false; alive = true)
-     * @param int $_amountNeighboursAlive   Amount of living neighbours (0 - 8)
-     * @param bool $_expected               Expected new cell state
-     */
-    public function testCanCalculateNewCellState(bool $_currentCellState, int $_amountNeighboursAlive, bool $_expected)
-    {
-        $this->assertEquals($_expected, $this->board->getNewCellState($_currentCellState, $_amountNeighboursAlive));
-    }
-
-    public function calculateNewCellStateProvider()
-    {
-        return [
-            "Dead Cell, One Neighbour" => [false, 1, false],
-            "Dead Cell, Three Neighbours" => [false, 3, true],
-            "Dead Cell, Six Neighbours" => [false, 6, false],
-
-            "Living Cell, Zero Neighbours" => [true, 0, false],
-            "Living Cell, Two Neighbours" => [true, 2, true],
-            "Living Cell, Three Neighbours" => [true, 3, true],
-            "Living Cell, Eight Neighbours" => [true, 8, false]
-        ];
-    }
-
-
-    /**
      * @dataProvider calculateCenterProvider
      * @covers \GameOfLife\Board::getCenter()
      *
@@ -359,58 +316,6 @@ class BoardTest extends TestCase
     }
 
     /**
-     * Checks whether border passthrough and solid work as expected.
-     *
-     * Places a 3 x 1 Blinker next to the right border of the board and checks the game step calculation results
-     *
-     * @covers \GameOfLife\Board::calculateStep()
-     */
-    public function testCanChangeBorderType()
-    {
-        $this->board->setWidth(10);
-        $this->board->setHeight(10);
-        $this->board->resetCurrentBoard();
-
-        // solid border
-        $this->board->setHasBorder(true);
-
-        $this->board->setField(9, 4, true);
-        $this->board->setField(9, 5, true);
-        $this->board->setField(9, 6, true);
-        $this->assertEquals(3, $this->board->getAmountCellsAlive());
-        $this->board->calculateStep();
-
-        $this->assertEquals(2, $this->board->getAmountCellsAlive());
-        $this->assertTrue($this->board->getField(9, 5));
-        $this->assertTrue($this->board->getField(8, 5));
-
-        $this->board->calculateStep();
-        $this->assertEquals(0, $this->board->getAmountCellsAlive());
-
-
-        // passthrough border
-        $this->board->resetCurrentBoard();
-        $this->board->setHasBorder(false);
-
-        $this->board->setField(9, 4, true);
-        $this->board->setField(9, 5, true);
-        $this->board->setField(9, 6, true);
-        $this->assertEquals(3, $this->board->getAmountCellsAlive());
-        $this->board->calculateStep();
-
-        $this->assertEquals(3, $this->board->getAmountCellsAlive());
-        $this->assertTrue($this->board->getField(0, 5));
-        $this->assertTrue($this->board->getField(9, 5));
-        $this->assertTrue($this->board->getField(8, 5));
-
-        $this->board->calculateStep();
-        $this->assertEquals(3, $this->board->getAmountCellsAlive());
-        $this->assertTrue($this->board->getField(9, 4));
-        $this->assertTrue($this->board->getField(9, 5));
-        $this->assertTrue($this->board->getField(9, 6));
-    }
-
-    /**
      * @covers \GameOfLife\Board::resetCurrentBoard()
      */
     public function testCanResetCurrentBoard()
@@ -425,30 +330,91 @@ class BoardTest extends TestCase
     }
 
     /**
+     * Checks whether the correct neighbors of a field are returned for both border types (solid and passthrough).
+     *
+     * @dataProvider neighborsOfFieldProvider
      * @covers \GameOfLife\Board::getNeighborsOfField()
+     *
+     * @param int[string] $_targetField Coordinates of the target field in the format array("x" => x, "y" => y)
+     * @param bool $_hasBorder Defines whether the board has a border
+     * @param int[] $_neighborsX All possible X-Coordinates of neighbors
+     * @param int[] $_neighborsY All possible Y-Coordinates of neighbors
+     * @param int $_amountNeighbors Expected amount of neighbor cells
      */
-    public function testCanGetNeighborsOfField()
+    public function testCanGetNeighborsOfField($_targetField, $_hasBorder, $_neighborsX, $_neighborsY, $_amountNeighbors)
     {
-        $board = new Board(3, 3, 1, 1, new RuleSet(array(), array()));
-        $field = $board->fields()[1][1];
+        $board = new Board(10, 10, 1, $_hasBorder);
+        $field = $board->fields()[$_targetField["y"]][$_targetField["x"]];
 
         $neighbors = $board->getNeighborsOfField($field);
 
-        $this->assertEquals(8, count($neighbors));
+        $this->assertEquals($_amountNeighbors, count($neighbors));
 
-        for ($y = 0; $y < 2; $y++)
+        foreach ($_neighborsY as $y)
         {
-            for ($x = 0; $x < 2; $x++)
+            foreach ($_neighborsX as $x)
             {
                 if ($field instanceof Field)
                 {
-                    if ($y != $field->x() || $x != $field->y())
+                    if ($y != $field->y() || $x != $field->x())
                     {
                         $tmpField = new Field($board, $x, $y);
+
                         $this->assertNotFalse(array_search($tmpField, $neighbors));
                     }
                 }
             }
         }
+    }
+
+    /**
+     * DataProvider for BoardTest::testCanGetNeighborsOfField().
+     *
+     * @return array Test values
+     */
+    public function neighborsOfFieldProvider()
+    {
+        return array(
+            "(1|1) Solid Border" => array(
+                array("x" => 1, "y" => 1),
+                true,
+                array(0, 1, 2),
+                array(0, 1, 2),
+                8
+            ),
+
+            "(0|0) Solid Border" => array(
+                array("x" => 0, "y" => 0),
+                true,
+                array(0, 1),
+                array(0, 1),
+                3
+            ),
+
+            "(0|1) Passthrough Border" => array(
+                array("x" => 0, "y" => 1),
+                false,
+                array(9, 0, 1),
+                array(0, 1, 2),
+                8
+            ),
+
+            "(1|0) Passthrough Border" => array(
+                array("x" => 1, "y" => 0),
+                false,
+                array(0, 1, 2),
+                array(9, 0, 1),
+                8
+            ),
+
+            "(9|9) Passthrough Border" => array(
+                array("x" => 9, "y" => 9),
+                false,
+                array(8, 9, 0),
+                array(8, 9, 0),
+                8
+            ),
+
+        );
     }
 }

@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Input\GliderInput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
@@ -27,8 +26,7 @@ class GliderInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new GliderInput();
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(10, 10, 50, true, $rules);
+        $this->board = new Board(10, 10, 50, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -62,8 +60,7 @@ class GliderInputTest extends TestCase
     public function testCanSetCells(int $_x, int $_y, bool $_expected)
     {
         $options = new Getopt();
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $board = new Board(10, 10, 50, true, $rules);
+        $board = new Board(10, 10, 50, true);
 
         $this->input->fillBoard($board, $options);
 

@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\RuleSet;
 use Input\UserInput;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
@@ -35,8 +34,7 @@ class UserInputTest extends TestCase
     {
         $this->input = new UserInput();
         $this->input->setTemplateDirectory($this->testTemplatesDirectory);
-        $rules = new RuleSet(array(3), array(0, 1, 4, 5, 6, 7, 8));
-        $this->board = new Board(2, 2, 50, true, $rules);
+        $this->board = new Board(2, 2, 50, true);
         $this->board->setField(0, 0, true);
         $this->fileSystemHandler = new FileSystemHandler();
 
