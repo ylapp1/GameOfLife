@@ -53,7 +53,6 @@ class BoardTest extends TestCase
         $this->assertEquals(0, $testBoard->gameStep());
         $this->assertEquals($_hasBorder, $testBoard->hasBorder());
         $this->assertEquals($_height, $testBoard->height());
-        $this->assertEquals(array(), $testBoard->historyOfBoards());
         $this->assertEquals($_maxSteps, $testBoard->maxSteps());
         $this->assertEquals($testRuleSet, $testBoard->rules());
         $this->assertEquals($_width, $testBoard->width());
@@ -72,7 +71,6 @@ class BoardTest extends TestCase
 
     /**
      * @covers \GameOfLife\Board::fields()
-     * @covers \GameOfLife\Board::historyOfBoards()
      * @covers \GameOfLife\Board::hasBorder()
      * @covers \GameOfLife\Board::height()
      * @covers \GameOfLife\Board::maxSteps()
@@ -85,7 +83,6 @@ class BoardTest extends TestCase
         $rules = $this->board->rules();
 
         $this->assertEquals(17, count($this->board->fields()));
-        $this->assertEquals(0, count($this->board->historyOfBoards()));
         $this->assertFalse($this->board->hasBorder());
         $this->assertEquals(17, $this->board->height());
         $this->assertEquals(250, $this->board->maxSteps());
@@ -99,7 +96,6 @@ class BoardTest extends TestCase
     /**
      * @dataProvider setAttributesProvider
      * @covers \GameOfLife\Board::setFields()
-     * @covers \GameOfLife\Board::setHistoryOfBoards()
      * @covers \GameOfLife\Board::setHasBorder()
      * @covers \GameOfLife\Board::setHeight()
      * @covers \GameOfLife\Board::setMaxSteps()
@@ -108,7 +104,6 @@ class BoardTest extends TestCase
      * @covers \GameOfLife\Board::setGameStep()
      *
      * @param array $_board             Current board
-     * @param array $_historyOfBoards   Array of the previous Boards
      * @param bool $_hasBorder          Border type
      * @param int $_height              Board height
      * @param int $_maxSteps            Maximum amount of steps that are calculated
@@ -116,11 +111,10 @@ class BoardTest extends TestCase
      * @param RuleSet $_rules           Birth/Death rules
      * @param int $_gameStep            Current game step
      */
-    public function testCanSetAttributes(array $_board, array $_historyOfBoards, bool $_hasBorder, int $_height,
+    public function testCanSetAttributes(array $_board, bool $_hasBorder, int $_height,
                                          int $_maxSteps, int $_width, RuleSet $_rules, int $_gameStep)
     {
         $this->board->setFields($_board);
-        $this->board->setHistoryOfBoards($_historyOfBoards);
         $this->board->setHasBorder($_hasBorder);
         $this->board->setHeight($_height);
         $this->board->setMaxSteps($_maxSteps);
@@ -129,7 +123,6 @@ class BoardTest extends TestCase
         $this->board->setGameStep($_gameStep);
 
         $this->assertEquals($_board, $this->board->fields());
-        $this->assertEquals($_historyOfBoards, $this->board->historyOfBoards());
         $this->assertEquals($_hasBorder, $this->board->hasBorder());
         $this->assertEquals($_height, $this->board->height());
         $this->assertEquals($_maxSteps, $this->board->maxSteps());
@@ -144,9 +137,9 @@ class BoardTest extends TestCase
         $rules = new RuleSet(array(0), array(1));
 
         return [
-            [$emptyBoard, [$emptyBoard], true, 20, 10, 30, $rules, 200],
-            [$emptyBoard, [$emptyBoard, $emptyBoard], false, 67, 13, 45, $rules, 384],
-            [$emptyBoard, [$emptyBoard, $emptyBoard, $emptyBoard], true, 256, 124, 6, $rules, 1789]
+            [$emptyBoard, true, 20, 10, 30, $rules, 200],
+            [$emptyBoard, false, 67, 13, 45, $rules, 384],
+            [$emptyBoard, true, 256, 124, 6, $rules, 1789]
         ];
     }
 
@@ -230,32 +223,6 @@ class BoardTest extends TestCase
 
 
     /**
-     * @covers \GameOfLife\Board::addToHistory()
-     */
-    public function testCanAddToHistoryOfBoards()
-    {
-        $emptyBoard = $this->board->initializeEmptyBoard();
-
-        // Check whether initial amount of boards in history is 0
-        $this->assertEquals(0, count($this->board->historyOfBoards()));
-
-        // Check whether using addToHistoryOfBoards 5 times will result in the history of boards storing 5 boards
-        for ($i = 0; $i < 5; $i++)
-        {
-            $this->board->addToHistory($emptyBoard);
-        }
-        $this->assertEquals(5, count($this->board->historyOfBoards()));
-
-        // Check whether using addToHistoryOfBoards more than 15 times in total will result in the history of boards storing exactly 15 boards
-        for ($i = 0; $i < 12; $i++)
-        {
-            $this->board->addToHistory($emptyBoard);
-        }
-        $this->assertEquals(15, count($this->board->historyOfBoards()));
-    }
-
-
-    /**
      * @dataProvider amountCellsAliveProvider
      * @covers \GameOfLife\Board::getAmountCellsAlive()
      *
@@ -296,18 +263,6 @@ class BoardTest extends TestCase
 
         // check whether max step makes the board stop
         $this->board->setGameStep(250);
-        $this->assertTrue($this->board->isFinished());
-
-        // Check whether repeating pattern is detected
-        $this->board->setGameStep(0);
-        $input = new BlinkerInput();
-        $options = new Getopt();
-        $input->fillBoard($this->board, $options);
-
-        $this->board->calculateStep();
-        $this->board->calculateStep();
-        $this->board->calculateStep();
-
         $this->assertTrue($this->board->isFinished());
     }
 

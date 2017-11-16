@@ -15,6 +15,7 @@ $loader->addPsr4("Ulrichsg\\", __DIR__ . "/src/Ulrichsg");
 $loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
+use GameOfLife\GameLogic;
 use GameOfLife\RuleSet;
 use Input\BaseInput;
 use Output\BaseOutput;
@@ -141,6 +142,7 @@ else
 
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder, $rulesConway);
+    $gameLogic = new GameLogic();
 
     // initialize new input with default value
     $instance = new Input\RandomInput;
@@ -177,10 +179,10 @@ else
     $output->startOutput($options, $board);
 
     // Game loop
-    while ($board->isFinished() == false)
+    while ($board->isFinished() == false && $gameLogic->isLoopDetected() == false)
     {
         $output->outputBoard($board);
-        $board->calculateStep();
+        $gameLogic->calculateNextBoard($board);
     }
 
     $output->finishOutput();

@@ -20,7 +20,6 @@ class Board
     private $gameStep;
     private $hasBorder;
     private $height;
-    private $historyOfBoards;
     private $maxSteps;
     private $rules;
     private $width;
@@ -44,7 +43,6 @@ class Board
         $this->gameStep = 0;
         $this->hasBorder = $_hasBorder;
         $this->height = $_height;
-        $this->historyOfBoards = array();
         $this->maxSteps = $_maxSteps;
         $this->rules = $_rules;
         $this->width = $_width;
@@ -164,26 +162,6 @@ class Board
     }
 
     /**
-     * Returns the history of boards.
-     *
-     * @return array   History of boards
-     */
-    public function historyOfBoards(): array
-    {
-        return $this->historyOfBoards;
-    }
-
-    /**
-     * Sets the history of boards.
-     *
-     * @param array $_historyOfBoards    History of boards
-     */
-    public function setHistoryOfBoards(array $_historyOfBoards)
-    {
-        $this->historyOfBoards = $_historyOfBoards;
-    }
-
-    /**
      * Returns the maximum amount of steps which are calculated before the board stops calculating more steps.
      *
      * @return int   Maximum amount of game steps
@@ -244,20 +222,6 @@ class Board
     }
 
 
-
-    /**
-     * Adds a board to the history of boards.
-     *
-     * The history of boards stores the last 15 boards of a game
-     *
-     * @param Field[][] $_board  The board that will be added to the history of boards
-     */
-    public function addToHistory(array $_board)
-    {
-        $this->historyOfBoards[] = $_board;
-        if (count($this->historyOfBoards) > 15) array_shift($this->historyOfBoards);
-    }
-
     /**
      * Calculates a single step of the board.
      *
@@ -282,7 +246,6 @@ class Board
             }
         }
 
-        $this->addToHistory($this->fields);
         $this->fields = $newBoard;
         $this->gameStep ++;
     }
@@ -415,7 +378,6 @@ class Board
      * The board is finished when either:
      *   - all cells are dead
      *   - maxSteps is reached
-     *   - only tiles are remaining that have a reoccurring pattern within 15 game steps
      *
      * @return bool  true:  board is finished
      *               false: board is not finished
@@ -424,16 +386,7 @@ class Board
     {
         if ($this->gameStep >= $this->maxSteps) return true;
         elseif ($this->getAmountCellsAlive() == 0) return true;
-        else
-        {
-            // Check history of boards for repeating patterns
-            foreach ($this->historyOfBoards as $board)
-            {
-                if ($this->fields == $board) return true;
-            }
-        }
-
-        return false;
+        else return false;
     }
 
     /**
