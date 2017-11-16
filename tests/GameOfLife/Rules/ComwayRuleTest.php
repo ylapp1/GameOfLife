@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class ComwayRuleTest extends TestCase
 {
     /**
-     * Checks whether the birth and death rules are correctly set
+     * Checks whether the birth and stay alive rules are correctly set.
      */
     public function testCanBeConstructed()
     {
