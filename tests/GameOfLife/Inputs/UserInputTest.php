@@ -359,7 +359,7 @@ class UserInputTest extends TestCase
                                 "Type \"options\" to see a list of all valid options\n" .
                                 "Let's Go:\n";
         $this->expectOutputRegex("/.*" . $expectedOutputRegex . ".*/");
-        if ( $this->userInputMock instanceof UserInput)
+        if ($this->userInputMock instanceof UserInput)
         {
             if ($this->optionsMock instanceof Getopt) $this->userInputMock->fillBoard($this->board, $this->optionsMock);
         }

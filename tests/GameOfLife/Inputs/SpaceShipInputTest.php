@@ -53,6 +53,7 @@ class SpaceShipInputTest extends TestCase
 
     /**
      * @dataProvider setCellsProvider
+     * @covers \Input\SpaceShipInput::fillBoard()
      *
      * @param int $_x            X-Coordinate of the cell
      * @param int $_y            Y-Coordinate of the cell

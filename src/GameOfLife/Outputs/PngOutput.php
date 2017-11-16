@@ -9,11 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
 
 /**
  * Saves the boards as .png files.
