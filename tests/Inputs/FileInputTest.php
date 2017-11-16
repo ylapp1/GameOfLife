@@ -7,6 +7,7 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Field;
 use GameOfLife\RuleSet;
 use Input\FileInput;
 use Ulrichsg\Getopt;
@@ -123,16 +124,21 @@ class FileInputTest extends TestCase
             ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
             ->willReturn("unittest",null, null, "unittest");
 
+        $field = new Field($this->board, 0, 0);
+        $field->setValue(true);
+
         $unitTestBoard = array(
-            array(0 => true),
-            array()
+            array(0 => $field,
+                1 => new Field($this->board, 1, 0)),
+            array(0 => new Field($this->board,0, 1),
+                1 => new Field($this->board,1, 1))
         );
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
-        $this->assertEquals($unitTestBoard, $this->board->currentBoard());
+        $this->assertEquals($unitTestBoard, $this->board->fields());
     }
 
     /**

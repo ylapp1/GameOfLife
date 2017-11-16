@@ -277,7 +277,7 @@ class ImageCreator
         imagecopy($image, $this->baseImage, 0,0,0,0,imagesx($this->baseImage), imagesy($this->baseImage));
 
         // Draw the cells
-        foreach ($_board->currentBoard() as $y=>$row)
+        foreach ($_board->fields() as $y=> $row)
         {
             foreach ($row as $x=>$cell)
             {

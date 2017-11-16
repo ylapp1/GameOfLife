@@ -9,6 +9,7 @@
 namespace Input;
 
 use GameOfLife\Board;
+use GameOfLife\Field;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
@@ -197,11 +198,12 @@ class FileInput extends BaseInput
     /**
      * Load board from txt file.
      *
+     * @param Board $_board Parent board
      * @param string $_templateName     Template name
      *
-     * @return array  The template converted to an array
+     * @return Field[][]  The template converted to an array
      */
-    private function loadTemplate(string $_templateName): array
+    private function loadTemplate(Board $_board, string $_templateName): array
     {
         $fileNameOfficial =  $this->templateDirectory . "/" . $_templateName . ".txt";
         $fileNameCustom = $this->templateDirectory . "/Custom/" . $_templateName . ".txt";
@@ -232,7 +234,9 @@ class FileInput extends BaseInput
 
             for ($x = 0; $x < count($cells); $x++)
             {
-                if ($cells[$x] == "X") $templateBoard[$y][$x] = true;
+                $templateBoard[$y][$x] = new Field($_board, $x, $y);
+
+                if ($cells[$x] == "X") $templateBoard[$y][$x]->setValue(true);
             }
         }
 
@@ -250,8 +254,8 @@ class FileInput extends BaseInput
      */
     private function placeTemplate(Board $_board, string $_template, int $_posX, int $_posY, bool $_isDimensionsAdjustment)
     {
-        $templateBoard = $this->loadTemplate($_template);
-        $board = $_board->currentBoard();
+        $templateBoard = $this->loadTemplate($_board, $_template);
+        $board = $_board->fields();
 
         if ($_isDimensionsAdjustment)
         {
@@ -271,13 +275,13 @@ class FileInput extends BaseInput
                 {
                     for ($x = 0; $x < $this->templateWidth; $x++)
                     {
-                        if (isset($templateBoard[$y][$x])) $board[$y + $_posY][$x + $_posX] = true;
+                        if ($templateBoard[$y][$x]->isAlive()) $board[$y + $_posY][$x + $_posX]->setValue(true);
                     }
                 }
             }
         }
 
-        $_board->setCurrentBoard($board);
+        $_board->setFields($board);
     }
 
     /**

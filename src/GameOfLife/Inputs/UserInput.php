@@ -91,7 +91,7 @@ class UserInput extends BaseInput
         if ($_options->getOption("edit") !== null)
         {
             $fileInput = new FileInput();
-            $fileInput->setTemplateDirectory($this->templateDirectory());
+            $fileInput->setTemplateDirectory($this->templateDirectory);
             $fileInput->fillBoard($_board, $_options);
             $this->printBoardEditor($_board);
         }
@@ -185,7 +185,7 @@ class UserInput extends BaseInput
             else
             {
                 // copy the current board
-                $board = $_board->currentBoard();
+                $board = $_board->fields();
                 $boardWidth = $_board->width();
                 $boardHeight = $_board->height();
 
@@ -201,7 +201,7 @@ class UserInput extends BaseInput
                 {
                     for ($x = 0; $x < $boardWidth; $x++)
                     {
-                        if (isset($board[$y][$x])) $_board->setField($x, $y, true);
+                        if ($board[$y][$x]->isAlive()) $_board->setField($x, $y, true);
                     }
                 }
             }

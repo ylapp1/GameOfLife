@@ -16,7 +16,7 @@ namespace GameOfLife;
  */
 class Board
 {
-    private $currentBoard;
+    private $fields;
     private $gameStep;
     private $hasBorder;
     private $height;
@@ -50,7 +50,7 @@ class Board
         $this->width = $_width;
 
         // must be called after board height is set
-        $this->currentBoard = $this->initializeEmptyBoard();
+        $this->fields = $this->initializeEmptyBoard();
     }
 
     /**
@@ -82,21 +82,21 @@ class Board
     /**
      * Returns current Board.
      *
-     * @return array   Current board
+     * @return Field[][]   Current board
      */
-    public function currentBoard(): array
+    public function fields(): array
     {
-        return $this->currentBoard;
+        return $this->fields;
     }
 
     /**
      * Sets current board.
      *
-     * @param array $_currentBoard   Current board
+     * @param Field[][] $_fields   Current board
      */
-    public function setCurrentBoard(array $_currentBoard)
+    public function setFields(array $_fields)
     {
-        $this->currentBoard = $_currentBoard;
+        $this->fields = $_fields;
     }
 
     /**
@@ -250,7 +250,7 @@ class Board
      *
      * The history of boards stores the last 15 boards of a game
      *
-     * @param bool[][] $_board  The board that will be added to the history of boards
+     * @param Field[][] $_board  The board that will be added to the history of boards
      */
     public function addToHistory(array $_board)
     {
@@ -273,16 +273,17 @@ class Board
         {
             for ($x = 0; $x < $this->width; $x++)
             {
-                $amountNeighboursAlive = $this->getAmountNeighboursAlive($x, $y);
+                $amountNeighboursAlive = $this->fields[$y][$x]->numberOfLivingNeighbors();
+
                 $currentCellState = $this->getField($x, $y);
                 $newCellState = $this->getNewCellState($currentCellState, $amountNeighboursAlive);
 
-                if ($newCellState) $newBoard[$y][$x] = true;
+                if ($newCellState) $newBoard[$y][$x]->setValue(true);
             }
         }
 
-        $this->addToHistory($this->currentBoard());
-        $this->currentBoard = $newBoard;
+        $this->addToHistory($this->fields);
+        $this->fields = $newBoard;
         $this->gameStep ++;
     }
 
@@ -294,69 +295,14 @@ class Board
     public function getAmountCellsAlive(): int
     {
         $amountCellsAlive = 0;
-        foreach ($this->currentBoard as $line)
+        foreach ($this->fields as $line)
         {
-            $amountCellsAlive += array_sum($line);
-        }
-        return $amountCellsAlive;
-    }
-
-    /**
-     * Returns the amount of living neighbour cells of a cell.
-     *
-     * @param int $_x   X-Coordinate of the cell that is inspected
-     * @param int $_y   Y-Coordinate of the cell that is inspected
-     *
-     * @return int      Amount of living neighbour cells
-     */
-    public function getAmountNeighboursAlive(int $_x, int $_y): int
-    {
-        $columns = array($_x);
-        $rows = array($_y);
-
-        // column to the left
-        if ($_x == 0)
-        {
-            if (! $this->hasBorder) $columns[] = $this->width - 1;
-        }
-        else $columns[] = $_x - 1;
-
-        // column to the right
-        if ($_x + 1 == $this->width)
-        {
-            if (! $this->hasBorder) $columns[] = 0;
-        }
-        else $columns[] = $_x + 1;
-
-        // row above
-        if ($_y == 0)
-        {
-            if (! $this->hasBorder) $rows[] = $this->height - 1;
-        }
-        else $rows[] = $_y - 1;
-
-        // row below
-        if ($_y + 1 == $this->height)
-        {
-            if (! $this->hasBorder) $rows[] = 0;
-        }
-        else $rows[] = $_y + 1;
-
-
-        // calculate amount of living neighbour cells
-        $amountLivingNeighbours = 0;
-
-        foreach ($rows as $y)
-        {
-            foreach ($columns as $x)
+            foreach ($line as $field)
             {
-                if ($this->getField($x, $y)) $amountLivingNeighbours++;
+                if ($field->isAlive()) $amountCellsAlive++;
             }
         }
-
-        if ($this->getField($_x, $_y)) $amountLivingNeighbours -= 1;
-
-        return $amountLivingNeighbours;
+        return $amountCellsAlive;
     }
 
     /**
@@ -382,7 +328,7 @@ class Board
      */
     public function getField (int $_x, int $_y): bool
     {
-        return isset($this->currentBoard[$_y][$_x]);
+        return $this->fields[$_y][$_x]->isAlive();
     }
 
     /**
@@ -445,7 +391,7 @@ class Board
      *
      * Uses the height attribute of this board to determine the amount of nested arrays
      *
-     * @return bool[][]      Empty board
+     * @return Field[][]      Empty board
      */
     public function initializeEmptyBoard(): array
     {
@@ -454,6 +400,10 @@ class Board
         for ($y = 0; $y < $this->height; $y++)
         {
             $board[$y] = array();
+            for ($x = 0; $x < $this->width; $x++)
+            {
+                $board[$y][] = new Field($this, $x, $y);
+            }
         }
 
         return $board;
@@ -479,7 +429,7 @@ class Board
             // Check history of boards for repeating patterns
             foreach ($this->historyOfBoards as $board)
             {
-                if ($this->currentBoard == $board) return true;
+                if ($this->fields == $board) return true;
             }
         }
 
@@ -491,7 +441,7 @@ class Board
      */
     public function resetCurrentBoard()
     {
-        $this->currentBoard = $this->initializeEmptyBoard();
+        $this->fields = $this->initializeEmptyBoard();
     }
 
     /**
@@ -505,7 +455,62 @@ class Board
      */
     public function setField(int $_x, int $_y, bool $_isAlive)
     {
-        if ($_isAlive) $this->currentBoard[$_y][$_x] = $_isAlive;
-        else unset($this->currentBoard[$_y][$_x]);
+        $this->fields[$_y][$_x]->setValue($_isAlive);
+    }
+
+    /**
+     * Returns the neighbor fields of $_field.
+     *
+     * @param Field $_field The field whose the neighbors will be returned
+     * @return Field[] Neighbor fields of $_field
+     */
+    public function getNeighborsOfField(Field $_field): array
+    {
+        $x = $_field->x();
+        $y = $_field->y();
+
+        $columns = array($x);
+        $rows = array($y);
+
+        // column to the left
+        if ($x == 0)
+        {
+            if (!$this->hasBorder) $columns[] = $this->width - 1;
+        }
+        else $columns[] = $x - 1;
+
+        // column to the right
+        if ($x + 1 == $this->width)
+        {
+            if (!$this->hasBorder) $columns[] = 0;
+        }
+        else $columns[] = $x + 1;
+
+        // row above
+        if ($y == 0)
+        {
+            if (!$this->hasBorder) $rows[] = $this->height - 1;
+        }
+        else $rows[] = $y - 1;
+
+        // row below
+        if ($y + 1 == $this->height)
+        {
+            if (!$this->hasBorder) $rows[] = 0;
+        }
+        else $rows[] = $y + 1;
+
+
+        $neighbors = array();
+
+        foreach ($rows as $y)
+        {
+            foreach ($columns as $x)
+            {
+                if ($y != $_field->y() || $x != $_field->x()) $neighbors[] = $this->fields[$y][$x];
+            }
+        }
+
+        return $neighbors;
     }
 }
