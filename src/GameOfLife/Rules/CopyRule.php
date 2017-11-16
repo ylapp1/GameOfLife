@@ -14,11 +14,11 @@ namespace Rule;
 class CopyRule extends BaseRule
 {
     /**
-     * Sets the birth/death rules for this rule.
+     * Sets the birth/stay alive rules for this rule.
      */
     public function __construct()
     {
         $this->rulesBirth = array(1, 3, 5, 7);
-        $this->rulesDeath = array(0, 2, 4, 6, 8);
+        $this->rulesStayAlive = array(1, 3, 5, 7);
     }
 }

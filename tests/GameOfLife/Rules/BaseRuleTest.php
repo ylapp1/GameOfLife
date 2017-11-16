@@ -22,21 +22,21 @@ class BaseRuleTest extends TestCase
      * @dataProvider setAttributesProvider
      * @covers \Rule\BaseRule::rulesBirth()
      * @covers \Rule\BaseRule::setRulesBirth()
-     * @covers \Rule\BaseRule::rulesDeath
-     * @covers \Rule\BaseRule::setRulesDeath()
+     * @covers \Rule\BaseRule::rulesStayAlive
+     * @covers \Rule\BaseRule::setRulesStayAlive()
      *
      * @param int[] $_rulesBirth Birth rules
-     * @param int[] $_rulesDeath Death rules
+     * @param int[] $_rulesStayAlive Stay alive rules
      */
-    public function testCanSetAttributes(array $_rulesBirth, array $_rulesDeath)
+    public function testCanSetAttributes(array $_rulesBirth, array $_rulesStayAlive)
     {
         $rule = new BaseRule();
 
         $rule->setRulesBirth($_rulesBirth);
-        $rule->setRulesDeath($_rulesDeath);
+        $rule->setRulesStayAlive($_rulesStayAlive);
 
         $this->assertEquals($_rulesBirth, $rule->rulesBirth());
-        $this->assertEquals($_rulesDeath, $rule->rulesDeath());
+        $this->assertEquals($_rulesStayAlive, $rule->rulesStayAlive());
     }
 
     /**
@@ -59,7 +59,7 @@ class BaseRuleTest extends TestCase
     }
 
     /**
-     * Checks whether the birth death rules are correctly applied.
+     * Checks whether the birth/stay alive rules are correctly applied.
      *
      * Tests all possible combinations of living/dead neighbors with the comway rules
      *
@@ -83,7 +83,7 @@ class BaseRuleTest extends TestCase
                   ->method("numberOfLivingNeighbors")
                   ->willReturn($_amountLivingNeighbors);
 
-        if ($_initialState == $_expectedState)
+        if ($_initialState == $_expectedState && $_initialState == false)
         { // If cell state won't change
 
             $fieldMock->expects($this->exactly(1))

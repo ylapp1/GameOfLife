@@ -22,6 +22,6 @@ class CopyRuleTest extends TestCase
         $rule = new CopyRule();
 
         $this->assertEquals(array(1, 3, 5, 7), $rule->rulesBirth());
-        $this->assertEquals(array(0, 2, 4, 6, 8), $rule->rulesDeath());
+        $this->assertEquals(array(1, 3, 5, 7), $rule->rulesStayAlive());
     }
 }

@@ -14,11 +14,11 @@ namespace Rule;
 class ComwayRule extends BaseRule
 {
     /**
-     * Sets the birth and death rules for this rule.
+     * Sets the birth/stay alive rules for this rule.
      */
     public function __construct()
     {
         $this->rulesBirth = array(3);
-        $this->rulesDeath = array(0, 1, 4, 5, 6, 7, 8);
+        $this->rulesStayAlive = array(2, 3);
     }
 }

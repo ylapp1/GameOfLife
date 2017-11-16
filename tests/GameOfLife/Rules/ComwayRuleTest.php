@@ -22,6 +22,6 @@ class ComwayRuleTest extends TestCase
         $rule = new ComwayRule();
 
         $this->assertEquals(array(3), $rule->rulesBirth());
-        $this->assertEquals(array(0, 1, 4, 5, 6, 7, 8), $rule->rulesDeath());
+        $this->assertEquals(array(2, 3), $rule->rulesStayAlive());
     }
 }

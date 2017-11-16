@@ -21,16 +21,16 @@ class BaseRule
     /**
      * Stores the amount of living neighbor cells which will rebirth a dead cell
      *
-     * @var int[] $rulesBirth
+     * @var int[] $rulesBirth Amount of living neighbor cells which rebirths a dead cell
      */
     protected $rulesBirth;
 
     /**
-     * Stores the amount of living neighbors which will kill a living cell
+     * Stores the amount of living neighbors which will keep a living cell alive
      *
-     * @var array
+     * @var int[] Amount of living neighbors which keeps a living cell alive
      */
-    protected $rulesDeath;
+    protected $rulesStayAlive;
 
 
     /**
@@ -54,23 +54,23 @@ class BaseRule
     }
 
     /**
-     * Returns the death rules
+     * Returns the stay alive rules
      *
-     * @return int[] Death rules
+     * @return int[] Stay alive rules
      */
-    public function rulesDeath(): array
+    public function rulesStayAlive(): array
     {
-        return $this->rulesDeath;
+        return $this->rulesStayAlive;
     }
 
     /**
-     * Sets the death rules
+     * Sets the stay alive rules
      *
-     * @param int[] $_rulesDeath Death rules
+     * @param int[] $_rulesStayAlive Stay alive rules
      */
-    public function setRulesDeath(array $_rulesDeath)
+    public function setRulesStayAlive(array $_rulesStayAlive)
     {
-        $this->rulesDeath = $_rulesDeath;
+        $this->rulesStayAlive = $_rulesStayAlive;
     }
 
 
@@ -109,10 +109,12 @@ class BaseRule
 
         if ($_field->isAlive())
         {
-            foreach ($this->rulesDeath as $amountDeath)
+            foreach ($this->rulesStayAlive as $amountStayAlive)
             {
-                if ($amountLivingNeighbors == $amountDeath) return false;
+                if ($amountLivingNeighbors == $amountStayAlive) return true;
             }
+
+            return false;
         }
         else
         {
