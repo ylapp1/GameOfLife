@@ -19,7 +19,7 @@ class RandomInput extends BaseInput
     /**
      * Adds RandomInputs specific options to the option list.
      *
-     * @param Getopt $_options  Option list to which the objects options are added
+     * @param Getopt $_options Option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
@@ -34,8 +34,8 @@ class RandomInput extends BaseInput
     /**
      * Fills the board with random cells until a specific percentage of the field is filled.
      *
-     * @param Board $_board     The Board
-     * @param Getopt $_options  Options (fillPercent)
+     * @param Board $_board The Board
+     * @param Getopt $_options Options (fillPercent)
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

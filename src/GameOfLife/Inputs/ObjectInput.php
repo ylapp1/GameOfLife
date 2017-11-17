@@ -12,24 +12,37 @@ use Ulrichsg\Getopt;
 
 /**
  * Parent class for classes that place an object (e.g. blinker, glider, spaceship) on the board.
- *
- * @package Input
  */
 class ObjectInput extends BaseInput
 {
+    /**
+     * Object height
+     *
+     * @var int $objectHeight
+     */
     private $objectHeight;
+
+    /**
+     * Object width
+     *
+     * @var int $objectWidth
+     */
     private $objectWidth;
+
+    /**
+     * Object name (used to generate options)
+     *
+     * @var string $objectName
+     */
     private $objectName;
 
 
-    // Magic methods
-
     /**
-     * BaseInput constructor.
+     * ObjectInput constructor.
      *
-     * @param int $_objectWidth     Object width
-     * @param int $_objectHeight    Object height
-     * @param string $_objectName   Object name
+     * @param int $_objectWidth Object width
+     * @param int $_objectHeight Object height
+     * @param string $_objectName Object name
      */
     public function __construct(int $_objectWidth, int $_objectHeight, string $_objectName)
     {
@@ -44,7 +57,7 @@ class ObjectInput extends BaseInput
     /**
      * Returns the object height.
      *
-     * @return int  Object height
+     * @return int Object height
      */
     public function objectHeight(): int
     {
@@ -54,7 +67,7 @@ class ObjectInput extends BaseInput
     /**
      * Sets the object height.
      *
-     * @param int $_objectHeight    Object height
+     * @param int $_objectHeight Object height
      */
     public function setObjectHeight(int $_objectHeight)
     {
@@ -64,7 +77,7 @@ class ObjectInput extends BaseInput
     /**
      * Returns the object width.
      *
-     * @return int  Object width
+     * @return int Object width
      */
     public function objectWidth(): int
     {
@@ -74,7 +87,7 @@ class ObjectInput extends BaseInput
     /**
      * Sets the object width.
      *
-     * @param int $_objectWidth     Object width
+     * @param int $_objectWidth Object width
      */
     public function setObjectWidth(int $_objectWidth)
     {
@@ -84,7 +97,7 @@ class ObjectInput extends BaseInput
     /**
      * Returns the object name.
      *
-     * @return string   Object name
+     * @return string Object name
      */
     public function objectName(): string
     {
@@ -94,7 +107,7 @@ class ObjectInput extends BaseInput
     /**
      * Sets the object name.
      *
-     * @param string $_objectName   Object name
+     * @param string $_objectName Object name
      */
     public function setObjectName(string $_objectName)
     {
@@ -107,7 +120,7 @@ class ObjectInput extends BaseInput
      *
      * Uses the objectName attribute to generate a option name and description
      *
-     * @param Getopt $_options  Option list to which the objects options are added
+     * @param Getopt $_options Option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
@@ -125,13 +138,13 @@ class ObjectInput extends BaseInput
      *
      * Uses the class attributes "objectWidth" and "objectHeight" to calculate the object dimensions
      *
-     * @param int $_boardWidth  Board width
+     * @param int $_boardWidth Board width
      * @param int $_boardHeight Board height
-     * @param int $_posX        X-Coordinate of the top left border of the object
-     * @param int $_posY        Y-Coordinate of the top left border of the object
+     * @param int $_posX X-Coordinate of the top left border of the object
+     * @param int $_posY Y-Coordinate of the top left border of the object
      *
-     * @return bool     True: Object is out of bounds
-     *                  False: Object is not out of bounds
+     * @return bool True: Object is out of bounds
+     *              False: Object is not out of bounds
      */
     public function isObjectOutOfBounds(int $_boardWidth, int $_boardHeight, int $_posX, int $_posY): bool
     {

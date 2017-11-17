@@ -9,7 +9,7 @@
 namespace Rule;
 
 /**
- * Rules for a copy world.
+ * Rules for a copy world (Rules for 1357/1357).
  */
 class CopyRule extends BaseRule
 {
