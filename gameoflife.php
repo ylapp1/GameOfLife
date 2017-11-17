@@ -32,6 +32,7 @@ $options = new Getopt(
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
         array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
         array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: console, png)"),
+        array(null, "rules", Getopt::REQUIRED_ARGUMENT, "Set the rules for the simulation (Comway, Copy, Two45) (Default: Comway)"),
 
         // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
@@ -140,7 +141,7 @@ else
 
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder);
-    $gameLogic = new GameLogic(new ComwayRule());
+    $rule = new ComwayRule();
 
     // initialize new input with default value
     $instance = new Input\RandomInput;
@@ -161,6 +162,15 @@ else
 
         if (class_exists($className)) $output = new $className;
     }
+
+    if ($options->getOption("rules") !== null)
+    {
+        $className = "Rule\\" . $options->getOption("rules") . "Rule";
+
+        if (class_exists($className)) $rule = new $className;
+    }
+
+    $gameLogic = new GameLogic($rule);
 
     // find out whether any input/output specific option is set
     foreach ($linkedOptions as $option => $className)
