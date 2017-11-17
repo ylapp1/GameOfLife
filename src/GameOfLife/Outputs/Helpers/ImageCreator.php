@@ -281,7 +281,10 @@ class ImageCreator
         {
             foreach ($row as $x=>$cell)
             {
-                imagecopymerge($image, $this->cellImage, $x * $this->cellSize, $y * $this->cellSize, 0, 0, $this->cellSize, $this->cellSize, 100);
+                if ($cell->isAlive())
+                {
+                    imagecopymerge($image, $this->cellImage, $x * $this->cellSize, $y * $this->cellSize, 0, 0, $this->cellSize, $this->cellSize, 100);
+                }
             }
         }
 
