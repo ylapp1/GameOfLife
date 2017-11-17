@@ -9,38 +9,46 @@
 namespace Input;
 
 use GameOfLife\Board;
-use GameOfLife\Field;
+use Input\TemplateHandler\TemplateLoader;
+use Input\TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
  * Fills the board with cells whose positions are loaded from a template file.
  *
- * @package Input
+ * Call addOptions($_options) to add the FileInput options to a Getopt object
+ * Call fillBoard($_board) to place a template on the board
  */
 class FileInput extends BaseInput
 {
     private $fileSystemHandler;
-    private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
-    private $templateHeight;
-    private $templateWidth;
+    private $templateDirectory;
+    private $templateLoader;
+    private $templatePlacer;
 
 
     /**
      * FileInput constructor.
+     *
+     * @param String $_templateDirectory The template directory from which templates shall be loaded
      */
-    public function __construct()
+    public function __construct(String $_templateDirectory = null)
     {
         $this->fileSystemHandler = new FileSystemHandler();
+
+        if ($_templateDirectory === null) $this->templateDirectory = __DIR__ . "/../../../Input/Templates/";
+        else $this->templateDirectory = $_templateDirectory;
+
+        $this->templateLoader = new TemplateLoader($this->templateDirectory);
+        $this->templatePlacer = new TemplatePlacer();
     }
 
 
-    // Getters and Setters
-
     /**
-     * Returns the file system handler of this file input.
+     * Returns the file system handler.
      *
-     * @return FileSystemHandler    The file system handler
+     * @return FileSystemHandler File system handler
      */
     public function fileSystemHandler(): FileSystemHandler
     {
@@ -48,11 +56,11 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Sets the file system handler of this file input.
+     * Sets the file system handler.
      *
-     * @param FileSystemHandler $_fileSystemHandler     The file system handler
+     * @param FileSystemHandler $_fileSystemHandler File system handler
      */
-    public function setFileSystemHandler(FileSystemhandler $_fileSystemHandler)
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
     {
         $this->fileSystemHandler = $_fileSystemHandler;
     }
@@ -60,9 +68,9 @@ class FileInput extends BaseInput
     /**
      * Returns the template directory.
      *
-     * @return string   Template directory
+     * @return String Template directory
      */
-    public function templateDirectory(): string
+    public function templateDirectory(): String
     {
         return $this->templateDirectory;
     }
@@ -70,58 +78,58 @@ class FileInput extends BaseInput
     /**
      * Sets the template directory.
      *
-     * @param string $_templateDirectory    Template directory
+     * @param String $_templateDirectory Template directory
      */
-    public function setTemplateDirectory(string $_templateDirectory)
+    public function setTemplateDirectory(String $_templateDirectory)
     {
         $this->templateDirectory = $_templateDirectory;
     }
 
     /**
-     * Returns the height of the template board.
+     * Returns the template loader.
      *
-     * @return int  Height of the template board
+     * @return TemplateLoader Template loader
      */
-    public function templateHeight(): int
+    public function templateLoader(): TemplateLoader
     {
-        return $this->templateHeight;
+        return $this->templateLoader;
     }
 
     /**
-     * Sets the height of the template board.
+     * Sets the template loader
      *
-     * @param int $_templateHeight  Height of the template board
+     * @param TemplateLoader $_templateLoader Template loader
      */
-    public function setTemplateHeight(int $_templateHeight)
+    public function setTemplateLoader(TemplateLoader $_templateLoader)
     {
-        $this->templateHeight = $_templateHeight;
+        $this->templateLoader = $_templateLoader;
     }
 
     /**
-     * Returns the width ot the template board.
+     * Returns the template placer.
      *
-     * @return int  Width of the template board
+     * @return TemplatePlacer Template placer
      */
-    public function templateWidth(): int
+    public function templatePlacer(): TemplatePlacer
     {
-        return $this->templateWidth;
+        return $this->templatePlacer;
     }
 
     /**
-     * Sets the width of the template board.
+     * Sets the template placer.
      *
-     * @param int $_templateWidth   Width of the template board
+     * @param TemplatePlacer $_templatePlacer Template placer
      */
-    public function setTemplateWidth(int $_templateWidth)
+    public function setTemplatePlacer(TemplatePlacer $_templatePlacer)
     {
-        $this->templateWidth = $_templateWidth;
+        $this->templatePlacer = $_templatePlacer;
     }
 
 
     /**
-     * Adds FileInputs specific options to the option list.
+     * Adds FileInput options to a Getopt object.
      *
-     * @param Getopt $_options     Option list to which the objects options are added
+     * @param Getopt $_options Option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
@@ -137,175 +145,85 @@ class FileInput extends BaseInput
     }
 
     /**
-     * Places the cells on the board.
+     * Places a template on the board or displays a list of templates.
      *
-     * If the template position is specified the function assumes that the user wants to keep the original board dimensions
-     *
-     * @param Board $_board      The Board
-     * @param Getopt $_options   Options (template)
+     * @param Board $_board The Board
+     * @param Getopt $_options Options (template, list-templates)
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("template") !== null)
-        {
-            $isDimensionsAdjustment = true;
-            $boardCenter = $_board->getCenter();
-            $templatePosX = $boardCenter["x"];
-            $templatePosY = $boardCenter["y"];
-
-            if ($_options->getOption("templatePosX") !== null)
-            {
-                $templatePosX = (int)$_options->getOption("templatePosX");
-                $isDimensionsAdjustment = false;
-            }
-
-            if ($_options->getOption("templatePosY") !== null)
-            {
-                $templatePosY = (int)$_options->getOption("templatePosY");
-                $isDimensionsAdjustment = false;
-            }
-
-            $this->placeTemplate($_board, $_options->getOption("template"), $templatePosX, $templatePosY, $isDimensionsAdjustment);
-        }
+        if ($_options->getOption("template") !== null) $this->placeTemplate($_board, $_options);
         elseif ($_options->getOption("list-templates") !== null)
         {
             $defaultTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory, ".txt");
             $customTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory . "/Custom", ".txt");
 
-            echo "\n\nDefault templates:\n";
-            if (count($defaultTemplates) == 0) echo "  None\n";
-            else
-            {
-                foreach ($defaultTemplates as $index => $templateName)
-                {
-                    echo "  " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
-                }
-            }
+            echo $this->listTemplates("Default templates", $defaultTemplates);
+            echo $this->listTemplates("Custom templates", $customTemplates);
 
-            echo "\nCustom templates:\n";
-            if (count($customTemplates) == 0) echo "  None\n";
-            else
-            {
-                foreach ($customTemplates as $index => $templateName)
-                {
-                    echo " " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
-                }
-            }
         }
         else echo "Error: No template file specified\n";
     }
 
     /**
-     * Load board from txt file.
+     * Generates an output string from a list of templates.
      *
-     * @param Board $_board Parent board
-     * @param string $_templateName     Template name
+     * @param String $_title Title of the list
+     * @param String[] $_templateList List of template names
      *
-     * @return Field[][]  The template converted to an array
+     * @return String Output string
      */
-    private function loadTemplate(Board $_board, string $_templateName): array
+    private function listTemplates(String $_title, array $_templateList): String
     {
-        $fileNameOfficial =  $this->templateDirectory . "/" . $_templateName . ".txt";
-        $fileNameCustom = $this->templateDirectory . "/Custom/" . $_templateName . ".txt";
-
-        // check whether template exists
-        if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
-        elseif (file_exists($fileNameCustom)) $fileName = $fileNameCustom;
+        $outputString = "\n" . $_title . ":\n";
+        if (count($_templateList) == 0) $outputString .= "  None\n";
         else
         {
-            echo "Error: Template file not found!\n";
-            $this->templateHeight = 0;
-            $this->templateWidth = 0;
-            return array();
-        }
-
-        // Read template
-        $fileSystemHandler = new FileSystemHandler();
-        $lines = $fileSystemHandler->readFile($fileName);
-
-        $templateBoard = array();
-        $this->templateHeight = count($lines);
-        $this->templateWidth = count(str_split($lines[0]));
-
-        for ($y = 0; $y < count($lines); $y++)
-        {
-            $templateBoard[$y] = array();
-            $cells = str_split($lines[$y]);
-
-            for ($x = 0; $x < count($cells); $x++)
+            foreach ($_templateList as $index => $templateName)
             {
-                $templateBoard[$y][$x] = new Field($_board, $x, $y);
-
-                if ($cells[$x] == "X") $templateBoard[$y][$x]->setValue(true);
+                $outputString .= "  " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
             }
         }
 
-        return $templateBoard;
+        return $outputString;
     }
 
     /**
-     * Calls loadTemplate() and places the template on the board.
+     * Places the template on the board.
      *
-     * @param Board $_board                     Board on which the template will be placed
-     * @param string $_template                 Template name
-     * @param int $_posX                        X-Coordinate of the top left corner of the template position
-     * @param int $_posY                        Y-Coordinate of the top right corner of the template position
-     * @param bool $_isDimensionsAdjustment     Indicates that the board dimensions shall be reconfigured to match the template width and height
+     * If the template position is specified the function assumes that the user wants to keep the original board dimensions
+     *
+     * @param Board $_board Board on which the template will be placed
+     * @param Getopt $_options Option list
      */
-    private function placeTemplate(Board $_board, string $_template, int $_posX, int $_posY, bool $_isDimensionsAdjustment)
+    private function placeTemplate(Board $_board, Getopt $_options)
     {
-        $templateBoard = $this->loadTemplate($_board, $_template);
-        $board = $_board->fields();
+        $isDimensionsAdjustment = true;
 
-        if ($_isDimensionsAdjustment)
+        $boardCenter = $_board->getCenter();
+        $templatePosX = $boardCenter["x"];
+        $templatePosY = $boardCenter["y"];
+
+        if ($_options->getOption("templatePosX") !== null)
         {
-            $_board->setWidth($this->templateWidth);
-            $_board->setHeight($this->templateHeight);
-            $board = $templateBoard;
+            $templatePosX = (int)$_options->getOption("templatePosX");
+            $isDimensionsAdjustment = false;
         }
+
+        if ($_options->getOption("templatePosY") !== null)
+        {
+            $templatePosY = (int)$_options->getOption("templatePosY");
+            $isDimensionsAdjustment = false;
+        }
+
+        $template = $this->templateLoader->loadTemplate($_board, $_options->getOption("template"));
+
+        if ($template == false) echo "Error: Template file not found!\n";
         else
         {
-            if ($this->isTemplateOutOfBounds($_board->width(), $_board->height(), $_posX, $_posY))
-            {
-                echo "Error, the template may not exceed the field borders!\n";
-            }
-            else
-            {
-                for ($y = 0; $y < $this->templateHeight; $y++)
-                {
-                    for ($x = 0; $x < $this->templateWidth; $x++)
-                    {
-                        if ($templateBoard[$y][$x]->isAlive()) $board[$y + $_posY][$x + $_posX]->setValue(true);
-                    }
-                }
-            }
-        }
+            $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
 
-        $_board->setFields($board);
-    }
-
-    /**
-     * Checks whether the template is out of bounds.
-     *
-     * Uses the class attributes "templateWidth" and "templateHeight" to check the template dimensions
-     *
-     * @param int $_boardWidth  Board width
-     * @param int $_boardHeight Board height
-     * @param int $_posX        X-Coordinate of the top left border of the template
-     * @param int $_posY        Y-Coordinate of the top left border of the template
-     *
-     * @return bool     True: Template is out of bounds
-     *                  False: Template is not out of bounds
-     */
-    private function isTemplateOutOfBounds(int $_boardWidth, int $_boardHeight, int $_posX, int $_posY): bool
-    {
-        if ($_posX < 0 ||
-            $_posY < 0 ||
-            $_posX + $this->templateWidth > $_boardWidth ||
-            $_posY + $this->templateHeight > $_boardHeight)
-        {
-            return true;
+            if ($result == false) echo "Error, the template may not exceed the field borders!\n";
         }
-        else return false;
     }
 }

@@ -90,8 +90,7 @@ class UserInput extends BaseInput
     {
         if ($_options->getOption("edit") !== null)
         {
-            $fileInput = new FileInput();
-            $fileInput->setTemplateDirectory($this->templateDirectory);
+            $fileInput = new FileInput($this->templateDirectory);
             $fileInput->fillBoard($_board, $_options);
             $this->printBoardEditor($_board);
         }

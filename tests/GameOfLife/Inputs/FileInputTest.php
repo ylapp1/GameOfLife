@@ -9,6 +9,8 @@
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Input\FileInput;
+use Input\TemplateHandler\TemplateLoader;
+use Input\TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -28,8 +30,7 @@ class FileInputTest extends TestCase
 
     protected function setUp()
     {
-        $this->input = new FileInput();
-        $this->input->setTemplateDirectory($this->testTemplateDirectory);
+        $this->input = new FileInput($this->testTemplateDirectory);
         $this->board = new Board(10, 10, 50, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -57,38 +58,37 @@ class FileInputTest extends TestCase
      * @covers \Input\FileInput::fileSystemHandler()
      * @covers \Input\FileInput::setTemplateDirectory()
      * @covers \Input\FileInput::templateDirectory()
-     * @covers \Input\FileInput::setTemplateHeight()
-     * @covers \Input\FileInput::templateHeight()
-     * @covers \Input\FileInput::setTemplateWidth()
-     * @covers \Input\FileInput::templateWidth()
+     * @covers \Input\FileInput::setTemplateLoader()
+     * @covers \Input\FileInput::templateLoader()
+     * @covers \Input\FileInput::setTemplatePlacer()
+     * @covers \Input\FileInput::templatePlacer()
      *
      * @param string $_templateDirectory    Template directory
-     * @param int $_templateWidth           New width of board after reading template
-     * @param int $_templateHeight          New height of board after reading template
      */
-    public function testCanSetAttributes(string $_templateDirectory, int $_templateWidth, int $_templateHeight)
+    public function testCanSetAttributes(string $_templateDirectory)
     {
         $fileSystemHandler = new FileSystemHandler();
+        $templateLoader = new TemplateLoader($_templateDirectory);
+        $templatePlacer = new TemplatePlacer();
+
         $this->input->setFileSystemHandler($fileSystemHandler);
-        $this->assertEquals($fileSystemHandler, $this->input->fileSystemHandler());
-
         $this->input->setTemplateDirectory($_templateDirectory);
+        $this->input->setTemplateLoader($templateLoader);
+        $this->input->setTemplatePlacer($templatePlacer);
+
+        $this->assertEquals($fileSystemHandler, $this->input->fileSystemHandler());
         $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
-
-        $this->input->setTemplateHeight($_templateHeight);
-        $this->assertEquals($_templateHeight, $this->input->templateHeight());
-
-        $this->input->setTemplateWidth($_templateWidth);
-        $this->assertEquals($_templateWidth, $this->input->templateWidth());
+        $this->assertEquals($templateLoader, $this->input->templateLoader());
+        $this->assertEquals($templatePlacer, $this->input->templatePlacer());
     }
 
     public function setAttributesProvider()
     {
         return [
-            ["test", 1, 2],
-            ["myDirectory", 23, 76],
-            ["randomDirectory", 45, 98],
-            ["testThisDirectory", 33, 55]
+            ["test"],
+            ["myDirectory"],
+            ["randomDirectory"],
+            ["testThisDirectory"]
         ];
     }
 
@@ -112,7 +112,6 @@ class FileInputTest extends TestCase
 
     /**
      * @covers \Input\FileInput::fillBoard
-     * @covers \Input\FileInput::loadTemplate()
      * @covers \Input\FileInput::placeTemplate()
      */
     public function testCanLoadTemplate()
@@ -150,7 +149,6 @@ class FileInputTest extends TestCase
 
     /**
      * @dataProvider invalidTemplateNamesProvider
-     * @covers \Input\FileInput::loadTemplate()
      *
      * @param string $_templateName     Name of the template
      */
@@ -178,6 +176,7 @@ class FileInputTest extends TestCase
 
     /**
      * @covers \Input\FileInput::fillBoard()
+     * @covers \Input\FileInput::listTemplates()
      */
     public function testCanListTemplates()
     {
@@ -213,7 +212,6 @@ class FileInputTest extends TestCase
      * @dataProvider placeTemplateProvider()
      * @covers \Input\FileInput::fillBoard()
      * @covers \Input\FileInput::placeTemplate()
-     * @covers \Input\FileInput::isTemplateOutOfBounds()
      *
      * @param int $_posX                X-Position of top left corner of the template
      * @param int $_posY                Y-Position of top left corner of the template
