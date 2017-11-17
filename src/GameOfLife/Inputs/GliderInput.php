@@ -14,14 +14,11 @@ use Ulrichsg\Getopt;
 /**
  * Places a glider on the board.
  *
- * Usage:
- *   - Call addOptions($_options) to add the objects options to the main option list
- *   - Call fillBoard to set the glider on the board
+ * Call addOptions($_options) to add the glider options to a Getopt object
+ * Call fillBoard($_board) to place the glider on the board
  */
 class GliderInput extends ObjectInput
 {
-    // Magic Methods
-
     /**
      * GliderInput constructor.
      */
@@ -30,11 +27,12 @@ class GliderInput extends ObjectInput
         parent::__construct(3, 3, "glider");
     }
 
+
     /**
      * Places the glider on the board.
      *
-     * @param Board $_board     The board
-     * @param Getopt $_options  Options (posX, posY)
+     * @param Board $_board The board
+     * @param Getopt $_options Options (posX, posY)
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

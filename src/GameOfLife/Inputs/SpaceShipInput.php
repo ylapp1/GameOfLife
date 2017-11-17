@@ -14,14 +14,11 @@ use Ulrichsg\Getopt;
 /**
  * Places a spaceship on the board.
  *
- * Usage:
- *   - Call addOptions($_options) to add the objects options to the main option list
- *   - Call fillBoard to set the spaceship on the board
+ * Call addOptions($_options) to add the spaceship options to a Getopt object
+ * Call fillBoard($_board) to place the spaceship on the board
  */
 class SpaceShipInput extends ObjectInput
 {
-    // Magic Methods
-
     /**
      * SpaceShipInput constructor.
      */
@@ -34,8 +31,8 @@ class SpaceShipInput extends ObjectInput
     /**
      * Places the spaceship on the board.
      *
-     * @param Board $_board     The Board
-     * @param Getopt $_options  Options (posX, posY)
+     * @param Board $_board The Board
+     * @param Getopt $_options Options (posX, posY)
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

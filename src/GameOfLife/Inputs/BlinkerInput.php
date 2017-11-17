@@ -14,14 +14,11 @@ use Ulrichsg\Getopt;
 /**
  * Places a 1x3 blinker on the board.
  *
- * Usage:
- *   - Call addOptions($_options) to add the objects options to the main option list
- *   - Call fillBoard() to set the blinker on the board
+ * Call addOptions($_options) to add the blinker options to a Getopt object
+ * Call fillBoard($_board) to place the blinker on the board
  */
 class BlinkerInput extends ObjectInput
 {
-    // Magic Methods
-
     /**
      * BlinkerInput constructor.
      */
@@ -30,11 +27,12 @@ class BlinkerInput extends ObjectInput
         parent::__construct(1, 3, "blinker");
     }
 
+
     /**
      * Places the blinker on the board.
      *
-     * @param Board $_board     The Board
-     * @param Getopt $_options  Options (posX, posY)
+     * @param Board $_board The Board
+     * @param Getopt $_options Options (posX, posY)
      */
     public function fillBoard (Board $_board, Getopt $_options)
     {
