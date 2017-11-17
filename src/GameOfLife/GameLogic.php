@@ -21,14 +21,14 @@ class GameLogic
     /**
      * Stores the current fields
      *
-     * @var Field[][]
+     * @var String
      */
     private $currentBoard = array();
 
     /**
      * Stores the fields of the last 15 boards of the current simulation
      *
-     * @var Field[][][] $historyOfBoards
+     * @var String[] $historyOfBoards
      */
     private $historyOfBoards = array();
 
@@ -54,9 +54,9 @@ class GameLogic
     /**
      * Returns the fields of the current board
      *
-     * @return Field[][] Fields of the current board
+     * @return String Fields of the current board
      */
-    public function currentBoard(): array
+    public function currentBoard(): String
     {
         return $this->currentBoard;
     }
@@ -64,9 +64,9 @@ class GameLogic
     /**
      * Sets the fields of the current board
      *
-     * @param Field[][] $_currentBoard Fields of the current board
+     * @param String $_currentBoard Fields of the current board
      */
-    public function setCurrentBoard(array $_currentBoard)
+    public function setCurrentBoard(String $_currentBoard)
     {
         $this->currentBoard = $_currentBoard;
     }
@@ -74,7 +74,7 @@ class GameLogic
     /**
      * Returns the history of boards.
      *
-     * @return Field[][][] History of boards
+     * @return String[] History of boards
      */
     public function historyOfBoards(): array
     {
@@ -84,7 +84,7 @@ class GameLogic
     /**
      * Sets the history of boards.
      *
-     * @param Board[] $_historyOfBoards History of boards
+     * @param String[] $_historyOfBoards History of boards
      */
     public function setHistoryOfBoards($_historyOfBoards)
     {
@@ -115,9 +115,9 @@ class GameLogic
     /**
      * Adds a board to the history of boards.
      *
-     * @param Field[][] $_fields The fields that will be added to the history of boards
+     * @param String $_fields The fields that will be added to the history of boards
      */
-    private function addToHistory(array $_fields)
+    private function addToHistory(String $_fields)
     {
         $this->historyOfBoards[] = $_fields;
         if (count($this->historyOfBoards) > 15) array_shift($this->historyOfBoards);
@@ -130,7 +130,7 @@ class GameLogic
      */
     public function calculateNextBoard(Board $_board)
     {
-        $this->addToHistory($_board->fields());
+        $this->addToHistory($_board);
 
         $newBoard = $_board->initializeEmptyBoard();
 
@@ -145,7 +145,7 @@ class GameLogic
 
         $_board->setFields($newBoard);
         $_board->setGameStep($_board->gameStep() + 1);
-        $this->currentBoard = $_board->fields();
+        $this->currentBoard = (string)$_board;
     }
 
     /**
