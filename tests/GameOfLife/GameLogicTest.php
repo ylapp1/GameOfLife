@@ -45,7 +45,7 @@ class GameLogicTest extends TestCase
         $gameLogic = new GameLogic(new ComwayRule());
 
         $board = new Board(5, 5, 1, true);
-        $fields = $board->fields();
+        $fields = (string)$board;
         $historyTest = array($fields, $fields, $fields, $fields);
 
         $gameLogic->setCurrentBoard($fields);
