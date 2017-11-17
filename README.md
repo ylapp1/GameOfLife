@@ -15,6 +15,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --border <arg>      | Set the border type                             | String  | solid (Default), passthrough                 |
 | --input <arg>       | Fill the board with cells                       | String  | Blinker, Glider, Random (Default), Spaceship |
 | --output <arg>      | Set the output type                             | String  | console, png                                 |
+| --rules <arg>       | Set the rules                                   | String  | Comway (Default), Copy, Two45                |
 | --version           | Print script version                            | -       | -                                            |
 | -h, --help          | Show help                                       | -       | -                                            |
 
@@ -58,4 +59,4 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --videoOutputAddSound              | Add sound to the video                     | -       | -                                                  |
 
 
-You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output.
+You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output on Windows.

@@ -17,9 +17,12 @@ $loader->addPsr4("Utils\\", __DIR__ . "/src/GameOfLife/Utils");
 
 use GameOfLife\Board;
 use GameOfLife\GameLogic;
-use Rule\ComwayRule;
 use Input\BaseInput;
+use Input\RandomInput;
 use Output\BaseOutput;
+use Output\ConsoleOutput;
+use Rule\BaseRule;
+use Rule\ComwayRule;
 use Ulrichsg\Getopt;
 
 // Create command line options
@@ -32,7 +35,7 @@ $options = new Getopt(
         array(null, "border", Getopt::REQUIRED_ARGUMENT, "Set the border type (solid|passthrough) (Default: solid)"),
         array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
         array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: console, png)"),
-        array(null, "rules", Getopt::REQUIRED_ARGUMENT, "Set the rules for the simulation (Comway, Copy, Two45) (Default: Comway)"),
+        array(null, "rules", Getopt::REQUIRED_ARGUMENT, "Set the rules for the simulation (valid arguments: Comway, Copy, Two45) (Default: Comway)"),
 
         // other options
         array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
@@ -43,10 +46,13 @@ $options = new Getopt(
 // save which options refer to which input/output type
 $linkedOptions = array();
 
-$classes = array_merge(glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"), glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"));
-$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "ImageOutput");
+$classes = array_merge(
+    glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php"),
+    glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"),
+    glob(__DIR__ . "/src/GameOfLife/Rules/*Rule.php")
+);
+$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "ImageOutput", "BaseRule");
 
-// find every input class
 foreach ($classes as $class)
 {
     $className = basename($class, ".php");
@@ -56,6 +62,7 @@ foreach ($classes as $class)
         // get class name with namespace prefix
         if (stristr($class, "Input") != false) $classPath = "Input\\";
         elseif (stristr($class, "Output") != false) $classPath = "Output\\";
+        elseif (stristr($class, "Rule") != false) $classPath = "Rule\\";
 
         $classPath .= $className;
 
@@ -65,7 +72,8 @@ foreach ($classes as $class)
         // initialize the class
         $instance = new $classPath;
         if (stristr($classPath, "Input") && $instance instanceof BaseInput ||
-            stristr($classPath, "Output") && $instance instanceof BaseOutput)
+            stristr($classPath, "Output") && $instance instanceof BaseOutput ||
+            stristr($classPath, "Rule") && $instance instanceof BaseRule)
         {
             $instance->addOptions($options);
         }
@@ -115,7 +123,7 @@ elseif ($options->getOption("help") !== null)
 }
 else
 {
-    // Fetch options
+    // Fetch board options
     if ($options->getOption("width") !== null) $width = (int)$options->getOption("width");
     else $width = 20;
 
@@ -138,56 +146,64 @@ else
     }
     else $hasBorder = true;
 
-
     // initialize new board
     $board = new Board($width, $height, $maxSteps, $hasBorder);
+
+
+    // initialize input, output and rule
+    $input = new RandomInput();
+    $output = new ConsoleOutput();
     $rule = new ComwayRule();
 
-    // initialize new input with default value
-    $instance = new Input\RandomInput;
-    $output = new Output\ConsoleOutput;
-
-    // find out whether user used the --input option
+    // set user selected input
     if ($options->getOption("input") !== null)
     {
-        $className = "Input\\" . $options->getOption("input") . "Input";
+        $className = strtolower($options->getOption("input")) . "Input";
+        $className = ucfirst($className);
+        $classPath = "Input\\" . $className;
 
-        if (class_exists($className)) $instance = new $className;
+        if (class_exists($classPath) && ! in_array($className, $excludeClasses)) $input = new $classPath;
     }
 
-    // find out whether user used the --output option
+    // set user selected output
     if ($options->getOption("output") !== null)
     {
-        $className = "Output\\" . $options->getOption("output") . "Output";
+        $className = strtolower($options->getOption("output")) . "Output";
+        $className = ucfirst($className);
+        $classPath = "Output\\" . $className;
 
-        if (class_exists($className)) $output = new $className;
+        if (class_exists($classPath) && ! in_array($className, $excludeClasses)) $output = new $classPath;
     }
 
+    // set user selected rule
     if ($options->getOption("rules") !== null)
     {
-        $className = "Rule\\" . $options->getOption("rules") . "Rule";
+        $className = strtolower($options->getOption("rules")) . "Rule";
+        $className = ucfirst($className);
+        $classPath = "Rule\\" . $className;
 
-        if (class_exists($className)) $rule = new $className;
+        if (class_exists($classPath) && ! in_array($className, $excludeClasses)) $rule = new $classPath;
     }
 
-    $gameLogic = new GameLogic($rule);
-
-    // find out whether any input/output specific option is set
+    // check whether any linked option (input/output/rule specific option) is set
     foreach ($linkedOptions as $option => $className)
     {
         // if input specific option is set initialize new input of the class which the input refers to
         if ($options->getOption($option) !== null)
         {
-            if (stristr($className, "Input") != false) $instance = new $className;
+            if (stristr($className, "Input") != false) $input = new $className;
             elseif (stristr($className, "Output") != false) $output = new $className;
+            elseif (stristr($className, "Rule") != false) $rule = new $className;
         }
     }
 
-    $instance->fillBoard($board, $options);
+
+    $gameLogic = new GameLogic($rule);
+    $input->fillBoard($board, $options);
     $output->startOutput($options, $board);
 
     // Game loop
-    while ($board->isFinished() == false && $gameLogic->isLoopDetected() == false)
+    while (! $board->isFinished() && ! $gameLogic->isLoopDetected())
     {
         $output->outputBoard($board);
         $gameLogic->calculateNextBoard($board);
