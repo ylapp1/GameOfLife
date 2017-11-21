@@ -62,9 +62,9 @@ class ConsoleOutput extends BaseOutput
      *
      * @return String Board output string
      */
-    private function getBoardContentString(Board $_board, String $_sideBorderSymbol, String $_cellAliveSymbol, String $_cellDeadSymbol)
+    protected function getBoardContentString(Board $_board, String $_sideBorderSymbol, String $_cellAliveSymbol, String $_cellDeadSymbol): String
     {
-        $output =  $this->getHorizontalBorderString($_board->width(), "╔", "╗") . "\n";
+        $output =  $this->getHorizontalLineString($_board->width(), "╔", "╗", "═") . "\n";
 
         for ($y = 0; $y < $_board->height(); $y++)
         {
@@ -73,7 +73,7 @@ class ConsoleOutput extends BaseOutput
             $output .= $_sideBorderSymbol . "\n";
         }
 
-        $output .= $this->getHorizontalBorderString($_board->width(), "╚", "╝") . "\n";
+        $output .= $this->getHorizontalLineString($_board->width(), "╚", "╝", "═") . "\n";
 
         return $output;
     }
@@ -86,7 +86,7 @@ class ConsoleOutput extends BaseOutput
      *
      * @return String The title string
      */
-    private function getBoardTitleString(int $_boardWidth, int $_gameStep)
+    private function getBoardTitleString(int $_boardWidth, int $_gameStep): String
     {
         $output = "Game step: " . ($_gameStep + 1);
         $paddingLeft = ceil(($_boardWidth - strlen($output)) / 2) + 1;
@@ -100,20 +100,21 @@ class ConsoleOutput extends BaseOutput
     /**
      * Returns an output string for either the upper or bottom border of the board.
      *
-     * @param int $_boardWidth Width of the board
-     * @param String $_leftCornerSymbol The symbol for the left corner
-     * @param String $_rightCornerSymbol The symbol for the right corner
+     * @param int $_length Length of the line (not including left and right edge symbol)
+     * @param String $_leftEdgeSymbol The symbol for the left edge of the line
+     * @param String $_rightEdgeSymbol The symbol for the right edge of the line
+     * @param String $_lineSymbol The symbol for the line itself
      *
-     * @return String Border output string
+     * @return String Line output string
      */
-    private function getHorizontalBorderString(int $_boardWidth, String $_leftCornerSymbol, String $_rightCornerSymbol)
+    protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
     {
-        $output = $_leftCornerSymbol;
-        for ($x = 0; $x < $_boardWidth; $x++)
+        $output = $_leftEdgeSymbol;
+        for ($x = 0; $x < $_length; $x++)
         {
-            $output .= "═";
+            $output .= $_lineSymbol;
         }
-        $output .= $_rightCornerSymbol;
+        $output .= $_rightEdgeSymbol;
 
         return $output;
     }
@@ -127,7 +128,7 @@ class ConsoleOutput extends BaseOutput
      *
      * @return String Row output String
      */
-    public function getRowOutputString (array $_fields, String $_cellAliveSymbol, String $_cellDeadSymbol)
+    protected function getRowOutputString (array $_fields, String $_cellAliveSymbol, String $_cellDeadSymbol): String
     {
         $output = "";
 
