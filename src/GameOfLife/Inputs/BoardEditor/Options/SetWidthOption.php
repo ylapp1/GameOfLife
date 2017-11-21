@@ -48,14 +48,17 @@ class SetWidthOption extends BoardEditorOption
             $this->parentBoardEditor->board()->setWidth($_width);
             $this->parentBoardEditor()->board()->resetCurrentBoard();
 
-            foreach ($fields as $field)
+            foreach ($fields as $row)
             {
-                if ($field instanceof Field)
+                foreach ($row as $field)
                 {
-                    if ($field->x() < $this->parentBoardEditor()->board()->width() &&
-                        $field->y() < $this->parentBoardEditor()->board()->height())
+                    if ($field instanceof Field)
                     {
-                        $this->parentBoardEditor()->board()->setField($field->x(), $field->y(), $field->isAlive());
+                        if ($field->x() < $this->parentBoardEditor()->board()->width() &&
+                            $field->y() < $this->parentBoardEditor()->board()->height())
+                        {
+                            $this->parentBoardEditor()->board()->setField($field->x(), $field->y(), $field->isAlive());
+                        }
                     }
                 }
             }
