@@ -18,19 +18,23 @@ use Ulrichsg\Getopt;
  * startOutput() initializes variables that are necessary for the output
  * outputBoard() outputs a single board
  * finishOutput() processes the output boards to create the final file
- *
- * @package Output
  */
 class BaseOutput
 {
+    /**
+     * Output directory for file outputs.
+     *
+     * @var String $outputDirectory
+     */
     protected $outputDirectory = __DIR__ . "/../../../Output/";
+
 
     /**
      * Returns the output directory of the output.
      *
-     * @return string   Output directory of the output
+     * @return String Output directory of the output
      */
-    public function outputDirectory(): string
+    public function outputDirectory(): String
     {
         return $this->outputDirectory;
     }
@@ -38,9 +42,9 @@ class BaseOutput
     /**
      * Sets the output directory of the output.
      *
-     * @param string $_outputDirectory      Output directory of the output
+     * @param String $_outputDirectory Output directory of the output
      */
-    public function setOutputDirectory(string $_outputDirectory)
+    public function setOutputDirectory(String $_outputDirectory)
     {
         $this->outputDirectory = $_outputDirectory;
     }
@@ -48,7 +52,7 @@ class BaseOutput
     /**
      * Adds output specific options to the option list.
      *
-     * @param Getopt $_options     Current option list
+     * @param Getopt $_options Current option list
      *
      * @codeCoverageIgnore
      */
@@ -59,8 +63,8 @@ class BaseOutput
     /**
      * Start output.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      *
      * @codeCoverageIgnore
      */
@@ -71,7 +75,7 @@ class BaseOutput
     /**
      * Output one game step.
      *
-     * @param Board $_board     Current board
+     * @param Board $_board Current board
      *
      * @codeCoverageIgnore
      */
@@ -89,13 +93,13 @@ class BaseOutput
     }
 
     /**
-     * Returns a new game id.
+     * Returns a new game id for classes that output files.
      *
-     * @param string $_outputType    Output Type (PNG, Gif, Video)
+     * @param String $_outputType Output Type (PNG, Gif, Video)
      *
-     * @return int      New Game id
+     * @return int New Game id
      */
-    public function getNewGameId(string $_outputType): int
+    public function getNewGameId(String $_outputType): int
     {
         $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
 

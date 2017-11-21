@@ -14,14 +14,39 @@ use Ulrichsg\Getopt;
 
 /**
  * Creates a video with sound from the boards.
- *
- * @package Output
  */
 class VideoOutput extends ImageOutput
 {
-    private $fillPercentages = array();
+    /**
+     * Fill percentage of each board during the simulation
+     * Is used to generate a beep sound for each frame
+     *
+     * @var array $fillPercentages
+     */
+    private $fillPercentages;
+
+    /**
+     * Frames per second
+     *
+     * @var int $fps
+     */
     private $fps;
-    private $frames = array();
+
+    /**
+     * File paths of the frame images
+     *
+     * @var array $frames
+     */
+    private $frames;
+
+    /**
+     * Indicates whether the video shall have sound.
+     *
+     * True: Video will have beep sounds
+     * False: Video will have no sound
+     *
+     * @var bool $hasSound
+     */
     private $hasSound;
 
 
@@ -33,6 +58,8 @@ class VideoOutput extends ImageOutput
         $outputDirectory = $this->outputDirectory . "tmp/Frames";
         parent::__construct("video", $outputDirectory);
 
+        $this->fillPercentages = array();
+        $this->frames = array();
         $this->hasSound = false;
     }
 
@@ -40,7 +67,7 @@ class VideoOutput extends ImageOutput
     /**
      * Returns the fill percentage list of this video output.
      *
-     * @return array    Fill percentage list
+     * @return array Fill percentage list
      */
     public function fillPercentages(): array
     {
@@ -50,7 +77,7 @@ class VideoOutput extends ImageOutput
     /**
      * Sets the fill percentage list of this video output.
      *
-     * @param array $_fillPercentages   Fill percentage list
+     * @param array $_fillPercentages Fill percentage list
      */
     public function setFillPercentages(array $_fillPercentages)
     {
@@ -60,7 +87,7 @@ class VideoOutput extends ImageOutput
     /**
      * Returns the frames per second of this video output.
      *
-     * @return int     Frames per second of this video output
+     * @return int Frames per second of this video output
      */
     public function fps(): int
     {
@@ -70,7 +97,7 @@ class VideoOutput extends ImageOutput
     /**
      * Sets the frames per second of this video output.
      *
-     * @param int $_fps    Frames per second of this video output
+     * @param int $_fps Frames per second of this video output
      */
     public function setFps(int $_fps)
     {
@@ -80,7 +107,7 @@ class VideoOutput extends ImageOutput
     /**
      * Returns the frame path list of this video output.
      *
-     * @return array    Frame path list
+     * @return array Frame path list
      */
     public function frames(): array
     {
@@ -90,7 +117,7 @@ class VideoOutput extends ImageOutput
     /**
      * Sets the frame path list of this video output.
      *
-     * @param array $_frames    Frame path list
+     * @param array $_frames Frame path list
      */
     public function setFrames(array $_frames)
     {
@@ -100,7 +127,7 @@ class VideoOutput extends ImageOutput
     /**
      * Returns whether this video output will add sound to the video file.
      *
-     * @return bool    Indicates whether the video has sound or not
+     * @return bool Indicates whether the video has sound or not
      */
     public function hasSound(): bool
     {
@@ -110,7 +137,7 @@ class VideoOutput extends ImageOutput
     /**
      * Sets whether this video output will add sound to the video file.
      *
-     * @param bool $hasSound    Indicates whether the video has sound or not
+     * @param bool $hasSound Indicates whether the video has sound or not
      */
     public function setHasSound(bool $hasSound)
     {
@@ -121,7 +148,7 @@ class VideoOutput extends ImageOutput
     /**
      * Adds VideoOutputs specific options to an option list.
      *
-     * @param Getopt $_options      The option list to which the options are added
+     * @param Getopt $_options The option list to which the options are added
      */
     public function addOptions(Getopt $_options)
     {
@@ -133,10 +160,10 @@ class VideoOutput extends ImageOutput
     }
 
     /**
-     * Start output.
+     * Starts the output.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -158,7 +185,7 @@ class VideoOutput extends ImageOutput
     /**
      * Creates PNG files which will later be combined to a video.
      *
-     * @param Board $_board     The board from which the ImageCreator will create an image
+     * @param Board $_board The board from which the ImageCreator will create an image
      */
     public function outputBoard(Board $_board)
     {

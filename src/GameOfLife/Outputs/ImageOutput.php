@@ -17,36 +17,55 @@ use Utils\FileSystemHandler;
 
 /**
  * Parent class for all classes that output images or process temporary output images.
- *
- * @package Output
  */
 class ImageOutput extends BaseOutput
 {
-    /** @var FileSystemHandler */
+    /**
+     * The file system handler
+     *
+     * @var FileSystemHandler $fileSystemHandler
+     */
     protected $fileSystemHandler;
-    /** @var ImageCreator $imageCreator */
+
+    /**
+     * The image creator
+     *
+     * @var ImageCreator $imageCreator
+     */
     protected $imageCreator;
+
+    /**
+     * The output directory for images
+     *
+     * @var string $imageOutputDirectory
+     */
     private $imageOutputDirectory;
+
+    /**
+     * Prefix for all Getopt options for the child class.
+     *
+     * @var string $optionPrefix
+     */
     private $optionPrefix;
 
     /**
      * ImageOutput constructor.
      *
-     * @param string $_optionPrefix          Prefix for all options of this output
-     * @param string $_imageOutputDirectory  The directory in which the images will be saved
+     * @param String $_optionPrefix Prefix for all options of this output
+     * @param String $_imageOutputDirectory The directory in which the images will be saved
      */
-    public function __construct(string $_optionPrefix, string $_imageOutputDirectory)
+    public function __construct(String $_optionPrefix, String $_imageOutputDirectory)
     {
-        $this->optionPrefix = $_optionPrefix;
         $this->fileSystemHandler = new FileSystemHandler();
         $this->imageOutputDirectory = $_imageOutputDirectory;
+        $this->optionPrefix = $_optionPrefix;
     }
 
 
     /**
      * Returns the filesystem handler of this output.
      *
-     * @return FileSystemHandler    Filesystem handler
+     * @return FileSystemHandler Filesystem handler
      */
     public function fileSystemHandler(): FileSystemHandler
     {
@@ -56,7 +75,7 @@ class ImageOutput extends BaseOutput
     /**
      * Sets the filesystem handler of this output.
      *
-     * @param FileSystemHandler $_fileSystemHandler     Filesystem handler
+     * @param FileSystemHandler $_fileSystemHandler Filesystem handler
      */
     public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
     {
@@ -66,7 +85,7 @@ class ImageOutput extends BaseOutput
     /**
      * Returns the image creator of this output.
      *
-     * @return ImageCreator     The image creator
+     * @return ImageCreator The image creator
      */
     public function imageCreator(): ImageCreator
     {
@@ -76,7 +95,7 @@ class ImageOutput extends BaseOutput
     /**
      * Sets the image creator of this output.
      *
-     * @param ImageCreator $_imageCreator   The image creator
+     * @param ImageCreator $_imageCreator The image creator
      */
     public function setImageCreator(ImageCreator $_imageCreator)
     {
@@ -86,7 +105,7 @@ class ImageOutput extends BaseOutput
     /**
      * Returns the image output directory.
      *
-     * @return string   Image output directory
+     * @return string Image output directory
      */
     public function imageOutputDirectory(): string
     {
@@ -96,7 +115,7 @@ class ImageOutput extends BaseOutput
     /**
      * Sets the image output directory.
      *
-     * @param string $_imageOutputDirectory     Image output directory
+     * @param string $_imageOutputDirectory Image output directory
      */
     public function setImageOutputDirectory(string $_imageOutputDirectory)
     {
@@ -106,7 +125,7 @@ class ImageOutput extends BaseOutput
     /**
      * Returns the option prefix of this image output.
      *
-     * @return string   Option prefix
+     * @return string Option prefix
      */
     public function optionPrefix(): string
     {
@@ -116,7 +135,7 @@ class ImageOutput extends BaseOutput
     /**
      * Sets the option prefix for this image output.
      *
-     * @param string $_optionPrefix     Option prefix
+     * @param string $_optionPrefix Option prefix
      */
     public function setOptionPrefix(string $_optionPrefix)
     {
@@ -127,7 +146,7 @@ class ImageOutput extends BaseOutput
     /**
      * Adds the image options to the option list.
      *
-     * @param Getopt $_options     Current option list
+     * @param Getopt $_options Current option list
      */
     public function addOptions(Getopt $_options)
     {
@@ -144,8 +163,8 @@ class ImageOutput extends BaseOutput
     /**
      * Initializes the image creator.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -170,7 +189,7 @@ class ImageOutput extends BaseOutput
         if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
         else $gridColor = new ImageColor(0, 0, 0);
 
-        // initialize ImageCreator for this PngOutput
+        // initialize the ImageCreator
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $this->imageOutputDirectory);
     }
 }

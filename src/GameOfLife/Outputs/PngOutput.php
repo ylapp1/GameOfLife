@@ -13,8 +13,6 @@ use Ulrichsg\Getopt;
 
 /**
  * Saves the boards as .png files.
- *
- * @package Output
  */
 class PngOutput extends ImageOutput
 {
@@ -29,10 +27,10 @@ class PngOutput extends ImageOutput
 
 
     /**
-     * Displays a text to the user that the simulation now starts.
+     * Displays a text to the user wihch tells the user that the simulation starts.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -43,7 +41,7 @@ class PngOutput extends ImageOutput
     /**
      * Outputs one game step.
      *
-     * @param Board $_board     Current board
+     * @param Board $_board Current board
      */
     public function outputBoard(Board $_board)
     {

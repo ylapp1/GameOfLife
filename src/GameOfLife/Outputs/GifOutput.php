@@ -15,12 +15,21 @@ use Ulrichsg\Getopt;
 
 /**
  * Saves the boards in an animated gif file.
- *
- * @package Output
  */
 class GifOutput extends ImageOutput
 {
+    /**
+     * File paths of the gif frames
+     *
+     * @var array $frames
+     */
     private $frames = array();
+
+    /**
+     * Time for which a frame is displayed
+     *
+     * @var int $frameTime
+     */
     private $frameTime;
 
 
@@ -37,7 +46,7 @@ class GifOutput extends ImageOutput
     /**
      * Returns the frame save paths.
      *
-     * @return array    Frame save paths
+     * @return array Frame save paths
      */
     public function frames(): array
     {
@@ -47,7 +56,7 @@ class GifOutput extends ImageOutput
     /**
      * Sets the frame save paths.
      *
-     * @param array $_frames    Frame save paths
+     * @param array $_frames Frame save paths
      */
     public function setFrames(array $_frames)
     {
@@ -57,7 +66,7 @@ class GifOutput extends ImageOutput
     /**
      * Returns the time per frame.
      *
-     * @return int      Time per frame
+     * @return int Time per frame
      */
     public function frameTime(): int
     {
@@ -67,7 +76,7 @@ class GifOutput extends ImageOutput
     /**
      * Sets the time per frame.
      *
-     * @param int $_frameTime   Time per frame
+     * @param int $_frameTime Time per frame
      */
     public function setFrameTime(int $_frameTime)
     {
@@ -78,22 +87,22 @@ class GifOutput extends ImageOutput
     /**
      * Adds GIFOutputs specific options to a Getopt object.
      *
-     * @param Getopt $_options      The option list to which the options are added
+     * @param Getopt $_options The option list to which the options are added
      */
     public function addOptions(Getopt $_options)
     {
         parent::addOptions($_options);
         $_options->addOptions(array(
-                                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
-                              )
+            array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
+            )
         );
     }
 
     /**
      * Initializes the output.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -111,7 +120,7 @@ class GifOutput extends ImageOutput
     /**
      * Creates a single Gif file for the current game step.
      *
-     * @param Board $_board     The board which will be output
+     * @param Board $_board The board which will be output
      */
     public function outputBoard(Board $_board)
     {
