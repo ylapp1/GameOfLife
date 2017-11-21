@@ -46,6 +46,10 @@ class ConsoleOutputTest extends TestCase
 
     /**
      * @covers \Output\ConsoleOutput::outputBoard()
+     * @covers \Output\ConsoleOutput::getBoardContentString()
+     * @covers \Output\ConsoleOutput::getBoardTitleString()
+     * @covers \Output\ConsoleOutput::getRowOutputString()
+     * @covers \Output\ConsoleOutput::getHorizontalBorderString()
      */
     public function testCanOutputBoard()
     {
