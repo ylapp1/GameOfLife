@@ -45,7 +45,7 @@ class ListOptionsOption extends BoardEditorOption
         }
 
         // Output the option list
-        $output = "\n\nOptions: ";
+        $output = "\n\nOptions:";
         foreach ($this->parentBoardEditor->options() as $optionName => $option)
         {
             $output .= "\n - " . str_pad($optionName, $longestOptionLength + 1) . ": " . $option->description();

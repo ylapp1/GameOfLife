@@ -40,7 +40,7 @@ class SaveTemplateOption extends BoardEditorOption
      */
     public function saveTemplate(String $_templateName)
     {
-        if ($_templateName == null) echo "Error: Invalid template name!\n";
+        if (! isset($_templateName) || $_templateName == "") echo "Error: Invalid template name!\n";
         else
         {
             $result = $this->parentBoardEditor->templateSaver()->saveTemplate($_templateName, $this->parentBoardEditor->board());
