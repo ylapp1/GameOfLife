@@ -230,6 +230,8 @@ class BoardEditor
         $parts = explode(" ", $_input);
         $inputOption = array_shift($parts);
 
+        if (count($parts) == 0) $parts = array();
+
         if (array_key_exists($inputOption, $this->options)) return array($inputOption, $parts);
         else return false;
     }
