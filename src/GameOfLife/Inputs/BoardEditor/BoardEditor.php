@@ -161,7 +161,7 @@ class BoardEditor
         $callback = $this->options[$_optionName]->callback();
 
         $argument = null;
-        if (count($_arguments) != 0) $argument = $_arguments[0];
+        if ($_arguments) $argument = $_arguments[0];
 
         $sessionFinished = $this->options[$_optionName]->$callback($argument);
 
