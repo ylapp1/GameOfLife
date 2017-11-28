@@ -60,7 +60,6 @@ class BoardEditor
     public function __construct(String $_templateDirectory, Board $_board = null)
     {
         if (isset($_board)) $this->board = $_board;
-        $this->options = $this->loadOptions();
         $this->output = new BoardEditorOutput();
         $this->templateSaver = new TemplateSaver($_templateDirectory);
     }
@@ -159,16 +158,8 @@ class BoardEditor
      */
     private function callOption(String $_optionName, array $_arguments = null): bool
     {
-        if (array_key_exists($_optionName, $this->options))
-        {
-            $callback = $this->options[$_optionName]->callback();
-            $sessionFinished = $this->options[$_optionName]->$callback($_arguments[0]);
-        }
-        else
-        {
-            echo "Error: Invalid option\n";
-            $sessionFinished = false;
-        }
+        $callback = $this->options[$_optionName]->callback();
+        $sessionFinished = $this->options[$_optionName]->$callback($_arguments[0]);
 
         return $sessionFinished;
     }
@@ -178,6 +169,7 @@ class BoardEditor
      */
     public function launch()
     {
+        $this->options = $this->loadOptions();
         $this->callOption("help");
         $this->output->outputBoard($this->board);
 
@@ -234,12 +226,8 @@ class BoardEditor
         $parts = explode(" ", $_input);
         $inputOption = array_shift($parts);
 
-        foreach ($this->options as $optionName => $option)
-        {
-            if ($inputOption == $optionName) return array($optionName, $parts);
-        }
-
-        return false;
+        if (array_key_exists($inputOption, $this->options)) return array($inputOption, $parts);
+        else return false;
     }
 
     /**
@@ -264,7 +252,7 @@ class BoardEditor
      * @param Board $_board The board
      * @param String $_inputCoordinates The user input coordinates in the format "x,y"
      */
-    public function setField(Board $_board, String $_inputCoordinates)
+    private function setField(Board $_board, String $_inputCoordinates)
     {
         $inputSplits = explode(",", $_inputCoordinates);
 
@@ -294,7 +282,7 @@ class BoardEditor
      *
      * @return int|bool Input coordinate | Error
      */
-    public function getInputCoordinate(String $_inputCoordinate, int $_minValue, int $_maxValue)
+    private function getInputCoordinate(String $_inputCoordinate, int $_minValue, int $_maxValue)
     {
         if ($_inputCoordinate == "") return false;
 

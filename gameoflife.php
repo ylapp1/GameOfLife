@@ -52,7 +52,7 @@ $classes = array_merge(
     glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php"),
     glob(__DIR__ . "/src/GameOfLife/Rules/*Rule.php")
 );
-$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "ImageOutput", "BaseRule");
+$excludeClasses = array("BaseInput", "ObjectInput", "BaseOutput", "BoardEditorOutput", "ImageOutput", "BaseRule");
 
 foreach ($classes as $class)
 {
