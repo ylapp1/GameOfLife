@@ -159,7 +159,11 @@ class BoardEditor
     private function callOption(String $_optionName, array $_arguments = null): bool
     {
         $callback = $this->options[$_optionName]->callback();
-        $sessionFinished = $this->options[$_optionName]->$callback($_arguments[0]);
+
+        $argument = null;
+        if (count($_arguments) != 0) $argument = $_arguments[0];
+
+        $sessionFinished = $this->options[$_optionName]->$callback($argument);
 
         return $sessionFinished;
     }
@@ -193,7 +197,7 @@ class BoardEditor
     /**
      * Loads all options from the options folder.
      *
-     * @return array array("optionName" => "optionObject")
+     * @return BoardEditorOption[] array in the format ("optionName" => "optionObject")
      */
     private function loadOptions(): array
     {
