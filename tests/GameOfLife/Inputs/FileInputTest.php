@@ -221,7 +221,7 @@ class FileInputTest extends TestCase
     {
         $this->board->setWidth(10);
         $this->board->setWidth(10);
-        $this->board->resetCurrentBoard();
+        $this->board->resetBoard();
 
         $this->optionsMock->expects($this->exactly(6))
                           ->method("getOption")

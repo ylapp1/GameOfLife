@@ -46,7 +46,7 @@ class SetWidthOption extends BoardEditorOption
             $fields = $this->parentBoardEditor()->board()->fields();
 
             $this->parentBoardEditor->board()->setWidth($_width);
-            $this->parentBoardEditor()->board()->resetCurrentBoard();
+            $this->parentBoardEditor()->board()->resetBoard();
 
             foreach ($fields as $row)
             {

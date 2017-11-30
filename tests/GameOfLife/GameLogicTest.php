@@ -119,7 +119,7 @@ class GameLogicTest extends TestCase
 
 
         // passthrough border
-        $board->resetCurrentBoard();
+        $board->resetBoard();
         $board->setHasBorder(false);
 
         $board->setField(9, 4, true);
@@ -164,5 +164,28 @@ class GameLogicTest extends TestCase
 
         $this->assertTrue($gameLogic->isLoopDetected());
         $this->assertEquals(1, count($gameLogic->historyOfBoards()));
+    }
+
+    /**
+     * Checks whether max steps reached can be successfully detected.
+     *
+     * @covers \GameOfLife\GameLogic::isMaxStepsReached()
+     */
+    public function testCanDetectMaxStepsReached()
+    {
+        $board = new Board(1, 1, 2, true);
+        $gameLogic = new GameLogic(new ComwayRule());
+
+        // Less than max steps
+        $board->setGameStep(1);
+        $this->assertFalse($gameLogic->isMaxStepsReached($board));
+
+        // Equal to max steps
+        $board->setGameStep(2);
+        $this->assertTrue($gameLogic->isMaxStepsReached($board));
+
+        // Greater than max steps
+        $board->setGameStep(14);
+        $this->assertTrue($gameLogic->isMaxStepsReached($board));
     }
 }

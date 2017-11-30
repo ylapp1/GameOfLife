@@ -204,7 +204,7 @@ else
     $output->startOutput($options, $board);
 
     // Game loop
-    while (! $board->isFinished() && ! $gameLogic->isLoopDetected())
+    while (! $gameLogic->isMaxStepsReached($board) && ! $gameLogic->isLoopDetected())
     {
         $output->outputBoard($board);
         $gameLogic->calculateNextBoard($board);

@@ -73,7 +73,6 @@ class BoardTest extends TestCase
      */
     public function testCanGetAttributes()
     {
-
         $this->assertEquals(17, count($this->board->fields()));
         $this->assertFalse($this->board->hasBorder());
         $this->assertEquals(17, $this->board->height());
@@ -233,25 +232,6 @@ class BoardTest extends TestCase
         ];
     }
 
-
-    /**
-     * @covers \GameOfLife\Board::isFinished()
-     */
-    public function testDetectsFinish()
-    {
-        // check whether empty board is detected
-        $this->assertTrue($this->board->isFinished());
-
-        // check whether living cells are detected
-        $this->board->setField(0, 0, true);
-        $this->assertFalse($this->board->isFinished());
-
-        // check whether max step makes the board stop
-        $this->board->setGameStep(250);
-        $this->assertTrue($this->board->isFinished());
-    }
-
-
     /**
      * @dataProvider calculateCenterProvider
      * @covers \GameOfLife\Board::getCenter()
@@ -316,7 +296,7 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\Board::resetCurrentBoard()
+     * @covers \GameOfLife\Board::resetBoard()
      */
     public function testCanResetCurrentBoard()
     {
@@ -325,7 +305,7 @@ class BoardTest extends TestCase
 
         $this->assertEquals(2, $this->board->getAmountCellsAlive());
 
-        $this->board->resetCurrentBoard();
+        $this->board->resetBoard();
         $this->assertEquals(0, $this->board->getAmountCellsAlive());
     }
 

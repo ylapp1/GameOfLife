@@ -37,7 +37,7 @@ class ExitOption extends BoardEditorOption
      */
     public function exitBoardEditor()
     {
-        $this->parentBoardEditor->board()->resetCurrentBoard();
+        $this->parentBoardEditor->board()->resetBoard();
         return true;
     }
 }

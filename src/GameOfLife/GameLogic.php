@@ -21,7 +21,7 @@ class GameLogic
     /**
      * Stores the current fields
      *
-     * @var String
+     * @var String $currentBoard
      */
     private $currentBoard = array();
 
@@ -35,7 +35,7 @@ class GameLogic
     /**
      * Birth/Death rules for this session
      *
-     * @var BaseRule The birth/death rules
+     * @var BaseRule $rule
      */
     private $rule;
 
@@ -47,12 +47,14 @@ class GameLogic
      */
     public function __construct(BaseRule $_rule)
     {
+        $this->currentBoard = array();
+        $this->historyOfBoards = array();
         $this->rule = $_rule;
     }
 
 
     /**
-     * Returns the fields of the current board
+     * Returns the fields of the current board.
      *
      * @return String Fields of the current board
      */
@@ -62,7 +64,7 @@ class GameLogic
     }
 
     /**
-     * Sets the fields of the current board
+     * Sets the fields of the current board.
      *
      * @param String $_currentBoard Fields of the current board
      */
@@ -86,15 +88,15 @@ class GameLogic
      *
      * @param String[] $_historyOfBoards History of boards
      */
-    public function setHistoryOfBoards($_historyOfBoards)
+    public function setHistoryOfBoards(array $_historyOfBoards)
     {
         $this->historyOfBoards = $_historyOfBoards;
     }
 
     /**
-     * Returns the birth/death rules for this session
+     * Returns the birth/death rules for this session.
      *
-     * @return BaseRule The birth/death rules
+     * @return BaseRule Birth/death rules
      */
     public function rule(): BaseRule
     {
@@ -102,11 +104,11 @@ class GameLogic
     }
 
     /**
-     * Sets the birth/death rules for this session
+     * Sets the birth/death rules for this session.
      *
-     * @param BaseRule $_rule The birth/death rules
+     * @param BaseRule $_rule Birth/death rules
      */
-    public function setRule($_rule)
+    public function setRule(BaseRule $_rule)
     {
         $this->rule = $_rule;
     }
@@ -132,20 +134,38 @@ class GameLogic
     {
         $this->addToHistory($_board);
 
-        $newBoard = $_board->initializeEmptyBoard();
+        /** @var Field[][] $newFields */
+        $newFields = $_board->initializeEmptyBoard();
 
         foreach ($_board->fields() as $line)
         {
             foreach ($line as $field)
             {
-                $newState = $this->rule->calculateNewState($field);
-                $newBoard[$field->y()][$field->x()]->setValue($newState);
+                if ($field instanceof Field)
+                {
+                    $newState = $this->rule->calculateNewState($field);
+                    $newFields[$field->y()][$field->x()]->setValue($newState);
+                }
             }
         }
 
-        $_board->setFields($newBoard);
+        $_board->setFields($newFields);
         $_board->setGameStep($_board->gameStep() + 1);
         $this->currentBoard = (string)$_board;
+    }
+
+    /**
+     * Checks whether the max step is reached.
+     *
+     * @param Board $_board The board which is checked
+     *
+     * @return bool true: board is finished
+     *              false: board is not finished
+     */
+    public function isMaxStepsReached(Board $_board): bool
+    {
+        if ($_board->gameStep() >= $_board->maxSteps()) return true;
+        else return false;
     }
 
     /**

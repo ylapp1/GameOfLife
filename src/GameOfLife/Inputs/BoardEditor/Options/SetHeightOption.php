@@ -46,7 +46,7 @@ class SetHeightOption extends BoardEditorOption
             $fields = $this->parentBoardEditor()->board()->fields();
 
             $this->parentBoardEditor->board()->setHeight($_height);
-            $this->parentBoardEditor()->board()->resetCurrentBoard();
+            $this->parentBoardEditor()->board()->resetBoard();
 
             foreach ($fields as $row)
             {

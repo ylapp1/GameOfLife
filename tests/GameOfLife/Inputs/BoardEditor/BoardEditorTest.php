@@ -117,7 +117,7 @@ class BoardEditorTest extends TestCase
      */
     public function testCanSetField(String $_inputCoordinates, String $_expectedErrorMessage = null)
     {
-        $this->testBoard->resetCurrentBoard();
+        $this->testBoard->resetBoard();
         $this->boardEditorMock->expects($this->exactly(2))
             ->method("readInput")
             ->willReturn($_inputCoordinates, "start");
