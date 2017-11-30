@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Input\TemplateHandler;
+namespace TemplateHandler;
 
 use GameOfLife\Board;
 use GameOfLife\Field;

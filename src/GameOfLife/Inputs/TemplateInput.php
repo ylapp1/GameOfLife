@@ -9,8 +9,8 @@
 namespace Input;
 
 use GameOfLife\Board;
-use Input\TemplateHandler\TemplateLoader;
-use Input\TemplateHandler\TemplatePlacer;
+use TemplateHandler\TemplateLoader;
+use TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
@@ -20,7 +20,7 @@ use Utils\FileSystemHandler;
  * Call addOptions($_options) to add the FileInput options to a Getopt object
  * Call fillBoard($_board) to place a template on the board
  */
-class FileInput extends BaseInput
+class TemplateInput extends BaseInput
 {
     private $templateDirectory;
     private $templateLoader;

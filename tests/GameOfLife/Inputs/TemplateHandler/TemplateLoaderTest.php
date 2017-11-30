@@ -7,12 +7,12 @@
  */
 
 use GameOfLife\Board;
-use Input\TemplateHandler\TemplateLoader;
+use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
 use Utils\FileSystemHandler;
 
 /**
- * Checks whether \Input\TemplateHandler\TemplateLoader works as expected.
+ * Checks whether \TemplateHandler\TemplateLoader works as expected.
  */
 class TemplateLoaderTest extends TestCase
 {

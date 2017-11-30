@@ -9,7 +9,7 @@
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\SaveTemplateOption;
 use GameOfLife\Board;
-use Input\TemplateHandler\TemplateSaver;
+use TemplateHandler\TemplateSaver;
 use PHPUnit\Framework\TestCase;
 
 /**

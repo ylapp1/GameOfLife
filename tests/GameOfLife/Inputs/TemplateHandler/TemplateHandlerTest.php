@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Input\TemplateHandler\TemplateHandler;
+use TemplateHandler\TemplateHandler;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +18,7 @@ class TemplateHandlerTest extends TestCase
     /**
      * Checks whether the constructor sets the attributes as expected.
      *
-     * @covers \Input\TemplateHandler\TemplateHandler::__construct()
+     * @covers \TemplateHandler\TemplateHandler::__construct()
      */
     public function testCanBeConstructed()
     {
@@ -31,10 +31,10 @@ class TemplateHandlerTest extends TestCase
     /**
      * Checks whether the getters/setters work as expected.
      *
-     * @covers \Input\TemplateHandler\TemplateHandler::setFileSystemHandler()
-     * @covers \Input\TemplateHandler\TemplateHandler::fileSystemHandler()
-     * @covers \Input\TemplateHandler\TemplateHandler::setTemplateDirectory()
-     * @covers \Input\TemplateHandler\TemplateHandler::templateDirectory()
+     * @covers \TemplateHandler\TemplateHandler::setFileSystemHandler()
+     * @covers \TemplateHandler\TemplateHandler::fileSystemHandler()
+     * @covers \TemplateHandler\TemplateHandler::setTemplateDirectory()
+     * @covers \TemplateHandler\TemplateHandler::templateDirectory()
      */
     public function testCanSetAttributes()
     {

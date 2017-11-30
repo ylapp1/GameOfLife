@@ -10,7 +10,7 @@ namespace BoardEditor;
 
 use GameOfLife\Board;
 use Output\BoardEditorOutput;
-use Input\TemplateHandler\TemplateSaver;
+use TemplateHandler\TemplateSaver;
 
 /**
  * Lets the user edit a board by using options or toggling cells.

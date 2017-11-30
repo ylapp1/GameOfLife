@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Field;
-use Input\TemplateHandler\Template;
+use TemplateHandler\Template;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -39,12 +39,12 @@ class TemplateTest extends TestCase
      * Checks whether getters/setters work as expected.
      *
      * @dataProvider setAttributesProvider
-     * @covers \Input\TemplateHandler\Template::setWidth()
-     * @covers \Input\TemplateHandler\Template::width()
-     * @covers \Input\TemplateHandler\Template::setHeight()
-     * @covers \Input\TemplateHandler\Template::height()
-     * @covers \Input\TemplateHandler\Template::setFields()
-     * @covers \Input\TemplateHandler\Template::fields()
+     * @covers \TemplateHandler\Template::setWidth()
+     * @covers \TemplateHandler\Template::width()
+     * @covers \TemplateHandler\Template::setHeight()
+     * @covers \TemplateHandler\Template::height()
+     * @covers \TemplateHandler\Template::setFields()
+     * @covers \TemplateHandler\Template::fields()
      *
      * @param int $_width Template width
      * @param int $_height Template height

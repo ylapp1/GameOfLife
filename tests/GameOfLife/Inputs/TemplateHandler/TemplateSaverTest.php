@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Board;
-use Input\TemplateHandler\TemplateSaver;
+use TemplateHandler\TemplateSaver;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ class TemplateSaverTest extends TestCase
     /**
      * Checks whether the constructor works as expected.
      *
-     * @covers \Input\TemplateHandler\TemplateSaver
+     * @covers \TemplateHandler\TemplateSaver
      */
     public function testCanBeConstructed()
     {

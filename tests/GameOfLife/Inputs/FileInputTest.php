@@ -8,9 +8,9 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Input\FileInput;
-use Input\TemplateHandler\TemplateLoader;
-use Input\TemplateHandler\TemplatePlacer;
+use Input\TemplateInput;
+use TemplateHandler\TemplateLoader;
+use TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FileInputTest extends TestCase
 {
-    /** @var  FileInput $input */
+    /** @var  TemplateInput $input */
     private $input;
     /** @var Board $board */
     private $board;
@@ -30,7 +30,7 @@ class FileInputTest extends TestCase
 
     protected function setUp()
     {
-        $this->input = new FileInput($this->testTemplateDirectory);
+        $this->input = new TemplateInput($this->testTemplateDirectory);
         $this->board = new Board(10, 10, 50, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -44,11 +44,11 @@ class FileInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\FileInput::__construct()
+     * @covers \Input\TemplateInput::__construct()
      */
     public function testCanBeConstructed()
     {
-        $input = new FileInput();
+        $input = new TemplateInput();
 
         $this->assertInstanceOf(TemplateLoader::class, $input->templateLoader());
         $this->assertInstanceOf(TemplatePlacer::class, $input->templatePlacer());
@@ -56,12 +56,12 @@ class FileInputTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \Input\FileInput::setTemplateDirectory()
-     * @covers \Input\FileInput::templateDirectory()
-     * @covers \Input\FileInput::setTemplateLoader()
-     * @covers \Input\FileInput::templateLoader()
-     * @covers \Input\FileInput::setTemplatePlacer()
-     * @covers \Input\FileInput::templatePlacer()
+     * @covers \Input\TemplateInput::setTemplateDirectory()
+     * @covers \Input\TemplateInput::templateDirectory()
+     * @covers \Input\TemplateInput::setTemplateLoader()
+     * @covers \Input\TemplateInput::templateLoader()
+     * @covers \Input\TemplateInput::setTemplatePlacer()
+     * @covers \Input\TemplateInput::templatePlacer()
      *
      * @param string $_templateDirectory    Template directory
      */
@@ -90,7 +90,7 @@ class FileInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\FileInput::addOptions()
+     * @covers \Input\TemplateInput::addOptions()
      */
     public function testCanAddOptions()
     {
@@ -108,8 +108,8 @@ class FileInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\FileInput::fillBoard
-     * @covers \Input\FileInput::placeTemplate()
+     * @covers \Input\TemplateInput::fillBoard
+     * @covers \Input\TemplateInput::placeTemplate()
      */
     public function testCanLoadTemplate()
     {
@@ -136,7 +136,7 @@ class FileInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\FileInput::fillBoard()
+     * @covers \Input\TemplateInput::fillBoard()
      */
     public function testDetectsEmptyTemplateName()
     {
@@ -172,8 +172,8 @@ class FileInputTest extends TestCase
     }
 
     /**
-     * @covers \Input\FileInput::fillBoard()
-     * @covers \Input\FileInput::listTemplates()
+     * @covers \Input\TemplateInput::fillBoard()
+     * @covers \Input\TemplateInput::listTemplates()
      */
     public function testCanListTemplates()
     {
@@ -207,8 +207,8 @@ class FileInputTest extends TestCase
 
     /**
      * @dataProvider placeTemplateProvider()
-     * @covers \Input\FileInput::fillBoard()
-     * @covers \Input\FileInput::placeTemplate()
+     * @covers \Input\TemplateInput::fillBoard()
+     * @covers \Input\TemplateInput::placeTemplate()
      *
      * @param int $_posX                X-Position of top left corner of the template
      * @param int $_posY                Y-Position of top left corner of the template

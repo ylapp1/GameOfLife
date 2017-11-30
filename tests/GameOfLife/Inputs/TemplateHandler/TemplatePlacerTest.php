@@ -8,8 +8,8 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Input\TemplateHandler\Template;
-use Input\TemplateHandler\TemplatePlacer;
+use TemplateHandler\Template;
+use TemplateHandler\TemplatePlacer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -20,8 +20,8 @@ class TemplatePlacerTest extends TestCase
     /**
      * Checks whether templates can be placed as expected.
      *
-     * @covers \Input\TemplateHandler\TemplatePlacer::placeTemplate()
-     * @covers \Input\TemplateHandler\TemplatePlacer::isTemplateOutOfBounds()
+     * @covers \TemplateHandler\TemplatePlacer::placeTemplate()
+     * @covers \TemplateHandler\TemplatePlacer::isTemplateOutOfBounds()
      */
     public function testCanPlaceTemplate()
     {

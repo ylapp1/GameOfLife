@@ -8,7 +8,6 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\StartOption;
-use GameOfLife\Board;
 use PHPUnit\Framework\TestCase;
 
 /**
