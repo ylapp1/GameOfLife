@@ -8,7 +8,7 @@
 
 use GameOfLife\Field;
 use Rule\BaseRule;
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -91,7 +91,7 @@ class BaseRuleTest extends TestCase
                       ->willReturn($_initialState);
         }
 
-        $rule = new ComwayRule();
+        $rule = new ConwayRule();
 
         if ($fieldMock instanceof Field)
         {

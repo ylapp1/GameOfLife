@@ -12,7 +12,7 @@ use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
 /**
- * Displays help text
+ * Displays help text.
  */
 class HelpOption extends BoardEditorOption
 {
@@ -37,15 +37,15 @@ class HelpOption extends BoardEditorOption
      */
     public function displayHelp()
     {
-        $output = "Set the coordinates for the living cells as below:\n";
-        $output .= "<X-Coordinate>,<Y-Coordinate>\n";
-        $output .= "Enter the coordinates of a set field to unset it.\n";
-        $output .= "The game starts when you type \"start\" in a new line and press <"."Enter>\n";
-        $output .= "You can save your board configuration before starting the simulation by typing \"save\"\n";
-        $output .= "Type \"options\" to see a list of all valid options\n";
-        $output .= "Let's Go:\n";
+        $helpText = "Set the coordinates for the living cells as below:\n"
+            . "<X-Coordinate>,<Y-Coordinate>\n"
+            . "Enter the coordinates of a set field to unset it.\n"
+            . "The game starts when you type \"start\" in a new line and press <Enter>\n"
+            . "You can save your board configuration before starting the simulation by typing \"save\"\n"
+            . "Type \"options\" to see a list of all valid options\n"
+            . "Let's Go:\n";
 
-        echo $output;
+        echo $helpText;
 
         return false;
     }

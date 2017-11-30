@@ -115,9 +115,6 @@ class ImageOutputTest extends TestCase
         $imageCreator = $this->output->imageCreator();
         $baseImage = $imageCreator->baseImage();
 
-        $this->assertEquals(new ImageColor(0, 0, 0), $imageCreator->backgroundColor());
-        $this->assertEquals(new ImageColor(255, 255, 255), $imageCreator->cellAliveColor());
-        $this->assertEquals(new ImageColor(255, 0, 0), $imageCreator->gridColor());
         $this->assertEquals(10, imagesx($baseImage));
         $this->assertEquals(10, imagesy($baseImage));
         $this->assertEquals(10, $imageCreator->cellSize());
@@ -143,8 +140,5 @@ class ImageOutputTest extends TestCase
         $imageCreator = $this->output->imageCreator();
 
         $this->assertEquals(100, $imageCreator->cellSize());
-        $this->assertEquals(new ImageColor(0, 0, 0), $imageCreator->cellAliveColor());
-        $this->assertEquals(new ImageColor(255, 255, 255), $imageCreator->backgroundColor());
-        $this->assertEquals(new ImageColor(0, 0, 0), $imageCreator->gridColor());
     }
 }

@@ -23,7 +23,7 @@ use Input\RandomInput;
 use Output\BaseOutput;
 use Output\ConsoleOutput;
 use Rule\BaseRule;
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 
 // Create command line options
@@ -154,7 +154,7 @@ else
     // initialize input, output and rule
     $input = new RandomInput();
     $output = new ConsoleOutput();
-    $rule = new ComwayRule();
+    $rule = new ConwayRule();
 
     // set user selected input
     if ($options->getOption("input") !== null)

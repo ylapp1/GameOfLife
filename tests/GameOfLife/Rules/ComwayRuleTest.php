@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,7 +19,7 @@ class ComwayRuleTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $rule = new ComwayRule();
+        $rule = new ConwayRule();
 
         $this->assertEquals(array(3), $rule->rulesBirth());
         $this->assertEquals(array(2, 3), $rule->rulesStayAlive());

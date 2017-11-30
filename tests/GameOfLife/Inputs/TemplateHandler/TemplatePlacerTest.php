@@ -52,11 +52,11 @@ class TemplatePlacerTest extends TestCase
 
         $this->assertTrue($result);
         $this->assertEquals(5, $board->getAmountCellsAlive());
-        $this->assertTrue($board->getField(0, 0));
-        $this->assertTrue($board->getField(1, 0));
-        $this->assertTrue($board->getField(2, 0));
-        $this->assertTrue($board->getField(0, 1));
-        $this->assertTrue($board->getField(1, 1));
+        $this->assertTrue($board->getFieldStatus(0, 0));
+        $this->assertTrue($board->getFieldStatus(1, 0));
+        $this->assertTrue($board->getFieldStatus(2, 0));
+        $this->assertTrue($board->getFieldStatus(0, 1));
+        $this->assertTrue($board->getFieldStatus(1, 1));
         $this->assertEquals($template->width(), $board->width());
         $this->assertEquals($template->height(), $board->height());
 
@@ -68,11 +68,11 @@ class TemplatePlacerTest extends TestCase
 
         $this->assertTrue($result);
         $this->assertEquals(5, $board->getAmountCellsAlive());
-        $this->assertTrue($board->getField(0, 0));
-        $this->assertTrue($board->getField(1, 0));
-        $this->assertTrue($board->getField(2, 0));
-        $this->assertTrue($board->getField(0, 1));
-        $this->assertTrue($board->getField(1, 1));
+        $this->assertTrue($board->getFieldStatus(0, 0));
+        $this->assertTrue($board->getFieldStatus(1, 0));
+        $this->assertTrue($board->getFieldStatus(2, 0));
+        $this->assertTrue($board->getFieldStatus(0, 1));
+        $this->assertTrue($board->getFieldStatus(1, 1));
         $this->assertEquals(10, $board->width());
         $this->assertEquals(10, $board->height());
 

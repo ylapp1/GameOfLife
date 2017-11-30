@@ -95,7 +95,7 @@ class Board
         {
             for ($x = 0; $x < $this->width; $x++)
             {
-                if ($this->getField($x, $y)) $string .= "X";
+                if ($this->getFieldStatus($x, $y)) $string .= "X";
                 else $string .= ".";
             }
 
@@ -117,6 +117,16 @@ class Board
     }
 
     /**
+     * Sets current board.
+     *
+     * @param Field[][] $_fields Current board
+     */
+    public function setFields(array $_fields)
+    {
+        $this->fields = $_fields;
+    }
+
+    /**
      * Returns the current game step.
      *
      * @return int Current game step
@@ -134,16 +144,6 @@ class Board
     public function setGameStep(int $_gameStep)
     {
         $this->gameStep = $_gameStep;
-    }
-
-    /**
-     * Sets current board.
-     *
-     * @param Field[][] $_fields Current board
-     */
-    public function setFields(array $_fields)
-    {
-        $this->fields = $_fields;
     }
 
     /**
@@ -270,7 +270,7 @@ class Board
      *
      * @return bool Returns whether the cell is alive (true) or dead (false)
      */
-    public function getField (int $_x, int $_y): bool
+    public function getFieldStatus (int $_x, int $_y): bool
     {
         return $this->fields[$_y][$_x]->isAlive();
     }

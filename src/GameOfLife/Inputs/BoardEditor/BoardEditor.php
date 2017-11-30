@@ -271,7 +271,7 @@ class BoardEditor
             elseif ($inputY === false) echo "Error: Invalid value for y specified: Value exceeds field borders or is not set\n";
             else
             {
-                $currentCellState = $_board->getField($inputX, $inputY);
+                $currentCellState = $_board->getFieldStatus($inputX, $inputY);
                 $_board->setField($inputX, $inputY, !$currentCellState);
                 $this->output->outputBoard($_board, $inputX, $inputY);
             }

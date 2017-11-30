@@ -22,7 +22,6 @@ use Utils\FileSystemHandler;
  */
 class FileInput extends BaseInput
 {
-    private $fileSystemHandler;
     private $templateDirectory;
     private $templateLoader;
     private $templatePlacer;
@@ -35,8 +34,6 @@ class FileInput extends BaseInput
      */
     public function __construct(String $_templateDirectory = null)
     {
-        $this->fileSystemHandler = new FileSystemHandler();
-
         if ($_templateDirectory === null) $this->templateDirectory = __DIR__ . "/../../../Input/Templates/";
         else $this->templateDirectory = $_templateDirectory;
 
@@ -44,26 +41,6 @@ class FileInput extends BaseInput
         $this->templatePlacer = new TemplatePlacer();
     }
 
-
-    /**
-     * Returns the file system handler.
-     *
-     * @return FileSystemHandler File system handler
-     */
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    /**
-     * Sets the file system handler.
-     *
-     * @param FileSystemHandler $_fileSystemHandler File system handler
-     */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
 
     /**
      * Returns the template directory.
@@ -155,8 +132,10 @@ class FileInput extends BaseInput
         if ($_options->getOption("template") !== null) $this->placeTemplate($_board, $_options);
         elseif ($_options->getOption("list-templates") !== null)
         {
-            $defaultTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory, ".txt");
-            $customTemplates = $this->fileSystemHandler->getFileList($this->templateDirectory . "/Custom", ".txt");
+            $fileSystemHandler = new FileSystemHandler();
+
+            $defaultTemplates = $fileSystemHandler->getFileList($this->templateDirectory, ".txt");
+            $customTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/Custom", ".txt");
 
             echo $this->listTemplates("Default templates", $defaultTemplates);
             echo $this->listTemplates("Custom templates", $customTemplates);

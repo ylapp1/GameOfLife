@@ -61,7 +61,7 @@ class BlinkerInputTest extends TestCase
     {
         $this->input->fillBoard($this->board, new Getopt());
         $this->assertEquals(3, $this->board->getAmountCellsAlive());
-        $this->assertEquals($_expected, $this->board->getField($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getFieldStatus($_x, $_y));
     }
 
     public function setCellsProvider()
@@ -95,9 +95,9 @@ class BlinkerInputTest extends TestCase
         if (! $_expectsError)
         {
             $this->assertEquals(3, $this->board->getAmountCellsAlive());
-            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY));
-            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY + 1));
-            $this->assertTrue($this->board->getField($_blinkerPosX, $_blinkerPosY + 2));
+            $this->assertTrue($this->board->getFieldStatus($_blinkerPosX, $_blinkerPosY));
+            $this->assertTrue($this->board->getFieldStatus($_blinkerPosX, $_blinkerPosY + 1));
+            $this->assertTrue($this->board->getFieldStatus($_blinkerPosX, $_blinkerPosY + 2));
         }
     }
 

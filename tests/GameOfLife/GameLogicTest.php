@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\GameLogic;
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,7 +24,7 @@ class GameLogicTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $rule = new ComwayRule();
+        $rule = new ConwayRule();
         $gameLogic = new GameLogic($rule);
 
         $this->assertEquals($rule, $gameLogic->rule());
@@ -42,7 +42,7 @@ class GameLogicTest extends TestCase
      */
     public function testCanSetAttributes()
     {
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
 
         $board = new Board(5, 5, 1, true);
         $fields = (string)$board;
@@ -50,11 +50,11 @@ class GameLogicTest extends TestCase
 
         $gameLogic->setCurrentBoard($fields);
         $gameLogic->setHistoryOfBoards($historyTest);
-        $gameLogic->setRule(new ComwayRule());
+        $gameLogic->setRule(new ConwayRule());
 
         $this->assertEquals($fields, $gameLogic->currentBoard());
         $this->assertEquals($historyTest, $gameLogic->historyOfBoards());
-        $this->assertEquals(new ComwayRule(), $gameLogic->rule());
+        $this->assertEquals(new ConwayRule(), $gameLogic->rule());
     }
 
     /**
@@ -66,7 +66,7 @@ class GameLogicTest extends TestCase
     public function testCanCalculateNextBoard()
     {
         $board = new Board(3, 3, 5, true);
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
 
         $board->setField(1, 0, true);
         $board->setField(1, 1, true);
@@ -75,16 +75,16 @@ class GameLogicTest extends TestCase
 
         $gameLogic->calculateNextBoard($board);
 
-        $this->assertTrue($board->getField(0, 1));
-        $this->assertTrue($board->getField(1, 1));
-        $this->assertTrue($board->getField(2, 1));
+        $this->assertTrue($board->getFieldStatus(0, 1));
+        $this->assertTrue($board->getFieldStatus(1, 1));
+        $this->assertTrue($board->getFieldStatus(2, 1));
         $this->assertEquals(3, $board->getAmountCellsAlive());
 
         $gameLogic->calculateNextBoard($board);
 
-        $this->assertTrue($board->getField(1, 0));
-        $this->assertTrue($board->getField(1, 1));
-        $this->assertTrue($board->getField(1, 2));
+        $this->assertTrue($board->getFieldStatus(1, 0));
+        $this->assertTrue($board->getFieldStatus(1, 1));
+        $this->assertTrue($board->getFieldStatus(1, 2));
         $this->assertEquals(3, $board->getAmountCellsAlive());
 
         $this->assertEquals(2, count($gameLogic->historyOfBoards()));
@@ -100,7 +100,7 @@ class GameLogicTest extends TestCase
      */
     public function testCanChangeBorderType()
     {
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
         $board = new Board(10, 10, 50, true);
 
         // solid border
@@ -111,8 +111,8 @@ class GameLogicTest extends TestCase
         $gameLogic->calculateNextBoard($board);
 
         $this->assertEquals(2, $board->getAmountCellsAlive());
-        $this->assertTrue($board->getField(9, 5));
-        $this->assertTrue($board->getField(8, 5));
+        $this->assertTrue($board->getFieldStatus(9, 5));
+        $this->assertTrue($board->getFieldStatus(8, 5));
 
         $gameLogic->calculateNextBoard($board);
         $this->assertEquals(0, $board->getAmountCellsAlive());
@@ -129,15 +129,15 @@ class GameLogicTest extends TestCase
         $gameLogic->calculateNextBoard($board);
 
         $this->assertEquals(3, $board->getAmountCellsAlive());
-        $this->assertTrue($board->getField(0, 5));
-        $this->assertTrue($board->getField(9, 5));
-        $this->assertTrue($board->getField(8, 5));
+        $this->assertTrue($board->getFieldStatus(0, 5));
+        $this->assertTrue($board->getFieldStatus(9, 5));
+        $this->assertTrue($board->getFieldStatus(8, 5));
 
         $gameLogic->calculateNextBoard($board);
         $this->assertEquals(3, $board->getAmountCellsAlive());
-        $this->assertTrue($board->getField(9, 4));
-        $this->assertTrue($board->getField(9, 5));
-        $this->assertTrue($board->getField(9, 6));
+        $this->assertTrue($board->getFieldStatus(9, 4));
+        $this->assertTrue($board->getFieldStatus(9, 5));
+        $this->assertTrue($board->getFieldStatus(9, 6));
     }
 
     /**
@@ -157,7 +157,7 @@ class GameLogicTest extends TestCase
         $board->setField(2, 1, true);
         $board->setField(2, 2, true);
 
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
         $this->assertFalse($gameLogic->isLoopDetected());
 
         $gameLogic->calculateNextBoard($board);
@@ -174,7 +174,7 @@ class GameLogicTest extends TestCase
     public function testCanDetectMaxStepsReached()
     {
         $board = new Board(1, 1, 2, true);
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
 
         // Less than max steps
         $board->setGameStep(1);

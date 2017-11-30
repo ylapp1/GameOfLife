@@ -65,7 +65,7 @@ class GliderInputTest extends TestCase
         $this->input->fillBoard($board, $options);
 
         $this->assertEquals(5, $board->getAmountCellsAlive());
-        $this->assertEquals($_expected, $board->getField($_x, $_y));
+        $this->assertEquals($_expected, $board->getFieldStatus($_x, $_y));
     }
 
     public function setCellsProvider()
@@ -102,11 +102,11 @@ class GliderInputTest extends TestCase
         if (! $_expectsError)
         {
             $this->assertEquals(5, $this->board->getAmountCellsAlive());
-            $this->assertTrue($this->board->getField($_gliderPosX + 1, $_gliderPosY));
-            $this->assertTrue($this->board->getField($_gliderPosX + 2, $_gliderPosY + 2));
-            $this->assertTrue($this->board->getField($_gliderPosX, $_gliderPosY + 2));
-            $this->assertTrue($this->board->getField($_gliderPosX + 1, $_gliderPosY + 2));
-            $this->assertTrue($this->board->getField($_gliderPosX + 2, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getFieldStatus($_gliderPosX + 1, $_gliderPosY));
+            $this->assertTrue($this->board->getFieldStatus($_gliderPosX + 2, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getFieldStatus($_gliderPosX, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getFieldStatus($_gliderPosX + 1, $_gliderPosY + 2));
+            $this->assertTrue($this->board->getFieldStatus($_gliderPosX + 2, $_gliderPosY + 2));
         }
     }
 

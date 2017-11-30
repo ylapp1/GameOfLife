@@ -73,7 +73,9 @@ class ImageCreatorTest extends TestCase
 
 
     /**
-     * @covers \Output\Helpers\ImageCreator::__construct
+     * @covers \Output\Helpers\ImageCreator::__construct()
+     * @covers \Output\Helpers\ImageCreator::initializeBaseImage()
+     * @covers \Output\Helpers\ImageCreator::initializeCellImage()
      */
     public function testCanBeConstructed()
     {
@@ -84,9 +86,6 @@ class ImageCreatorTest extends TestCase
                                          $colorWhite, $colorBlack, "tmp/Frames");
 
         $this->assertEquals(15, $imageCreator->cellSize());
-        $this->assertEquals($colorWhite, $imageCreator->backgroundColor());
-        $this->assertEquals($colorBlack, $imageCreator->cellAliveColor());
-        $this->assertEquals($colorBlack, $imageCreator->gridColor());
         $this->assertEquals("tmp/Frames", $imageCreator->outputPath());
         $this->assertTrue(is_resource($imageCreator->baseImage()));
         $this->assertTrue(is_resource($imageCreator->cellImage()));
@@ -99,12 +98,6 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::outputPath()
      * @covers \Output\Helpers\ImageCreator::setCellSize()
      * @covers \Output\Helpers\ImageCreator::cellSize()
-     * @covers \Output\Helpers\ImageCreator::setBackgroundColor()
-     * @covers \Output\Helpers\ImageCreator::backgroundColor()
-     * @covers \Output\Helpers\ImageCreator::setCellAliveColor()
-     * @covers \Output\Helpers\ImageCreator::cellAliveColor()
-     * @covers \Output\Helpers\ImageCreator::setGridColor()
-     * @covers \Output\Helpers\ImageCreator::gridColor()
      * @covers \Output\Helpers\ImageCreator::setBaseImage()
      * @covers \Output\Helpers\ImageCreator::baseImage()
      * @covers \Output\Helpers\ImageCreator::setCellImage()
@@ -119,26 +112,15 @@ class ImageCreatorTest extends TestCase
     {
         $baseImage = imagecreate(rand(1, 10), rand(1, 10));
         $cellImage = imagecreate(rand(1, 10), rand(1, 10));
-
-        $backgroundColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
-        $cellAliveColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
-        $gridColor = new ImageColor(rand(0, 255), rand(0, 255), rand(0, 255));
-
         $fileSystemHandler = new FileSystemHandler();
 
         $this->imageCreator->setCellSize($_cellSize);
-        $this->imageCreator->setBackgroundColor($backgroundColor);
-        $this->imageCreator->setCellAliveColor($cellAliveColor);
-        $this->imageCreator->setGridColor($gridColor);
         $this->imageCreator->setOutputPath($_outputPath);
         $this->imageCreator->setBaseImage($baseImage);
         $this->imageCreator->setCellImage($cellImage);
         $this->imageCreator->setFileSystemHandler($fileSystemHandler);
 
         $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
-        $this->assertEquals($backgroundColor, $this->imageCreator->backgroundColor());
-        $this->assertEquals($cellAliveColor, $this->imageCreator->cellAliveColor());
-        $this->assertEquals($gridColor, $this->imageCreator->gridColor());
         $this->assertEquals($_outputPath, $this->imageCreator->outputPath());
         $this->assertEquals($baseImage, $this->imageCreator->baseImage());
         $this->assertEquals($cellImage, $this->imageCreator->cellImage());

@@ -11,7 +11,7 @@ namespace Rule;
 /**
  * Standard rules for Comway's Game of Life (Rules for 23/3).
  */
-class ComwayRule extends BaseRule
+class ConwayRule extends BaseRule
 {
     /**
      * Sets the birth/stay alive rules for this rule.

@@ -49,13 +49,13 @@ class FileInputTest extends TestCase
     public function testCanBeConstructed()
     {
         $input = new FileInput();
-        $this->assertEquals(new FileSystemHandler(), $input->fileSystemhandler());
+
+        $this->assertInstanceOf(TemplateLoader::class, $input->templateLoader());
+        $this->assertInstanceOf(TemplatePlacer::class, $input->templatePlacer());
     }
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \Input\FileInput::setFileSystemHandler()
-     * @covers \Input\FileInput::fileSystemHandler()
      * @covers \Input\FileInput::setTemplateDirectory()
      * @covers \Input\FileInput::templateDirectory()
      * @covers \Input\FileInput::setTemplateLoader()
@@ -67,16 +67,13 @@ class FileInputTest extends TestCase
      */
     public function testCanSetAttributes(string $_templateDirectory)
     {
-        $fileSystemHandler = new FileSystemHandler();
         $templateLoader = new TemplateLoader($_templateDirectory);
         $templatePlacer = new TemplatePlacer();
 
-        $this->input->setFileSystemHandler($fileSystemHandler);
         $this->input->setTemplateDirectory($_templateDirectory);
         $this->input->setTemplateLoader($templateLoader);
         $this->input->setTemplatePlacer($templatePlacer);
 
-        $this->assertEquals($fileSystemHandler, $this->input->fileSystemHandler());
         $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
         $this->assertEquals($templateLoader, $this->input->templateLoader());
         $this->assertEquals($templatePlacer, $this->input->templatePlacer());
@@ -235,7 +232,7 @@ class FileInputTest extends TestCase
         if ($_expectedString === null)
         {
             $this->assertEquals(1, $this->board->getAmountCellsAlive());
-            $this->assertTrue($this->board->getField($_posX, $_posY));
+            $this->assertTrue($this->board->getFieldStatus($_posX, $_posY));
         }
     }
 

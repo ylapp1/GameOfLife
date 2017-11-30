@@ -101,7 +101,7 @@ class Template
     }
 
     /**
-     * Sets the template fields
+     * Sets the template fields.
      *
      * @param Field[][] $_fields Template fields
      */

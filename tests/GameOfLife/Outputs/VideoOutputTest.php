@@ -11,7 +11,7 @@ use GameOfLife\GameLogic;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Output\VideoOutput;
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +46,7 @@ class VideoOutputTest extends TestCase
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
 
-        $this->gameLogic = new GameLogic(new ComwayRule());
+        $this->gameLogic = new GameLogic(new ConwayRule());
     }
 
     protected function tearDown()

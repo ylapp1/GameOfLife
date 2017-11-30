@@ -140,7 +140,7 @@ class BoardTest extends TestCase
     {
         $this->board->setField($_x, $_y, $_value);
 
-        $this->assertEquals($_expected, $this->board->getField($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getFieldStatus($_x, $_y));
     }
 
     public function setFieldsProvider()
@@ -154,7 +154,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider readFieldsProvider
-     * @covers \GameOfLife\Board::getField()
+     * @covers \GameOfLife\Board::getFieldStatus()
      *
      * @param int $_x           X-Coordinate of test field
      * @param int $_y           Y-Coordinate of test field
@@ -170,7 +170,7 @@ class BoardTest extends TestCase
 
         $this->board->setFields($testBoard);
 
-        $this->assertEquals($_expected, $this->board->getField($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getFieldStatus($_x, $_y));
     }
 
     public function readFieldsProvider()

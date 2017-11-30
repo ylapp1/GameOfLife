@@ -9,6 +9,7 @@
 namespace Output\Helpers;
 
 use GameOfLife\Board;
+use GameOfLife\Field;
 use Utils\FileSystemHandler;
 
 /**
@@ -19,9 +20,6 @@ use Utils\FileSystemHandler;
 class ImageCreator
 {
     private $outputPath;
-    private $backgroundColor;
-    private $gridColor;
-    private $cellAliveColor;
     private $cellSize;
     private $baseImage;
     private $cellImage;
@@ -45,66 +43,6 @@ class ImageCreator
     public function setOutputPath(string $_outputPath)
     {
         $this->outputPath = $_outputPath;
-    }
-
-    /**
-     * Returns the background color of the image.
-     *
-     * @return ImageColor   Background color of the image
-     */
-    public function backgroundColor(): ImageColor
-    {
-        return $this->backgroundColor;
-    }
-
-    /**
-     * Sets the background color of the image.
-     *
-     * @param ImageColor $_backgroundColor      Background color of the image
-     */
-    public function setBackgroundColor(ImageColor $_backgroundColor)
-    {
-        $this->backgroundColor = $_backgroundColor;
-    }
-
-    /**
-     * Returns the grid color of the image.
-     *
-     * @return ImageColor   Grid color of the image
-     */
-    public function gridColor(): ImageColor
-    {
-        return $this->gridColor;
-    }
-
-    /**
-     * Sets the grid color of the image.
-     *
-     * @param ImageColor $_gridColor    Grid color of the image
-     */
-    public function setGridColor(ImageColor $_gridColor)
-    {
-        $this->gridColor = $_gridColor;
-    }
-
-    /**
-     * Returns the cell color of the image.
-     *
-     * @return ImageColor   Cell color of the image
-     */
-    public function cellAliveColor(): ImageColor
-    {
-        return $this->cellAliveColor;
-    }
-
-    /**
-     * Sets the cell color of the image.
-     *
-     * @param ImageColor $_cellAliveColor   Cell color of the image
-     */
-    public function setCellAliveColor(ImageColor $_cellAliveColor)
-    {
-        $this->cellAliveColor = $_cellAliveColor;
     }
 
     /**
@@ -202,65 +140,96 @@ class ImageCreator
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
                                 ImageColor $_backgroundColor, ImageColor $_gridColor, string $_outPutPath)
     {
-        // Create a base image (empty grid) on which all the other images will be based
         $this->cellSize = $_cellSize;
         $this->outputPath = $_outPutPath;
 
-        $baseImage = imagecreate($_boardWidth * $this->cellSize, $_boardHeight * $this->cellSize);
+        // Generate base images
+        $this->baseImage = $this->initializeBaseImage($_boardWidth, $_boardHeight, $_backgroundColor, $_gridColor);
+        $this->cellImage = $this->initializeCellImage($_backgroundColor, $_cellAliveColor);
 
-        // set colors
-        $this->backgroundColor = $_backgroundColor;
-        $this->gridColor = $_gridColor;
-        $this->cellAliveColor = $_cellAliveColor;
+        $this->fileSystemHandler = new FileSystemHandler();
+    }
 
-        imagefill($baseImage, 0, 0, $this->backgroundColor->getColor($baseImage));
+    /**
+     * Initializes and returns the background image of each image (an empty grid).
+     *
+     * Requires the class attribute $cellSize to be set
+     *
+     * @param int $_width Board width
+     * @param int $_height Board height
+     * @param ImageColor $_backgroundColor Color of the background
+     * @param ImageColor $_gridColor Color of the grid
+     *
+     * @return resource Base Image
+     */
+    private function initializeBaseImage(int $_width, int $_height, ImageColor $_backgroundColor, ImageColor $_gridColor)
+    {
+        $baseImage = imagecreate($_width * $this->cellSize, $_height * $this->cellSize);
+        imagefill($baseImage, 0, 0, $_backgroundColor->getColor($baseImage));
 
         // draw grid
         imagesetthickness($baseImage, 1);
 
-        for ($x = 0; $x < $_boardWidth * $this->cellSize; $x += $this->cellSize)
+        // Vertical lines
+        for ($x = 0; $x < $_width * $this->cellSize; $x += $this->cellSize)
         {
-            imageline($baseImage, $x, 0, $x, imagesy($baseImage), $this->gridColor->getColor($baseImage));
+            imageline($baseImage, $x, 0, $x, imagesy($baseImage), $_gridColor->getColor($baseImage));
         }
 
-        for ($y = 0; $y < $_boardHeight * $this->cellSize; $y += $this->cellSize)
+        // Horizontal lines
+        for ($y = 0; $y < $_height * $this->cellSize; $y += $this->cellSize)
         {
-            imageline($baseImage, 0, $y, imagesx($baseImage), $y, $this->gridColor->getColor($baseImage));
+            imageline($baseImage, 0, $y, imagesx($baseImage), $y, $_gridColor->getColor($baseImage));
         }
 
         imagesetthickness($baseImage, 1);
-        $this->baseImage = $baseImage;
 
-        $red = 0;
-        while ($red == $this->backgroundColor->red() || $red == $this->cellAliveColor->red())
+        return $baseImage;
+    }
+
+    /**
+     * Initializes and returns the image for living cells.
+     *
+     * Requires the class attribute $cellSize to be set
+     *
+     * @param ImageColor $_backgroundColor Color of the background
+     * @param ImageColor $_cellAliveColor Color of living cells
+     *
+     * @return resource Cell image
+     */
+    private function initializeCellImage(ImageColor $_backgroundColor, ImageColor $_cellAliveColor)
+    {
+        // Generate a color that is unequal to the background as well as the cell color
+        // The color is used to make the space around the smiley transparent
+        $transparentColorRed = 0;
+        while ($transparentColorRed == $_backgroundColor->red() || $transparentColorRed == $_cellAliveColor->red())
         {
-                $red++;
+            $transparentColorRed++;
         }
 
-        $transparentColor = new ImageColor($red, 0, 0);
+        $transparentColor = new ImageColor($transparentColorRed, 0, 0);
 
         // Create Smiley Image for living cells
-        $cellImage = imagecreatetruecolor($_cellSize, $_cellSize);
+        $cellImage = imagecreatetruecolor($this->cellSize, $this->cellSize);
         imagefill($cellImage, 0, 0, $transparentColor->getColor($cellImage));
 
-        $headSize = $_cellSize * 4/5;
-        $padding = ($_cellSize - $headSize) / 2;
+        $headSize = $this->cellSize * 4/5;
+        $padding = ($this->cellSize - $headSize) / 2;
 
         // Head
-        imagefilledellipse($cellImage, $_cellSize / 2, $_cellSize / 2, $headSize, $headSize, $this->cellAliveColor->getColor($cellImage));
+        imagefilledellipse($cellImage, $this->cellSize / 2, $this->cellSize / 2, $headSize, $headSize, $_cellAliveColor->getColor($cellImage));
         // Eyes
-        imagefilledellipse($cellImage, $padding + $headSize * 1/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
-        imagefilledellipse($cellImage, $padding + $headSize * 3/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $this->backgroundColor->getColor($cellImage));
+        imagefilledellipse($cellImage, $padding + $headSize * 1/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $_backgroundColor->getColor($cellImage));
+        imagefilledellipse($cellImage, $padding + $headSize * 3/4, $padding + $headSize / 4, $headSize / 4, $headSize / 4, $_backgroundColor->getColor($cellImage));
         // Mouth
         imagesetthickness($cellImage, 5);
-        imagearc($cellImage, $padding + $headSize / 2, $padding + $headSize / 2, $headSize * 3/4,$headSize * 3/4, 25, 155, $this->backgroundColor->getColor($cellImage));
+        imagearc($cellImage, $padding + $headSize / 2, $padding + $headSize / 2, $headSize * 3/4,$headSize * 3/4, 25, 155, $_backgroundColor->getColor($cellImage));
 
         imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));
 
-        $this->cellImage = $cellImage;
-
-        $this->fileSystemHandler = new FileSystemHandler();
+        return $cellImage;
     }
+
 
     /**
      * Creates and returns an image of the current board.
@@ -279,11 +248,14 @@ class ImageCreator
         // Draw the cells
         foreach ($_board->fields() as $y=> $row)
         {
-            foreach ($row as $x=>$cell)
+            foreach ($row as $x=>$field)
             {
-                if ($cell->isAlive())
+                if ($field instanceof Field)
                 {
-                    imagecopymerge($image, $this->cellImage, $x * $this->cellSize, $y * $this->cellSize, 0, 0, $this->cellSize, $this->cellSize, 100);
+                    if ($field->isAlive())
+                    {
+                        imagecopymerge($image, $this->cellImage, $x * $this->cellSize, $y * $this->cellSize, 0, 0, $this->cellSize, $this->cellSize, 100);
+                    }
                 }
             }
         }

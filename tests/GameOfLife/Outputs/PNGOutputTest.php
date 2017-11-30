@@ -11,7 +11,7 @@ use GameOfLife\GameLogic;
 use Output\PngOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
-use Rule\ComwayRule;
+use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -123,7 +123,7 @@ class PNGOutputTest extends TestCase
      */
     public function testCanCreatePNG()
     {
-        $gameLogic = new GameLogic(new ComwayRule());
+        $gameLogic = new GameLogic(new ConwayRule());
         $this->expectOutputRegex("/.*Starting simulation ...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 

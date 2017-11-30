@@ -167,7 +167,7 @@ class UserInputTest extends TestCase
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
         $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertTrue($this->board->getField(0, 0));
+        $this->assertTrue($this->board->getFieldStatus(0, 0));
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
     }
