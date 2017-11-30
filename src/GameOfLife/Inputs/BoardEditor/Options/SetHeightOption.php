@@ -38,15 +38,16 @@ class SetHeightOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function setHeight(int $_height)
+    public function setHeight(int $_height = null)
     {
-        if ($_height < 1) echo "Error: the board height may not be less than 1\n";
+        if (! isset($_height)) echo "Error: No value for height entered!\n";
+        elseif ($_height < 1) echo "Error: The board height may not be less than 1\n";
         else
         {
-            $fields = $this->parentBoardEditor()->board()->fields();
+            $fields = $this->parentBoardEditor->board()->fields();
 
             $this->parentBoardEditor->board()->setHeight($_height);
-            $this->parentBoardEditor()->board()->resetBoard();
+            $this->parentBoardEditor->board()->resetBoard();
 
             foreach ($fields as $row)
             {
@@ -62,9 +63,10 @@ class SetHeightOption extends BoardEditorOption
                     }
                 }
             }
+
+            $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
         }
 
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
         return false;
     }
 }

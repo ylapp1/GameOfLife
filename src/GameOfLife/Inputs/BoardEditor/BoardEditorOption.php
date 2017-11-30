@@ -24,7 +24,10 @@ class BoardEditorOption
      * Name of the call back class method
      *
      * This function will be called when the option is used
-     * Note: The function must return true or false to indicate whether the board editing is finished after using this option
+     * Notes:
+     *   - The function must return true or false to indicate whether the board editing is finished after using this option
+     *   - Any function parameters must be defined as optional (you must then manually check in the function whether the
+     *     parameter is null)
      *
      * @var String $callback
      */

@@ -38,7 +38,7 @@ class SaveTemplateOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function saveTemplate(String $_templateName)
+    public function saveTemplate(String $_templateName = null)
     {
         if (! isset($_templateName) || $_templateName == "") echo "Error: Invalid template name!\n";
         else
