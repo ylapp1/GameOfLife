@@ -28,6 +28,7 @@ class ExitOption extends BoardEditorOption
         $this->name = "exit";
         $this->callback = "exitBoardEditor";
         $this->description = "Exit the application";
+        $this->numberOfArguments = 0;
     }
 
     /**

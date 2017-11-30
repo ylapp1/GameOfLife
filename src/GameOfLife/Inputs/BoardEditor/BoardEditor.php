@@ -8,9 +8,9 @@
 
 namespace BoardEditor;
 
+use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use Output\BoardEditorOutput;
-use TemplateHandler\TemplateSaver;
 
 /**
  * Lets the user edit a board by using options or toggling cells.
@@ -30,11 +30,11 @@ class BoardEditor
     private $board;
 
     /**
-     * Option list in the format "optionName" => BoardEditorOption $option
+     * Option Handler which loads and parses options.
      *
-     * @var BoardEditorOption[]
+     * @var BoardEditorOptionHandler
      */
-    private $options;
+    private $optionHandler;
 
     /**
      * Output that prints the board
@@ -44,11 +44,11 @@ class BoardEditor
     private $output;
 
     /**
-     * The template saver that is used to save templates
+     * Template directory which will be used in this board editor session
      *
-     * @var TemplateSaver
+     * @var String $templateDirectory
      */
-    private $templateSaver;
+    private $templateDirectory;
 
 
     /**
@@ -60,8 +60,10 @@ class BoardEditor
     public function __construct(String $_templateDirectory, Board $_board = null)
     {
         if (isset($_board)) $this->board = $_board;
+
+        $this->templateDirectory = $_templateDirectory;
+        $this->optionHandler = new BoardEditorOptionHandler($this);
         $this->output = new BoardEditorOutput();
-        $this->templateSaver = new TemplateSaver($_templateDirectory);
     }
 
 
@@ -86,23 +88,23 @@ class BoardEditor
     }
 
     /**
-     * Returns the option list.
+     * Returns the option handler.
      *
-     * @return BoardEditorOption[] Option list
+     * @return BoardEditorOptionHandler Option handler
      */
-    public function options(): array
+    public function optionHandler(): BoardEditorOptionHandler
     {
-        return $this->options;
+        return $this->optionHandler;
     }
 
     /**
-     * Sets the option list.
+     * Sets the option handler.
      *
-     * @param array $_options New option list
+     * @param BoardEditorOptionHandler $_optionHandler Option handler
      */
-    public function setOptions(array $_options)
+    public function setOptionHandler(BoardEditorOptionhandler $_optionHandler)
     {
-        $this->options = $_options;
+        $this->optionHandler = $_optionHandler;
     }
 
     /**
@@ -125,56 +127,33 @@ class BoardEditor
         $this->output = $_output;
     }
 
-
     /**
-     * Returns the template saver.
+     * Returns the template directory.
      *
-     * @return TemplateSaver The template saver
+     * @return String Template directory
      */
-    public function templateSaver(): TemplateSaver
+    public function templateDirectory(): String
     {
-        return $this->templateSaver;
+        return $this->templateDirectory;
     }
 
     /**
-     * Sets the template saver.
+     * Sets the template directory
      *
-     * @param TemplateSaver $_templateSaver New template saver
+     * @param String $_templateDirectory Template directory
      */
-    public function setTemplateSaver(TemplateSaver $_templateSaver)
+    public function setTemplateDirectory(String $_templateDirectory)
     {
-        $this->templateSaver = $_templateSaver;
+        $this->templateDirectory = $_templateDirectory;
     }
 
 
     /**
-     * Calls an option from the option list.
-     *
-     * @param String $_optionName The option name
-     * @param array $_arguments The arguments for the option
-     *
-     * @return bool True: Board Editor session is finished
-     *              False: Board Editor session continues
-     */
-    private function callOption(String $_optionName, array $_arguments = null): bool
-    {
-        $callback = $this->options[$_optionName]->callback();
-
-        $argument = null;
-        if ($_arguments) $argument = $_arguments[0];
-
-        $sessionFinished = $this->options[$_optionName]->$callback($argument);
-
-        return $sessionFinished;
-    }
-
-    /**
-     * Launches the board editor.
+     * Launches the board editor session.
      */
     public function launch()
     {
-        $this->options = $this->loadOptions();
-        $this->callOption("help");
+        $this->optionHandler->parseInput("help");
         $this->output->outputBoard($this->board);
 
         $isInputFinished = false;
@@ -183,57 +162,8 @@ class BoardEditor
             echo "> ";
 
             $line = $this->readInput("php://stdin");
-            $result = $this->isOption($line);
-
-            if ($result !== false)
-            {
-                $isInputFinished = $this->callOption($result[0], $result[1]);
-            }
-            elseif (stristr($line, ",")) $this->setField($this->board, $line);
-            else echo "Error: Invalid option or invalid coordinates format\n";
+            $isInputFinished = $this->optionHandler->parseInput($line);
         }
-    }
-
-    /**
-     * Loads all options from the options folder.
-     *
-     * @return BoardEditorOption[] array in the format ("optionName" => "optionObject")
-     */
-    private function loadOptions(): array
-    {
-        $options = array();
-
-        // Load each option from the options folder
-        $classes = glob(__DIR__ . "/Options/*Option.php");
-
-        foreach ($classes as $class)
-        {
-            $className = basename($class, ".php");
-            $classPath = "BoardEditor\\Options\\" . $className;
-
-            $instance = new $classPath($this);
-            if ($instance instanceof BoardEditorOption) $options[$instance->name()] = $instance;
-        }
-
-        return $options;
-    }
-
-    /**
-     * Returns whether the input string is one of the registered options.
-     *
-     * @param String $_input Input string
-     *
-     * @return bool|array false or option name and arguments
-     */
-    private function isOption(String $_input)
-    {
-        $parts = explode(" ", $_input);
-        $inputOption = array_shift($parts);
-
-        if (count($parts) == 0) $parts = array();
-
-        if (array_key_exists($inputOption, $this->options)) return array($inputOption, $parts);
-        else return false;
     }
 
     /**
@@ -250,53 +180,5 @@ class BoardEditor
         fclose($fileOpen);
 
         return rtrim($inputLine, "\n\r");
-    }
-
-    /**
-     * Sets a field on the board and displays the updated board or displays an error in case of invalid coordinates.
-     *
-     * @param Board $_board The board
-     * @param String $_inputCoordinates The user input coordinates in the format "x,y"
-     */
-    private function setField(Board $_board, String $_inputCoordinates)
-    {
-        $inputSplits = explode(",", $_inputCoordinates);
-
-        if (count($inputSplits) == 2)
-        {
-            $inputX = $this->getInputCoordinate($inputSplits[0], 0, $_board->width() - 1);
-            $inputY = $this->getInputCoordinate($inputSplits[1], 0, $_board->height() - 1);
-
-            if ($inputX === false) echo "Error: Invalid value for x specified: Value exceeds field borders or is not set\n";
-            elseif ($inputY === false) echo "Error: Invalid value for y specified: Value exceeds field borders or is not set\n";
-            else
-            {
-                $currentCellState = $_board->getFieldStatus($inputX, $inputY);
-                $_board->setField($inputX, $inputY, !$currentCellState);
-                $this->output->outputBoard($_board, $inputX, $inputY);
-            }
-        }
-        else echo "Error: Please input exactly two values!\n";
-    }
-
-    /**
-     * Converts user input to int and checks whether coordinate is inside field borders.
-     *
-     * @param String $_inputCoordinate User input string (a single coordinate)
-     * @param int $_minValue The lowest value that the input coordinate may be
-     * @param int $_maxValue The highest value that the input coordinate may be
-     *
-     * @return int|bool Input coordinate | Error
-     */
-    private function getInputCoordinate(String $_inputCoordinate, int $_minValue, int $_maxValue)
-    {
-        if ($_inputCoordinate == "") return false;
-
-        // convert coordinate to integer
-        $coordinate = (int)$_inputCoordinate;
-
-        // Check whether field borders are exceeded
-        if ($coordinate < $_minValue || $coordinate > $_maxValue) return false;
-        else return $coordinate;
     }
 }

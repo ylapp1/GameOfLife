@@ -8,6 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
+use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use BoardEditor\Options\ListOptionsOption;
 use PHPUnit\Framework\TestCase;
 
@@ -37,12 +38,17 @@ class ListOptionsOptionTest extends TestCase
      *
      * @covers \BoardEditor\Options\ListOptionsOption::listOptions()
      */
-    public function testCanExitBoardEditor()
+    public function testCanListOptions()
     {
         $boardEditorMock = $this->getMockBuilder(BoardEditor::class)
-                                ->setMethods(array("options"))
+                                ->setMethods(array("optionHandler"))
                                 ->disableOriginalConstructor()
                                 ->getMock();
+
+        $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
+                                  ->setMethods(array("options"))
+                                  ->disableOriginalConstructor()
+                                  ->getMock();
 
         // Generate some fake options
         $testOptions = array(
@@ -68,8 +74,12 @@ class ListOptionsOptionTest extends TestCase
             $listOptionsOption = new ListOptionsOption($boardEditorMock);
 
             $boardEditorMock->expects($this->exactly(2))
-                            ->method("options")
-                            ->willReturn($boardEditorOptions);
+                            ->method("optionHandler")
+                            ->willReturn($optionHandlerMock);
+
+            $optionHandlerMock->expects($this->exactly(2))
+                              ->method("options")
+                              ->willReturn($boardEditorOptions);
 
             $expectedOutput = "\n\nOptions:"
                             . "\n - test                   : Tests units"

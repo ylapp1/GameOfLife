@@ -28,6 +28,7 @@ class ListOptionsOption extends BoardEditorOption
         $this->name = "options";
         $this->callback = "listOptions";
         $this->description = "Lists available options";
+        $this->numberOfArguments = 0;
     }
 
     /**
@@ -39,14 +40,14 @@ class ListOptionsOption extends BoardEditorOption
     {
         // Get the length of the longest option name
         $longestOptionLength = 0;
-        foreach ($this->parentBoardEditor->options() as $optionName => $option)
+        foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
         {
             if (strlen($optionName) > $longestOptionLength) $longestOptionLength = strlen($optionName);
         }
 
         // Output the option list
         $output = "\n\nOptions:";
-        foreach ($this->parentBoardEditor->options() as $optionName => $option)
+        foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
         {
             $output .= "\n - " . str_pad($optionName, $longestOptionLength + 1) . ": " . $option->description();
         }

@@ -71,7 +71,6 @@ class BoardEditorTest extends TestCase
         $boardEditor = new BoardEditor($testTemplateDirectory, $this->testBoard);
 
         $this->assertEquals(new BoardEditorOutput(), $boardEditor->output());
-        $this->assertEquals(new TemplateSaver($testTemplateDirectory), $boardEditor->templateSaver());
         $this->assertEquals($this->testBoard, $boardEditor->board());
     }
 
@@ -80,57 +79,18 @@ class BoardEditorTest extends TestCase
      *
      * @covers \BoardEditor\BoardEditor::board()
      * @covers \BoardEditor\BoardEditor::setBoard()
-     * @covers \BoardEditor\BoardEditor::options()
-     * @covers \BoardEditor\BoardEditor::setOptions()
      * @covers \BoardEditor\BoardEditor::output()
      * @covers \BoardEditor\BoardEditor::setOutput()
-     * @covers \BoardEditor\BoardEditor::templateSaver()
-     * @covers \BoardEditor\BoardEditor::setTemplateSaver()
      */
     public function testCanSetAttributes()
     {
-        $testOptions = array("Hallo", "Zwei", "zahl", "Zehn");
         $boardEditor = new BoardEditor("hello");
 
         $boardEditor->setBoard($this->testBoard);
-        $boardEditor->setOptions($testOptions);
         $boardEditor->setOutput(new BoardEditorOutput());
-        $boardEditor->setTemplateSaver(new TemplateSaver("finalTest"));
 
         $this->assertEquals($this->testBoard, $boardEditor->board());
-        $this->assertEquals($testOptions, $boardEditor->options());
         $this->assertEquals(new BoardEditorOutput(), $boardEditor->output());
-        $this->assertEquals(new TemplateSaver("finalTest"), $boardEditor->templateSaver());
-    }
-
-    /**
-     * Checks whether fields can be set with the board editor.
-     *
-     * @dataProvider setFieldsProvider()
-     * @covers BoardEditor\BoardEditor::isOption()
-     * @covers BoardEditor\BoardEditor::launch()
-     * @covers BoardEditor\BoardEditor::setField()
-     * @covers BoardEditor\BoardEditor::getInputCoordinate()
-     *
-     * @param String $_inputCoordinates Input coordinates
-     * @param String $_expectedErrorMessage The expected error message
-     */
-    public function testCanSetField(String $_inputCoordinates, String $_expectedErrorMessage = null)
-    {
-        $this->testBoard->resetBoard();
-        $this->boardEditorMock->expects($this->exactly(2))
-            ->method("readInput")
-            ->willReturn($_inputCoordinates, "start");
-
-        if ($_expectedErrorMessage) $this->expectOutputRegex("/.*" . $_expectedErrorMessage . ".*/");
-        else ($this->expectOutputRegex("/.*>.*/"));
-
-        if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
-
-        if (! $_expectedErrorMessage)
-        {
-            $this->assertEquals(1, $this->testBoard->getAmountCellsAlive());
-        }
     }
 
     /**
@@ -149,41 +109,6 @@ class BoardEditorTest extends TestCase
             "X exceeds field dimensions" => array("-1, 0", "Error: Invalid value for x specified: Value exceeds field borders or is not set\n"),
             "Y empty" => array("4,", "Error: Invalid value for y specified: Value exceeds field borders or is not set\n")
         ];
-    }
-
-    /**
-     * Checks whether the options from the option directory can be loaded.
-     *
-     * @covers BoardEditor\BoardEditor::callOption()
-     * @covers BoardEditor\BoardEditor::isOption()
-     * @covers BoardEditor\BoardEditor::loadOptions()
-     * @covers BoardEditor\BoardEditor::launch()
-     */
-    public function testCanLoadOptions()
-    {
-        $this->boardEditorMock->expects($this->exactly(2))
-            ->method("readInput")
-            ->willReturn("options", "start");
-
-        $expectedOutputRegex = "/";
-
-        // Load each option from the options folder
-        $classes = glob(__DIR__ . "/Options/*Option.php");
-
-        foreach ($classes as $class)
-        {
-            $className = basename($class, ".php");
-            $classPath = "BoardEditor\\Options\\" . $className;
-
-            $instance = new $classPath($this);
-            if ($instance instanceof BoardEditoroption) $expectedOutputRegex = ".*" . $instance->name() . ".*";
-        }
-
-        $expectedOutputRegex .= "/";
-
-        $this->expectOutputRegex($expectedOutputRegex);
-
-        if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
     }
 
     /**

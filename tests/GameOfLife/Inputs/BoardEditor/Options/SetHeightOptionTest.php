@@ -46,13 +46,8 @@ class SetHeightOptionTest extends TestCase
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new SetHeightOption($boardEditor);
 
-        // Empty height
-        $this->expectOutputRegex("/Error: No value for height entered!\n.*/");
-        $result = $option->setHeight();
-        $this->assertFalse($result);
-
         // Invalid height
-        $this->expectOutputRegex("/.*Error: The board height may not be less than 1\n.*/");
+        $this->expectOutputRegex("/Error: The board height may not be less than 1\n.*/");
         $result = $option->setHeight(0);
         $this->assertFalse($result);
 

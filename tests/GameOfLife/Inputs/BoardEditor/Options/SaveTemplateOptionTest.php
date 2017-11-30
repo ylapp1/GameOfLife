@@ -50,13 +50,18 @@ class SaveTemplateOptionTest extends TestCase
                                   ->getMock();
 
         $boardEditorMock = $this->getMockBuilder(BoardEditor::class)
-                                ->setMethods(array("readInput", "templateSaver", "board"))
+                                ->setMethods(array("readInput", "templateSaver", "board", "templateDirectory"))
                                 ->disableOriginalConstructor()
                                 ->getMock();
 
         if ($boardEditorMock instanceof BoardEditor)
         {
+            $boardEditorMock->expects($this->exactly(1))
+                            ->method("templateDirectory")
+                            ->willReturn("hello");
+
             $option = new SaveTemplateOption($boardEditorMock);
+            if ($templateSaverMock instanceof TemplateSaver) $option->setTemplateSaver($templateSaverMock);
 
 
             // No template name
@@ -68,9 +73,6 @@ class SaveTemplateOptionTest extends TestCase
 
 
             // Prepare the mocks
-            $boardEditorMock->expects($this->exactly(4))
-                ->method("templateSaver")
-                ->willReturn($templateSaverMock);
             $boardEditorMock->expects($this->exactly(4))
                 ->method("board")
                 ->willReturn($board);

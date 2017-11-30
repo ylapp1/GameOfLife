@@ -29,6 +29,7 @@ class SetWidthOption extends BoardEditorOption
         $this->name = "width";
         $this->callback = "setWidth";
         $this->description = "Sets the board width";
+        $this->numberOfArguments = 1;
     }
 
     /**
@@ -38,15 +39,16 @@ class SetWidthOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function setWidth(int $_width = null)
+    public function setWidth($_width)
     {
-        if (! isset($_width)) echo "Error: No value for width entered!\n";
-        elseif ($_width < 1) echo "Error: The board width may not be less than 1\n";
+        $width = (int)$_width;
+
+        if ($width < 1) echo "Error: The board width may not be less than 1\n";
         else
         {
             $fields = $this->parentBoardEditor->board()->fields();
 
-            $this->parentBoardEditor->board()->setWidth($_width);
+            $this->parentBoardEditor->board()->setWidth($width);
             $this->parentBoardEditor->board()->resetBoard();
 
             foreach ($fields as $row)

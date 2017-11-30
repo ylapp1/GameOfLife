@@ -29,6 +29,7 @@ class SetHeightOption extends BoardEditorOption
         $this->name = "height";
         $this->callback = "setHeight";
         $this->description = "Sets the board height";
+        $this->numberOfArguments = 1;
     }
 
     /**
@@ -38,15 +39,16 @@ class SetHeightOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function setHeight(int $_height = null)
+    public function setHeight($_height)
     {
-        if (! isset($_height)) echo "Error: No value for height entered!\n";
-        elseif ($_height < 1) echo "Error: The board height may not be less than 1\n";
+        $height = (int)$_height;
+
+        if ($height < 1) echo "Error: The board height may not be less than 1\n";
         else
         {
             $fields = $this->parentBoardEditor->board()->fields();
 
-            $this->parentBoardEditor->board()->setHeight($_height);
+            $this->parentBoardEditor->board()->setHeight($height);
             $this->parentBoardEditor->board()->resetBoard();
 
             foreach ($fields as $row)

@@ -21,6 +21,13 @@ class BoardEditorOption
     protected $name;
 
     /**
+     * Aliases of this option which can be used to trigger it
+     *
+     * @var String[] $aliases
+     */
+    private $aliases;
+
+    /**
      * Name of the call back class method
      *
      * This function will be called when the option is used
@@ -32,6 +39,13 @@ class BoardEditorOption
      * @var String $callback
      */
     protected $callback;
+
+    /**
+     * Stores the number of arguments of the callback function
+     *
+     * @var int $numberOfArguments
+     */
+    protected $numberOfArguments;
 
     /**
      * Short description of the option which will be displayed in the option list
@@ -70,13 +84,33 @@ class BoardEditorOption
     }
 
     /**
-     * Sets the option name
+     * Sets the option name.
      *
      * @param String $_name New option name.
      */
     public function setName(String $_name)
     {
         $this->name = $_name;
+    }
+
+    /**
+     * Returns the aliases of this option.
+     *
+     * @return array Aliases of this option
+     */
+    public function aliases(): array
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * Sets the aliases of this option.
+     *
+     * @param array $_aliases Aliases of this option
+     */
+    public function setAliases(array $_aliases)
+    {
+        $this->aliases = $_aliases;
     }
 
     /**
@@ -97,6 +131,26 @@ class BoardEditorOption
     public function setCallback(String $_callback)
     {
         $this->callback = $_callback;
+    }
+
+    /**
+     * Returns the number of arguments.
+     *
+     * @return int Number of arguments
+     */
+    public function numberOfArguments(): int
+    {
+        return $this->numberOfArguments;
+    }
+
+    /**
+     * Sets the number of arguments.
+     *
+     * @param int $_numberOfArguments Number of arguments
+     */
+    public function setNumberOfArguments(int $_numberOfArguments)
+    {
+        $this->numberOfArguments = $_numberOfArguments;
     }
 
     /**

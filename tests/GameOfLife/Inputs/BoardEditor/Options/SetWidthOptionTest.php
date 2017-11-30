@@ -46,13 +46,8 @@ class SetWidthOptionTest extends TestCase
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new SetWidthOption($boardEditor);
 
-        // Empty width
-        $this->expectOutputRegex("/Error: No value for width entered!\n.*/");
-        $result = $option->setWidth();
-        $this->assertFalse($result);
-
         // Invalid width
-        $this->expectOutputRegex("/.*Error: The board width may not be less than 1\n.*/");
+        $this->expectOutputRegex("/Error: The board width may not be less than 1\n.*/");
         $result = $option->setWidth(0);
         $this->assertFalse($result);
 

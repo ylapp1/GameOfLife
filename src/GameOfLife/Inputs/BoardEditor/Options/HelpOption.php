@@ -28,6 +28,7 @@ class HelpOption extends BoardEditorOption
         $this->name = "help";
         $this->callback = "displayHelp";
         $this->description = "Display help";
+        $this->numberOfArguments = 0;
     }
 
     /**
