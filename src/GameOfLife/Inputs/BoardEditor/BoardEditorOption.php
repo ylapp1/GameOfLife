@@ -25,7 +25,7 @@ class BoardEditorOption
      *
      * @var String[] $aliases
      */
-    private $aliases;
+    protected $aliases;
 
     /**
      * Name of the call back class method
@@ -33,8 +33,7 @@ class BoardEditorOption
      * This function will be called when the option is used
      * Notes:
      *   - The function must return true or false to indicate whether the board editing is finished after using this option
-     *   - Any function parameters must be defined as optional (you must then manually check in the function whether the
-     *     parameter is null)
+     *   - Any function parameters must not contain type hints because the input values will always be strings.
      *
      * @var String $callback
      */
@@ -69,6 +68,7 @@ class BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
+        $this->aliases = array();
         $this->parentBoardEditor = $_parentBoardEditor;
     }
 
@@ -191,5 +191,19 @@ class BoardEditorOption
     public function setParentBoardEditor(BoardEditor $_parentBoardEditor)
     {
         $this->parentBoardEditor = $_parentBoardEditor;
+    }
+
+
+    /**
+     * Checks whether this option has the alias $_alias.
+     *
+     * @param String $_alias The alias to search for
+     *
+     * @return bool Indicates whether the alias belongs to this option
+     */
+    public function hasAlias(String $_alias)
+    {
+        if (in_array(strtolower($_alias), $this->aliases)) return true;
+        else return false;
     }
 }

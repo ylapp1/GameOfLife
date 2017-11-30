@@ -26,6 +26,7 @@ class HelpOption extends BoardEditorOption
         parent::__construct($_parentBoardEditor);
 
         $this->name = "help";
+        $this->aliases = array("h");
         $this->callback = "displayHelp";
         $this->description = "Display help";
         $this->numberOfArguments = 0;

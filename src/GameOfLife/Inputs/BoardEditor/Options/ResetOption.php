@@ -26,6 +26,7 @@ class ResetOption extends BoardEditorOption
         parent::__construct($_parentBoardEditor);
 
         $this->name = "reset";
+        $this->aliases = array("r");
         $this->callback = "resetBoard";
         $this->description = "Resets the edited board to an empty board";
         $this->numberOfArguments = 0;

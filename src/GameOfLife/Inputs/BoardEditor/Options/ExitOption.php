@@ -26,6 +26,7 @@ class ExitOption extends BoardEditorOption
         parent::__construct($_parentBoardEditor);
 
         $this->name = "exit";
+        $this->aliases = array("quit", "q");
         $this->callback = "exitBoardEditor";
         $this->description = "Exit the application";
         $this->numberOfArguments = 0;

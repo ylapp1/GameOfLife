@@ -65,7 +65,20 @@ class BoardEditorOptionParser
             $optionData = $this->splitOption("toggle," . $_input, ",");
             return $optionData;
         }
-        else return false;
+        else
+        {
+            // Check whether option name is an alias of any option
+            foreach ($_optionList as $optionName => $option)
+            {
+                if ($option->hasAlias($optionData["name"]))
+                {
+                    $optionData["name"] = $option->name();
+                    return $optionData;
+                }
+            }
+
+            return false;
+        }
     }
 
     /**
