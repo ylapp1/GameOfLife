@@ -26,6 +26,7 @@ class BoardEditorOptionTest extends TestCase
         $option = new BoardEditorOption($boardEditor);
 
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
+        $this->assertEquals(array(), $option->aliases());
     }
 
     /**
@@ -34,19 +35,25 @@ class BoardEditorOptionTest extends TestCase
      * @dataProvider setAttributesProvider
      * @covers \BoardEditor\BoardEditorOption::name()
      * @covers \BoardEditor\BoardEditorOption::setName()
+     * @covers \BoardEditor\BoardEditorOption::aliases()
+     * @covers \BoardEditor\BoardEditorOption::setAliases()
      * @covers \BoardEditor\BoardEditorOption::callback()
      * @covers \BoardEditor\BoardEditorOption::setCallback()
+     * @covers \BoardEditor\BoardEditorOption::numberOfArguments()
+     * @covers \BoardEditor\BoardEditorOption::setNumberOfArguments()
      * @covers \BoardEditor\BoardEditorOption::description()
      * @covers \BoardEditor\BoardEditorOption::setDescription()
      * @covers \BoardEditor\BoardEditorOption::parentBoardEditor()
      * @covers \BoardEditor\BoardEditorOption::setParentBoardEditor()
      *
      * @param String $_name Option name
+     * @param array $_aliases Alias list
      * @param String $_callback Function that will be called when the option is used
+     * @param int $_numberOfArguments Number of arguments of the callback function
      * @param String $_description Short description of the option which will be displayed in the option list
      * @param String $_templateDirectory Template directory for the BoardEditor constructor
      */
-    public function testCanSetAttributes(String $_name, String $_callback, String $_description, String $_templateDirectory)
+    public function testCanSetAttributes(String $_name, array $_aliases, String $_callback, int $_numberOfArguments, String $_description, String $_templateDirectory)
     {
         $boardEditor = new BoardEditor("the test");
         $option = new BoardEditorOption($boardEditor);
@@ -54,12 +61,16 @@ class BoardEditorOptionTest extends TestCase
         $testBoardEditor = new BoardEditor($_templateDirectory);
 
         $option->setName($_name);
+        $option->setAliases($_aliases);
         $option->setCallback($_callback);
+        $option->setNumberOfArguments($_numberOfArguments);
         $option->setDescription($_description);
         $option->setParentBoardEditor($testBoardEditor);
 
         $this->assertEquals($_name, $option->name());
+        $this->assertEquals($_aliases, $option->aliases());
         $this->assertEquals($_callback, $option->callback());
+        $this->assertEquals($_numberOfArguments, $option->numberOfArguments());
         $this->assertEquals($_description, $option->description());
         $this->assertEquals($testBoardEditor, $option->parentBoardEditor());
     }
@@ -72,9 +83,31 @@ class BoardEditorOptionTest extends TestCase
     public function setAttributesProvider()
     {
         return array(
-            array("myOption", "openOption", "Opens my option", "Options/Directory"),
-            array("myOtherOption", "secondOption", "Opens not my option", "Not/my/option"),
-            array("finalOption", "endAllOptions", "Destroys all options that ever existed", "Destroyer/Options/Done")
+            array("myOption", array("myO", "MyOpt"), "openOption", 1, "Opens my option", "Options/Directory"),
+            array("myOtherOption", array("myOther", "otherOpt"), "secondOption", 2, "Opens not my option", "Not/my/option"),
+            array("finalOption", array("finalO", "finalOpt"), "endAllOptions", 3, "Destroys all options that ever existed", "Destroyer/Options/Done")
         );
+    }
+
+    /**
+     * Checks whether an option can return whether an alias belongs to it.
+     *
+     * @covers \BoardEditor\BoardEditorOption::hasAlias()
+     */
+    public function testCanFindAlias()
+    {
+        $aliases = array("one", "two", "three");
+
+        $boardEditor =new BoardEditor("hello");
+        $option = new BoardEditorOption($boardEditor);
+
+        $option->setAliases($aliases);
+
+        $this->assertTrue($option->hasAlias("one"));
+        $this->assertTrue($option->hasAlias("two"));
+        $this->assertTrue($option->hasAlias("three"));
+        $this->assertFalse($option->hasAlias("random"));
+        $this->assertFalse($option->hasAlias("hello"));
+        $this->assertFalse($option->hasAlias("myOption"));
     }
 }

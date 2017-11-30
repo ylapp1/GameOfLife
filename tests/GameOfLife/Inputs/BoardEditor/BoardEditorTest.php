@@ -7,9 +7,8 @@
  */
 
 use BoardEditor\BoardEditor;
-use BoardEditor\BoardEditorOption;
+use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
-use TemplateHandler\TemplateSaver;
 use Output\BoardEditorOutput;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -79,18 +78,74 @@ class BoardEditorTest extends TestCase
      *
      * @covers \BoardEditor\BoardEditor::board()
      * @covers \BoardEditor\BoardEditor::setBoard()
+     * @covers \BoardEditor\BoardEditor::optionHandler()
+     * @covers \BoardEditor\BoardEditor::setOptionHandler()
      * @covers \BoardEditor\BoardEditor::output()
      * @covers \BoardEditor\BoardEditor::setOutput()
+     * @covers \BoardEditor\BoardEditor::templateDirectory()
+     * @covers \BoardEditor\BoardEditor::setTemplateDirectory()
      */
     public function testCanSetAttributes()
     {
         $boardEditor = new BoardEditor("hello");
 
+        $optionHandler = new BoardEditorOptionHandler($boardEditor);
+        $output = new BoardEditorOutput();
+        $templateDirectory = "This/is/a/very/serious/test";
+
         $boardEditor->setBoard($this->testBoard);
-        $boardEditor->setOutput(new BoardEditorOutput());
+        $boardEditor->setOptionHandler($optionHandler);
+        $boardEditor->setOutput($output);
+        $boardEditor->setTemplateDirectory($templateDirectory);
 
         $this->assertEquals($this->testBoard, $boardEditor->board());
-        $this->assertEquals(new BoardEditorOutput(), $boardEditor->output());
+        $this->assertEquals($optionHandler, $boardEditor->optionHandler());
+        $this->assertEquals($output, $boardEditor->output());
+        $this->assertEquals($templateDirectory, $boardEditor->templateDirectory());
+    }
+
+    /**
+     * Checks whether the board editor can launch a board editor session.
+     *
+     * @covers \BoardEditor\BoardEditor::launch()
+     */
+    public function testCanLaunchSession()
+    {
+        $this->testBoard->resetBoard();
+        $this->boardEditorMock->expects($this->exactly(1))
+            ->method("readInput")
+            ->willReturn("exit");
+
+        $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
+                                  ->setMethods(array("parseInput"))
+                                  ->disableOriginalConstructor()
+                                  ->getMock();
+
+        if ($this->boardEditorMock instanceof BoardEditor)
+        {
+            if ($optionHandlerMock instanceof BoardEditorOptionHandler)
+            {
+                $this->boardEditorMock->setOptionHandler($optionHandlerMock);
+            }
+        }
+
+        $expectedOutput = "╔═════╗\n"
+                        . "║     ║\n"
+                        . "║     ║\n"
+                        . "║     ║\n"
+                        . "║     ║\n"
+                        . "║     ║\n"
+                        . "╚═════╝\n"
+                        . "> ";
+
+        $this->expectOutputString($expectedOutput);
+
+        $optionHandlerMock->expects($this->exactly(2))
+                          ->method("parseInput")
+                          ->withConsecutive(array("help"), array("exit"))
+                          ->willReturn(false, true);
+
+        if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
     }
 
     /**
