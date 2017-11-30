@@ -155,6 +155,19 @@ class GameLogic
     }
 
     /**
+     * Checks whether the board is empty.
+     *
+     * @param Board $_board The board
+     *
+     * @return bool Indicates whether the board is empty
+     */
+    public function isBoardEmpty(Board $_board): bool
+    {
+        if ($_board->getAmountCellsAlive() == 0) return true;
+        else return false;
+    }
+
+    /**
      * Checks whether the max step is reached.
      *
      * @param Board $_board The board which is checked

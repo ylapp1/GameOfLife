@@ -188,4 +188,20 @@ class GameLogicTest extends TestCase
         $board->setGameStep(14);
         $this->assertTrue($gameLogic->isMaxStepsReached($board));
     }
+
+    /**
+     * Checks whether an empty board can be detected by the game logic.
+     *
+     * @covers \GameOfLife\GameLogic::isBoardEmpty()
+     */
+    public function testCanDetectEmptyBoard()
+    {
+        $board = new Board(1, 1, 2, true);
+        $gameLogic = new GameLogic(new ConwayRule());
+
+        $this->assertTrue($gameLogic->isBoardEmpty($board));
+
+        $board->setField(0, 0, true);
+        $this->assertFalse($gameLogic->isBoardEmpty($board));
+    }
 }
