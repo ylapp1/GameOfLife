@@ -30,6 +30,7 @@ class ListOptionsOptionTest extends TestCase
         $this->assertEquals("options", $option->name());
         $this->assertEquals("listOptions", $option->callback());
         $this->assertEquals("Lists available options", $option->description());
+        $this->assertEquals(0, $option->numberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

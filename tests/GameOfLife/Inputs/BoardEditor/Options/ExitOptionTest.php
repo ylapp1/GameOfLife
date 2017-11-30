@@ -29,6 +29,7 @@ class ExitOptionTest extends TestCase
         $this->assertEquals("exit", $option->name());
         $this->assertEquals("exitBoardEditor", $option->callback());
         $this->assertEquals("Exit the application", $option->description());
+        $this->assertEquals(0, $option->numberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

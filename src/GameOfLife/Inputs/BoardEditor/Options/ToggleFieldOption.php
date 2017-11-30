@@ -44,7 +44,7 @@ class ToggleFieldOption extends BoardEditorOption
         $x = $this->getIntegerCoordinate($_x, "x", 0, $this->parentBoardEditor->board()->width() - 1);
         $y = $this->getIntegerCoordinate($_y, "y", 0, $this->parentBoardEditor->board()->height() - 1);
 
-        if (! $x || ! $y) return false;
+        if ($x === false || $y === false) return false;
 
         $currentCellState = $this->parentBoardEditor->board()->getFieldStatus($x, $y);
         $this->parentBoardEditor->board()->setField($x, $y, !$currentCellState);

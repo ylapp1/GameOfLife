@@ -24,14 +24,55 @@ class SaveTemplateOptionTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $boardEditor = new BoardEditor("test");
+        $fakeTemplateDirectory = "test";
+
+        $boardEditor = new BoardEditor($fakeTemplateDirectory);
         $option = new SaveTemplateOption($boardEditor);
+        $templateSaver = new TemplateSaver($fakeTemplateDirectory);
 
         $this->assertEquals("save", $option->name());
         $this->assertEquals("saveTemplate", $option->callback());
         $this->assertEquals("Saves the board as a template", $option->description());
+        $this->assertEquals(1, $option->numberOfArguments());
+        $this->assertEquals($templateSaver, $option->templateSaver());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
+
+    /**
+     * Checks whether the getters/setters work as expected.
+     *
+     * @dataProvider setAttributesProvider()
+     * @covers \BoardEditor\Options\SaveTemplateOption::templateSaver()
+     * @covers \BoardEditor\Options\SaveTemplateOption::setTemplateSaver()
+     *
+     * @param String $_templateDirectory
+     */
+    public function testCanSetAttributes(String $_templateDirectory)
+    {
+        $templateSaver = new TemplateSaver($_templateDirectory);
+
+        $boardEditor = new BoardEditor("hello");
+        $option = new SaveTemplateOption($boardEditor);
+
+        $option->setTemplateSaver($templateSaver);
+        $this->assertEquals($templateSaver, $option->templateSaver());
+    }
+
+    /**
+     * DataProvider for SaveTemplateOptionTest::testCanSetAttributes.
+     *
+     * @return array Test values
+     */
+    public function setAttributesProvider()
+    {
+        return array(
+            array("MyTest"),
+            array("NotMyTest"),
+            array("This/is/a/test"),
+            array("WelcomeToMy/Test")
+        );
+    }
+
 
     /**
      * Checks whether the currently edited board can be saved to a file.

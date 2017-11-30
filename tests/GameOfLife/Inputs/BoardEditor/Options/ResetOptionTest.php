@@ -29,6 +29,7 @@ class ResetOptionTest extends TestCase
         $this->assertEquals("reset", $option->name());
         $this->assertEquals("resetBoard", $option->callback());
         $this->assertEquals("Resets the edited board to an empty board", $option->description());
+        $this->assertEquals(0, $option->numberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 
