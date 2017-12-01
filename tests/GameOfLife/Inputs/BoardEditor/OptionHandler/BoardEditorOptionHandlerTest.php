@@ -29,7 +29,7 @@ class BoardEditorOptionHandlerTest extends TestCase
 
         $this->assertEquals($boardEditor, $optionHandler->parentBoardEditor());
         $this->assertEquals(new BoardEditorOptionLoader($optionHandler), $optionHandler->optionLoader());
-        $this->assertEquals(new BoardEditorOptionParser(), $optionHandler->optionParser());
+        $this->assertEquals(new BoardEditorOptionParser($optionHandler), $optionHandler->optionParser());
         $this->assertTrue(is_array($optionHandler->options()));
         $this->assertGreaterThan(0, count($optionHandler->options()));
     }
@@ -55,7 +55,7 @@ class BoardEditorOptionHandlerTest extends TestCase
         $testOptionHandler = new BoardEditorOptionHandler($testBoardEditor);
         $optionLoader = new BoardEditorOptionLoader($testOptionHandler);
 
-        $optionParser = new BoardEditorOptionParser();
+        $optionParser = new BoardEditorOptionParser($optionHandler);
         $options = array("hello", "test", "my", "options");
 
         $optionHandler->setOptions($options);

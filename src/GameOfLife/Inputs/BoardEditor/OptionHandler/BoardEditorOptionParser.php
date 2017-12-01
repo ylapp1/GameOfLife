@@ -8,29 +8,66 @@
 
 namespace BoardEditor\OptionHandler;
 
-use BoardEditor\BoardEditorOption;
-
 /**
  * Parses board editor options.
  */
 class BoardEditorOptionParser
 {
     /**
+     * The parent option handler
+     *
+     * @var BoardEditorOptionHandler Parent option handler
+     */
+    private $parentOptionHandler;
+
+
+    /**
+     * BoardEditorOptionParser constructor.
+     *
+     * @param BoardEditorOptionHandler $_parentOptionHandler Parent option handler
+     */
+    public function __construct(BoardEditorOptionHandler $_parentOptionHandler)
+    {
+        $this->parentOptionHandler = $_parentOptionHandler;
+    }
+
+
+    /**
+     * Returns the parent option handler.
+     *
+     * @return BoardEditorOptionHandler Parent option handler
+     */
+    public function parentOptionHandler(): BoardEditorOptionHandler
+    {
+        return $this->parentOptionHandler;
+    }
+
+    /**
+     * Sets the parent option handler.
+     *
+     * @param BoardEditorOptionHandler $_parentOptionHandler Parent option handler
+     */
+    public function setParentOptionHandler(BoardEditorOptionHandler $_parentOptionHandler)
+    {
+        $this->parentOptionHandler = $_parentOptionHandler;
+    }
+
+
+    /**
      * Calls an option from the option list.
      *
      * @param String $_input Input string
-     * @param BoardEditorOption[] $_optionList The option list
      *
      * @return bool True: Board Editor session is finished
      *              False: Board Editor session continues
      */
-    public function callOption(String $_input, array $_optionList): bool
+    public function callOption(String $_input): bool
     {
-        $optionData = $this->isOption($_input, $_optionList);
+        $optionData = $this->isOption($_input);
 
         if ($optionData)
         {
-            $option = $_optionList[$optionData["name"]];
+            $option = $this->parentOptionHandler->options()[$optionData["name"]];
 
             if (count($optionData["arguments"]) != $option->numberOfArguments())
             {
@@ -51,15 +88,15 @@ class BoardEditorOptionParser
      * Returns whether the input string is one of the registered options.
      *
      * @param String $_input Input string
-     * @param BoardEditorOption[] $_optionList The option list
      *
      * @return array|bool The option data (name, arguments) or false
      */
-    private function isOption(String $_input, array $_optionList)
+    private function isOption(String $_input)
     {
         $optionData = $this->splitOption($_input, " ");
+        $options = $this->parentOptionHandler->options();
 
-        if (array_key_exists($optionData["name"], $_optionList)) return $optionData;
+        if (array_key_exists($optionData["name"], $options)) return $optionData;
         elseif (stristr($_input, ","))
         {
             $optionData = $this->splitOption("toggle," . $_input, ",");
@@ -68,11 +105,11 @@ class BoardEditorOptionParser
         else
         {
             // Check whether option name is an alias of any option
-            foreach ($_optionList as $optionName => $option)
+            foreach ($options as $optionName => $option)
             {
                 if ($option->hasAlias($optionData["name"]))
                 {
-                    $optionData["name"] = $option->name();
+                    $optionData["name"] = $optionName;
                     return $optionData;
                 }
             }
