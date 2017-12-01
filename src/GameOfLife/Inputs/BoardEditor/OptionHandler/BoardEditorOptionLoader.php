@@ -8,15 +8,21 @@
 
 namespace BoardEditor\OptionHandler;
 
-use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-
+use Utils\FileSystemHandler;
 
 /**
  * Loads the board editor options and returns a list of options.
  */
 class BoardEditorOptionLoader
 {
+    /**
+     * The file system handler
+     *
+     * @var FileSystemHandler $fileSystemHandler
+     */
+    private $fileSystemHandler;
+
     /**
      * The parent option handler
      *
@@ -32,9 +38,30 @@ class BoardEditorOptionLoader
      */
     public function __construct(BoardEditorOptionHandler $_parentOptionHandler)
     {
+        $this->fileSystemHandler = new FileSystemHandler();
         $this->parentOptionHandler = $_parentOptionHandler;
     }
 
+
+    /**
+     * Returns the file system handler.
+     *
+     * @return FileSystemHandler File system handler
+     */
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    /**
+     * Sets the file system handler.
+     *
+     * @param FileSystemHandler $_fileSystemHandler File system handler
+     */
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
 
     /**
      * Returns the parent option handler.
@@ -69,7 +96,7 @@ class BoardEditorOptionLoader
         $options = array();
 
         // Load each option from the options folder
-        $classes = glob($_optionsDirectory);
+        $classes = $this->fileSystemHandler->getFileList($_optionsDirectory, "Option.php");
 
         foreach ($classes as $class)
         {
