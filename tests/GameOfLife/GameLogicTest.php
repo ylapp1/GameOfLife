@@ -151,7 +151,7 @@ class GameLogicTest extends TestCase
     {
         $board = new Board(3, 3, 5, true);
 
-        // Place a 2x2 square on the field (static tile with comway rules)
+        // Place a 2x2 square on the field (static tile with conway rules)
         $board->setField(1, 1, true);
         $board->setField(1, 2, true);
         $board->setField(2, 1, true);
@@ -164,6 +164,26 @@ class GameLogicTest extends TestCase
 
         $this->assertTrue($gameLogic->isLoopDetected());
         $this->assertEquals(1, count($gameLogic->historyOfBoards()));
+
+
+        // Place a 1x3 blinker on the field (blinking tile with conway rules))
+        $board->resetBoard();
+        $board->setField(1,0, true);
+        $board->setField(1, 1, true);
+        $board->setField(1, 2, true);
+
+        $gameLogic = new GameLogic(new ConwayRule());
+        $this->assertFalse($gameLogic->isLoopDetected());
+
+        $gameLogic->calculateNextBoard($board);
+
+        $this->assertFalse($gameLogic->isLoopDetected());
+        $this->assertEquals(1, count($gameLogic->historyOfBoards()));
+
+        $gameLogic->calculateNextBoard($board);
+
+        $this->assertTrue($gameLogic->isLoopDetected());
+        $this->assertEquals(2, count($gameLogic->historyOfBoards()));
     }
 
     /**
