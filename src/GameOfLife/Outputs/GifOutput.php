@@ -10,7 +10,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use GIFEncoder\GIFEncoder;
+use GifCreator\GifCreator;
 use Ulrichsg\Getopt;
 
 /**
@@ -151,10 +151,15 @@ class GifOutput extends ImageOutput
 
         $frameDurations[] = $this->frameTime + 200;
 
-        $gif = new GIFEncoder($this->frames, $frameDurations, 0, 2, 1, 0, 0, "url");
-        $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
+        $gifCreator = new GifCreator();
+        $gifCreator->create($this->frames, $frameDurations, 0);
 
-        if (fwrite(fopen($this->outputDirectory . "Gif/" . $fileName, "wb"), $gif->GetAnimation()) == false)
+        $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
+        $filePath = $this->outputDirectory . "Gif/" . $fileName;
+
+        file_put_contents($filePath, $gifCreator->getGif());
+
+        if (! file_exists($filePath))
         {
             echo "An error occurred during the gif creation. Stopping...";
             return;
@@ -163,6 +168,6 @@ class GifOutput extends ImageOutput
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
 
-        echo "\nGIF creation complete.";
+        echo "\nGIF creation complete.\n\n";
     }
 }

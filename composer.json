@@ -3,6 +3,7 @@
     "phpunit/phpunit": "^6.3.0"
   },
   "require": {
-    "ulrichsg/getopt-php": "1.0.1"
+    "ulrichsg/getopt-php": "1.0.1",
+    "sybio/gif-creator": "^1.0"
   }
 }
