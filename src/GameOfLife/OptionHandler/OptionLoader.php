@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife\OptionHandler;
+namespace OptionHandler;
 
 use Input\BaseInput;
 use Output\BaseOutput;
@@ -71,7 +71,7 @@ class OptionLoader
                 /**
                  * @var BaseInput|BaseOutput|BaseRule $classInstance
                  */
-                $classInstance = new $classPath;
+                $classInstance = new $classIncludePath;
                 $classInstance->addOptions($_options);
 
                 // get options after the class added its options

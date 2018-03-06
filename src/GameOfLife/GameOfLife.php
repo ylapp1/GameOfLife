@@ -8,7 +8,7 @@
 
 namespace GameOfLife;
 
-use GameOfLife\OptionHandler\OptionHandler;
+use OptionHandler\OptionHandler;
 use Input\BaseInput;
 use Output\BaseOutput;
 use Ulrichsg\Getopt;

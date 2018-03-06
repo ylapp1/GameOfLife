@@ -11,6 +11,7 @@ $loader->addPsr4("BoardEditor\\", __DIR__ . "/../src/GameOfLife/Inputs/BoardEdit
 $loader->addPsr4("GameOfLife\\", __DIR__ . "/../src/GameOfLife");
 $loader->addPsr4("GIFEncoder\\", __DIR__ . "/../src/GIFEncoder");
 $loader->addPsr4("Input\\", __DIR__ . "/../src/GameOfLife/Inputs");
+$loader->addPsr4("OptionHandler\\", __DIR__ . "/../src/GameOfLife/OptionHandler");
 $loader->addPsr4("Output\\", __DIR__ . "/../src/GameOfLife/Outputs");
 $loader->addPsr4("Rule\\", __DIR__ . "/../src/GameOfLife/Rules");
 $loader->addPsr4("TemplateHandler\\", __DIR__ . "/../src/GameOfLife/Inputs/TemplateHandler");

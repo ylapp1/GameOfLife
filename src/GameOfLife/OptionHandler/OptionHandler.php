@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife\OptionHandler;
+namespace OptionHandler;
 
 use Ulrichsg\Getopt;
 
@@ -103,13 +103,16 @@ class OptionHandler
     {
         $this->optionLoader->addDefaultOptions($_options);
 
-        $inputClasses = glob(__DIR__ . "/src/GameOfLife/Inputs/*Input.php");
-        $this->optionLoader->addClassOptions($_options, $inputClasses, $this->excludeClasses, "Input");
+        $inputClasses = glob(__DIR__ . "/../Inputs/*Input.php");
+        $linkedOptions = $this->optionLoader->addClassOptions($_options, $inputClasses, $this->excludeClasses, "Input");
+        $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $outputClasses = glob(__DIR__ . "/src/GameOfLife/Outputs/*Output.php");
-        $this->optionLoader->addClassOptions($_options, $outputClasses, $this->excludeClasses, "Output");
+        $outputClasses = glob(__DIR__ . "/../Outputs/*Output.php");
+        $linkedOptions = $this->optionLoader->addClassOptions($_options, $outputClasses, $this->excludeClasses, "Output");
+        $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $ruleClasses = glob(__DIR__ . "/src/GameOfLife/Rules/*Rule.php");
-        $this->optionLoader->addClassOptions($_options, $ruleClasses, $this->excludeClasses, "Rule");
+        $ruleClasses = glob(__DIR__ . "/../Rules/*Rule.php");
+        $linkedOptions = $this->optionLoader->addClassOptions($_options, $ruleClasses, $this->excludeClasses, "Rule");
+        $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
     }
 }

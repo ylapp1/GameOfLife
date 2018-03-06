@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife\OptionHandler;
+namespace OptionHandler;
 
 use GameOfLife\Board;
 use Input\BaseInput;
