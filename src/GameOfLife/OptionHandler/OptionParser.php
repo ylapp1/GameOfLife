@@ -114,8 +114,8 @@ class OptionParser
 
         if ($_options->getOption("input") !== null)
         {
-            $className = strtolower($_options->getOption("input")) . "Input";
-            $classPath = "Input\\" . ucfirst($className);
+            $className = ucfirst(strtolower($_options->getOption("input"))) . "Input";
+            $classPath = "Input\\" . $className;
 
             if (class_exists($classPath) &&
                 ! in_array($className, $this->parentOptionHandler->excludeClasses()))
@@ -150,8 +150,8 @@ class OptionParser
 
         if ($_options->getOption("output") !== null)
         {
-            $className = strtolower($_options->getOption("output")) . "Output";
-            $classPath = "Output\\" . ucfirst($className);
+            $className = ucfirst(strtolower($_options->getOption("output"))) . "Output";
+            $classPath = "Output\\" . $className;
 
             if (class_exists($classPath) &&
                 ! in_array($className, $this->parentOptionHandler->excludeClasses()))
@@ -185,8 +185,8 @@ class OptionParser
 
         if ($_options->getOption("rules") !== null)
         {
-            $className = strtolower($_options->getOption("rules")) . "Rule";
-            $classPath = "Rule\\" . ucfirst($className);
+            $className = ucfirst(strtolower($_options->getOption("rules"))) . "Rule";
+            $classPath = "Rule\\" . $className;
 
             if (class_exists($classPath) &&
                 ! in_array($className, $this->parentOptionHandler->excludeClasses()))
