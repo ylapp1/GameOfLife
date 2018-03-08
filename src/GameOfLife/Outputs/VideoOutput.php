@@ -205,7 +205,15 @@ class VideoOutput extends ImageOutput
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Initialize ffmpeg helper
-        $ffmpegHelper = new FfmpegHelper("Tools/ffmpeg/bin/ffmpeg.exe");
+        $ffmpegHelper = new FfmpegHelper(PHP_OS);
+        if (! $ffmpegHelper->binaryPath())
+        {
+            echo "Error: Ffmpeg binary not found";
+            unset($this->imageCreator);
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+            return;
+        }
+
         $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
 
         if (count($this->frames) == 0)
@@ -232,7 +240,13 @@ class VideoOutput extends ImageOutput
                 $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
                 $ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-                exec($ffmpegHelper->generateCommand($ffmpegOutputDirectory . $outputPath));
+                $error = $ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
+
+                if ($error)
+                {
+                    echo "\nError while creating the audio files. Is ffmpeg installed?\n";
+                    return;
+                }
 
                 file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
             }
@@ -257,7 +271,13 @@ class VideoOutput extends ImageOutput
         $ffmpegHelper->addOption("-pix_fmt yuv420p");
 
         // Save video in output folder
-        exec($ffmpegHelper->generateCommand("\"" . $this->outputDirectory . "/Video/" . $fileName . "\""));
+        $error = $ffmpegHelper->executeCommand("\"" . $this->outputDirectory . "/Video/" . $fileName . "\"");
+
+        if ($error)
+        {
+            echo "\nError while creating the video file. Is ffmpeg installed?\n";
+            return;
+        }
 
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);

@@ -7,6 +7,7 @@
  */
 
 namespace Output\Helpers;
+use Utils\FileSystemHandler;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -16,17 +17,42 @@ namespace Output\Helpers;
 class FfmpegHelper
 {
     private $binaryPath;
+    private $fileSystemHandler;
     private $options = array();
+    private $osName;
 
 
     /**
      * FfmpegHelper constructor.
      *
-     * @param string $_binaryPath   Path to the ffmpeg binary file
+     * @param String $_osName The name of the operating system
      */
-    public function __construct(string $_binaryPath)
+    public function __construct(String $_osName)
     {
-        $this->binaryPath = $_binaryPath;
+        $this->osName = strtolower($_osName);
+        $this->binaryPath = $this->findFFmpegBinary();
+        $this->fileSystemHandler = new FileSystemHandler();
+    }
+
+
+    private function findFFmpegBinary()
+    {
+        $binaryPath = false;
+
+        if (stristr($this->osName, "win"))
+        { // If OS is Windows search the Tools directory for the ffmpeg.exe file
+            $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
+        }
+        elseif ($this->osName == "linux")
+        { // If OS is Linux check whether the ffmpeg command returns true
+
+            $error = false;
+            passthru("ffmpeg", $error);
+
+            if (! $error) $binaryPath = "ffmpeg";
+        }
+
+        return $binaryPath;
     }
 
 
@@ -92,11 +118,11 @@ class FfmpegHelper
     /**
      * Generates a ffmpeg command that can be executed by using exec.
      *
-     * @param string $_outputPath   Ffmpeg output path
+     * @param String $_outputPath The Ffmpeg output path
      *
-     * @return string               The ffmpeg command
+     * @return String The ffmpeg command
      */
-    public function generateCommand(string $_outputPath): string
+    public function generateCommand(String $_outputPath): String
     {
         $command = "\"" . $this->binaryPath . "\"";
         foreach ($this->options as $option)
@@ -104,9 +130,33 @@ class FfmpegHelper
             $command .= " " . $option;
         }
         $command .= " \"" . $_outputPath . "\"";
-        // hide output by redirecting it to NUL
-        $command .= " 2>NUL";
+
+        echo $this->osName;
+
+        if (stristr($this->osName, "win")) $redirect = "NUL";
+        elseif ($this->osName == "linux") $redirect = "/dev/null";
+        else $redirect = "test.txt";
+
+        // hide output by redirecting it
+        $command .= " 2>" . $redirect;
 
         return $command;
+    }
+
+    /**
+     * Executes the ffmpeg command.
+     *
+     * @param String $_outputPath The Ffmpeg output path
+     *
+     * @return bool|int The return value of the ffmpeg command
+     */
+    public function executeCommand(String $_outputPath)
+    {
+        $output = "";
+        $error = false;
+
+        exec($this->generateCommand($_outputPath), $output, $error);
+
+        return $error;
     }
 }
