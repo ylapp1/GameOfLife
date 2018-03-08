@@ -6,5 +6,5 @@ php:
   - nightly
 install:
   composer install
-  sudo apt-get install --y ffmpeg
+  sudo apt-get install -y ffmpeg
 script: phpunit --configuration tests/phpunit.xml tests --coverage-text
