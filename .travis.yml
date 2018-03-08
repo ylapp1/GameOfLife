@@ -4,11 +4,9 @@ php:
   - 7.1.8
   - 7.1.9
   - nightly
-matrix:
-  include:
-    - os: linux
-      dist: xenial
-      sudo: required
+os: linux
+dist: xenial
+sudo: required
 install:
   - composer install
   - sudo apt-get update
