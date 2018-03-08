@@ -168,6 +168,23 @@ class VideoOutputTest extends TestCase
      */
     public function testCanCreateVideo(bool $_hasSound)
     {
+        $ffmpegHelperMock = $this->getMockBuilder(\Output\Helpers\FfmpegHelper::class)
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+
+        $ffmpegHelperMock->expects($this->exactly(1 + $_hasSound * 10))
+                         ->method("executeCommand")
+                         ->willReturn(false);
+
+        $ffmpegHelperMock->expects($this->exactly(1))
+                         ->method("binaryPath")
+                         ->willReturn(true);
+
+        if ($ffmpegHelperMock instanceof \Output\Helpers\FfmpegHelper)
+        {
+            $this->output->setFfmpegHelper($ffmpegHelperMock);
+        }
+
         $this->expectOutputRegex("Starting video output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->output->setHasSound($_hasSound);
