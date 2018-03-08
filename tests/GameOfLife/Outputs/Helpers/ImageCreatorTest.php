@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn.consult.eu>
  */
 
@@ -93,6 +93,8 @@ class ImageCreatorTest extends TestCase
     }
 
     /**
+     * Checks whether the getters/setters work as expected.
+     *
      * @dataProvider setAttributesProvider
      * @covers \Output\Helpers\ImageCreator::setOutputPath()
      * @covers \Output\Helpers\ImageCreator::outputPath()

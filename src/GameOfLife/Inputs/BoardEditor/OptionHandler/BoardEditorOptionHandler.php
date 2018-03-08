@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -149,6 +149,6 @@ class BoardEditorOptionHandler
      */
     public function parseInput(String $_input): bool
     {
-        return $this->optionParser->callOption($_input, $this->options);
+        return $this->optionParser->callOption($_input);
     }
 }

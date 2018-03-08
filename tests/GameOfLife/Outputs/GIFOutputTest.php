@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -185,6 +185,8 @@ class GIFOutputTest extends TestCase
     }
 
     /**
+     * Checks whether the output detects that the output folder does not exist.
+     *
      * @covers \Output\GifOutput::finishOutput()
      */
     public function testDetectsOutputFolderNotExisting()
