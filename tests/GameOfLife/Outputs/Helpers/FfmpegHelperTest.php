@@ -100,6 +100,6 @@ class FfmpegHelperTest extends TestCase
 
         $this->expectOutputRegex("/.*/");
 
-        $this->assertEquals(' myTest thisIsATest testing "Output" 2>test.txt', $this->ffmpegHelper->generateCommand("Output"));
+        $this->assertEquals(' myTest thisIsATest testing "Output"', $this->ffmpegHelper->generateCommand("Output"));
     }
 }

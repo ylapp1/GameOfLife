@@ -8,6 +8,7 @@
 
 namespace Output\Helpers;
 use Utils\FileSystemHandler;
+use Utils\ShellExecutor;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -20,6 +21,7 @@ class FfmpegHelper
     private $fileSystemHandler;
     private $options = array();
     private $osName;
+    private $shellExecutor;
 
 
     /**
@@ -31,6 +33,7 @@ class FfmpegHelper
     {
         $this->osName = strtolower($_osName);
         $this->fileSystemHandler = new FileSystemHandler();
+        $this->shellExecutor = new ShellExecutor($_osName);
         $this->binaryPath = $this->findFFmpegBinary();
     }
 
@@ -46,9 +49,7 @@ class FfmpegHelper
         elseif ($this->osName == "linux")
         { // If OS is Linux check whether the ffmpeg command returns true
 
-            $returnValue = false;
-            passthru("ffmpeg 2>/dev/null", $returnValue);
-
+            $returnValue = $this->shellExecutor->executeCommand("ffmpeg", true);
             if ($returnValue == 1) $binaryPath = "ffmpeg";
         }
 
@@ -136,13 +137,6 @@ class FfmpegHelper
         }
         $command .= " \"" . $_outputPath . "\"";
 
-        if (stristr($this->osName, "win")) $redirect = "NUL";
-        elseif ($this->osName == "linux") $redirect = "/dev/null";
-        else $redirect = "test.txt";
-
-        // hide output by redirecting it
-        $command .= " 2>" . $redirect;
-
         return $command;
     }
 
@@ -155,10 +149,7 @@ class FfmpegHelper
      */
     public function executeCommand(String $_outputPath)
     {
-        $output = "";
-        $error = false;
-
-        exec($this->generateCommand($_outputPath), $output, $error);
+        $error = $this->shellExecutor->executeCommand($this->generateCommand($_outputPath), true);
 
         return $error;
     }

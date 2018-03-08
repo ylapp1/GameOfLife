@@ -8,6 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\GameLogic;
+use Output\Helpers\FfmpegHelper;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Output\VideoOutput;
@@ -86,6 +87,8 @@ class VideoOutputTest extends TestCase
      * @covers \Output\VideoOutput::setHasSound()
      * @covers \Output\VideoOutput::imageCreator()
      * @covers \Output\VideoOutput::setImageCreator()
+     * @covers \Output\VideoOutput::ffmpegHelper()
+     * @covers \Output\VideoOutput::setFfmpegHelper()
      *
      * @param array $_fillPercentages       Fill percentage of each gamestep
      * @param int $_fps                     Frames per second
@@ -97,6 +100,7 @@ class VideoOutputTest extends TestCase
         $fileSystemHandler = new FileSystemHandler();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack, "tmp");
+        $ffmpegHelper = new FfmpegHelper("Mein lustiger test");
 
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setFillPercentages($_fillPercentages);
@@ -104,6 +108,7 @@ class VideoOutputTest extends TestCase
         $this->output->setFrames($_frames);
         $this->output->setImageCreator($imageCreator);
         $this->output->setHasSound($_hasSound);
+        $this->output->setFfmpegHelper($ffmpegHelper);
 
         $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
         $this->assertEquals($_fillPercentages, $this->output->fillPercentages());
@@ -111,6 +116,7 @@ class VideoOutputTest extends TestCase
         $this->assertEquals($_frames, $this->output->frames());
         $this->assertEquals($imageCreator, $this->output->imageCreator());
         $this->assertEquals($_hasSound, $this->output->hasSound());
+        $this->assertEquals($ffmpegHelper, $this->output->ffmpegHelper());
     }
 
     public function setAttributesProvider()
@@ -163,6 +169,7 @@ class VideoOutputTest extends TestCase
      * @dataProvider createVideoProvider()
      * @covers \Output\VideoOutput::outputBoard()
      * @covers \Output\VideoOutput::finishOutput()
+     * @covers \Output\VideoOutput::generateVideoFile()
      *
      * @param bool $_hasSound   Indicates whether the video will have sound or not
      */
