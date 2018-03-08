@@ -90,7 +90,7 @@ class BoardEditorOptionHandlerTest extends TestCase
 
         $optionParserMock->expects($this->exactly(1))
                          ->method("callOption")
-                         ->with($input, $options)
+                         ->with($input)
                          ->willReturn(true);
 
         $this->assertTrue($optionHandler->parseInput($input));
