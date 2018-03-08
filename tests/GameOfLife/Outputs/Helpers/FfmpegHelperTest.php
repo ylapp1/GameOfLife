@@ -17,9 +17,11 @@ class FfmpegHelperTest extends TestCase
     /** @var FfmpegHelper */
     private $ffmpegHelper;
 
+    private $execMock;
+
     protected function setUp()
     {
-        $this->ffmpegHelper = new FfmpegHelper("ffmpeg.exe");
+        $this->ffmpegHelper = new FfmpegHelper("Linux");
     }
 
     protected function tearDown()
@@ -29,26 +31,13 @@ class FfmpegHelperTest extends TestCase
 
 
     /**
-     * @dataProvider constructionProvider
      * @covers \Output\Helpers\FfmpegHelper::__construct()
-     *
-     * @param string $_binaryPath   The binary path
      */
-    public function testCanBeConstructed(string $_binaryPath)
+    public function testCanBeConstructed()
     {
-        $input = new FfmpegHelper($_binaryPath);
+        $ffmpegHelper = new FfmpegHelper("Other");
 
-        $this->assertEquals($_binaryPath, $input->binaryPath());
-    }
-
-    public function constructionProvider()
-    {
-        return [
-            ["testPath"],
-            ["I/am/a/file/path"],
-            ["Test/this/path"],
-            ["Special/File/Path (Not Really)"]
-        ];
+        $this->assertEquals("", $ffmpegHelper->binaryPath());
     }
 
     /**
@@ -111,6 +100,8 @@ class FfmpegHelperTest extends TestCase
         $this->ffmpegHelper->addOption("thisIsATest");
         $this->ffmpegHelper->addOption("testing");
 
-        $this->assertEquals('"ffmpeg.exe" myTest thisIsATest testing "Output" 2>NUL', $this->ffmpegHelper->generateCommand("Output"));
+        $this->expectOutputRegex("/.*/");
+
+        $this->assertEquals('"" myTest thisIsATest testing "Output" 2>/dev/null', $this->ffmpegHelper->generateCommand("Output"));
     }
 }

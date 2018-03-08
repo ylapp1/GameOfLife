@@ -202,18 +202,17 @@ class VideoOutput extends ImageOutput
         echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
         echo "\nStarting video creation ...\n";
 
-        $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
-
         // Initialize ffmpeg helper
         $ffmpegHelper = new FfmpegHelper(PHP_OS);
-        if (! $ffmpegHelper->binaryPath())
-        {
-            echo "Error: Ffmpeg binary not found";
-            unset($this->imageCreator);
-            $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
-            return;
-        }
+        if (! $ffmpegHelper->binaryPath()) echo "Error: Ffmpeg binary not found";
+        else $this->generateVideoFile($ffmpegHelper);
 
+        unset($this->imageCreator);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+    }
+
+    private function generateVideoFile(FfmpegHelper $_ffmpegHelper)
+    {
         $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
 
         if (count($this->frames) == 0)
@@ -235,12 +234,12 @@ class VideoOutput extends ImageOutput
                 $outputPath = "tmp/Audio/" . $i . ".wav";
 
                 // Generate random beep sound
-                $ffmpegHelper->resetOptions();
-                $ffmpegHelper->addOption("-f lavfi");
-                $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
-                $ffmpegHelper->addOption("-t " . $secondsPerFrame);
+                $_ffmpegHelper->resetOptions();
+                $_ffmpegHelper->addOption("-f lavfi");
+                $_ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
+                $_ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-                $error = $ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
+                $error = $_ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
 
                 if ($error)
                 {
@@ -255,32 +254,31 @@ class VideoOutput extends ImageOutput
         echo "\nGenerating video file ...";
 
         // Create video
-        $ffmpegHelper->resetOptions();
+        $_ffmpegHelper->resetOptions();
 
         if ($this->hasSound == true)
         {
             // Create single sound from sound frames
-            $ffmpegHelper->addOption("-f concat");
-            $ffmpegHelper->addOption("-safe 0");
-            $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
+            $_ffmpegHelper->addOption("-f concat");
+            $_ffmpegHelper->addOption("-safe 0");
+            $_ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
         }
 
         // Create video from image frames
-        $ffmpegHelper->addOption("-framerate " . $this->fps);
-        $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
-        $ffmpegHelper->addOption("-pix_fmt yuv420p");
+        $_ffmpegHelper->addOption("-framerate " . $this->fps);
+        $_ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
+        $_ffmpegHelper->addOption("-pix_fmt yuv420p");
+
+        $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Save video in output folder
-        $error = $ffmpegHelper->executeCommand("\"" . $this->outputDirectory . "/Video/" . $fileName . "\"");
+        $error = $_ffmpegHelper->executeCommand( $this->outputDirectory . "Video/" . $fileName);
 
         if ($error)
         {
             echo "\nError while creating the video file. Is ffmpeg installed?\n";
             return;
         }
-
-        unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
 
         echo "\nVideo creation complete!\n\n";
     }

@@ -30,8 +30,8 @@ class FfmpegHelper
     public function __construct(String $_osName)
     {
         $this->osName = strtolower($_osName);
-        $this->binaryPath = $this->findFFmpegBinary();
         $this->fileSystemHandler = new FileSystemHandler();
+        $this->binaryPath = $this->findFFmpegBinary();
     }
 
 
@@ -46,10 +46,10 @@ class FfmpegHelper
         elseif ($this->osName == "linux")
         { // If OS is Linux check whether the ffmpeg command returns true
 
-            $error = false;
-            passthru("ffmpeg", $error);
+            $returnValue = false;
+            passthru("ffmpeg 2>/dev/null", $returnValue);
 
-            if (! $error) $binaryPath = "ffmpeg";
+            if ($returnValue == 1) $binaryPath = "ffmpeg";
         }
 
         return $binaryPath;
@@ -124,14 +124,17 @@ class FfmpegHelper
      */
     public function generateCommand(String $_outputPath): String
     {
-        $command = "\"" . $this->binaryPath . "\"";
+        $command = "";
+
+        if (stristr($this->osName, "win")) $command .= "\"";
+        $command .= $this->binaryPath;
+        if (stristr($this->osName, "win")) $command .= "\"";
+
         foreach ($this->options as $option)
         {
             $command .= " " . $option;
         }
         $command .= " \"" . $_outputPath . "\"";
-
-        echo $this->osName;
 
         if (stristr($this->osName, "win")) $redirect = "NUL";
         elseif ($this->osName == "linux") $redirect = "/dev/null";
