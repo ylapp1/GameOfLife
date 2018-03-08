@@ -109,7 +109,7 @@ class OptionParserTest extends TestCase
     {
         $this->optionsMock->expects($this->exactly(count($_returnValueMaps)))
             ->method("getOption")
-            ->will($this->returnValueMap($_returnValueMaps));
+            ->willReturnMap($_returnValueMaps);
 
 
         if ($this->optionsMock instanceof Getopt)
@@ -200,7 +200,7 @@ class OptionParserTest extends TestCase
     {
         $this->optionsMock->expects($this->exactly(count($_returnValueMaps)))
                           ->method("getOption")
-                          ->will($this->returnValueMap($_returnValueMaps));
+                          ->willReturnmap($_returnValueMaps);
 
         if (count($_excludeClasses) > 0)
         {
