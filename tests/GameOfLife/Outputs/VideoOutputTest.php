@@ -152,7 +152,7 @@ class VideoOutputTest extends TestCase
     {
         $this->assertEquals(false, file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting video output ...\n\n");
+        $this->expectOutputRegex("/Starting video output ...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "Video"));
         $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));
