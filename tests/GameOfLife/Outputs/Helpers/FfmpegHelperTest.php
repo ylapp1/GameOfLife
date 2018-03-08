@@ -17,11 +17,9 @@ class FfmpegHelperTest extends TestCase
     /** @var FfmpegHelper */
     private $ffmpegHelper;
 
-    private $execMock;
-
     protected function setUp()
     {
-        $this->ffmpegHelper = new FfmpegHelper("Linux");
+        $this->ffmpegHelper = new FfmpegHelper("Other");
     }
 
     protected function tearDown()
@@ -102,6 +100,6 @@ class FfmpegHelperTest extends TestCase
 
         $this->expectOutputRegex("/.*/");
 
-        $this->assertEquals('"" myTest thisIsATest testing "Output" 2>/dev/null', $this->ffmpegHelper->generateCommand("Output"));
+        $this->assertEquals(' myTest thisIsATest testing "Output" 2>test.txt', $this->ffmpegHelper->generateCommand("Output"));
     }
 }
