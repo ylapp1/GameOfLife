@@ -51,7 +51,7 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanFindFfmpegBinaryForWindows()
     {
-        $ffmpegHelper = new FfmpegHelper("windows");
+        $ffmpegHelper = new FfmpegHelper("test");
 
         $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
 
@@ -65,6 +65,10 @@ class FfmpegHelperTest extends TestCase
         $reflectionProperty = $reflectionClass->getProperty("fileSystemHandler");
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($ffmpegHelper, $fileSystemHandlerMock);
+
+        $reflectionProperty = $reflectionClass->getProperty("osName");
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($ffmpegHelper, "Windows");
 
         $reflectionMethod = $reflectionClass->getMethod("findFfmpegBinary");
         $reflectionMethod->setAccessible(true);
