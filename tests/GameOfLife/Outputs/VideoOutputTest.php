@@ -166,6 +166,8 @@ class VideoOutputTest extends TestCase
     }
 
     /**
+     * Checks whether a video can be successfully created.
+     *
      * @dataProvider createVideoProvider()
      * @covers \Output\VideoOutput::outputBoard()
      * @covers \Output\VideoOutput::finishOutput()
@@ -227,20 +229,69 @@ class VideoOutputTest extends TestCase
         $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 
-    public function createVideoProvider()
+    /**
+     * DataProvider for VideoOutputTest::testCanCreateVideo().
+     *
+     * @return array Test values in the format array(hasSound)
+     */
+    public function createVideoProvider(): array
     {
-        return [
-            "Without sound" => [false],
-            "With sound" => [true]
-        ];
+        return array(
+            "Without sound" => array(false),
+            "With sound" => array(true)
+        );
     }
 
     /**
+     * Checks whether an empty frames folder is succesfully detected.
+     *
      * @covers \Output\VideoOutput::finishOutput()
+     * @covers \Output\VideoOutput::generateVideoFile()
      */
     public function testDetectsEmptyFramesFolder()
     {
         $this->expectOutputRegex("/.*Error: No frames in frames folder found!\n/");
         $this->output->finishOutput();
+    }
+
+    /**
+     * Checks whether errors while creating the audio and the video files are detected.
+     *
+     * @covers \Output\VideoOutput::finishOutput()
+     * @covers \Output\VideoOutput::generateVideoFile()
+     */
+    public function testDetectsFfmpegErrors()
+    {
+        $ffmpegHelperMock = $this->getMockBuilder(\Output\Helpers\FfmpegHelper::class)
+                                 ->disableOriginalConstructor()
+                                 ->getMock();
+
+        $ffmpegHelperMock->expects($this->exactly(2))
+                         ->method("binaryPath")
+                         ->willReturn(true);
+
+        $ffmpegHelperMock->expects($this->exactly(2))
+                         ->method("executeCommand")
+                         ->willReturn("error");
+
+        if ($ffmpegHelperMock instanceof FfmpegHelper)
+        {
+            $this->output->setFfmpegHelper($ffmpegHelperMock);
+            $this->output->setFrames(array(true));
+            $this->output->setFillPercentages(array(2));
+            $this->output->setFps(2);
+
+            // With sound
+            $this->output->setHasSound(true);
+
+            $this->expectOutputRegex("/.*\nError while creating the audio files\. Is ffmpeg installed\?\n.*/");
+            $this->output->finishOutput();
+
+            // Without sound
+            $this->output->setHasSound(false);
+
+            $this->expectOutputRegex("/.*\nError while creating the video file\. Is ffmpeg installed\?\n/");
+            $this->output->finishOutput();
+        }
     }
 }
