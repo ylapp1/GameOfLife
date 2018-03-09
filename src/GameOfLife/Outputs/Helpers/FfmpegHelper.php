@@ -7,6 +7,8 @@
  */
 
 namespace Output\Helpers;
+use Utils\FileSystemHandler;
+use Utils\ShellExecutor;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -16,17 +18,23 @@ namespace Output\Helpers;
 class FfmpegHelper
 {
     private $binaryPath;
+    private $fileSystemHandler;
     private $options = array();
+    private $osName;
+    private $shellExecutor;
 
 
     /**
      * FfmpegHelper constructor.
      *
-     * @param string $_binaryPath   Path to the ffmpeg binary file
+     * @param String $_osName The name of the operating system
      */
-    public function __construct(string $_binaryPath)
+    public function __construct(String $_osName)
     {
-        $this->binaryPath = $_binaryPath;
+        $this->osName = strtolower($_osName);
+        $this->fileSystemHandler = new FileSystemHandler();
+        $this->shellExecutor = new ShellExecutor($_osName);
+        $this->binaryPath = $this->findFFmpegBinary();
     }
 
 
@@ -50,6 +58,16 @@ class FfmpegHelper
         $this->binaryPath = $_binaryPath;
     }
 
+    public function fileSystemHandler(): FileSystemHandler
+    {
+        return $this->fileSystemHandler;
+    }
+
+    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    {
+        $this->fileSystemHandler = $_fileSystemHandler;
+    }
+
     /**
      * Returns the ffmpeg option list.
      *
@@ -70,6 +88,38 @@ class FfmpegHelper
         $this->options = $_options;
     }
 
+    public function shellExecutor()
+    {
+        return $this->shellExecutor;
+    }
+
+    public function setShellExecutor(ShellExecutor $_shellExecutor)
+    {
+        $this->shellExecutor = $_shellExecutor;
+    }
+
+
+    /**
+     * Finds and returns the path to the ffmpeg binary file.
+     *
+     * @return String|bool The path to the ffmpeg binary file or false if the file was not found
+     */
+    private function findFFmpegBinary()
+    {
+        $binaryPath = false;
+
+        if (stristr($this->osName, "win"))
+        { // If OS is Windows search the Tools directory for the ffmpeg.exe file
+            $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
+        }
+        elseif (stristr($this->osName, "linux"))
+        { // If OS is Linux check whether the ffmpeg command returns true
+            $returnValue = $this->shellExecutor->executeCommand("ffmpeg", true);
+            if ($returnValue == 1) $binaryPath = "ffmpeg";
+        }
+
+        return $binaryPath;
+    }
 
     /**
      * Add an option to the option list.
@@ -92,21 +142,38 @@ class FfmpegHelper
     /**
      * Generates a ffmpeg command that can be executed by using exec.
      *
-     * @param string $_outputPath   Ffmpeg output path
+     * @param String $_outputPath The Ffmpeg output path
      *
-     * @return string               The ffmpeg command
+     * @return String The ffmpeg command
      */
-    public function generateCommand(string $_outputPath): string
+    public function generateCommand(String $_outputPath): String
     {
-        $command = "\"" . $this->binaryPath . "\"";
+        $command = "";
+
+        if (stristr($this->osName, "win")) $command .= "\"";
+        $command .= $this->binaryPath;
+        if (stristr($this->osName, "win")) $command .= "\"";
+
         foreach ($this->options as $option)
         {
             $command .= " " . $option;
         }
         $command .= " \"" . $_outputPath . "\"";
-        // hide output by redirecting it to NUL
-        $command .= " 2>NUL";
 
         return $command;
+    }
+
+    /**
+     * Executes the ffmpeg command.
+     *
+     * @param String $_outputPath The Ffmpeg output path
+     *
+     * @return bool|int The return value of the ffmpeg command
+     */
+    public function executeCommand(String $_outputPath)
+    {
+        $error = $this->shellExecutor->executeCommand($this->generateCommand($_outputPath), true);
+
+        return $error;
     }
 }

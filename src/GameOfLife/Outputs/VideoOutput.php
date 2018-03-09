@@ -49,6 +49,13 @@ class VideoOutput extends ImageOutput
      */
     private $hasSound;
 
+    /**
+     * The ffmpeg helper
+     *
+     * @var FfmpegHelper $ffmpegHelper
+     */
+    private $ffmpegHelper;
+
 
     /**
      * VideoOutput constructor.
@@ -61,6 +68,8 @@ class VideoOutput extends ImageOutput
         $this->fillPercentages = array();
         $this->frames = array();
         $this->hasSound = false;
+
+        $this->ffmpegHelper = new FfmpegHelper(PHP_OS);
     }
 
 
@@ -144,6 +153,26 @@ class VideoOutput extends ImageOutput
         $this->hasSound = $hasSound;
     }
 
+    /**
+     * Returns the ffmpeg helper.
+     *
+     * @return FfmpegHelper The ffmpeg helper
+     */
+    public function ffmpegHelper()
+    {
+        return $this->ffmpegHelper;
+    }
+
+    /**
+     * Sets the ffmpeg helper.
+     *
+     * @param FfmpegHelper $_ffmpegHelper The ffmpeg helper
+     */
+    public function setFfmpegHelper(FfmpegHelper $_ffmpegHelper)
+    {
+        $this->ffmpegHelper = $_ffmpegHelper;
+    }
+
 
     /**
      * Adds VideoOutputs specific options to an option list.
@@ -202,10 +231,16 @@ class VideoOutput extends ImageOutput
         echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
         echo "\nStarting video creation ...\n";
 
-        $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
-
         // Initialize ffmpeg helper
-        $ffmpegHelper = new FfmpegHelper("Tools/ffmpeg/bin/ffmpeg.exe");
+        if (! $this->ffmpegHelper->binaryPath()) echo "Error: Ffmpeg binary not found\n";
+        else $this->generateVideoFile();
+
+        unset($this->imageCreator);
+        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+    }
+
+    private function generateVideoFile()
+    {
         $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
 
         if (count($this->frames) == 0)
@@ -227,12 +262,18 @@ class VideoOutput extends ImageOutput
                 $outputPath = "tmp/Audio/" . $i . ".wav";
 
                 // Generate random beep sound
-                $ffmpegHelper->resetOptions();
-                $ffmpegHelper->addOption("-f lavfi");
-                $ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
-                $ffmpegHelper->addOption("-t " . $secondsPerFrame);
+                $this->ffmpegHelper->resetOptions();
+                $this->ffmpegHelper->addOption("-f lavfi");
+                $this->ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
+                $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-                exec($ffmpegHelper->generateCommand($ffmpegOutputDirectory . $outputPath));
+                $error = $this->ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
+
+                if ($error)
+                {
+                    echo "\nError while creating the audio files. Is ffmpeg installed?\n";
+                    return;
+                }
 
                 file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
             }
@@ -241,26 +282,31 @@ class VideoOutput extends ImageOutput
         echo "\nGenerating video file ...";
 
         // Create video
-        $ffmpegHelper->resetOptions();
+        $this->ffmpegHelper->resetOptions();
 
         if ($this->hasSound == true)
         {
             // Create single sound from sound frames
-            $ffmpegHelper->addOption("-f concat");
-            $ffmpegHelper->addOption("-safe 0");
-            $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
+            $this->ffmpegHelper->addOption("-f concat");
+            $this->ffmpegHelper->addOption("-safe 0");
+            $this->ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
         }
 
         // Create video from image frames
-        $ffmpegHelper->addOption("-framerate " . $this->fps);
-        $ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
-        $ffmpegHelper->addOption("-pix_fmt yuv420p");
+        $this->ffmpegHelper->addOption("-framerate " . $this->fps);
+        $this->ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
+        $this->ffmpegHelper->addOption("-pix_fmt yuv420p");
+
+        $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Save video in output folder
-        exec($ffmpegHelper->generateCommand("\"" . $this->outputDirectory . "/Video/" . $fileName . "\""));
+        $error = $this->ffmpegHelper->executeCommand( $this->outputDirectory . "Video/" . $fileName);
 
-        unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+        if ($error)
+        {
+            echo "\nError while creating the video file. Is ffmpeg installed?\n";
+            return;
+        }
 
         echo "\nVideo creation complete!\n\n";
     }

@@ -14,6 +14,9 @@ packages=(
 
   ## ImageOutput dependencies
   php7.0-gd
+
+  # VideoOutput depencies
+  ffmpeg
 )
 
 apt-get update

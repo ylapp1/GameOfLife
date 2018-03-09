@@ -171,4 +171,68 @@ class FileSystemHandlerTest extends TestCase
             unlink($fileName);
         }
     }
+
+    /**
+     * Checks whether a file can be found recursive.
+     *
+     * @param String $_directories
+     * @param String $_filePath
+     * @param String $_searchFilename
+     * @param Bool $_expectsFilePath Indicates whether the FileSystemHadresult will be a filepath or false
+     *
+     * @dataProvider findFileRecursiveProvider()
+     *
+     * @covers \Utils\FileSystemHandler::findFileRecursive()
+     */
+    public function testCanFindFileRecursive(String $_directories, String $_filePath, String $_searchFilename, Bool $_expectsFilePath = true)
+    {
+        $testDirectory = __DIR__ . "/test";
+        $testFilePath = $testDirectory . "/"  . $_filePath;
+
+        $testFilePath = str_replace("\\", "/", $testFilePath);
+
+        mkdir($testDirectory . "/" . $_directories, 0777, true);
+        touch($testFilePath);
+
+        $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
+
+        if ($_expectsFilePath) $this->assertEquals($testFilePath, $filePath);
+        else $this->assertFalse($filePath);
+
+        // Delete the test file
+        unlink($testFilePath);
+
+        // Delete the test sub directories
+        $directories = explode("/", $_directories);
+
+        for ($i = count($directories); $i > 0; $i--)
+        {
+            $removeDirectory = "";
+
+            for ($j = 0; $j < $i; $j++)
+            {
+                $removeDirectory .= "/" . $directories[$j];
+            }
+
+            rmdir($testDirectory . $removeDirectory);
+        }
+
+        // Delete the test directory
+        rmdir($testDirectory);
+    }
+
+    /**
+     * DataProvider for FileSystemHandlerTest::testCanFindFileRecursive().
+     *
+     * @return array Test values in the format array(testDirectoryStructure, filePath, searchFileName, expectsFilePath)
+     */
+    public function findFileRecursiveProvider()
+    {
+        return array(
+            "Existing file in second sub folder" => array("testing/directory/mytest", "testing/directory/test.txt", "test.txt"),
+            "Existing file in first sub folder" => array("testing/directory/mytest", "testing/second.txt", "second.txt"),
+            "Existing file in third sub folder" => array("testing/directory/mytest", "testing/directory/mytest/thisIsMyTest.txt", "thisIsMyTest.txt"),
+            "Not existing file" => array("testing/directory/mytest", "testing/directory/mytest/test.txt", "nottest.txt", false)
+        );
+    }
 }

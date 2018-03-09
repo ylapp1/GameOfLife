@@ -143,4 +143,28 @@ class FileSystemHandler
     {
         return glob($_filePath . '/*' . $_fileEnding, GLOB_MARK);
     }
+
+    /**
+     * Searches a folder for a file.
+     *
+     * @param String $_baseFolder The folder path
+     * @param String $_fileName The file name
+     *
+     * @return String|bool The file path or false
+     */
+    public function findFileRecursive(String $_baseFolder, String $_fileName)
+    {
+        $directoryIterator = new \RecursiveDirectoryIterator($_baseFolder);
+
+        foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
+        {
+            if (stripos($file, $_fileName) == strlen($file) - strlen($_fileName))
+            {
+                $filePath = str_replace("\\", "/", $file);
+                return $filePath;
+            }
+        }
+
+        return false;
+    }
 }
