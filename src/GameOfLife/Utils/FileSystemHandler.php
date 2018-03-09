@@ -160,7 +160,8 @@ class FileSystemHandler
         {
             if (stripos($file, $_fileName) == strlen($file) - strlen($_fileName))
             {
-                return $file;
+                $filePath = str_replace("\\", "/", $file);
+                return $filePath;
             }
         }
 
