@@ -61,7 +61,7 @@ class ShellExecutor
      *
      * @return int The return code of the command
      */
-    public function executeCommand(String $_command, Bool $_hideOutput = false): int
+    public function executeCommand(String $_command, Bool $_hideOutput = false)
     {
         $output = array();
         $returnValue = 0;
@@ -77,7 +77,7 @@ class ShellExecutor
      *
      * @return String The path to which the output will be redirected
      */
-    public function getOutputHideRedirect()
+    private function getOutputHideRedirect()
     {
         if (stristr($this->osName, "win")) return $this->outputHideRedirectWindows;
         elseif (stristr($this->osName, "linux")) return $this->outputHideRedirectLinux;
