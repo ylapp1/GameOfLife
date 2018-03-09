@@ -6,27 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-// Must add this test to the same namespace like ShellExecutor in order to be able to override exec
-namespace Utils;
-
-/**
- * Overridden exec function for this unit test.
- * Writes the command to the returnValue.
- *
- * @param String $_command The command
- * @param array $_output The list of output lines
- * @param int $_returnValue The return value
- */
-function exec(String $_command, array &$_output, int &$_returnValue)
-{
-    $_returnValue = $_command;
-}
-
-
 use PHPUnit\Framework\TestCase;
+use Utils\ShellExecutor;
 
 /**
  * Checks whether the ShellExecutor class works as expected.
+ * This test works because the exec function for the Utils namespace was overridden in testboot.php.
  */
 class ShellExecutorTest extends TestCase
 {
