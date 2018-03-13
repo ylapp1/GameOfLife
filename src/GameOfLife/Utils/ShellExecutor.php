@@ -54,6 +54,27 @@ class ShellExecutor
 
 
     /**
+     * Returns the os name.
+     *
+     * @return String The os name
+     */
+    public function osName(): String
+    {
+        return $this->osName;
+    }
+
+    /**
+     * Sets the os name.
+     *
+     * @param String $_osName The os name
+     */
+    public function setOsname(String $_osName)
+    {
+        $this->osName = $_osName;
+    }
+
+
+    /**
      * Executes a command and optionally hides the output from the user.
      *
      * @param String $_command The command
@@ -82,5 +103,14 @@ class ShellExecutor
         if (stristr($this->osName, "win")) return $this->outputHideRedirectWindows;
         elseif (stristr($this->osName, "linux")) return $this->outputHideRedirectLinux;
         else return $this->outputHideRedirectOther;
+    }
+
+    public function clearScreen()
+    {
+        if (stristr($this->osName, "linux")) system("clear");
+
+        /*
+         * It's not possible to clear the screen in cmd. (Ideas were using "cls" or moving the cursor position up)
+         */
     }
 }

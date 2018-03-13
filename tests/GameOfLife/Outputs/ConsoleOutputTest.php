@@ -36,6 +36,25 @@ class ConsoleOutputTest extends TestCase
 
 
     /**
+     * Checks whether the constructor works as expected.
+     *
+     * @covers \Output\ConsoleOutput::__construct()
+     *
+     * @throws ReflectionException
+     */
+    public function testCanBeConstructed()
+    {
+        $output = new ConsoleOutput();
+
+        $reflectionClass = new ReflectionClass(\Output\ConsoleOutput::class);
+        $reflectionProperty = $reflectionClass->getProperty("shellExecutor");
+        $reflectionProperty->setAccessible(true);
+
+        $this->assertInstanceOf(\Utils\ShellExecutor::class, $reflectionProperty->getValue($output));
+    }
+
+
+    /**
      * @covers \Output\ConsoleOutput::startOutput()
      */
     public function testCanStartOutput()

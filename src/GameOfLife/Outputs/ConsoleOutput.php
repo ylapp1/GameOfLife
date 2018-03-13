@@ -11,12 +11,30 @@ namespace Output;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Ulrichsg\Getopt;
+use Utils\ShellExecutor;
 
 /**
  * Prints boards to the console.
  */
 class ConsoleOutput extends BaseOutput
 {
+    /**
+     * The shell executor
+     *
+     * @var ShellExecutor $shellExecutor
+     */
+    private $shellExecutor;
+
+
+    /**
+     * ConsoleOutput constructor.
+     */
+    public function __construct()
+    {
+        $this->shellExecutor = new ShellExecutor(PHP_OS);
+    }
+
+
     /**
      * Initializes the output.
      *
@@ -35,6 +53,8 @@ class ConsoleOutput extends BaseOutput
      */
     public function outputBoard(Board $_board)
     {
+        $this->shellExecutor->clearScreen();
+
         echo "\n\n";
 
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
