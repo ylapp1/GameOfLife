@@ -69,7 +69,7 @@ class TemplatePlacer
      * @return bool True: Template is out of bounds
      *              False: Template is not out of bounds
      */
-    private function isTemplateOutOfBounds(Board $_board, Template $_template, int $_posX, int $_posY): bool
+    public function isTemplateOutOfBounds(Board $_board, Template $_template, int $_posX, int $_posY): bool
     {
         if ($_posX < 0 ||
             $_posY < 0 ||

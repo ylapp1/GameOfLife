@@ -11,6 +11,7 @@ namespace OptionHandler;
 use GameOfLife\Board;
 use Input\BaseInput;
 use Input\RandomInput;
+use Input\TemplateInput;
 use Output\BaseOutput;
 use Output\ConsoleOutput;
 use Rule\ConwayRule;
@@ -114,6 +115,7 @@ class OptionParser
 
         if ($_options->getOption("input") !== null)
         {
+            $input = false;
             $className = ucfirst(strtolower($_options->getOption("input"))) . "Input";
             $classPath = "Input\\" . $className;
 
@@ -122,6 +124,8 @@ class OptionParser
             {
                 $input = new $classPath;
             }
+
+            if (! $input) $input = new TemplateInput();
         }
 
         // check whether any linked option (input specific option) is set
