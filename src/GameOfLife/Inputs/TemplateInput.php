@@ -266,6 +266,14 @@ class TemplateInput extends BaseInput
         if ($template == false) echo "Error: Template file not found!\n";
         else
         {
+            if ($_templateName)
+            {
+                if (! $this->templatePlacer->isTemplateOutOfBounds($_board, $template, $templatePosX, $templatePosY))
+                {
+                    $isDimensionsAdjustment = false;
+                }
+            }
+
             $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
 
             if ($result == false) echo "Error, the template may not exceed the field borders!\n";
