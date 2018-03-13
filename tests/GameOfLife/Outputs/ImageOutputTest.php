@@ -21,7 +21,7 @@ class ImageOutputTest extends TestCase
 {
     /** @var ImageOutput */
     private $output;
-    private $testDirectory = __DIR__ . "/../ImageOutputTest";
+    private $testDirectory = __DIR__ . "/../ImageOutputTest/";
     /** @var FileSystemHandler */
     private $fileSystemHandler;
 
@@ -142,5 +142,29 @@ class ImageOutputTest extends TestCase
         $imageCreator = $this->output->imageCreator();
 
         $this->assertEquals(100, $imageCreator->cellSize());
+    }
+
+    /**
+     * Checks whether a new unique game id can be generated.
+     *
+     * @covers \Output\ImageOutput::getNewGameId()
+     */
+    public function testCanGetNewGameId()
+    {
+        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystemHandler::class)
+                                      ->getMock();
+
+        if ($fileSystemHandlerMock instanceof \Utils\FileSystemHandler)
+        {
+            $this->output->setFileSystemHandler($fileSystemHandlerMock);
+        }
+
+        $fileSystemHandlerMock->expects($this->exactly(3))
+                              ->method("getFileList")
+                              ->willReturnOnConsecutiveCalls(array(), array("Game_1"), array("Game_1", "Game_2"));
+
+        $this->assertEquals(1, $this->output->getNewGameId("PNG"));
+        $this->assertEquals(2, $this->output->getNewGameId("Gif"));
+        $this->assertEquals(3, $this->output->getNewGameId("Video"));
     }
 }

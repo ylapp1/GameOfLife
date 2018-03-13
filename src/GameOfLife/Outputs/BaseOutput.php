@@ -91,32 +91,4 @@ class BaseOutput
     public function finishOutput()
     {
     }
-
-    /**
-     * Returns a new game id for classes that output files.
-     *
-     * @param String $_outputType Output Type (PNG, Gif, Video)
-     *
-     * @return int New Game id
-     */
-    public function getNewGameId(String $_outputType): int
-    {
-        $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
-
-        if (count($fileNames) == 0) $newGameId = 1;
-        else
-        {
-            $fileIds = array();
-            foreach ($fileNames as $fileName)
-            {
-                $fileData = explode("_", basename($fileName));
-                $fileIds[] = intval($fileData[1]);
-            }
-
-            sort($fileIds, SORT_NUMERIC);
-            $newGameId = $fileIds[count($fileIds) - 1] + 1;
-        }
-
-        return $newGameId;
-    }
 }

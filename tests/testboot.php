@@ -41,6 +41,11 @@ namespace Utils
         else $_returnValue = $_command;
     }
 
+    /**
+     * Overriden system function for the ShellExecutor unit test.
+     *
+     * @param String $_command The command
+     */
     function system(String $_command)
     {
         echo $_command;

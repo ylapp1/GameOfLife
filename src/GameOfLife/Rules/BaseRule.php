@@ -33,6 +33,9 @@ class BaseRule
     protected $rulesStayAlive;
 
 
+    /**
+     * BaseRule constructor.
+     */
     public function __construct()
     {
         $this->rulesBirth = array();
