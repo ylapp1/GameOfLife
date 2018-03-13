@@ -41,8 +41,6 @@ class CustomRule extends BaseRule
             $rulesBirth = $_options->getOption("rulesBirth");
             $rulesStayAlive = $_options->getOption("rulesStayAlive");
 
-            echo "Both rule sets are set";
-
             if (is_numeric($rulesBirth) && is_numeric($rulesStayAlive))
             {
                 $this->rulesBirth = $this->getRulesFromNumericString($rulesBirth);
@@ -172,12 +170,16 @@ class CustomRule extends BaseRule
      */
     private function getRulesFromNumericString(String $_numericString): array
     {
-        return array_map(
+        $rules = array_map(
             function(String $_number)
             {
                 return (int)$_number;
             },
             str_split($_numericString)
         );
+
+        sort($rules);
+
+        return $rules;
     }
 }

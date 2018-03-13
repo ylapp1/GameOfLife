@@ -17,6 +17,19 @@ use PHPUnit\Framework\TestCase;
 class BaseRuleTest extends TestCase
 {
     /**
+     * Checks whether the constructor works as expected.
+     *
+     * @covers \Rule\BaseRule::__construct()
+     */
+    public function testCanBeConstructed()
+    {
+        $rule = new BaseRule();
+
+        $this->assertEquals(array(), $rule->rulesBirth());
+        $this->assertEquals(array(), $rule->rulesStayAlive());
+    }
+
+    /**
      * Checks whether getters and setters work as expected.
      *
      * @dataProvider setAttributesProvider
