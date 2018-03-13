@@ -16,9 +16,9 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\FileInput works as expected.
+ * Checks whether \Input\TemplateInput works as expected.
  */
-class FileInputTest extends TestCase
+class TemplateInputTest extends TestCase
 {
     /** @var  TemplateInput $input */
     private $input;
@@ -253,5 +253,54 @@ class FileInputTest extends TestCase
             [0, 0],
             [1, 2]
         ];
+    }
+
+    /**
+     * Checks whether a default template can be loaded by its linked options.
+     *
+     * @covers \Input\TemplateInput::fillBoard()
+     * @covers \Input\TemplateInput::placeTemplate()
+     */
+    public function testCanLoadDefaultTemplatesFromLinkedOption()
+    {
+        $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
+                            ->getMock();
+
+        $optionsMock->expects($this->exactly(9))
+            ->method("getOption")
+            ->withConsecutive(
+                array("template"), array("list-templates"), array("input"), array("unittestPosX"), array("unittestPosY"),
+                array("unittestPosX"), array("unittestPosX"), array("unittestPosY"), array("unittestPosY")
+            )
+            ->willReturn(null, null, null, null, 5, 3, 5, 5, 3, 3);
+
+        $board = new Board(10, 8, 5, true);
+
+        if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
+
+        $this->assertTrue($board->getFieldStatus(5, 3));
+    }
+
+    /**
+     * Checks whether the random input is selected when an invalid input type is selected.
+     *
+     * @covers \Input\TemplateInput::fillBoard()
+     */
+    public function testCanFallBackToRandomInput()
+    {
+        $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
+                            ->getMock();
+
+        $optionsMock->expects($this->exactly(6))
+                    ->method("getOption")
+                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"), array("input"))
+                    ->willReturn(null, null, "test", "test", "test", "test");
+
+        $board = new Board(10, 8, 5, true);
+
+        if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
+
+        $this->assertGreaterThan(0.15, $board->getFillPercentage());
+        $this->assertLessThan(0.70, $board->getFillPercentage());
     }
 }

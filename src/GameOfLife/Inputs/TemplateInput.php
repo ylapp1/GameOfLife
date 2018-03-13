@@ -168,9 +168,9 @@ class TemplateInput extends BaseInput
 
             foreach ($this->defaultTemplateNames as $defaultTemplateName)
             {
-                if ($_options->getOption("input") !== null && $_options->getOption("input") == $defaultTemplateName)
+                if ($_options->getOption("input") !== null)
                 {
-                    $templateName = $defaultTemplateName;
+                    if ($_options->getOption("input") == $defaultTemplateName) $templateName = $defaultTemplateName;
                 }
                 else
                 {
