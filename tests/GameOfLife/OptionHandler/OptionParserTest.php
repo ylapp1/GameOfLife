@@ -232,20 +232,20 @@ class OptionParserTest extends TestCase
             // Input
             "input = Valid class name (User)" => array(
                 "parseInputOptions",
-                array(array("input", "User"), array("input", "User")),
+                array(array("input", "user"), array("input", "user")),
                 \Input\UserInput::class,
                 array("BaseInput")
             ),
             "input = Excluded class name (Base)" => array(
                 "parseInputOptions",
                 array(array("input", "Base"), array("input", "Base")),
-                \Input\RandomInput::class,
+                \Input\TemplateInput::class,
                 array("BaseInput")
             ),
             "input = Invalid class name (HelloWorld)" => array(
                 "parseInputOptions",
                 array(array("input", "HelloWorld"), array("input", "HelloWorld")),
-                \Input\RandomInput::class,
+                \Input\TemplateInput::class,
                 array(),
             ),
             "input = test, template = true" => array(

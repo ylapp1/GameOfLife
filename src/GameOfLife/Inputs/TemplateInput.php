@@ -22,9 +22,11 @@ use Utils\FileSystemHandler;
  */
 class TemplateInput extends BaseInput
 {
+    private $fileSystemHandler;
     private $templateDirectory;
     private $templateLoader;
     private $templatePlacer;
+    private $defaultTemplateNames = array();
 
 
     /**
@@ -39,6 +41,15 @@ class TemplateInput extends BaseInput
 
         $this->templateLoader = new TemplateLoader($this->templateDirectory);
         $this->templatePlacer = new TemplatePlacer();
+        $this->fileSystemHandler = new FileSystemHandler();
+
+        $this->defaultTemplateNames = array_map(
+            function($_arrayEntry)
+            {
+                return basename($_arrayEntry, ".txt");
+            },
+            $this->fileSystemHandler->getFileList($this->templateDirectory . "/*.txt")
+        );
     }
 
 
@@ -110,6 +121,16 @@ class TemplateInput extends BaseInput
      */
     public function addOptions(Getopt $_options)
     {
+        foreach ($this->defaultTemplateNames as $defaultTemplateName)
+        {
+            $_options->addOptions(
+                array (
+                    array(null, $defaultTemplateName . "PosX", Getopt::REQUIRED_ARGUMENT, "X position of the " . $defaultTemplateName),
+                    array(null, $defaultTemplateName . "PosY", Getopt::REQUIRED_ARGUMENT, "Y position of the " . $defaultTemplateName)
+                )
+            );
+        }
+
         $_options->addOptions(
             array
             (
@@ -141,7 +162,39 @@ class TemplateInput extends BaseInput
             echo $this->listTemplates("Custom templates", $customTemplates);
 
         }
-        else echo "Error: No template file specified\n";
+        else
+        {
+            $templateName = false;
+
+            foreach ($this->defaultTemplateNames as $defaultTemplateName)
+            {
+                if ($_options->getOption("input") !== null && $_options->getOption("input") == $defaultTemplateName)
+                {
+                    $templateName = $defaultTemplateName;
+                }
+                else
+                {
+                    if ($_options->getOption($defaultTemplateName . "PosX") !== null ||
+                        $_options->getOption($defaultTemplateName . "PosY") !== null)
+                    {
+                        $templateName = $defaultTemplateName;
+                    }
+                }
+
+                if ($templateName) break;
+            }
+
+            if ($templateName) $this->placeTemplate($_board, $_options, $templateName);
+            else
+            {
+                if ($_options->getOption("input") !== null && $_options->getOption("input") !== "template")
+                {
+                    $randomInput = new RandomInput();
+                    $randomInput->fillBoard($_board, new Getopt());
+                }
+                else echo "Error: No template file specified\n";
+            }
+        }
     }
 
     /**
@@ -174,8 +227,9 @@ class TemplateInput extends BaseInput
      *
      * @param Board $_board Board on which the template will be placed
      * @param Getopt $_options Option list
+     * @param String $_templateName The name of the template
      */
-    private function placeTemplate(Board $_board, Getopt $_options)
+    private function placeTemplate(Board $_board, Getopt $_options, String $_templateName = null)
     {
         $isDimensionsAdjustment = true;
 
@@ -183,19 +237,31 @@ class TemplateInput extends BaseInput
         $templatePosX = $boardCenter["x"];
         $templatePosY = $boardCenter["y"];
 
-        if ($_options->getOption("templatePosX") !== null)
+        $posXPrefix = "template";
+        $posYPrefix = "template";
+
+        if ($_templateName)
         {
-            $templatePosX = (int)$_options->getOption("templatePosX");
+            $posXPrefix = $_templateName;
+            $posYPrefix = $_templateName;
+        }
+
+        if ($_options->getOption($posXPrefix . "PosX") !== null)
+        {
+            $templatePosX = (int)$_options->getOption($posXPrefix . "PosX");
             $isDimensionsAdjustment = false;
         }
 
-        if ($_options->getOption("templatePosY") !== null)
+        if ($_options->getOption($posYPrefix . "PosY") !== null)
         {
-            $templatePosY = (int)$_options->getOption("templatePosY");
+            $templatePosY = (int)$_options->getOption($posYPrefix . "PosY");
             $isDimensionsAdjustment = false;
         }
 
-        $template = $this->templateLoader->loadTemplate($_board, $_options->getOption("template"));
+        if ($_templateName) $templateName = $_templateName;
+        else $templateName = $_options->getOption("template");
+
+        $template = $this->templateLoader->loadTemplate($_board, $templateName);
 
         if ($template == false) echo "Error: Template file not found!\n";
         else

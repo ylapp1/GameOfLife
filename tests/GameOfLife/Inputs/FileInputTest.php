@@ -94,6 +94,11 @@ class FileInputTest extends TestCase
      */
     public function testCanAddOptions()
     {
+        $templateOptions = array(
+            array(null, "unittestPosX", Getopt::REQUIRED_ARGUMENT, "X position of the unittest"),
+            array(null, "unittestPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the unittest")
+        );
+
         $fileInputOptions = array(
             array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
             array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
@@ -101,9 +106,9 @@ class FileInputTest extends TestCase
             array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
         );
 
-        $this->optionsMock->expects($this->exactly(1))
+        $this->optionsMock->expects($this->exactly(2))
                           ->method("addOptions")
-                          ->with($fileInputOptions);
+                          ->withConsecutive(array($templateOptions), array($fileInputOptions));
         if ($this->optionsMock instanceof Getopt) $this->input->addOptions($this->optionsMock);
     }
 
@@ -116,7 +121,7 @@ class FileInputTest extends TestCase
         $this->optionsMock->expects($this->exactly(4))
             ->method("getOption")
             ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
-            ->willReturn("unittest",null, null, "unittest");
+            ->willReturn("unittest", null, null, "unittest");
 
         $field = new Field($this->board, 0, 0);
         $field->setValue(true);
