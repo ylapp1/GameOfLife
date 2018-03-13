@@ -36,7 +36,20 @@ class CustomRule extends BaseRule
             }
             else echo "Error: Unknown rules notation";
         }
-        else echo "Error: Rules string is empty";
+        elseif ($_options->getOption("rulesBirth") !== null && $_options->getOption("rulesStayAlive") !== null)
+        {
+            $rulesBirth = $_options->getOption("rulesBirth");
+            $rulesStayAlive = $_options->getOption("rulesStayAlive");
+
+            echo "Both rule sets are set";
+
+            if (is_numeric($rulesBirth) && is_numeric($rulesStayAlive))
+            {
+                $this->rulesBirth = $this->getRulesFromNumericString($rulesBirth);
+                $this->rulesStayAlive = $this->getRulesFromNumericString($rulesStayAlive);
+            }
+        }
+        else echo "Error: Rules string is not set";
     }
 
     /**
@@ -49,7 +62,9 @@ class CustomRule extends BaseRule
         $_options->addOptions(
             array
             (
-                array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "Rule string in the format <stayAlive>/<birth>")
+                array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "Rule string in the format <stayAlive>/<birth>"),
+                array(null, "rulesBirth", Getopt::OPTIONAL_ARGUMENT, "The amounts of cells which will rebirth a dead cell as a single string"),
+                array(null, "rulesStayAlive", Getopt::OPTIONAL_ARGUMENT, "The amounts of cells which will keep a living cell alive")
             )
         );
     }
@@ -68,6 +83,12 @@ class CustomRule extends BaseRule
         if (strstr($_rulesString, "/"))
         {
             $ruleParts = explode("/", $_rulesString);
+
+            foreach ($ruleParts as $index => $rulePart)
+            {
+                if ($rulePart == "") unset($ruleParts[$index]);
+            }
+
             if (count($ruleParts) < 2) echo "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n";
             elseif (count($ruleParts) == 2)
             {
@@ -138,6 +159,7 @@ class CustomRule extends BaseRule
         if (count($ruleParts) > 1)
         {
             $this->rulesStayAlive = array_merge($this->rulesStayAlive, $this->getRulesFromNumericString($ruleParts[0]));
+            sort($this->rulesStayAlive);
         }
     }
 
