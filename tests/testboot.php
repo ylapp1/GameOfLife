@@ -40,4 +40,9 @@ namespace Utils
         }
         else $_returnValue = $_command;
     }
+
+    function system(String $_command)
+    {
+        echo $_command;
+    }
 }

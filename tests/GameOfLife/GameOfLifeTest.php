@@ -120,6 +120,8 @@ class GameOfLifeTest extends TestCase
      *
      * @dataProvider startSimulationProvider()
      *
+     * @covers \GameOfLife\GameOfLife::startSimulation()
+     *
      * @throws ReflectionException
      */
     public function testCanStartSimulation(int $_amountLoops, String $_endLoopMethodName)

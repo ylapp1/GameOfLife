@@ -11,12 +11,28 @@ use Utils\ShellExecutor;
 
 /**
  * Checks whether the ShellExecutor class works as expected.
- * This test works because the exec function for the Utils namespace was overridden in testboot.php.
+ * This test works because exec() and system() were overridden in testboot.php for the Utils namespace.
  */
 class ShellExecutorTest extends TestCase
 {
     /**
+     * Checks whether the getters and setters work as expected.
+     *
+     * @covers \Utils\ShellExecutor::setOsname()
+     * @covers \Utils\ShellExecutor::osName()
+     */
+    public function testCanGetAttributes()
+    {
+        $shellExecutor = new ShellExecutor("mytest");
+
+        $testOsName = "The name";
+        $shellExecutor->setOsname($testOsName);
+        $this->assertEquals($testOsName, $shellExecutor->osName());
+    }
+
+    /**
      * Checks whether a command can be successfully executed.
+     * See testboot.php for the overridden exec() function
      *
      * @covers \Utils\ShellExecutor::__construct()
      * @covers \Utils\ShellExecutor::executeCommand()
@@ -61,5 +77,17 @@ class ShellExecutorTest extends TestCase
             "Linux" => array("linux", "hello", "hello 2>/dev/null"),
             "Other" => array("other", "hello", "hello 2>output.txt")
         );
+    }
+
+    /**
+     * Checks whether the screen can be cleared as expected.
+     * See testboot.php for the overridden system() function
+     */
+    public function testCanClearScreen()
+    {
+        $shellExecutor = new ShellExecutor("Linux");
+
+        $this->expectOutputString("clear");
+        $shellExecutor->clearScreen();
     }
 }
