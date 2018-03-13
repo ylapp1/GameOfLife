@@ -38,7 +38,7 @@ class VideoOutputTest extends TestCase
     protected function setUp()
     {
         $this->output = new VideoOutput();
-        $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
 

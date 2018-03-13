@@ -62,7 +62,7 @@ class VideoOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->outputDirectory . "tmp/Frames";
+        $outputDirectory = $this->baseOutputDirectory . "tmp/Frames";
         parent::__construct("video", $outputDirectory);
 
         $this->fillPercentages = array();
@@ -199,8 +199,8 @@ class VideoOutput extends ImageOutput
         parent::startOutput($_options, $_board);
         echo "Starting video output ...\n\n";
 
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/Video");
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/tmp/Audio");
+        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Video");
+        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
 
         // fetch options
         $fps = $_options->getOption("videoOutputFPS");
@@ -236,12 +236,12 @@ class VideoOutput extends ImageOutput
         else $this->generateVideoFile();
 
         unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+        $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
     private function generateVideoFile()
     {
-        $ffmpegOutputDirectory = str_replace("\\", "/", $this->outputDirectory);
+        $ffmpegOutputDirectory = str_replace("\\", "/", $this->baseOutputDirectory);
 
         if (count($this->frames) == 0)
         {
@@ -254,7 +254,7 @@ class VideoOutput extends ImageOutput
         {
             $amountFrames = count($this->frames);
             $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
-            $audioListPath = $this->outputDirectory . "tmp/Audio/list.txt";
+            $audioListPath = $this->baseOutputDirectory . "tmp/Audio/list.txt";
 
             for ($i = 0; $i < count($this->frames); $i++)
             {
@@ -300,7 +300,7 @@ class VideoOutput extends ImageOutput
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Save video in output folder
-        $error = $this->ffmpegHelper->executeCommand( $this->outputDirectory . "Video/" . $fileName);
+        $error = $this->ffmpegHelper->executeCommand( $this->baseOutputDirectory . "Video/" . $fileName);
 
         if ($error)
         {

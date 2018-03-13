@@ -18,6 +18,7 @@ class Two45Rule extends BaseRule
      */
     public function __construct()
     {
+        parent::__construct();
         $this->rulesBirth = array(4, 5);
         $this->rulesStayAlive = array(2);
     }

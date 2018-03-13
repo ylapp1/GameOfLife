@@ -18,6 +18,7 @@ class CopyRule extends BaseRule
      */
     public function __construct()
     {
+        parent::__construct();
         $this->rulesBirth = array(1, 3, 5, 7);
         $this->rulesStayAlive = array(1, 3, 5, 7);
     }

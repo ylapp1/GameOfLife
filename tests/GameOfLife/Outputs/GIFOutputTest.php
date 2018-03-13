@@ -35,7 +35,7 @@ class GIFOutputTest extends TestCase
     protected function setUp()
     {
         $this->output = new GifOutput();
-        $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemHandler();
 
@@ -194,7 +194,7 @@ class GIFOutputTest extends TestCase
         $this->output->startOutput(new Getopt(), $this->board);
         $this->output->outputBoard($this->board);
 
-        $this->fileSystemHandler->deleteDirectory($this->output->outputDirectory() . "Gif");
+        $this->fileSystemHandler->deleteDirectory($this->output->baseOutputDirectory() . "Gif");
 
         $this->expectOutputRegex("/.*An error occurred during the gif creation. Stopping.../");
         @$this->output->finishOutput();

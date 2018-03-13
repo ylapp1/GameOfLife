@@ -66,6 +66,8 @@ class ImageOutputTest extends TestCase
 
     /**
      * @dataProvider constructionProvider
+     * @covers \Output\ImageOutput::setBaseOutputDirectory()
+     * @covers \Output\ImageOutput::baseOutputDirectory()
      * @covers \Output\ImageOutput::fileSystemHandler()
      * @covers \Output\ImageOutput::setFileSystemHandler()
      * @covers \Output\ImageOutput::imageCreator()
@@ -84,11 +86,13 @@ class ImageOutputTest extends TestCase
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1,2,1, $colorBlack, $colorBlack, $colorBlack,"foo");
 
+        $this->output->setBaseOutputDirectory("hello");
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setImageCreator($imageCreator);
         $this->output->setImageOutputDirectory($_imageOutputDirectory);
         $this->output->setOptionPrefix($_optionPrefix);
 
+        $this->assertEquals("hello", $this->output->baseOutputDirectory());
         $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
         $this->assertEquals($imageCreator, $this->output->imageCreator());
         $this->assertEquals($_imageOutputDirectory, $this->output->imageOutputDirectory());

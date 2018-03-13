@@ -23,7 +23,7 @@ class PngOutput extends ImageOutput
     public function __construct()
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $outputDirectory = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
+        $outputDirectory = $this->baseOutputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
         parent::__construct("png", $outputDirectory);
     }
 

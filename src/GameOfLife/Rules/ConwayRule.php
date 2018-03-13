@@ -18,6 +18,7 @@ class ConwayRule extends BaseRule
      */
     public function __construct()
     {
+        parent::__construct();
         $this->rulesBirth = array(3);
         $this->rulesStayAlive = array(2, 3);
     }

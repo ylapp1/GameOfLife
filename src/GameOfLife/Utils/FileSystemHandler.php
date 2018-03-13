@@ -53,7 +53,7 @@ class FileSystemHandler
         if (! file_exists($_directoryPath)) return self::ERROR_DIRECTORY_NOT_EXISTS;
 
         if (substr($_directoryPath, strlen($_directoryPath) - 1, 1) != '/') $_directoryPath .= '/';
-        $files = $this->getFileList($_directoryPath);
+        $files = $this->getFileList($_directoryPath . "/*");
 
         if (count($files) !== 0)
         {
@@ -135,13 +135,12 @@ class FileSystemHandler
      * Returns an array of files in a directory.
      *
      * @param string $_filePath     Directory of which a file list shall be returned
-     * @param string $_fileEnding   File type (optional)
      *
      * @return array    File list
      */
-    public function getFileList(string $_filePath, string $_fileEnding = null): array
+    public function getFileList(string $_filePath): array
     {
-        return glob($_filePath . '/*' . $_fileEnding, GLOB_MARK);
+        return glob($_filePath);
     }
 
     /**

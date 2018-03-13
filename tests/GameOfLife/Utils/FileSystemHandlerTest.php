@@ -162,7 +162,7 @@ class FileSystemHandlerTest extends TestCase
             touch($this->testDirectory . "/" . $fileName);
         }
 
-        $files = $this->fileSystemHandler->getFileList($this->testDirectory);
+        $files = $this->fileSystemHandler->getFileList($this->testDirectory . "/*");
 
         foreach ($files as $index => $file)
         {

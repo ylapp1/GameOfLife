@@ -22,34 +22,6 @@ use Ulrichsg\Getopt;
 class BaseOutput
 {
     /**
-     * Output directory for file outputs.
-     *
-     * @var String $outputDirectory
-     */
-    protected $outputDirectory = __DIR__ . "/../../../Output/";
-
-
-    /**
-     * Returns the output directory of the output.
-     *
-     * @return String Output directory of the output
-     */
-    public function outputDirectory(): String
-    {
-        return $this->outputDirectory;
-    }
-
-    /**
-     * Sets the output directory of the output.
-     *
-     * @param String $_outputDirectory Output directory of the output
-     */
-    public function setOutputDirectory(String $_outputDirectory)
-    {
-        $this->outputDirectory = $_outputDirectory;
-    }
-
-    /**
      * Adds output specific options to the option list.
      *
      * @param Getopt $_options Current option list

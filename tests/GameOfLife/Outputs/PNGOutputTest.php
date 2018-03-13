@@ -35,7 +35,7 @@ class PNGOutputTest extends TestCase
     protected function setUp()
     {
         $this->output = new PngOutput();
-        $this->output->setOutputDirectory($this->outputDirectory);
+        $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/PNG/Game_1/");
         $this->fileSystemHandler = new FileSystemHandler();
 

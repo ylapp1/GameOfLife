@@ -21,6 +21,13 @@ use Utils\FileSystemHandler;
 class ImageOutput extends BaseOutput
 {
     /**
+     * Output directory for file outputs.
+     *
+     * @var String $outputDirectory
+     */
+    protected $baseOutputDirectory = __DIR__ . "/../../../Output/";
+
+    /**
      * The file system handler
      *
      * @var FileSystemHandler $fileSystemHandler
@@ -48,6 +55,7 @@ class ImageOutput extends BaseOutput
      */
     private $optionPrefix;
 
+
     /**
      * ImageOutput constructor.
      *
@@ -61,6 +69,26 @@ class ImageOutput extends BaseOutput
         $this->optionPrefix = $_optionPrefix;
     }
 
+
+    /**
+     * Returns the base output directory.
+     *
+     * @return String The base output directory
+     */
+    public function baseOutputDirectory(): String
+    {
+        return $this->baseOutputDirectory;
+    }
+
+    /**
+     * Sets the base output directory.
+     *
+     * @param String $_baseOutputDirectory The base output directory
+     */
+    public function setBaseOutputDirectory(String $_baseOutputDirectory)
+    {
+        $this->baseOutputDirectory = $_baseOutputDirectory;
+    }
 
     /**
      * Returns the filesystem handler of this output.
@@ -202,7 +230,7 @@ class ImageOutput extends BaseOutput
      */
     public function getNewGameId(String $_outputType): int
     {
-        $fileNames = $this->fileSystemHandler->getFileList($this->outputDirectory . "/" . $_outputType . "/Game_*");
+        $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
 
         if (count($fileNames) == 0) $newGameId = 1;
         else

@@ -134,8 +134,8 @@ class TemplateInput extends BaseInput
         {
             $fileSystemHandler = new FileSystemHandler();
 
-            $defaultTemplates = $fileSystemHandler->getFileList($this->templateDirectory, ".txt");
-            $customTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/Custom", ".txt");
+            $defaultTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/*.txt");
+            $customTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/Custom/*.txt");
 
             echo $this->listTemplates("Default templates", $defaultTemplates);
             echo $this->listTemplates("Custom templates", $customTemplates);

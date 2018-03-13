@@ -38,7 +38,7 @@ class GifOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->outputDirectory . "/tmp/Frames";
+        $outputDirectory = $this->baseOutputDirectory . "/tmp/Frames";
         parent::__construct("gif", $outputDirectory);
     }
 
@@ -109,7 +109,7 @@ class GifOutput extends ImageOutput
         parent::startOutput($_options, $_board);
         echo "Starting GIF Output...\n\n";
 
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/Gif");
+        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Gif");
 
         // fetch options
         $frameTime = $_options->getOption("gifOutputFrameTime");
@@ -155,7 +155,7 @@ class GifOutput extends ImageOutput
         $gifCreator->create($this->frames, $frameDurations, 0);
 
         $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
-        $filePath = $this->outputDirectory . "Gif/" . $fileName;
+        $filePath = $this->baseOutputDirectory . "Gif/" . $fileName;
 
         file_put_contents($filePath, $gifCreator->getGif());
 
@@ -166,7 +166,7 @@ class GifOutput extends ImageOutput
         }
 
         unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
+        $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
 
         echo "\nGIF creation complete.\n\n";
     }
