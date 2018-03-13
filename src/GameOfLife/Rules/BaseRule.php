@@ -33,6 +33,13 @@ class BaseRule
     protected $rulesStayAlive;
 
 
+    public function __construct()
+    {
+        $this->rulesBirth = array();
+        $this->rulesStayAlive = array();
+    }
+
+
     /**
      * Returns the birth rules
      *
@@ -79,9 +86,9 @@ class BaseRule
      *
      * @codeCoverageIgnore
      *
-     * @param Getopt $options Option list
+     * @param Getopt $_options The option list
      */
-    public function addOptions(Getopt $options)
+    public function addOptions(Getopt $_options)
     {
     }
 
@@ -90,9 +97,9 @@ class BaseRule
      *
      * @codeCoverageIgnore
      *
-     * @param Getopt $options
+     * @param Getopt $_options The option list
      */
-    public function initialize(Getopt $options)
+    public function initialize(Getopt $_options)
     {
     }
 

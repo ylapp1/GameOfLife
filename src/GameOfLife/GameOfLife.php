@@ -92,6 +92,7 @@ class GameOfLife
         $this->output = $this->optionHandler->optionParser()->parseOutputOptions($this->options);
 
         $rule = $this->optionHandler->optionParser()->parseRuleOptions($this->options);
+        $rule->initialize($this->options);
         $this->gameLogic = new GameLogic($rule);
 
         return true;
