@@ -56,6 +56,7 @@ class PngOutput extends ImageOutput
         $filePath = $this->imageOutputDirectory() . "/" . $fileName;
 
         imagepng($image, $filePath);
+        unset($image);
     }
 
     /**

@@ -134,6 +134,7 @@ class GifOutput extends ImageOutput
         $filePath = $this->imageOutputDirectory() . "/" . $fileName;
 
         imagegif($image, $filePath);
+        unset($image);
 
         $this->frames[] = $filePath;
     }
