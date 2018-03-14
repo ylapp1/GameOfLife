@@ -145,4 +145,31 @@ class BaseRuleTest extends TestCase
             "Cell dead, 8 living neighbors" => array(false, 8, false),
         );
     }
+
+    /**
+     * Checks whether a rule can be initialized as expected.
+     *
+     * @covers \Rule\BaseRule::initialize()
+     * @covers \Rule\BaseRule::convertToAntiRule()
+     */
+    public function testCanBeInitialized()
+    {
+        $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                            ->getMock();
+
+        $optionsMock->expects($this->exactly(2))
+                    ->method("getOption")
+                    ->withConsecutive(array("antiRules"), array("antiRules"))
+                    ->willReturn(null, true);
+
+        $rule = new ConwayRule();
+
+        if ($optionsMock instanceof \Ulrichsg\Getopt) $rule->initialize($optionsMock);
+        $this->assertEquals(array(3), $rule->rulesBirth());
+        $this->assertEquals(array(2, 3), $rule->rulesStayAlive());
+
+        $rule->initialize($optionsMock);
+        $this->assertEquals(array(0, 1, 2, 3, 4, 7, 8), $rule->rulesBirth());
+        $this->assertEquals(array(0, 1, 2, 3, 4, 6, 7, 8), $rule->rulesStayAlive());
+    }
 }
