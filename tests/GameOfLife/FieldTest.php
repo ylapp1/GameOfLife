@@ -163,4 +163,56 @@ class FieldTest extends TestCase
             )
         );
     }
+
+    /**
+     * Checks whether the number of border neighbors is correctly returned.
+     *
+     * @param int $_fieldX The X-Coordinate of the field that will be checked
+     * @param int $_fieldY The Y-Coordinate of the field that will be checked
+     * @param bool $_hasBorder Sets whether the test board has a border or not
+     * @param int $_expectedResult The expected number of border neighbors
+     *
+     * @covers \GameOfLife\Field::numberOfBorderNeighbors()
+     *
+     * @dataProvider getNumberOfBorderNeighborsProvider
+     */
+    public function testCanGetNumberOfBorderNeighbors(int $_fieldX, int $_fieldY, bool $_hasBorder, int $_expectedResult)
+    {
+        $board = new Board(10, 10, 0, $_hasBorder);
+
+        /** @var Field $checkField */
+        $checkField = $board->fields()[$_fieldY][$_fieldX];
+
+        $this->assertEquals($_expectedResult, $checkField->numberOfBorderNeighbors());
+    }
+
+    /**
+     * DataProvider for FieldTest::testCanGetNumberOfBorderNeighbors.
+     *
+     * @return array Test values in the format array(fieldX, fieldY, hasBorder, expectedResult)
+     */
+    public function getNumberOfBorderNeighborsProvider()
+    {
+        return array(
+            "with border, cell in center" => array(5, 5, true, 0),
+            "with border, cell at left center border" => array(0, 5, true, 3),
+            "with border, cell at right center border" => array(9, 5, true, 3),
+            "with border, cell at top center border" => array(5, 0, true, 3),
+            "with border, cell at bottom center border" => array(5, 9, true, 3),
+            "with border, cell in top left corner" => array(0, 0, true, 5),
+            "with border, cell in top right corner" => array(9, 0, true, 5),
+            "with border, cell in bottom right corner" => array(9, 9, true, 5),
+            "with border, cell in bottom left corner" => array(0, 9, true, 5),
+
+            "without border, cell in center" => array(5, 5, false, 0),
+            "without border, cell at left center border" => array(0, 5, false, 0),
+            "without border, cell at right center border" => array(9, 5, false, 0),
+            "without border, cell at top center border" => array(5, 0, false, 0),
+            "without border, cell at bottom center border" => array(5, 9, false, 0),
+            "without border, cell in top left corner" => array(0, 0, false, 0),
+            "without border, cell in top right corner" => array(9, 0, false, 0),
+            "without border, cell in bottom right corner" => array(9, 9, false, 0),
+            "without border, cell in bottom left corner" => array(0, 9, false, 0),
+        );
+    }
 }
