@@ -158,7 +158,8 @@ class TemplateInputTest extends TestCase
 
     /**
      * @covers \Input\TemplateInput::fillBoard()
-     * @covers \Input\TemplateInput::listTemplates()
+     * @covers \TemplateHandler\TemplateListPrinter::printTemplateLists()
+     * @covers \TemplateHandler\TemplateListPrinter::printTemplateList()
      *
      * @throws ReflectionException
      */
@@ -250,6 +251,7 @@ class TemplateInputTest extends TestCase
      *
      * @covers \Input\TemplateInput::fillBoard()
      * @covers \Input\TemplateInput::placeTemplate()
+     * @covers \Input\TemplateInput::getTemplateNameFromLinkedOption()
      */
     public function testCanLoadDefaultTemplatesFromLinkedOption()
     {

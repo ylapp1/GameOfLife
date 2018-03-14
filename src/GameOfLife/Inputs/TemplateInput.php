@@ -51,7 +51,7 @@ class TemplateInput extends BaseInput
 
 
     /**
-     * FileInput constructor.
+     * TemplateInput constructor.
      *
      * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
