@@ -77,5 +77,5 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --rulesStayAlive <arg> | The amounts of cells which will keep a living cell alive               | String | numeric string                                                     |
 
 
-You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output in Windows.
+You have to download ffmpeg and extract it to "GameOfLife/Tools/" in order to use the video output in Windows.
 You have to install ffmpeg with your package manager to use the video output in Linux.
