@@ -203,4 +203,22 @@ class Field
 
         return $neighborsDead;
     }
+
+    /**
+     * Returns the number of border neighbors.
+     * If the board has no border this function will return 0.
+     *
+     * @return int The number of border neighbors
+     */
+    public function numberOfBorderNeighbors()
+    {
+        if ($this->parentBoard->hasBorder())
+        {
+            $neighbors = $this->parentBoard->getNeighborsOfField($this);
+            $numberOfNeighbors = count($neighbors);
+
+            return 8 - $numberOfNeighbors;
+        }
+        else return 0;
+    }
 }

@@ -156,10 +156,11 @@ class UserInputTest extends TestCase
      */
     public function testCanLoadTemplate()
     {
-        $this->optionsMock->expects($this->exactly(5))
+        $this->optionsMock->expects($this->exactly(8))
                           ->method("getOption")
-                          ->withConsecutive(["edit"], ["template"], ["templatePosX"], ["templatePosY"], ["template"])
-                          ->willReturn(true, "unittest", null, null, "unittest");
+                          ->withConsecutive(array("edit"), array("template"), array("templatePosX"), array("templatePosY"),
+                                            array("width"), array("height"), array("template"), array("invertTemplate"))
+                          ->willReturn(true, "unittest", null, null, null, null, "unittest", null);
         $this->boardEditorMock->expects($this->exactly(1))
                               ->method("launch")
                               ->will($this->returnValue(null));

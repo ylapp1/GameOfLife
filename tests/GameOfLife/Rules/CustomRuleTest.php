@@ -64,17 +64,17 @@ class CustomRuleTest extends TestCase
 
         if ($_rulesString == null)
         {
-            $optionsMock->expects($this->exactly(2))
+            $optionsMock->expects($this->exactly(3))
                         ->method("getOption")
-                        ->withConsecutive(array("rulesString"), array("rulesBirth"))
-                        ->willReturn(null, null);
+                        ->withConsecutive(array("rulesString"), array("rulesBirth"), array("antiRules"))
+                        ->willReturn(null, null, null);
         }
         else
         {
-            $optionsMock->expects($this->exactly(2))
+            $optionsMock->expects($this->exactly(3))
                 ->method("getOption")
-                ->with("rulesString")
-                ->willReturn($_rulesString);
+                ->withConsecutive(array("rulesString"), array("rulesString"), array("antiRules"))
+                ->willReturn($_rulesString, $_rulesString, null);
         }
 
         $rule = new CustomRule();
@@ -170,6 +170,7 @@ class CustomRuleTest extends TestCase
                     array("rulesBirth", "1234"),
                     array("rulesStayAlive", "4567"),
                     array("rulesStayAlive", "4567"),
+                    array("antiRules", null)
                 ),
                 array(1, 2, 3, 4),
                 array(4, 5, 6, 7)
@@ -181,6 +182,7 @@ class CustomRuleTest extends TestCase
                     array("rulesBirth", "2745"),
                     array("rulesStayAlive", "3425"),
                     array("rulesStayAlive", "3425"),
+                    array("antiRules", null)
                 ),
                 array(2, 4, 5, 7),
                 array(2, 3, 4, 5)

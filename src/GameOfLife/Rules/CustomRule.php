@@ -48,6 +48,8 @@ class CustomRule extends BaseRule
             }
         }
         else echo "Error: Rules string is not set";
+
+        parent::initialize($_options);
     }
 
     /**

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ylapp1/GameOfLife.svg?branch=feature%2Fphase-5)](https://travis-ci.org/ylapp1/GameOfLife)
+[![Build Status](https://travis-ci.org/ylapp1/GameOfLife.svg?branch=feature%2Fphase-6)](https://travis-ci.org/ylapp1/GameOfLife)
 
 # GameOfLife
 
@@ -15,7 +15,8 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --border <arg>      | Set the border type                             | String  | solid (Default), passthrough                 |
 | --input <arg>       | Fill the board with cells                       | String  | Blinker, Glider, Random (Default), Spaceship |
 | --output <arg>      | Set the output type                             | String  | console, png                                 |
-| --rules <arg>       | Set the rules                                   | String  | Comway (Default), Copy, Two45                |
+| --rules <arg>       | Set the rules                                   | String  | Comway (Default), Copy, Two45, Custom        |
+| --antiRules         | Converts the selected rules to anti rules       | -       | -                                            |
 | --version           | Print script version                            | -       | -                                            |
 | -h, --help          | Show help                                       | -       | -                                            |
 
@@ -35,11 +36,12 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --pacmanPosX <arg>    | X position of the pacman                          | Integer | Default: Center             |
 | --pacmanPosY <arg>    | Y position of the pacman                          | Integer | Default: Center             |
 | --fillPercent <arg>   | Percentage of living cells on a random board      | Integer | Default: rand(1,70)         |
-| -- template <arg>     | Load board configuration from a txt file          | String  | glidergun, custom templates |
+| --template <arg>      | Load board configuration from a txt file          | String  | glidergun, custom templates |
 | --list-templates      | Display a list of all templates                   | -       | -                           |
 | --templatePosX <arg>  | X-Position of the top left corner of the template | Integer | Default: Center             |
 | --templatePosY <arg>  | Y-Position of the top left corner of the template | Integer | Default: Center             |
-| -- edit               | Edit a template selected with --template          | -       | -                           |
+| --invertTemplate      | Inverts the loaded template                       | -       | -                           |
+| --edit                | Edit a template selected with --template          | -       | -                           |
 
 
 ## Output options
@@ -63,4 +65,5 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --videoOutputAddSound              | Add sound to the video                     | -       | -                                                  |
 
 
-You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output on Windows.
+You have to download ffmpeg and extract it to "GameOfLife/Tools/ffmpeg/" in order to use the video output in Windows.
+You have to install ffmpeg with your package manager to use the video output in Linux.

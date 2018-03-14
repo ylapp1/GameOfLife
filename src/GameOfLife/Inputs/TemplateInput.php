@@ -138,6 +138,7 @@ class TemplateInput extends BaseInput
                 array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
                 array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
                 array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
+                array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template")
             )
         );
     }
@@ -160,7 +161,6 @@ class TemplateInput extends BaseInput
 
             echo $this->listTemplates("Default templates", $defaultTemplates);
             echo $this->listTemplates("Custom templates", $customTemplates);
-
         }
         else
         {
@@ -258,6 +258,8 @@ class TemplateInput extends BaseInput
             $isDimensionsAdjustment = false;
         }
 
+        if ($_options->getOption("width") !== null || $_options->getOption("height") !== null) $isDimensionsAdjustment = false;
+
         if ($_templateName) $templateName = $_templateName;
         else $templateName = $_options->getOption("template");
 
@@ -277,6 +279,10 @@ class TemplateInput extends BaseInput
             $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
 
             if ($result == false) echo "Error, the template may not exceed the field borders!\n";
+            else
+            {
+                if ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+            }
         }
     }
 }

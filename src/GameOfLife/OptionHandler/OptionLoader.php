@@ -35,6 +35,7 @@ class OptionLoader
                 array(null, "input", Getopt::REQUIRED_ARGUMENT, "Fill the board with cells (valid arguments: Blinker, Glider, Random, Spaceship)"),
                 array(null, "output", Getopt::REQUIRED_ARGUMENT, "Set the output type (valid arguments: console, png)"),
                 array(null, "rules", Getopt::REQUIRED_ARGUMENT, "Set the rules for the simulation (valid arguments: Comway, Copy, Two45) (Default: Comway)"),
+                array(null, "antiRules", Getopt::NO_ARGUMENT, "Converts the selected rules to anti rules"),
 
                 // other options
                 array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),

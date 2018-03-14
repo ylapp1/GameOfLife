@@ -104,6 +104,7 @@ class TemplateInputTest extends TestCase
             array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
             array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
             array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
+            array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template")
         );
 
         $this->optionsMock->expects($this->exactly(2))
@@ -118,10 +119,11 @@ class TemplateInputTest extends TestCase
      */
     public function testCanLoadTemplate()
     {
-        $this->optionsMock->expects($this->exactly(4))
+        $this->optionsMock->expects($this->exactly(7))
             ->method("getOption")
-            ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
-            ->willReturn("unittest", null, null, "unittest");
+            ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"),
+                              array("height"), array("template"), array("invertTemplate"))
+            ->willReturn("unittest", null, null, null, null, "unittest", null);
 
         $field = new Field($this->board, 0, 0);
         $field->setValue(true);
@@ -156,10 +158,10 @@ class TemplateInputTest extends TestCase
      */
     public function testDetectsInvalidTemplateNames(string $_templateName)
     {
-        $this->optionsMock->expects($this->exactly(4))
+        $this->optionsMock->expects($this->exactly(6))
                           ->method("getOption")
-                          ->withConsecutive(["template"], ["templatePosX"], ["templatePosY"], ["template"])
-                          ->willReturn($_templateName,null, null, $_templateName);
+                          ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"), array("height"), array("template"))
+                          ->willReturn($_templateName,null, null, null, null, $_templateName);
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
         $this->expectOutputString("Error: Template file not found!\n");
@@ -225,10 +227,14 @@ class TemplateInputTest extends TestCase
         $this->board->setWidth(10);
         $this->board->resetBoard();
 
-        $this->optionsMock->expects($this->exactly(6))
+        $expectedAmountGetOptoinCalls = 9;
+        if ($_expectedString) $expectedAmountGetOptoinCalls = 8;
+
+        $this->optionsMock->expects($this->exactly($expectedAmountGetOptoinCalls))
                           ->method("getOption")
-                          ->withConsecutive(["template"], ["templatePosX"], ["templatePosX"], ["templatePosY"], ["templatePosY"], ["template"])
-                          ->willReturn("unittest", $_posX, $_posX, $_posY, $_posY, "unittest");
+                          ->withConsecutive(array("template"), array("templatePosX"), array("templatePosX"), array("templatePosY"),
+                                            array("templatePosY"), array("width"), array("height"), array("template"), array("invertTemplate"))
+                          ->willReturn("unittest", $_posX, $_posX, $_posY, $_posY, null, null, "unittest", null);
 
         if ($_expectedString !== null) $this->expectOutputString($_expectedString);
 
@@ -266,13 +272,14 @@ class TemplateInputTest extends TestCase
         $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $optionsMock->expects($this->exactly(9))
+        $optionsMock->expects($this->exactly(11))
             ->method("getOption")
             ->withConsecutive(
-                array("template"), array("list-templates"), array("input"), array("unittestPosX"), array("unittestPosY"),
-                array("unittestPosX"), array("unittestPosX"), array("unittestPosY"), array("unittestPosY")
+                array("template"), array("list-templates"), array("input"), array("unittestPosX"),
+                array("unittestPosX"), array("unittestPosX"), array("unittestPosY"), array("unittestPosY"),
+                array("width"), array("height"), array("invertTemplate")
             )
-            ->willReturn(null, null, null, null, 5, 3, 5, 5, 3, 3);
+            ->willReturn(null, null, null, 5, 5, 5, 3, 3, null, null, null);
 
         $board = new Board(10, 8, 5, true);
 

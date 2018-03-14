@@ -397,4 +397,33 @@ class BoardTest extends TestCase
 
         );
     }
+
+    /**
+     * Checks whether the board can be inverted.
+     *
+     * @covers \GameOfLife\Board::invertBoard()
+     */
+    public function testCanInvertBoard()
+    {
+        $board = new Board(2, 2, 1, true);
+        $board->setField(1, 1, true);
+
+        $fieldZeroZero = new Field($board, 0, 0);
+        $fieldOneZero = new Field($board, 1, 0);
+        $fieldZeroOne = new Field($board, 0, 1);
+        $fieldOneOne = new Field($board, 1, 1);
+
+        $fieldZeroZero->setValue(true);
+        $fieldOneZero->setValue(true);
+        $fieldZeroOne->setValue(true);
+
+        $expectedFields = array(
+            array($fieldZeroZero, $fieldOneZero),
+            array($fieldZeroOne, $fieldOneOne)
+        );
+
+        $board->invertBoard();
+
+        $this->assertEquals($expectedFields, $board->fields());
+    }
 }
