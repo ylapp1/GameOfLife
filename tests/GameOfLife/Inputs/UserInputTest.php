@@ -56,6 +56,8 @@ class UserInputTest extends TestCase
 
     /**
      * Function that is called before and after each test.
+     *
+     * @throws ReflectionException
      */
     protected function setUp()
     {
@@ -68,8 +70,18 @@ class UserInputTest extends TestCase
         $this->optionsMock = $this->getMockBuilder(Getopt::class)
                                   ->getMock();
 
-        if ($this->boardEditorMock instanceof BoardEditor) $this->input->setBoardEditor($this->boardEditorMock);
-        $this->input->setTemplateDirectory($this->testTemplatesDirectory);
+        if ($this->boardEditorMock instanceof BoardEditor)
+        {
+            $reflectionClass = new ReflectionClass(\Input\UserInput::class);
+
+            $reflectionProperty = $reflectionClass->getProperty("boardEditor");
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($this->input, $this->boardEditorMock);
+
+            $reflectionProperty = $reflectionClass->getProperty("templatesBaseDirectory");
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($this->input, $this->testTemplatesDirectory);
+        }
     }
 
     /**
@@ -85,57 +97,10 @@ class UserInputTest extends TestCase
 
 
     /**
-     * Checks whether the constructor works as expected.
-     *
-     * @covers \Input\UserInput::__construct()
-     */
-    public function testCanBeConstructed()
-    {
-        $input = new UserInput();
-
-        $this->assertInstanceOf(BoardEditor::class, $input->boardEditor());
-    }
-
-    /**
-     * Checks whether the getters and setters work as expected.
-     *
-     * @dataProvider setAttributesProvider()
-     * @covers \Input\UserInput::templateDirectory()
-     * @covers \Input\UserInput::setTemplateDirectory()
-     * @covers \Input\UserInput::boardEditor()
-     * @covers \Input\UserInput::setBoardEditor()
-     *
-     * @param string $_customTemplateDirectory Directory where templates are saved
-     */
-    public function testCanSetAttributes(string $_customTemplateDirectory)
-    {
-        $boardEditor = new BoardEditor($_customTemplateDirectory, $this->board);
-
-        $this->input->setTemplateDirectory($_customTemplateDirectory);
-        $this->input->setBoardEditor($boardEditor);
-
-        $this->assertEquals($boardEditor, $this->input->boardEditor());
-        $this->assertEquals($_customTemplateDirectory, $this->input->templateDirectory());
-    }
-
-    /**
-     * DataProvider for UserInputTest::testCanSetAttributes.
-     *
-     * @return array Test values in the format [$filePath]
-     */
-    public function setAttributesProvider()
-    {
-        return [
-            ["test"],
-            ["myTest"],
-            ["mySpecialTest"]
-        ];
-    }
-
-    /**
      * Checks whether the Getopt options are set correctly.
      *
      * @covers \Input\UserInput::addOptions()
+     * @covers \Input\UserInput::__construct()
      */
     public function testCanAddOptions()
     {

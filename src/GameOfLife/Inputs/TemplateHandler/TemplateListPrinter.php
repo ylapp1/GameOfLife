@@ -8,28 +8,11 @@
 
 namespace TemplateHandler;
 
-use Utils\FileSystemHandler;
-
 /**
  * Prints a list of default and custom templates.
  */
-class TemplateListPrinter
+class TemplateListPrinter extends TemplateHandler
 {
-    /**
-     * The file system handler
-     *
-     * @var FileSystemHandler $fileSystemHandler
-     */
-    private $fileSystemHandler;
-
-    /**
-     * The base directory for default and custom templates
-     *
-     * @var String $templatesBaseDirectory
-     */
-    private $templatesBaseDirectory;
-
-
     /**
      * TemplateListPrinter constructor.
      *
@@ -37,8 +20,7 @@ class TemplateListPrinter
      */
     public function __construct(String $_templatesBaseDirectory)
     {
-        $this->fileSystemHandler = new FileSystemHandler();
-        $this->templatesBaseDirectory = $_templatesBaseDirectory;
+        parent::__construct($_templatesBaseDirectory);
     }
 
 
@@ -47,8 +29,8 @@ class TemplateListPrinter
      */
     public function printTemplateLists()
     {
-        $defaultTemplates = $this->fileSystemHandler->getFileList($this->templatesBaseDirectory . "/*.txt");
-        $customTemplates = $this->fileSystemHandler->getFileList($this->templatesBaseDirectory . "/Custom/*.txt");
+        $defaultTemplates = $this->fileSystemHandler->getFileList($this->defaultTemplatesDirectory . "/*.txt");
+        $customTemplates = $this->fileSystemHandler->getFileList($this->customTemplatesDirectory . "/*.txt");
 
         $this->printTemplateList("Default templates", $defaultTemplates);
         $this->printTemplateList("Custom templates", $customTemplates);

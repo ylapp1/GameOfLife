@@ -11,7 +11,7 @@ namespace TemplateHandler;
 use Utils\FileSystemHandler;
 
 /**
- * Parent class for TemplateLoader and TemplateSaver.
+ * Parent class for TemplateListPrinter, TemplateLoader and TemplateSaver.
  */
 class TemplateHandler
 {
@@ -47,66 +47,5 @@ class TemplateHandler
         $this->fileSystemHandler = new FileSystemHandler();
         $this->defaultTemplatesDirectory = $_templatesBaseDirectory;
         $this->customTemplatesDirectory = $_templatesBaseDirectory . "/Custom";
-    }
-
-
-    /**
-     * Returns the file system.
-     *
-     * @return FileSystemHandler The file system handler
-     */
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    /**
-     * Sets the file system handler.
-     *
-     * @param FileSystemHandler $_fileSystemHandler The file system handler
-     */
-    public function setFileSystemHandler(FileSystemhandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
-
-    /**
-     * Returns the directory for default templates.
-     *
-     * @return String The directory for default templates
-     */
-    public function defaultTemplatesDirectory(): String
-    {
-        return $this->defaultTemplatesDirectory;
-    }
-
-    /**
-     * Sets the directory for default templates.
-     *
-     * @param String $_defaultTemplatesDirectory The directory for default templates
-     */
-    public function setDefaultTemplatesDirectory(String $_defaultTemplatesDirectory)
-    {
-        $this->defaultTemplatesDirectory = $_defaultTemplatesDirectory;
-    }
-
-    /**
-     * Returns the directory for custom templates.
-     *
-     * @return String The directory for custom templates
-     */
-    public function customTemplatesDirectory(): String
-    {
-        return $this->customTemplatesDirectory;
-    }
-
-    /**
-     * Sets the directory for custom templates.
-     *
-     * @param String $_customTemplatesDirectory The directory for custom templates
-     */
-    public function setCustomTemplatesDirectory(String $_customTemplatesDirectory)
-    {
-        $this->customTemplatesDirectory = $_customTemplatesDirectory;
     }
 }

@@ -52,34 +52,6 @@ class TemplateLoaderTest extends TestCase
     }
 
     /**
-     * Checks whether the constructor works as expected.
-     *
-     * @dataProvider constructionProvider()
-     *
-     * @param String $_templateDirectory Template directory
-     */
-    public function testCanBeConstructed(String $_templateDirectory)
-    {
-        $templateLoader = new TemplateLoader($_templateDirectory);
-
-        $this->assertEquals($_templateDirectory, $templateLoader->defaultTemplatesDirectory());
-    }
-
-    /**
-     * DataProvider for TemplateLoaderTest::testCanBeConstructed()
-     *
-     * @return array Test values
-     */
-    public function constructionProvider()
-    {
-        return array(
-            array("test"),
-            array("my/test"),
-            array("my/long/test/that/is/good")
-        );
-    }
-
-    /**
      * Checks whether templates are correctly loaded.
      */
     public function testCanLoadTemplate()

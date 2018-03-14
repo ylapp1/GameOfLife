@@ -17,20 +17,9 @@ use PHPUnit\Framework\TestCase;
 class TemplateSaverTest extends TestCase
 {
     /**
-     * Checks whether the constructor works as expected.
-     *
-     * @covers \TemplateHandler\TemplateSaver
-     */
-    public function testCanBeConstructed()
-    {
-        $testDirectory = "myPersonalTest";
-        $templateSaver = new TemplateSaver($testDirectory);
-
-        $this->assertEquals($testDirectory, $templateSaver->defaultTemplatesDirectory());
-    }
-
-    /**
      * Checks whether templates can be saved.
+     *
+     * @throws ReflectionException
      */
     public function testCanSaveTemplate()
     {
@@ -48,7 +37,10 @@ class TemplateSaverTest extends TestCase
 
         if ($fileSystemHandlerMock instanceof FileSystemHandler)
         {
-            $templateSaver->setFileSystemHandler($fileSystemHandlerMock);
+            $reflectionClass = new ReflectionClass(\TemplateHandler\TemplateSaver::class);
+            $reflectionProperty = $reflectionClass->getProperty("fileSystemHandler");
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($templateSaver, $fileSystemHandlerMock);
 
             $fileSystemHandlerMock->expects($this->exactly(2))
                 ->method("writeFile")
