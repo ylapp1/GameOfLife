@@ -225,10 +225,12 @@ class VideoOutput extends ImageOutput
 
     /**
      * Creates the video file from the frames and adds a sound per game step.
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
-        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        parent::finishOutput($_simulationEndReason);
         echo "\nStarting video creation ...\n";
 
         // Initialize ffmpeg helper

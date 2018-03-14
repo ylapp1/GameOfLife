@@ -139,10 +139,11 @@ class PNGOutputTest extends TestCase
 
     /**
      * @covers \Output\PngOutput::finishOutput()
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n");
-        $this->output->finishOutput();
+        $this->expectOutputString("\nSimulation finished: All cells are dead.\n\n");
+        $this->output->finishOutput("All cells are dead");
     }
 }

@@ -65,14 +65,6 @@ class ConsoleOutput extends BaseOutput
     }
 
     /**
-     * Prints a message saying that the simulation is finished.
-     */
-    public function finishOutput()
-    {
-        echo "\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
-    }
-
-    /**
      * Returns the board output string.
      *
      * @param Board $_board The board

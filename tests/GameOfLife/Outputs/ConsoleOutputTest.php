@@ -93,11 +93,13 @@ class ConsoleOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\ConsoleOutput::finishOutput()
+     * Checks whether the output can be finished as expected.
+     *
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n");
-        $this->output->finishOutput();
+        $this->expectOutputString("\nSimulation finished: All cells are dead.\n\n");
+        $this->output->finishOutput("All cells are dead");
     }
 }

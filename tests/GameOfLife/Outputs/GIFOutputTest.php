@@ -147,6 +147,7 @@ class GIFOutputTest extends TestCase
     /**
      * @covers \Output\GifOutput::outputBoard()
      * @covers \Output\GifOutput::finishOutput()
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanCreateGif()
     {
@@ -164,24 +165,26 @@ class GIFOutputTest extends TestCase
         }
 
         // Check whether finishOutput creates the final gif
-        $outputRegex = "Simulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        $outputRegex = "Simulation finished: All cells are dead.\n\n";
         $outputRegex .= "\nStarting GIF creation. One moment please...\n";
         $outputRegex .= "GIF creation complete.";
 
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
-        $this->output->finishOutput();
+        $this->output->finishOutput("All cells are dead");
 
         $this->assertTrue(file_exists($this->outputDirectory . "Gif/Game_1.gif"));
         $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
     }
 
     /**
+     * Checks whether an empty frames folder is detected.
+     *
      * @covers \Output\GifOutput::finishOutput()
      */
     public function testDetectsEmptyFramesFolder()
     {
         $this->expectOutputRegex("/.*Error: No frames in frames folder found!\n/");
-        $this->output->finishOutput();
+        $this->output->finishOutput("test");
     }
 
     /**
@@ -197,6 +200,6 @@ class GIFOutputTest extends TestCase
         $this->fileSystemHandler->deleteDirectory($this->output->baseOutputDirectory() . "Gif");
 
         $this->expectOutputRegex("/.*An error occurred during the gif creation. Stopping.../");
-        @$this->output->finishOutput();
+        @$this->output->finishOutput("test");
     }
 }
