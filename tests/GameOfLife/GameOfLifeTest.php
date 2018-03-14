@@ -131,10 +131,11 @@ class GameOfLifeTest extends TestCase
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $optionsMock->expects($this->exactly(6))
+        $optionsMock->expects($this->exactly(7))
                     ->method("getOption")
-                    ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"), array("height"), array("template"))
-                    ->willReturn("blinker", null, null, null, null, "blinker");
+                    ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"),
+                                      array("height"), array("template"), array("invertTemplate"))
+                    ->willReturn("blinker", null, null, null, null, "blinker", null);
 
         $input = new TemplateInput();
         $output = new ConsoleOutput();

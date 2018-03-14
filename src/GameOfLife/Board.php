@@ -317,6 +317,20 @@ class Board
     }
 
     /**
+     * Inverts the board.
+     */
+    public function invertBoard()
+    {
+        foreach ($this->fields as $row)
+        {
+            foreach ($row as $field)
+            {
+                $field->setValue(! $field->value());
+            }
+        }
+    }
+
+    /**
      * Sets a field on the board.
      *
      * @param int $_x   X-Coordinate of the cell which shall be set
