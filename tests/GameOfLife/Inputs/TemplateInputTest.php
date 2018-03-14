@@ -307,7 +307,7 @@ class TemplateInputTest extends TestCase
 
         if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
 
-        $this->assertGreaterThan(0.15, $board->getFillPercentage());
-        $this->assertLessThan(0.70, $board->getFillPercentage());
+        $this->assertGreaterThanOrEqual(0.15, $board->getFillPercentage());
+        $this->assertLessThanOrEqual(0.70, $board->getFillPercentage());
     }
 }
