@@ -36,11 +36,12 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --pacmanPosX <arg>    | X position of the pacman                          | Integer | Default: Center             |
 | --pacmanPosY <arg>    | Y position of the pacman                          | Integer | Default: Center             |
 | --fillPercent <arg>   | Percentage of living cells on a random board      | Integer | Default: rand(1,70)         |
-| -- template <arg>     | Load board configuration from a txt file          | String  | glidergun, custom templates |
+| --template <arg>      | Load board configuration from a txt file          | String  | glidergun, custom templates |
 | --list-templates      | Display a list of all templates                   | -       | -                           |
 | --templatePosX <arg>  | X-Position of the top left corner of the template | Integer | Default: Center             |
 | --templatePosY <arg>  | Y-Position of the top left corner of the template | Integer | Default: Center             |
-| -- edit               | Edit a template selected with --template          | -       | -                           |
+| --invertTemplate      | Inverts the loaded template                       | -       | -                           |
+| --edit                | Edit a template selected with --template          | -       | -                           |
 
 
 ## Output options
