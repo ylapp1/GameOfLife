@@ -139,6 +139,7 @@ class PNGOutputTest extends TestCase
 
     /**
      * @covers \Output\PngOutput::finishOutput()
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {

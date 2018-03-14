@@ -93,7 +93,9 @@ class ConsoleOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\ConsoleOutput::finishOutput()
+     * Checks whether the output can be finished as expected.
+     *
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanFinishOutput()
     {

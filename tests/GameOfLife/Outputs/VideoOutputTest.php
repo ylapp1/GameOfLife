@@ -171,6 +171,7 @@ class VideoOutputTest extends TestCase
      * @dataProvider createVideoProvider()
      * @covers \Output\VideoOutput::outputBoard()
      * @covers \Output\VideoOutput::finishOutput()
+     * @covers \Output\BaseOutput::finishOutput()
      * @covers \Output\VideoOutput::generateVideoFile()
      *
      * @param bool $_hasSound   Indicates whether the video will have sound or not

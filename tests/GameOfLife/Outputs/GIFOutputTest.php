@@ -147,6 +147,7 @@ class GIFOutputTest extends TestCase
     /**
      * @covers \Output\GifOutput::outputBoard()
      * @covers \Output\GifOutput::finishOutput()
+     * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanCreateGif()
     {
@@ -176,6 +177,8 @@ class GIFOutputTest extends TestCase
     }
 
     /**
+     * Checks whether an empty frames folder is detected.
+     *
      * @covers \Output\GifOutput::finishOutput()
      */
     public function testDetectsEmptyFramesFolder()

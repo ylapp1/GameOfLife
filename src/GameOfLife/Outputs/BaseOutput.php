@@ -60,7 +60,7 @@ class BaseOutput
      *
      * @param String $_simulationEndReason The reason why the simulation ended
      */
-    protected function finishOutput(String $_simulationEndReason)
+    public function finishOutput(String $_simulationEndReason)
     {
         echo "\nSimulation finished: " . $_simulationEndReason . ".\n\n";
     }
