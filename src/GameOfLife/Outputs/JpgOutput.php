@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017-2018 CN-Consult GmbH
+ * @copyright 2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -13,18 +13,18 @@ use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Saves the boards as .png files.
+ * Saves the game steps in .jpg files.
  */
-class PngOutput extends ImageOutput
+class JpgOutput extends ImageOutput
 {
     /**
-     * PngOutput constructor.
+     * JpgOutput constructor.
      */
     public function __construct()
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $outputDirectory = $this->baseOutputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
-        parent::__construct("png", $outputDirectory);
+        $outputDirectory = $this->baseOutputDirectory . "/JPG/Game_" . $this->getNewGameId("JPG");
+        parent::__construct("jpg", $outputDirectory);
     }
 
 
@@ -37,7 +37,7 @@ class PngOutput extends ImageOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-        echo "Starting PNG Output ...\n\n";
+        echo "Starting JPG Output ...\n\n";
     }
 
     /**
@@ -52,10 +52,10 @@ class PngOutput extends ImageOutput
 
         $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
 
-        $fileName = $_board->gameStep() . ".png";
+        $fileName = $_board->gameStep() . ".jpg";
         $filePath = $this->imageOutputDirectory() . "/" . $fileName;
 
-        imagepng($image, $filePath);
+        imagejpeg($image, $filePath);
         unset($image);
     }
 

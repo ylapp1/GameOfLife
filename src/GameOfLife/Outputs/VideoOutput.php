@@ -228,6 +228,7 @@ class VideoOutput extends ImageOutput
         $filePath = $this->imageOutputDirectory() . "/" . $fileName;
 
         imagepng($image, $filePath);
+        unset($image);
 
         $this->frames[] = $filePath;
         $this->fillPercentages[] = $_board->getFillpercentage();

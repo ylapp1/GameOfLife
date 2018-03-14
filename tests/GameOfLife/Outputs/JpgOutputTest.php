@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use GameOfLife\GameLogic;
-use Output\PngOutput;
+use Output\JpgOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Rule\ConwayRule;
@@ -17,11 +17,11 @@ use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Output\PngOutput works as expected.
+ * Checks whether \Output\JpgOutput works as expected.
  */
-class PNGOutputTest extends TestCase
+class JpgOutputTest extends TestCase
 {
-    /** @var PngOutput $output */
+    /** @var JpgOutput $output */
     private $output;
     /** @var Board $board */
     private $board;
@@ -34,9 +34,9 @@ class PNGOutputTest extends TestCase
 
     protected function setUp()
     {
-        $this->output = new PngOutput();
+        $this->output = new JpgOutput();
         $this->output->setBaseOutputDirectory($this->outputDirectory);
-        $this->output->setImageOutputDirectory($this->outputDirectory . "/PNG/Game_1/");
+        $this->output->setImageOutputDirectory($this->outputDirectory . "/JPG/Game_1/");
         $this->fileSystemHandler = new FileSystemHandler();
 
         $this->board = new Board(10, 10, 50, true);
@@ -57,21 +57,21 @@ class PNGOutputTest extends TestCase
 
 
     /**
-     * @covers \Output\PngOutput::__construct()
+     * @covers \Output\JpgOutput::__construct()
      */
     public function testCanBeConstructed()
     {
-        $output = new PngOutput();
+        $output = new JpgOutput();
 
-        $this->assertEquals("png", $output->optionPrefix());
-        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/PNG/"));
+        $this->assertEquals("jpg", $output->optionPrefix());
+        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/JPG/"));
     }
 
     /**
-     * @covers \Output\PngOutput::fileSystemHandler()
-     * @covers \Output\PngOutput::setFileSystemHandler()
-     * @covers \Output\PngOutput::imageCreator()
-     * @covers \Output\PngOutput::setImageCreator()
+     * @covers \Output\JpgOutput::fileSystemHandler()
+     * @covers \Output\JpgOutput::setFileSystemHandler()
+     * @covers \Output\JpgOutput::imageCreator()
+     * @covers \Output\JpgOutput::setImageCreator()
      */
     public function testCanSetAttributes()
     {
@@ -87,39 +87,39 @@ class PNGOutputTest extends TestCase
     }
 
     /**
-     * @covers \Output\PngOutput::addOptions()
+     * @covers \Output\JpgOutput::addOptions()
      */
     public function testCanAddOptions()
     {
         $pngOutputOptions = array(
-            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+            array(null, "jpgOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "jpgOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "jpgOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "jpgOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
         );
 
         $this->optionsMock->expects($this->exactly(1))
-                          ->method("addOptions")
-                          ->with($pngOutputOptions);
+            ->method("addOptions")
+            ->with($pngOutputOptions);
 
         if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }
 
     /**
-     * @covers \Output\PngOutput::startOutput()
+     * @covers \Output\JpgOutput::startOutput()
      */
     public function testCanCreateOutputDirectory()
     {
         $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting PNG Output ...\n\n");
+        $this->expectOutputString("Starting JPG Output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
-        $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1"));
+        $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1"));
     }
 
     /**
-     * @covers \Output\PngOutput::outputBoard()
+     * @covers \Output\JpgOutput::outputBoard()
      */
     public function testCanCreatePNG()
     {
@@ -133,12 +133,12 @@ class PNGOutputTest extends TestCase
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
             $this->output->outputBoard($this->board);
             $gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1/" . $i . ".jpg"));
         }
     }
 
     /**
-     * @covers \Output\PngOutput::finishOutput()
+     * @covers \Output\JpgOutput::finishOutput()
      * @covers \Output\BaseOutput::finishOutput()
      */
     public function testCanFinishOutput()
