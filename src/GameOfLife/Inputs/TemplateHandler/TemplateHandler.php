@@ -11,7 +11,7 @@ namespace TemplateHandler;
 use Utils\FileSystemHandler;
 
 /**
- * Parent class for template loader and saver.
+ * Parent class for TemplateLoader and TemplateSaver.
  */
 class TemplateHandler
 {
@@ -23,27 +23,35 @@ class TemplateHandler
     protected $fileSystemHandler;
 
     /**
-     * Base directory from which templates are read
+     * The directory in which the default templates are stored.
      *
-     * @var string $templateDirectory
+     * @var String $defaultTemplatesDirectory
      */
-    protected $templateDirectory;
+    protected $defaultTemplatesDirectory;
+
+    /**
+     * The directory in which the custom templates are stored.
+     *
+     * @var String $customTemplatesDirectory
+     */
+    protected $customTemplatesDirectory;
 
 
     /**
      * TemplateLoader constructor.
      *
-     * @param String $_templateDirectory Template base directory
+     * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
-    public function __construct(String $_templateDirectory)
+    public function __construct(String $_templatesBaseDirectory)
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->templateDirectory = $_templateDirectory;
+        $this->defaultTemplatesDirectory = $_templatesBaseDirectory;
+        $this->customTemplatesDirectory = $_templatesBaseDirectory . "/Custom";
     }
 
 
     /**
-     * Returns the file system handler of this file input.
+     * Returns the file system.
      *
      * @return FileSystemHandler The file system handler
      */
@@ -53,9 +61,9 @@ class TemplateHandler
     }
 
     /**
-     * Sets the file system handler of this file input.
+     * Sets the file system handler.
      *
-     * @param FileSystemHandler $_fileSystemHandler     The file system handler
+     * @param FileSystemHandler $_fileSystemHandler The file system handler
      */
     public function setFileSystemHandler(FileSystemhandler $_fileSystemHandler)
     {
@@ -63,22 +71,42 @@ class TemplateHandler
     }
 
     /**
-     * Returns the template directory.
+     * Returns the directory for default templates.
      *
-     * @return string   Template directory
+     * @return String The directory for default templates
      */
-    public function templateDirectory(): string
+    public function defaultTemplatesDirectory(): String
     {
-        return $this->templateDirectory;
+        return $this->defaultTemplatesDirectory;
     }
 
     /**
-     * Sets the template directory.
+     * Sets the directory for default templates.
      *
-     * @param string $_templateDirectory    Template directory
+     * @param String $_defaultTemplatesDirectory The directory for default templates
      */
-    public function setTemplateDirectory(string $_templateDirectory)
+    public function setDefaultTemplatesDirectory(String $_defaultTemplatesDirectory)
     {
-        $this->templateDirectory = $_templateDirectory;
+        $this->defaultTemplatesDirectory = $_defaultTemplatesDirectory;
+    }
+
+    /**
+     * Returns the directory for custom templates.
+     *
+     * @return String The directory for custom templates
+     */
+    public function customTemplatesDirectory(): String
+    {
+        return $this->customTemplatesDirectory;
+    }
+
+    /**
+     * Sets the directory for custom templates.
+     *
+     * @param String $_customTemplatesDirectory The directory for custom templates
+     */
+    public function setCustomTemplatesDirectory(String $_customTemplatesDirectory)
+    {
+        $this->customTemplatesDirectory = $_customTemplatesDirectory;
     }
 }

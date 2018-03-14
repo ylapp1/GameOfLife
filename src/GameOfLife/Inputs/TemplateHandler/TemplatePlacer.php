@@ -9,6 +9,7 @@
 namespace TemplateHandler;
 
 use GameOfLife\Board;
+use GameOfLife\Field;
 
 /**
  * Places a template on a board.
@@ -18,21 +19,31 @@ class TemplatePlacer
     /**
      * Places a template on a board.
      *
-     * @param Template $_template The template that shall be placed
+     * @param Template $_template The template that will be placed on the board
      * @param Board $_board The board on which the template will be placed
-     * @param int $_posX X-Position of the top left corner of the template on the board
-     * @param int $_posY Y-Position of the top left corner of the template on the board
-     * @param bool $_adjustDimensions Indicates whether the board shall be adjusted to match the template width and height
+     * @param int $_posX The X-coordinate of the top left corner of the template on the board
+     * @param int $_posY The Y-coordinate of the top left corner of the template on the board
+     * @param Bool $_adjustDimensions Indicates whether the board shall be adjusted to match the template width and height
      *
-     * @return bool True: No error while placing template
-     *              False: Error while placing template
+     * @return Bool True: No error while placing the template
+     *              False: Error while placing the template
      */
-    public function placeTemplate(Template $_template, Board $_board, int $_posX, int $_posY, bool $_adjustDimensions): bool
+    public function placeTemplate(Template $_template, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions): Bool
     {
         if ($_adjustDimensions)
         {
             $_board->setWidth($_template->width());
             $_board->setHeight($_template->height());
+
+            foreach ($_template->fields() as $row)
+            {
+                /** @var Field $field */
+                foreach ($row as $field)
+                {
+                    $field->setParentBoard($_board);
+                }
+            }
+
             $_board->setFields($_template->fields());
 
             return true;
@@ -42,14 +53,12 @@ class TemplatePlacer
             if ($this->isTemplateOutOfBounds($_board, $_template, $_posX, $_posY)) return false;
             else
             {
-                for ($y = 0; $y < $_template->height(); $y++)
+                foreach ($_template->fields() as $row)
                 {
-                    for ($x = 0; $x < $_template->width(); $x++)
+                    /** @var Field $field */
+                    foreach ($row as $field)
                     {
-                        if ($_template->getField($x, $y)->isAlive())
-                        {
-                            $_board->setField($x + $_posX, $y + $_posY, true);
-                        }
+                        $_board->setField($field->x() + $_posX, $field->y() + $_posY, $field->isAlive());
                     }
                 }
 
@@ -61,15 +70,15 @@ class TemplatePlacer
     /**
      * Checks whether a template is out of bounds.
      *
-     * @param Board $_board The board on which the template shall be placed
+     * @param Board $_board The board on which the template will be placed
      * @param Template $_template The template
-     * @param int $_posX X-Coordinate of the top left border of the template
-     * @param int $_posY Y-Coordinate of the top left border of the template
+     * @param int $_posX The X-coordinate of the top left border of the template
+     * @param int $_posY The Y-coordinate of the top left border of the template
      *
-     * @return bool True: Template is out of bounds
-     *              False: Template is not out of bounds
+     * @return Bool True: The template is out of bounds
+     *              False: The template is not out of bounds
      */
-    public function isTemplateOutOfBounds(Board $_board, Template $_template, int $_posX, int $_posY): bool
+    public function isTemplateOutOfBounds(Board $_board, Template $_template, int $_posX, int $_posY): Bool
     {
         if ($_posX < 0 ||
             $_posY < 0 ||

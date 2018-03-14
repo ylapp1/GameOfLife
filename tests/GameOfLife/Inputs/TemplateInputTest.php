@@ -125,14 +125,14 @@ class TemplateInputTest extends TestCase
                               array("height"), array("template"), array("invertTemplate"))
             ->willReturn("unittest", null, null, null, null, "unittest", null);
 
-        $field = new Field($this->board, 0, 0);
+        $field = new Field(0, 0, false, $this->board);
         $field->setValue(true);
 
         $unitTestBoard = array(
             array(0 => $field,
-                1 => new Field($this->board, 1, 0)),
-            array(0 => new Field($this->board,0, 1),
-                1 => new Field($this->board,1, 1))
+                1 => new Field(1, 0, false, $this->board)),
+            array(0 => new Field(0, 1, false, $this->board),
+                1 => new Field(1, 1, false, $this->board))
         );
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);

@@ -25,7 +25,7 @@ class TemplateHandlerTest extends TestCase
         $templateHandler = new TemplateHandler("test");
 
         $this->assertEquals(new FileSystemHandler(), $templateHandler->fileSystemHandler());
-        $this->assertEquals("test", $templateHandler->templateDirectory());
+        $this->assertEquals("test", $templateHandler->defaultTemplatesDirectory());
     }
 
     /**
@@ -33,17 +33,21 @@ class TemplateHandlerTest extends TestCase
      *
      * @covers \TemplateHandler\TemplateHandler::setFileSystemHandler()
      * @covers \TemplateHandler\TemplateHandler::fileSystemHandler()
-     * @covers \TemplateHandler\TemplateHandler::setTemplateDirectory()
-     * @covers \TemplateHandler\TemplateHandler::templateDirectory()
+     * @covers \TemplateHandler\TemplateHandler::setDefaultTemplatesDirectory()
+     * @covers \TemplateHandler\TemplateHandler::defaultTemplatesDirectory()
+     * @covers \TemplateHandler\TemplateHandler::setCustomTemplatesDirectory()
+     * @covers \TemplateHandler\TemplateHandler::customTemplatesDirectory()
      */
     public function testCanSetAttributes()
     {
         $templateHandler = new TemplateHandler("nottest");
 
         $templateHandler->setFileSystemHandler(new FileSystemHandler());
-        $templateHandler->setTemplateDirectory("mytest");
+        $templateHandler->setDefaultTemplatesDirectory("mytest");
+        $templateHandler->setCustomTemplatesDirectory("hello");
 
         $this->assertEquals(new FileSystemHandler(), $templateHandler->fileSystemHandler());
-        $this->assertEquals("mytest", $templateHandler->templateDirectory());
+        $this->assertEquals("mytest", $templateHandler->defaultTemplatesDirectory());
+        $this->assertEquals("hello", $templateHandler->customTemplatesDirectory());
     }
 }

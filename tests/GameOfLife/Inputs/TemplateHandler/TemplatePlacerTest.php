@@ -35,7 +35,7 @@ class TemplatePlacerTest extends TestCase
             $fields[] = array();
             for ($x = 0; $x < 3; $x++)
             {
-                $field = new Field($board, $x, $y);
+                $field = new Field($x, $y, false, $board);
 
                 if ($counter < 5) $field->setValue(true);
                 $counter++;

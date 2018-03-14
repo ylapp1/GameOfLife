@@ -26,7 +26,7 @@ class TemplateSaverTest extends TestCase
         $testDirectory = "myPersonalTest";
         $templateSaver = new TemplateSaver($testDirectory);
 
-        $this->assertEquals($testDirectory, $templateSaver->templateDirectory());
+        $this->assertEquals($testDirectory, $templateSaver->defaultTemplatesDirectory());
     }
 
     /**
@@ -35,7 +35,7 @@ class TemplateSaverTest extends TestCase
     public function testCanSaveTemplate()
     {
         $fileSystemHandlerMock = $this->getMockBuilder(FileSystemHandler::class)
-            ->setMethods(array("createDirectory", "writeFile"))
+            ->setMethods(array("writeFile"))
             ->getMock();
 
         $testBoard = new Board(2, 3, 2, true);
@@ -51,9 +51,6 @@ class TemplateSaverTest extends TestCase
             $templateSaver->setFileSystemHandler($fileSystemHandlerMock);
 
             $fileSystemHandlerMock->expects($this->exactly(2))
-                ->method("createDirectory")
-                ->with($testDirectory . "/Custom");
-            $fileSystemHandlerMock->expects($this->exactly(2))
                 ->method("writeFile")
                 ->withConsecutive(array($testDirectory . "/Custom", "unitTest.txt", $boardString, true),
                     array($testDirectory . "/Custom", "unitTestSecond.txt", $boardString, false))
@@ -61,11 +58,11 @@ class TemplateSaverTest extends TestCase
 
 
             // Save successful
-            $result = $templateSaver->saveTemplate("unitTest", $testBoard, true);
+            $result = $templateSaver->saveCustomTemplate("unitTest", $testBoard, true);
             $this->assertTrue($result);
 
             // Save not successful
-            $result = $templateSaver->saveTemplate("unitTestSecond", $testBoard, false);
+            $result = $templateSaver->saveCustomTemplate("unitTestSecond", $testBoard, false);
             $this->assertFalse($result);
         }
     }

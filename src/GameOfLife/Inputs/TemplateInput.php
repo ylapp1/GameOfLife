@@ -263,7 +263,7 @@ class TemplateInput extends BaseInput
         if ($_templateName) $templateName = $_templateName;
         else $templateName = $_options->getOption("template");
 
-        $template = $this->templateLoader->loadTemplate($_board, $templateName);
+        $template = $this->templateLoader->loadTemplate($templateName);
 
         if ($template == false) echo "Error: Template file not found!\n";
         else

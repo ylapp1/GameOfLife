@@ -20,7 +20,7 @@ class TemplateTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $field = new Field(null, 0, 0);
+        $field = new Field(0, 0, false, null);
         $fields = array(
             array($field, $field, $field),
             array($field, $field, $field),
@@ -70,7 +70,7 @@ class TemplateTest extends TestCase
      */
     public function setAttributesProvider()
     {
-        $field = new Field(null, 0, 0);
+        $field = new Field(0, 0, false);
 
         return array(
             array(1, 2, array(array($field), array($field))),

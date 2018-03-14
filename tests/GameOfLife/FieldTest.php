@@ -39,7 +39,7 @@ class FieldTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $field = new Field($this->board, 1, 2);
+        $field = new Field(1, 2, false, $this->board);
 
         $this->assertEquals($this->board, $field->parentBoard());
         $this->assertEquals(1, $field->x());
@@ -65,9 +65,9 @@ class FieldTest extends TestCase
      * @param int $_y Y-Coordinate of the field
      * @param bool $_value Status of the field (true = alive, false = dead)
      */
-    public function testCanSetAttributes($_parentBoard, $_x, $_y, $_value)
+    public function testCanSetAttributes(Board $_parentBoard, int $_x, int $_y, Bool $_value)
     {
-        $field = new Field($this->board, 1, 2);
+        $field = new Field(1, 2, false, $this->board);
 
         $field->setParentBoard($_parentBoard);
         $field->setX($_x);
@@ -85,10 +85,12 @@ class FieldTest extends TestCase
      */
     public function setAttributesProvider()
     {
+        $board = new Board(3, 4, 5, false);
+
         return array(
-            array($this->board, 1, 2, true),
-            array($this->board, 2, 3, false),
-            array($this->board, 4, 5, true)
+            array($board, 1, 2, true),
+            array($board, 2, 3, false),
+            array($board, 4, 5, true)
         );
     }
 
@@ -100,7 +102,7 @@ class FieldTest extends TestCase
      */
     public function testCanReturnStatus()
     {
-        $field = new Field($this->board, 0, 0);
+        $field = new Field(0, 0, false, $this->board);
 
         $field->setValue(true);
         $this->assertTrue($field->isAlive());
@@ -125,7 +127,7 @@ class FieldTest extends TestCase
      */
     public function testCanSumNeighborStatuses(array $_fieldCoordinates, array $_livingNeighborsCoordinates, int $_amountLivingNeighbors, int $_amountDeadNeighbors)
     {
-        $field = new Field($this->board, $_fieldCoordinates["x"], $_fieldCoordinates["y"]);
+        $field = new Field($_fieldCoordinates["x"], $_fieldCoordinates["y"], false, $this->board);
 
         foreach ($_livingNeighborsCoordinates as $livingNeighborCoordinates)
         {
@@ -172,7 +174,7 @@ class FieldTest extends TestCase
      * @param bool $_hasBorder Sets whether the test board has a border or not
      * @param int $_expectedResult The expected number of border neighbors
      *
-     * @covers \GameOfLife\Field::numberOfBorderNeighbors()
+     * @covers \GameOfLife\Field::numberOfNeighborBorderFields()
      *
      * @dataProvider getNumberOfBorderNeighborsProvider
      */
@@ -183,7 +185,7 @@ class FieldTest extends TestCase
         /** @var Field $checkField */
         $checkField = $board->fields()[$_fieldY][$_fieldX];
 
-        $this->assertEquals($_expectedResult, $checkField->numberOfBorderNeighbors());
+        $this->assertEquals($_expectedResult, $checkField->numberOfNeighborBorderFields());
     }
 
     /**

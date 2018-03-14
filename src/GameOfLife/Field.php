@@ -9,208 +9,207 @@
 namespace GameOfLife;
 
 /**
- * Stores the data of a single cell.
+ * Stores a single field.
  */
 class Field
 {
     /**
-     * Status of the current cell
-     *
-     * True: Cell is alive
-     * False: Cell is dead
-     *
-     * @var bool $value
-     */
-    private $value;
-
-    /**
-     * Board to which this cell belongs
-     *
-     * @var Board $parentBoard
-     */
-    private $parentBoard;
-
-    /**
-     * X-Position on the parent board
+     * The X-coordinate of the field
      *
      * @var int $x
      */
     private $x;
 
     /**
-     * Y-Position on the parent board
+     * The Y-coordinate of the field
      *
      * @var int $y
      */
     private $y;
 
+    /**
+     * The state of the cell in the field
+     *
+     * True: The cell is alive
+     * False: The cell is dead
+     *
+     * @var Bool $value
+     */
+    private $value;
+
+    /**
+     * The board to which the field belongs
+     *
+     * @var Board $parentBoard
+     */
+    private $parentBoard;
+
 
     /**
      * Field constructor.
      *
-     * @param Board $_parentBoard Board to which this cell belongs
-     * @param int $_x X-Position on the parent board
-     * @param int $_y Y-Position on the parent board
+     * @param int $_x The X-coordinate of the field
+     * @param int $_y The Y-coordinate of the field
+     * @param bool $_value The state of the cell in the field
+     * @param Board $_parentBoard The board to which the field belongs
      */
-    public function __construct($_parentBoard, $_x, $_y)
+    public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
     {
-        $this->parentBoard = $_parentBoard;
         $this->x = $_x;
         $this->y = $_y;
-        $this->value = false;
-    }
-
-
-    /**
-     * Returns the value of this cell.
-     *
-     * @return bool Value of this cell
-     */
-    public function value()
-    {
-        return $this->value;
-    }
-
-    /**
-     * Sets the value of this cell.
-     *
-     * @param bool $_value Value of this cell
-     */
-    public function setValue($_value)
-    {
         $this->value = $_value;
-    }
-
-    /**
-     * Sets the board to which this cell belongs.
-     *
-     * @return Board Board to which this cell belongs
-     */
-    public function parentBoard()
-    {
-        return $this->parentBoard;
-    }
-
-    /**
-     * Returns the board to which this cell belongs.
-     *
-     * @param Board $_parentBoard Board to which this cell belongs
-     */
-    public function setParentBoard($_parentBoard)
-    {
         $this->parentBoard = $_parentBoard;
     }
 
+
     /**
-     * Returns the X-Position of this cell on the parent board.
+     * Returns the X-coordinate of the field.
      *
-     * @return int X-Position of this cell on the parent board
+     * @return int The X-coordinate of the field
      */
-    public function x()
+    public function x(): int
     {
         return $this->x;
     }
 
     /**
-     * Sets the X-Position of this cell on the parent board.
+     * Sets the X-coordinate of the field.
      *
-     * @param int $_x X-Position of this cell on the parent board
+     * @param int $_x The X-coordinate of the field
      */
-    public function setX($_x)
+    public function setX(int $_x)
     {
         $this->x = $_x;
     }
 
     /**
-     * Returns the Y-Position of this cell on the parent board.
+     * Returns the Y-coordinate of the field.
      *
-     * @return int Y-Position of this cell on the parent board
+     * @return int The Y-coordinate of the field
      */
-    public function y()
+    public function y(): int
     {
         return $this->y;
     }
 
     /**
-     * Sets the Y-Position of this cell on the parent board.
+     * Sets the Y-coordinate of the field.
      *
-     * @param int $_y Y-Position of this cell on the parent board
+     * @param int $_y The Y-coordinate of the field
      */
-    public function setY($_y)
+    public function setY(int $_y)
     {
         $this->y = $_y;
     }
 
-
     /**
-     * Returns whether this cell is alive.
+     * Returns the state of the cell in the field.
      *
-     * @return bool Indicates whether this cell is alive
-     *              True: Cell is alive
-     *              False: Cell is dead
+     * @return Bool The state of the cell in the field
      */
-    public function isAlive()
+    public function value(): Bool
     {
         return $this->value;
     }
 
     /**
-     * Returns whether this cell is dead.
+     * Sets the state of the cell in the field.
      *
-     * @return bool Indicates whether this cell is dead
-     *              True: Cell is dead
-     *              False: Cell is alive
+     * @param Bool $_value The state of the cell in the field
      */
-    public function isDead()
+    public function setValue(Bool $_value)
+    {
+        $this->value = $_value;
+    }
+
+    /**
+     * Sets the board to which the field belongs.
+     *
+     * @return Board The board to which the field belongs
+     */
+    public function parentBoard(): Board
+    {
+        return $this->parentBoard;
+    }
+
+    /**
+     * Returns the board to which the field belongs.
+     *
+     * @param Board $_parentBoard The board to which the field belongs
+     */
+    public function setParentBoard(Board $_parentBoard)
+    {
+        $this->parentBoard = $_parentBoard;
+    }
+
+
+    /**
+     * Returns whether the cell in the field is alive.
+     *
+     * @return Bool True: The cell is alive
+     *              False: The cell is dead
+     */
+    public function isAlive(): Bool
+    {
+        return $this->value;
+    }
+
+    /**
+     * Returns whether the cell in the field is dead.
+     *
+     * @return Bool True: The cell is dead
+     *              False: The cell is alive
+     */
+    public function isDead(): Bool
     {
         return ! $this->value;
     }
 
     /**
-     * Calculates the amount of living neighbor cells.
+     * Calculates the number of living neighbor cells.
      *
-     * @return int Amount of living neighbor cells
+     * @return int The number of living neighbor cells
      */
-    public function numberOfLivingNeighbors()
+    public function numberOfLivingNeighbors(): int
     {
         /** @var Field[] $neighbors */
         $neighbors = $this->parentBoard->getNeighborsOfField($this);
-        $neighborsAlive = 0;
+        $numberOfLivingNeighbors = 0;
 
         foreach ($neighbors as $neighbor)
         {
-            if ($neighbor->isAlive()) $neighborsAlive++;
+            if ($neighbor->isAlive()) $numberOfLivingNeighbors++;
         }
 
-        return $neighborsAlive;
+        return $numberOfLivingNeighbors;
     }
 
     /**
-     * Calculates the amount of dead neighbor cells.
+     * Calculates the number of dead neighbor cells.
      *
-     * @return int Amount of dead neighbor cells
+     * @return int The number of dead neighbor cells
      */
-    public function numberOfDeadNeighbors()
+    public function numberOfDeadNeighbors(): int
     {
         /** @var Field[] $neighbors */
         $neighbors = $this->parentBoard->getNeighborsOfField($this);
-        $neighborsDead = 0;
+        $numberOfDeadNeighbors = 0;
 
         foreach ($neighbors as $neighbor)
         {
-            if ($neighbor->isDead()) $neighborsDead++;
+            if ($neighbor->isDead()) $numberOfDeadNeighbors++;
         }
 
-        return $neighborsDead;
+        return $numberOfDeadNeighbors;
     }
 
     /**
-     * Returns the number of border neighbors.
+     * Returns the number of neighbor border fields.
      * If the board has no border this function will return 0.
      *
-     * @return int The number of border neighbors
+     * @return int The number of neighbor border fields
      */
-    public function numberOfBorderNeighbors()
+    public function numberOfNeighborBorderFields(): int
     {
         if ($this->parentBoard->hasBorder())
         {
