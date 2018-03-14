@@ -16,23 +16,23 @@ use GameOfLife\Field;
 class Template
 {
     /**
-     * Template width
+     * The template width
      *
      * @var int $width
      */
     private $width;
 
     /**
-     * Template height
+     * The template height
      *
      * @var int $height
      */
     private $height;
 
     /**
-     * The array of fields
+     * The list of fields
      *
-     * @var Field[][]
+     * @var Field[][] $fields
      */
     private $fields;
 
@@ -40,20 +40,20 @@ class Template
     /**
      * Template constructor.
      *
-     * @param Field[][] $_fields Template fields
+     * @param Field[][] $_fields The list of fields
      */
     public function __construct(array $_fields)
     {
-        $this->fields = $_fields;
         $this->height = count($_fields);
         $this->width = count($_fields[0]);
+        $this->fields = $_fields;
     }
 
 
     /**
      * Returns the template width.
      *
-     * @return int Template width
+     * @return int The template width
      */
     public function width(): int
     {
@@ -63,7 +63,7 @@ class Template
     /**
      * Sets the template width.
      *
-     * @param int $_width Template width
+     * @param int $_width The template width
      */
     public function setWidth(int $_width)
     {
@@ -73,7 +73,7 @@ class Template
     /**
      * Returns the template height.
      *
-     * @return int Template height
+     * @return int The template height
      */
     public function height(): int
     {
@@ -83,7 +83,7 @@ class Template
     /**
      * Sets the template height.
      *
-     * @param int $_height Template height
+     * @param int $_height The template height
      */
     public function setHeight(int $_height)
     {
@@ -91,9 +91,9 @@ class Template
     }
 
     /**
-     * Returns the template fields.
+     * Returns the list of template fields.
      *
-     * @return Field[][] Template fields
+     * @return Field[][] The list of template fields
      */
     public function fields(): array
     {
@@ -101,9 +101,9 @@ class Template
     }
 
     /**
-     * Sets the template fields.
+     * Sets the list of template fields.
      *
-     * @param Field[][] $_fields Template fields
+     * @param Field[][] $_fields The list of template fields
      */
     public function setFields(array $_fields)
     {
@@ -112,10 +112,10 @@ class Template
 
 
     /**
-     * Returns a single field of this template.
+     * Returns a specific field from the list of fields.
      *
-     * @param int $_x X-Position of the field
-     * @param int $_y Y-Position of the field
+     * @param int $_x The X-coordinate of the field
+     * @param int $_y The Y-coordinate of the field
      *
      * @return Field The field
      */
