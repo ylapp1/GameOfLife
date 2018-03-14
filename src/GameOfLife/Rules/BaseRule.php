@@ -32,6 +32,13 @@ class BaseRule
      */
     protected $rulesStayAlive;
 
+    /**
+     * Indicates whether the rule is an anti rule
+     *
+     * @var Bool $isAntiRule
+     */
+    protected $isAntiRule;
+
 
     /**
      * BaseRule constructor.
@@ -98,12 +105,36 @@ class BaseRule
     /**
      * Intialize the rule.
      *
-     * @codeCoverageIgnore
-     *
      * @param Getopt $_options The option list
      */
     public function initialize(Getopt $_options)
     {
+        if ($_options->getOption("antiRules") !== null)
+        {
+            $this->isAntiRule = true;
+            $this->convertToAntiRule();
+        }
+    }
+
+    /**
+     * Converts the rule to its anti rule.
+     */
+    private function convertToAntiRule()
+    {
+        $rulesStayAlive = range(0, 8);
+        foreach ($this->rulesBirth as $amountNeighborsBirth)
+        {
+            unset($rulesStayAlive[8 - $amountNeighborsBirth]);
+        }
+
+        $rulesBirth = range(0, 8);
+        foreach ($this->rulesStayAlive as $amountNeighborsStayAlive)
+        {
+            unset($rulesBirth[8 - $amountNeighborsStayAlive]);
+        }
+
+        $this->rulesStayAlive = array_values($rulesStayAlive);
+        $this->rulesBirth = array_values($rulesBirth);
     }
 
     /**
@@ -116,6 +147,7 @@ class BaseRule
     public function calculateNewState(Field $_field): bool
     {
         $amountLivingNeighbors = $_field->numberOfLivingNeighbors();
+        if ($this->isAntiRule) $amountLivingNeighbors += $_field->numberOfBorderNeighbors();
 
         if ($_field->isAlive())
         {

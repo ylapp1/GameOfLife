@@ -160,7 +160,6 @@ class TemplateInput extends BaseInput
 
             echo $this->listTemplates("Default templates", $defaultTemplates);
             echo $this->listTemplates("Custom templates", $customTemplates);
-
         }
         else
         {
@@ -255,6 +254,11 @@ class TemplateInput extends BaseInput
         if ($_options->getOption($posYPrefix . "PosY") !== null)
         {
             $templatePosY = (int)$_options->getOption($posYPrefix . "PosY");
+            $isDimensionsAdjustment = false;
+        }
+
+        if ($_options->getOption("width") !== null || $_options->getOption("height") !== null)
+        {
             $isDimensionsAdjustment = false;
         }
 
