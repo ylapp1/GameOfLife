@@ -26,26 +26,6 @@ class ImageCreator
     private $fileSystemHandler;
 
     /**
-     * Returns the output directory in which ImageCreator saves the images.
-     *
-     * @return string   The base output directory
-     */
-    public function outputPath(): string
-    {
-        return $this->outputPath;
-    }
-
-    /**
-     * Sets the base output directory in which ImageCreator saves the images.
-     *
-     * @param string $_outputPath     The base output directory
-     */
-    public function setOutputPath(string $_outputPath)
-    {
-        $this->outputPath = $_outputPath;
-    }
-
-    /**
      * Returns the cell size of the image.
      *
      * @return int  The cell size of the image
@@ -135,13 +115,11 @@ class ImageCreator
      * @param ImageColor $_cellAliveColor   Cell color of the images
      * @param ImageColor $_backgroundColor  Background Color of the images
      * @param ImageColor $_gridColor        Grid color of the images
-     * @param string $_outPutPath           Path where images will be saved
      */
     public function __construct(int $_boardHeight, int $_boardWidth, int $_cellSize, ImageColor $_cellAliveColor,
-                                ImageColor $_backgroundColor, ImageColor $_gridColor, string $_outPutPath)
+                                ImageColor $_backgroundColor, ImageColor $_gridColor)
     {
         $this->cellSize = $_cellSize;
-        $this->outputPath = $_outPutPath;
 
         // Generate base images
         $this->baseImage = $this->initializeBaseImage($_boardWidth, $_boardHeight, $_backgroundColor, $_gridColor);
@@ -234,12 +212,11 @@ class ImageCreator
     /**
      * Creates and returns an image of the current board.
      *
-     * @param Board $_board                 Current board
-     * @param string $_imageType            Type of Image that shall be returned
+     * @param Board $_board The current board
      *
-     * @return string                       Path to image
+     * @return resource The image
      */
-    public function createImage (Board $_board, string $_imageType): string
+    public function createImage (Board $_board)
     {
         $image = imagecreate(imagesx($this->baseImage), imagesy($this->baseImage));
 
@@ -260,33 +237,6 @@ class ImageCreator
             }
         }
 
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
-
-        $fileName = $_board->gameStep();
-        $filePath = $this->outputPath();
-
-        switch ($_imageType)
-        {
-            case "png":
-            case "video":
-                $this->fileSystemHandler->createDirectory($filePath);
-
-                $filePath .= "/" . $fileName . ".png";
-                imagepng($image, $filePath);
-                break;
-
-            case "gif":
-                $this->fileSystemHandler->createDirectory($filePath);
-
-                $filePath .= "/" . $fileName . ".gif";
-                imagegif($image, $filePath);
-                break;
-            default:
-                echo "Error: Invalid image type specified!\n";
-        }
-
-        imagedestroy($image);
-
-        return $filePath;
+        return $image;
     }
 }

@@ -34,8 +34,7 @@ class ImageCreatorTest extends TestCase
         $colorWhite = new ImageColor(255, 255, 255);
 
         $this->imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
-                                                $colorWhite, $colorBlack, $this->outputDirectory);
-        $this->imageCreator->setOutputPath($this->outputDirectory . "/tmp/Frames");
+                                                $colorWhite, $colorBlack);
         $this->fileSystemHandler = new FileSystemHandler();
     }
 
@@ -52,23 +51,10 @@ class ImageCreatorTest extends TestCase
      */
     public function testCanCreateImage()
     {
-        $outputPath = $this->outputDirectory . "/tmp/Frames/";
-        $this->expectOutputRegex("/.*Gamestep: 1.*/");
+        $image = $this->imageCreator->createImage($this->board);
+        $this->assertEquals("gd", get_resource_type($image));
 
-        $this->imageCreator->createImage($this->board, "png");
-        $this->assertTrue(file_exists($outputPath . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($outputPath);
-
-        $this->imageCreator->createImage($this->board, "video");
-        $this->assertTrue(file_exists($outputPath . "0.png"));
-        $this->fileSystemHandler->deleteDirectory($outputPath);
-
-        $this->imageCreator->createImage($this->board, "gif");
-        $this->assertTrue(file_exists($outputPath . "0.gif"));
-        $this->fileSystemHandler->deleteDirectory($outputPath);
-
-        $this->expectOutputRegex("/.*Error: Invalid image type specified!\n.*/");
-        $this->imageCreator->createImage($this->board, "myInvalidImageType");
+        unset($image);
     }
 
 
@@ -83,10 +69,9 @@ class ImageCreatorTest extends TestCase
         $colorWhite = new ImageColor(255, 255, 255);
 
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
-                                         $colorWhite, $colorBlack, "tmp/Frames");
+                                         $colorWhite, $colorBlack);
 
         $this->assertEquals(15, $imageCreator->cellSize());
-        $this->assertEquals("tmp/Frames", $imageCreator->outputPath());
         $this->assertTrue(is_resource($imageCreator->baseImage()));
         $this->assertTrue(is_resource($imageCreator->cellImage()));
         $this->assertEquals(new FileSystemHandler(), $imageCreator->fileSystemHandler());
@@ -96,8 +81,6 @@ class ImageCreatorTest extends TestCase
      * Checks whether the getters/setters work as expected.
      *
      * @dataProvider setAttributesProvider
-     * @covers \Output\Helpers\ImageCreator::setOutputPath()
-     * @covers \Output\Helpers\ImageCreator::outputPath()
      * @covers \Output\Helpers\ImageCreator::setCellSize()
      * @covers \Output\Helpers\ImageCreator::cellSize()
      * @covers \Output\Helpers\ImageCreator::setBaseImage()
@@ -108,22 +91,19 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::fileSystemHandler()
      *
      * @param int $_cellSize        Diameter/Width/Height of a single cell
-     * @param string $_outputPath   Path where images are saved
      */
-    public function testCanSetAttributes(int $_cellSize, string $_outputPath)
+    public function testCanSetAttributes(int $_cellSize)
     {
         $baseImage = imagecreate(rand(1, 10), rand(1, 10));
         $cellImage = imagecreate(rand(1, 10), rand(1, 10));
         $fileSystemHandler = new FileSystemHandler();
 
         $this->imageCreator->setCellSize($_cellSize);
-        $this->imageCreator->setOutputPath($_outputPath);
         $this->imageCreator->setBaseImage($baseImage);
         $this->imageCreator->setCellImage($cellImage);
         $this->imageCreator->setFileSystemHandler($fileSystemHandler);
 
         $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
-        $this->assertEquals($_outputPath, $this->imageCreator->outputPath());
         $this->assertEquals($baseImage, $this->imageCreator->baseImage());
         $this->assertEquals($cellImage, $this->imageCreator->cellImage());
         $this->assertEquals($fileSystemHandler, $this->imageCreator->fileSystemHandler());
@@ -132,9 +112,9 @@ class ImageCreatorTest extends TestCase
     public function setAttributesProvider()
     {
         return [
-            [4, "other/path"],
-            [444, "my/other/path"],
-            [123, "my/path"]
+            [4],
+            [444],
+            [123]
         ];
     }
 }

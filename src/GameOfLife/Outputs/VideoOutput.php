@@ -219,7 +219,17 @@ class VideoOutput extends ImageOutput
     public function outputBoard(Board $_board)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
-        $this->frames[] = $this->imageCreator->createImage($_board, "video");
+
+        $image = $this->imageCreator->createImage($_board);
+
+        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
+
+        $fileName = $_board->gameStep() . ".png";
+        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+
+        imagepng($image, $filePath);
+
+        $this->frames[] = $filePath;
         $this->fillPercentages[] = $_board->getFillpercentage();
     }
 

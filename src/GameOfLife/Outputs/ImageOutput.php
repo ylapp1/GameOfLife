@@ -218,7 +218,7 @@ class ImageOutput extends BaseOutput
         else $gridColor = new ImageColor(0, 0, 0);
 
         // initialize the ImageCreator
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor, $this->imageOutputDirectory);
+        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor);
     }
 
     /**

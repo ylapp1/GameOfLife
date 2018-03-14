@@ -125,7 +125,17 @@ class GifOutput extends ImageOutput
     public function outputBoard(Board $_board)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
-        $this->frames[] = $this->imageCreator->createImage($_board, "gif");
+
+        $image = $this->imageCreator->createImage($_board);
+
+        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
+
+        $fileName = $_board->gameStep() . ".gif";
+        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+
+        imagegif($image, $filePath);
+
+        $this->frames[] = $filePath;
     }
 
     /**
