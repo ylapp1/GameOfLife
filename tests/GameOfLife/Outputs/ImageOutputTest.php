@@ -84,7 +84,7 @@ class ImageOutputTest extends TestCase
     {
         $fileSystemHandler = new FileSystemHandler();
         $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1,2,1, $colorBlack, $colorBlack, $colorBlack,"foo");
+        $imageCreator = new ImageCreator(1,2,1, $colorBlack, $colorBlack, $colorBlack);
 
         $this->output->setBaseOutputDirectory("hello");
         $this->output->setFileSystemHandler($fileSystemHandler);

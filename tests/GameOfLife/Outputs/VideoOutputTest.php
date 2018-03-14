@@ -99,7 +99,7 @@ class VideoOutputTest extends TestCase
     {
         $fileSystemHandler = new FileSystemHandler();
         $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack, "tmp");
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
         $ffmpegHelper = new FfmpegHelper("Mein lustiger test");
 
         $this->output->setFileSystemHandler($fileSystemHandler);

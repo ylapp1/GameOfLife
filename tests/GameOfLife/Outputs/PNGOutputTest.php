@@ -77,7 +77,7 @@ class PNGOutputTest extends TestCase
     {
         $fileSystemHandler = new FileSystemHandler();
         $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack, "tmp");
+        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
 
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setImageCreator($imageCreator);
