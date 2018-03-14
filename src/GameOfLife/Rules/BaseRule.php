@@ -147,7 +147,7 @@ class BaseRule
     public function calculateNewState(Field $_field): bool
     {
         $amountLivingNeighbors = $_field->numberOfLivingNeighbors();
-        if ($this->isAntiRule) $amountLivingNeighbors += $_field->numberOfBorderNeighbors();
+        if ($this->isAntiRule) $amountLivingNeighbors += $_field->numberOfNeighborBorderFields();
 
         if ($_field->isAlive())
         {

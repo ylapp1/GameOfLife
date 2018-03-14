@@ -9,118 +9,81 @@
 namespace Input;
 
 use GameOfLife\Board;
+use TemplateHandler\Template;
+use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
 /**
- * Fills the board with cells whose positions are loaded from a template file.
- *
- * Call addOptions($_options) to add the FileInput options to a Getopt object
- * Call fillBoard($_board) to place a template on the board
+ * Fills a board with fields that are loaded from a template file.
  */
 class TemplateInput extends BaseInput
 {
-    private $fileSystemHandler;
-    private $templateDirectory;
+    /**
+     * The template list printer
+     *
+     * @var TemplateListPrinter $templateListPrinter
+     */
+    private $templateListPrinter;
+
+    /**
+     * The template loader
+     *
+     * @var TemplateLoader $templateLoader
+     */
     private $templateLoader;
+
+    /**
+     * The template placer
+     *
+     * @var TemplatePlacer $templatePlacer
+     */
     private $templatePlacer;
+
+    /**
+     * The list of default template names
+     *
+     * @var String[] $defaultTemplateNames
+     */
     private $defaultTemplateNames = array();
 
 
     /**
      * FileInput constructor.
      *
-     * @param String $_templateDirectory The template directory from which templates shall be loaded
+     * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
-    public function __construct(String $_templateDirectory = null)
+    public function __construct(String $_templatesBaseDirectory = null)
     {
-        if ($_templateDirectory === null) $this->templateDirectory = __DIR__ . "/../../../Input/Templates/";
-        else $this->templateDirectory = $_templateDirectory;
+        $templatesBaseDirectory = __DIR__ . "/../../../Input/Templates/";
+        if ($_templatesBaseDirectory !== null) $templatesBaseDirectory = $_templatesBaseDirectory;
 
-        $this->templateLoader = new TemplateLoader($this->templateDirectory);
+        $this->templateListPrinter = new TemplateListPrinter($templatesBaseDirectory);
+        $this->templateLoader = new TemplateLoader($templatesBaseDirectory);
         $this->templatePlacer = new TemplatePlacer();
-        $this->fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemHandler();
 
+        $defaultTemplatePaths = $fileSystemHandler->getFileList($templatesBaseDirectory . "/*.txt");
         $this->defaultTemplateNames = array_map(
             function($_arrayEntry)
             {
                 return basename($_arrayEntry, ".txt");
             },
-            $this->fileSystemHandler->getFileList($this->templateDirectory . "/*.txt")
+            $defaultTemplatePaths
         );
     }
 
 
     /**
-     * Returns the template directory.
+     * Adds TemplateInputs options to a Getopt object.
      *
-     * @return String Template directory
-     */
-    public function templateDirectory(): String
-    {
-        return $this->templateDirectory;
-    }
-
-    /**
-     * Sets the template directory.
-     *
-     * @param String $_templateDirectory Template directory
-     */
-    public function setTemplateDirectory(String $_templateDirectory)
-    {
-        $this->templateDirectory = $_templateDirectory;
-    }
-
-    /**
-     * Returns the template loader.
-     *
-     * @return TemplateLoader Template loader
-     */
-    public function templateLoader(): TemplateLoader
-    {
-        return $this->templateLoader;
-    }
-
-    /**
-     * Sets the template loader
-     *
-     * @param TemplateLoader $_templateLoader Template loader
-     */
-    public function setTemplateLoader(TemplateLoader $_templateLoader)
-    {
-        $this->templateLoader = $_templateLoader;
-    }
-
-    /**
-     * Returns the template placer.
-     *
-     * @return TemplatePlacer Template placer
-     */
-    public function templatePlacer(): TemplatePlacer
-    {
-        return $this->templatePlacer;
-    }
-
-    /**
-     * Sets the template placer.
-     *
-     * @param TemplatePlacer $_templatePlacer Template placer
-     */
-    public function setTemplatePlacer(TemplatePlacer $_templatePlacer)
-    {
-        $this->templatePlacer = $_templatePlacer;
-    }
-
-
-    /**
-     * Adds FileInput options to a Getopt object.
-     *
-     * @param Getopt $_options Option list to which the objects options are added
+     * @param Getopt $_options The option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
+        // Generate the options for the default templates
         foreach ($this->defaultTemplateNames as $defaultTemplateName)
         {
             $_options->addOptions(
@@ -146,45 +109,17 @@ class TemplateInput extends BaseInput
     /**
      * Places a template on the board or displays a list of templates.
      *
-     * @param Board $_board The Board
-     * @param Getopt $_options Options (template, list-templates)
+     * @param Board $_board The board
+     * @param Getopt $_options The option list
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("template") !== null) $this->placeTemplate($_board, $_options);
-        elseif ($_options->getOption("list-templates") !== null)
-        {
-            $fileSystemHandler = new FileSystemHandler();
-
-            $defaultTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/*.txt");
-            $customTemplates = $fileSystemHandler->getFileList($this->templateDirectory . "/Custom/*.txt");
-
-            echo $this->listTemplates("Default templates", $defaultTemplates);
-            echo $this->listTemplates("Custom templates", $customTemplates);
-        }
+        if ($_options->getOption("template") !== null) $this->placeTemplate($_board, $_options, $_options->getOption("template"), true);
+        elseif ($_options->getOption("list-templates") !== null) $this->templateListPrinter->printTemplateLists();
         else
         {
-            $templateName = false;
-
-            foreach ($this->defaultTemplateNames as $defaultTemplateName)
-            {
-                if ($_options->getOption("input") !== null)
-                {
-                    if ($_options->getOption("input") == $defaultTemplateName) $templateName = $defaultTemplateName;
-                }
-                else
-                {
-                    if ($_options->getOption($defaultTemplateName . "PosX") !== null ||
-                        $_options->getOption($defaultTemplateName . "PosY") !== null)
-                    {
-                        $templateName = $defaultTemplateName;
-                    }
-                }
-
-                if ($templateName) break;
-            }
-
-            if ($templateName) $this->placeTemplate($_board, $_options, $templateName);
+            $templateName = $this->getTemplateNameFromLinkedOption($_options);
+            if ($templateName) $this->placeTemplate($_board, $_options, $templateName, false);
             else
             {
                 if ($_options->getOption("input") !== null && $_options->getOption("input") !== "template")
@@ -198,91 +133,109 @@ class TemplateInput extends BaseInput
     }
 
     /**
-     * Generates an output string from a list of templates.
+     * Tries to find the template name by checking whether an option is set that is linked to a template.
      *
-     * @param String $_title Title of the list
-     * @param String[] $_templateList List of template names
+     * @param Getopt $_options The option list
      *
-     * @return String Output string
+     * @return String|Bool The template name or false
      */
-    private function listTemplates(String $_title, array $_templateList): String
+    private function getTemplateNameFromLinkedOption(Getopt $_options)
     {
-        $outputString = "\n" . $_title . ":\n";
-        if (count($_templateList) == 0) $outputString .= "  None\n";
-        else
+        foreach ($this->defaultTemplateNames as $defaultTemplateName)
         {
-            foreach ($_templateList as $index => $templateName)
+            if ($_options->getOption("input") !== null)
             {
-                $outputString .= "  " . ($index + 1) . ") " . basename($templateName, ".txt") . "\n";
+                if ($_options->getOption("input") == $defaultTemplateName) return $defaultTemplateName;
+            }
+            else
+            {
+                if ($_options->getOption($defaultTemplateName . "PosX") !== null ||
+                    $_options->getOption($defaultTemplateName . "PosY") !== null)
+                {
+                    return $defaultTemplateName;
+                }
             }
         }
 
-        return $outputString;
+        return false;
     }
 
     /**
      * Places the template on the board.
      *
-     * If the template position is specified the function assumes that the user wants to keep the original board dimensions
-     *
-     * @param Board $_board Board on which the template will be placed
-     * @param Getopt $_options Option list
+     * @param Board $_board The board on which the template will be placed
+     * @param Getopt $_options The option list
      * @param String $_templateName The name of the template
+     * @param Bool $_isTemplateOption Indicates whether this function was called because the option "template" was set
      */
-    private function placeTemplate(Board $_board, Getopt $_options, String $_templateName = null)
+    private function placeTemplate(Board $_board, Getopt $_options, String $_templateName, Bool $_isTemplateOption)
     {
-        $isDimensionsAdjustment = true;
+        $template = $this->templateLoader->loadTemplate($_templateName);
+        if ($template == false)
+        {
+            echo "Error: Template file not found!\n";
+            return;
+        }
+
+        $posOptionPrefix = "template";
+        if (! $_isTemplateOption) $posOptionPrefix = $_templateName;
 
         $boardCenter = $_board->getCenter();
+
+        // Get X position
         $templatePosX = $boardCenter["x"];
+        if ($_options->getOption($posOptionPrefix . "PosX") !== null)
+        {
+            $templatePosX = (int)$_options->getOption($posOptionPrefix . "PosX");
+        }
+
+        // Get Y position
         $templatePosY = $boardCenter["y"];
-
-        $posXPrefix = "template";
-        $posYPrefix = "template";
-
-        if ($_templateName)
+        if ($_options->getOption($posOptionPrefix . "PosY") !== null)
         {
-            $posXPrefix = $_templateName;
-            $posYPrefix = $_templateName;
+            $templatePosY = (int)$_options->getOption($posOptionPrefix . "PosY");
         }
 
-        if ($_options->getOption($posXPrefix . "PosX") !== null)
-        {
-            $templatePosX = (int)$_options->getOption($posXPrefix . "PosX");
-            $isDimensionsAdjustment = false;
-        }
+        $isDimensionsAdjustment = $this->isDimensionsAdjustment($_options, $_board, $template, $posOptionPrefix);
 
-        if ($_options->getOption($posYPrefix . "PosY") !== null)
-        {
-            $templatePosY = (int)$_options->getOption($posYPrefix . "PosY");
-            $isDimensionsAdjustment = false;
-        }
+        $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
+        if ($result == false) echo "Error, the template may not exceed the field borders!\n";
+        elseif ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+    }
 
-        if ($_options->getOption("width") !== null || $_options->getOption("height") !== null) $isDimensionsAdjustment = false;
+    /**
+     * Returns whether the board dimensions shall be adjusted to be the same like the templates dimensions.
+     * If the template position or the board dimensions are specified the function assumes that the user
+     * wants to keep the original board dimensions
+     *
+     * @param Getopt $_options The option list
+     * @param Board $_board The board that will be filled
+     * @param Template $_template The template
+     * @param String $_posOptionPrefix The pos option prefix
+     *
+     * @return Bool Indicates whether the board dimensions shall be adjusted to be the same like the templates dimensions
+     */
+    private function isDimensionsAdjustment(Getopt $_options, Board $_board, Template $_template, String $_posOptionPrefix): Bool
+    {
+        if ($_posOptionPrefix !== "template")
+        { // If the template was selected by using --input
+            $templatePosX = $_board->getCenter()["x"];
+            $templatePosY = $_board->getCenter()["y"];
 
-        if ($_templateName) $templateName = $_templateName;
-        else $templateName = $_options->getOption("template");
-
-        $template = $this->templateLoader->loadTemplate($templateName);
-
-        if ($template == false) echo "Error: Template file not found!\n";
-        else
-        {
-            if ($_templateName)
+            if (! $this->templatePlacer->isTemplateOutOfBounds($_board, $_template, $templatePosX, $templatePosY))
             {
-                if (! $this->templatePlacer->isTemplateOutOfBounds($_board, $template, $templatePosX, $templatePosY))
-                {
-                    $isDimensionsAdjustment = false;
-                }
-            }
-
-            $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
-
-            if ($result == false) echo "Error, the template may not exceed the field borders!\n";
-            else
-            {
-                if ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+                return false;
             }
         }
+
+        if ($_options->getOption($_posOptionPrefix . "PosX") !== null ||
+            $_options->getOption($_posOptionPrefix . "PosY") !== null ||
+            $_options->getOption("width") !== null ||
+            $_options->getOption("height") !== null)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

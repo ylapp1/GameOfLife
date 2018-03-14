@@ -24,8 +24,7 @@ class RandomInput extends BaseInput
     public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
-            array
-            (
+            array(
                 array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
             )
         );
@@ -34,8 +33,8 @@ class RandomInput extends BaseInput
     /**
      * Fills the board with random cells until a specific percentage of the field is filled.
      *
-     * @param Board $_board The Board
-     * @param Getopt $_options Options (fillPercent)
+     * @param Board $_board The Board which will be filled
+     * @param Getopt $_options The option list
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
@@ -53,11 +52,11 @@ class RandomInput extends BaseInput
             return;
         }
 
-        // Fill random cells
-        $amountSetCells = 0;
-        $amountFields = $_board->width() * $_board->height();
+        // Fill the board with random set cells
+        $numberOfSetCells = 0;
+        $numberOfFields = $_board->width() * $_board->height();
 
-        while (($amountSetCells / $amountFields) * 100 < $fillPercent)
+        while (($numberOfSetCells / $numberOfFields) * 100 < $fillPercent)
         {
             $x = rand(0, $_board->width() - 1);
             $y = rand(0, $_board->height() - 1);
@@ -65,7 +64,7 @@ class RandomInput extends BaseInput
             if ($_board->getFieldStatus($x, $y) == false)
             {
                 $_board->setField($x, $y, true);
-                $amountSetCells++;
+                $numberOfSetCells++;
             }
         }
     }
