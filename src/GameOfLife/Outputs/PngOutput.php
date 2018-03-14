@@ -53,10 +53,12 @@ class PngOutput extends ImageOutput
 
     /**
      * Displays a text which tells the user that the simulation is finished.
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
+        parent::finishOutput($_simulationEndReason);
         unset($this->imageCreator);
-        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
     }
 }

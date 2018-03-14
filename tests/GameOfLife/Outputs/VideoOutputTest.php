@@ -208,7 +208,7 @@ class VideoOutputTest extends TestCase
         }
 
         // Check whether finishOutput creates the final gif
-        $outputRegex = "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        $outputRegex = "\nSimulation finished: All cells are dead.\n\n";
         $outputRegex .= "\nStarting video creation ...\n";
 
         if ($_hasSound == true)
@@ -223,7 +223,7 @@ class VideoOutputTest extends TestCase
         $outputRegex .= "\nVideo creation complete!\n\n";
 
         $this->expectOutputRegex("/.*". $outputRegex . ".*/");
-        $this->output->finishOutput();
+        $this->output->finishOutput("All cells are dead");
 
         //$this->assertEquals(true, file_exists($this->outputDirectory . "/Video/Game_1.mp4"));
         $this->assertFalse(file_exists($this->outputDirectory . "tmp"));
@@ -251,7 +251,7 @@ class VideoOutputTest extends TestCase
     public function testDetectsEmptyFramesFolder()
     {
         $this->expectOutputRegex("/.*Error: No frames in frames folder found!\n/");
-        $this->output->finishOutput();
+        $this->output->finishOutput("test");
     }
 
     /**
@@ -285,13 +285,13 @@ class VideoOutputTest extends TestCase
             $this->output->setHasSound(true);
 
             $this->expectOutputRegex("/.*\nError while creating the audio files\. Is ffmpeg installed\?\n.*/");
-            $this->output->finishOutput();
+            $this->output->finishOutput("test");
 
             // Without sound
             $this->output->setHasSound(false);
 
             $this->expectOutputRegex("/.*\nError while creating the video file\. Is ffmpeg installed\?\n/");
-            $this->output->finishOutput();
+            $this->output->finishOutput("test");
         }
     }
 }

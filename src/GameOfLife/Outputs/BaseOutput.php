@@ -58,9 +58,10 @@ class BaseOutput
     /**
      * Finish output (Display that simulation is finished, write files and delete temporary files).
      *
-     * @codeCoverageIgnore
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    protected function finishOutput(String $_simulationEndReason)
     {
+        echo "\nSimulation finished: " . $_simulationEndReason . ".\n\n";
     }
 }

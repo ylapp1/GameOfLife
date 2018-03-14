@@ -113,6 +113,11 @@ class GameOfLife
             $this->gameLogic->calculateNextBoard($this->board);
         }
 
-        $this->output->finishOutput();
+        if ($this->gameLogic->isMaxStepsReached($this->board)) $simulationEndReason = "Max steps reached";
+        elseif ($this->gameLogic->isLoopDetected()) $simulationEndReason = "Loop detected";
+        elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
+        else $simulationEndReason = "All cells are dead, a repeating pattern was detected or maxSteps was reached";
+
+        $this->output->finishOutput($simulationEndReason);
     }
 }

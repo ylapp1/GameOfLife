@@ -130,10 +130,12 @@ class GifOutput extends ImageOutput
 
     /**
      * Creates an animated Gif from the gif files that were created by outputBoard().
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
-        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        parent::finishOutput($_simulationEndReason);
         echo "\nStarting GIF creation. One moment please...";
 
         if (count($this->frames) == 0)
