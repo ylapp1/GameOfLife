@@ -257,10 +257,7 @@ class TemplateInput extends BaseInput
             $isDimensionsAdjustment = false;
         }
 
-        if ($_options->getOption("width") !== null || $_options->getOption("height") !== null)
-        {
-            $isDimensionsAdjustment = false;
-        }
+        if ($_options->getOption("width") !== null || $_options->getOption("height") !== null) $isDimensionsAdjustment = false;
 
         if ($_templateName) $templateName = $_templateName;
         else $templateName = $_options->getOption("template");
