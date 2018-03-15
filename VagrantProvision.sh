@@ -17,6 +17,9 @@ packages=(
 
   # VideoOutput depencies
   ffmpeg
+
+  # doxygen
+  doxygen graphviz
 )
 
 apt-get update
