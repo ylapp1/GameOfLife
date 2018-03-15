@@ -30,7 +30,7 @@ class TemplateLoader extends TemplateHandler
      *
      * @param String $_templateName The name of the template
      *
-     * @return Template|Bool The loaded template or false if the template file was not found
+     * @return array|Bool The loaded template or false if the template file was not found
      */
     public function loadTemplate(String $_templateName)
     {
@@ -62,6 +62,6 @@ class TemplateLoader extends TemplateHandler
             }
         }
 
-        return new Template($fields);
+        return $fields;
     }
 }

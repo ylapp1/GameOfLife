@@ -7,6 +7,7 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Field;
 use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
 use Utils\FileSystemHandler;
@@ -59,25 +60,34 @@ class TemplateLoaderTest extends TestCase
         $board = new Board(5, 5, 1, true);
 
         // Official template
-        $template = $this->templateLoader->loadTemplate("unittest");
+        /** @var Field[][] $templateFields */
+        $templateFields = $this->templateLoader->loadTemplate("unittest");
 
-        $this->assertEquals(2, $template->width());
-        $this->assertEquals(2, $template->height());
-        $this->assertTrue($template->getField(0, 0)->isAlive());
-        $this->assertFalse($template->getField(1, 0)->isAlive());
-        $this->assertFalse($template->getField(0, 1)->isAlive());
-        $this->assertFalse($template->getField(1, 1)->isAlive());
+        $templateHeight = count($templateFields);
+        $templateWidth = count($templateFields[0]);
+
+        $this->assertEquals(2, $templateWidth);
+        $this->assertEquals(2, $templateHeight);
+        $this->assertTrue($templateFields[0][0]->isAlive());
+        $this->assertFalse($templateFields[1][0]->isAlive());
+        $this->assertFalse($templateFields[0][1]->isAlive());
+        $this->assertFalse($templateFields[1][1]->isAlive());
 
         // Custom template
         $this->fileSystemHandler->writeFile($this->templateDirectory . "/Custom", "unittest2.txt", ".X\r\n..");
-        $template = $this->templateLoader->loadTemplate("unittest2");
 
-        $this->assertEquals(2, $template->width());
-        $this->assertEquals(2, $template->height());
-        $this->assertFalse($template->getField(0, 0)->isAlive());
-        $this->assertTrue($template->getField(1, 0)->isAlive());
-        $this->assertFalse($template->getField(0, 1)->isAlive());
-        $this->assertFalse($template->getField(1, 1)->isAlive());
+        /** @var Field[][] $templateFields */
+        $templateFields = $this->templateLoader->loadTemplate("unittest2");
+
+        $templateHeight = count($templateFields);
+        $templateWidth = count($templateFields[0]);
+
+        $this->assertEquals(2, $templateWidth);
+        $this->assertEquals(2, $templateHeight);
+        $this->assertFalse($templateFields[0][0]->isAlive());
+        $this->assertTrue($templateFields[0][1]->isAlive());
+        $this->assertFalse($templateFields[1][0]->isAlive());
+        $this->assertFalse($templateFields[1][1]->isAlive());
 
         $this->fileSystemHandler->deleteFile($this->templateDirectory . "/Custom/unittest2.txt");
         $this->fileSystemHandler->deleteDirectory($this->templateDirectory . "/Custom");

@@ -74,7 +74,7 @@ class SaveTemplateOption extends BoardEditorOption
      */
     public function saveTemplate($_templateName)
     {
-        $result = $this->templateSaver->saveTemplate($_templateName, $this->parentBoardEditor->board());
+        $result = $this->templateSaver->saveCustomTemplate($_templateName, $this->parentBoardEditor->board());
 
         if ($result == false)
         {
@@ -83,7 +83,7 @@ class SaveTemplateOption extends BoardEditorOption
 
             if (stristr($input, "y") || stristr($input, "yes"))
             {
-                $this->templateSaver->saveTemplate($_templateName, $this->parentBoardEditor->board(), true);
+                $this->templateSaver->saveCustomTemplate($_templateName, $this->parentBoardEditor->board(), true);
                 echo "Template successfully replaced!\n\n";
             }
             else echo "Saving aborted.\n\n";

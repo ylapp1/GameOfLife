@@ -170,8 +170,8 @@ class TemplateInput extends BaseInput
      */
     private function placeTemplate(Board $_board, Getopt $_options, String $_templateName, Bool $_isTemplateOption)
     {
-        $template = $this->templateLoader->loadTemplate($_templateName);
-        if ($template == false)
+        $templateFields = $this->templateLoader->loadTemplate($_templateName);
+        if ($templateFields == false)
         {
             echo "Error: Template file not found!\n";
             return;
@@ -196,9 +196,9 @@ class TemplateInput extends BaseInput
             $templatePosY = (int)$_options->getOption($posOptionPrefix . "PosY");
         }
 
-        $isDimensionsAdjustment = $this->isDimensionsAdjustment($_options, $_board, $template, $posOptionPrefix);
+        $isDimensionsAdjustment = $this->isDimensionsAdjustment($_options, $_board, $templateFields, $posOptionPrefix);
 
-        $result = $this->templatePlacer->placeTemplate($template, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
+        $result = $this->templatePlacer->placeTemplate($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
         if ($result == false) echo "Error, the template may not exceed the field borders!\n";
         elseif ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
     }
@@ -210,19 +210,22 @@ class TemplateInput extends BaseInput
      *
      * @param Getopt $_options The option list
      * @param Board $_board The board that will be filled
-     * @param Template $_template The template
+     * @param array $_templateFields The template fields
      * @param String $_posOptionPrefix The pos option prefix
      *
      * @return Bool Indicates whether the board dimensions shall be adjusted to be the same like the templates dimensions
      */
-    private function isDimensionsAdjustment(Getopt $_options, Board $_board, Template $_template, String $_posOptionPrefix): Bool
+    private function isDimensionsAdjustment(Getopt $_options, Board $_board, array $_templateFields, String $_posOptionPrefix): Bool
     {
         if ($_posOptionPrefix !== "template")
         { // If the template was selected by using --input
             $templatePosX = $_board->getCenter()["x"];
             $templatePosY = $_board->getCenter()["y"];
 
-            if (! $this->templatePlacer->isTemplateOutOfBounds($_board, $_template, $templatePosX, $templatePosY))
+            $templateHeight = count($_templateFields);
+            $templateWidth = count($_templateFields[0]);
+
+            if (! $this->templatePlacer->isTemplateOutOfBounds($_board, $templateWidth, $templateHeight, $templatePosX, $templatePosY))
             {
                 return false;
             }
