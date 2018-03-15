@@ -63,6 +63,7 @@ class TemplateInput extends BaseInput
         $this->templateListPrinter = new TemplateListPrinter($templatesBaseDirectory);
         $this->templateLoader = new TemplateLoader($templatesBaseDirectory);
         $this->templatePlacer = new TemplatePlacer();
+
         $fileSystemHandler = new FileSystemHandler();
 
         $defaultTemplatePaths = $fileSystemHandler->getFileList($templatesBaseDirectory . "/*.txt");
@@ -73,6 +74,8 @@ class TemplateInput extends BaseInput
             },
             $defaultTemplatePaths
         );
+
+        unset($fileSystemHandler);
     }
 
 

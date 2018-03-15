@@ -16,7 +16,7 @@ class Board
     /**
      * Stores the fields of the current game step
      *
-     * @var Field[][]  $fields
+     * @var Field[][] $fields
      */
     private $fields;
 

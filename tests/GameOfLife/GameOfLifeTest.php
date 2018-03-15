@@ -174,28 +174,11 @@ class GameOfLifeTest extends TestCase
                       ->method($_endLoopMethodName)
                       ->willReturn(true);
 
-
-        $reflectionClass = new ReflectionClass(\GameOfLife\GameOfLife::class);
-
-        $reflectionProperty = $reflectionClass->getProperty("options");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($gameOfLife, $optionsMock);
-
-        $reflectionProperty = $reflectionClass->getProperty("input");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($gameOfLife, $input);
-
-        $reflectionProperty = $reflectionClass->getProperty("output");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($gameOfLife, $output);
-
-        $reflectionProperty = $reflectionClass->getProperty("board");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($gameOfLife, $board);
-
-        $reflectionProperty = $reflectionClass->getProperty("gameLogic");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($gameOfLife, $gameLogicMock);
+        \setPrivateAttribute($gameOfLife, "options", $optionsMock);
+        \setPrivateAttribute($gameOfLife, "input", $input);
+        \setPrivateAttribute($gameOfLife, "output", $output);
+        \setPrivateAttribute($gameOfLife, "board", $board);
+        \setPrivateAttribute($gameOfLife, "gameLogic", $gameLogicMock);
 
         // Hide output
         $this->expectOutputRegex("/.*Starting the simulation.*Simulation finished.*/s");

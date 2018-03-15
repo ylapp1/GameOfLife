@@ -14,7 +14,7 @@ use Output\BaseOutput;
 use Ulrichsg\Getopt;
 
 /**
- * Wrapper class for the GameOfLife simulation.
+ * Wrapper class for the Game Of Life simulation.
  */
 class GameOfLife
 {

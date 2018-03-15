@@ -117,11 +117,11 @@ class ImageOutputTest extends TestCase
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
 
         $imageCreator = $this->output->imageCreator();
-        $baseImage = $imageCreator->baseImage();
+        $baseImage = \getPrivateAttribute($imageCreator, "baseImage");
 
         $this->assertEquals(10, imagesx($baseImage));
         $this->assertEquals(10, imagesy($baseImage));
-        $this->assertEquals(10, $imageCreator->cellSize());
+        $this->assertEquals(10, \getPrivateAttribute($imageCreator, "cellSize"));
     }
 
     /**
@@ -145,7 +145,7 @@ class ImageOutputTest extends TestCase
 
         $imageCreator = $this->output->imageCreator();
 
-        $this->assertEquals(100, $imageCreator->cellSize());
+        $this->assertEquals(100, \getPrivateAttribute($imageCreator, "cellSize"));
     }
 
     /**

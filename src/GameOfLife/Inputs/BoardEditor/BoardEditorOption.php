@@ -203,7 +203,8 @@ class BoardEditorOption
      */
     public function hasAlias(String $_alias)
     {
-        if (in_array(strtolower($_alias), $this->aliases)) return true;
+        $alias = strtolower($_alias);
+        if (in_array($alias, $this->aliases)) return true;
         else return false;
     }
 }

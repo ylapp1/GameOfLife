@@ -9,8 +9,8 @@
 
 namespace Input;
 
-use GameOfLife\Board;
 use BoardEditor\BoardEditor;
+use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**

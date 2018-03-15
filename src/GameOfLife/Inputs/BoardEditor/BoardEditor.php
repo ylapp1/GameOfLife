@@ -25,21 +25,21 @@ class BoardEditor
     /**
      * The board that is edited
      *
-     * @var Board
+     * @var Board $board
      */
     private $board;
 
     /**
      * Option Handler which loads and parses options.
      *
-     * @var BoardEditorOptionHandler
+     * @var BoardEditorOptionHandler $optionHandler
      */
     private $optionHandler;
 
     /**
      * Output that prints the board
      *
-     * @var BoardEditorOutput
+     * @var BoardEditorOutput $output
      */
     private $output;
 

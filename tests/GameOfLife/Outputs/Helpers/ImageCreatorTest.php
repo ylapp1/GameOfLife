@@ -71,50 +71,8 @@ class ImageCreatorTest extends TestCase
         $imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                          $colorWhite, $colorBlack);
 
-        $this->assertEquals(15, $imageCreator->cellSize());
-        $this->assertTrue(is_resource($imageCreator->baseImage()));
-        $this->assertTrue(is_resource($imageCreator->cellImage()));
-        $this->assertEquals(new FileSystemHandler(), $imageCreator->fileSystemHandler());
-    }
-
-    /**
-     * Checks whether the getters/setters work as expected.
-     *
-     * @dataProvider setAttributesProvider
-     * @covers \Output\Helpers\ImageCreator::setCellSize()
-     * @covers \Output\Helpers\ImageCreator::cellSize()
-     * @covers \Output\Helpers\ImageCreator::setBaseImage()
-     * @covers \Output\Helpers\ImageCreator::baseImage()
-     * @covers \Output\Helpers\ImageCreator::setCellImage()
-     * @covers \Output\Helpers\ImageCreator::cellImage()
-     * @covers \Output\Helpers\ImageCreator::setFileSystemHandler()
-     * @covers \Output\Helpers\ImageCreator::fileSystemHandler()
-     *
-     * @param int $_cellSize        Diameter/Width/Height of a single cell
-     */
-    public function testCanSetAttributes(int $_cellSize)
-    {
-        $baseImage = imagecreate(rand(1, 10), rand(1, 10));
-        $cellImage = imagecreate(rand(1, 10), rand(1, 10));
-        $fileSystemHandler = new FileSystemHandler();
-
-        $this->imageCreator->setCellSize($_cellSize);
-        $this->imageCreator->setBaseImage($baseImage);
-        $this->imageCreator->setCellImage($cellImage);
-        $this->imageCreator->setFileSystemHandler($fileSystemHandler);
-
-        $this->assertEquals($_cellSize, $this->imageCreator->cellSize());
-        $this->assertEquals($baseImage, $this->imageCreator->baseImage());
-        $this->assertEquals($cellImage, $this->imageCreator->cellImage());
-        $this->assertEquals($fileSystemHandler, $this->imageCreator->fileSystemHandler());
-    }
-
-    public function setAttributesProvider()
-    {
-        return [
-            [4],
-            [444],
-            [123]
-        ];
+        $this->assertEquals(15, \getPrivateAttribute($imageCreator, "cellSize"));
+        $this->assertTrue(is_resource(\getPrivateAttribute($imageCreator, "baseImage")));
+        $this->assertTrue(is_resource(\getPrivateAttribute($imageCreator, "cellImage")));
     }
 }
