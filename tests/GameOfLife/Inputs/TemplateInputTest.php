@@ -125,8 +125,21 @@ class TemplateInputTest extends TestCase
      */
     public function testDetectsEmptyTemplateName()
     {
+        $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                            ->getMock();
+
+        $optionsMock->expects($this->exactly(6))
+                    ->method("getOption")
+                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("unittestPosX"),
+                                      array("unittestPosY"), array("input"))
+                    ->willReturn(null, null, null, null, null, "template");
+
         $this->expectOutputString("Error: No template file specified\n");
-        $this->input->fillBoard($this->board, new Getopt());
+
+        if ($optionsMock instanceof \Ulrichsg\Getopt)
+        {
+            $this->input->fillBoard($this->board, $optionsMock);
+        }
     }
 
     /**
@@ -284,10 +297,10 @@ class TemplateInputTest extends TestCase
         $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $optionsMock->expects($this->exactly(6))
+        $optionsMock->expects($this->exactly(5))
                     ->method("getOption")
-                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"), array("input"))
-                    ->willReturn(null, null, "test", "test", "test", "test");
+                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"))
+                    ->willReturn(null, null, "test", "test", "test");
 
         $board = new Board(10, 8, 5, true);
 

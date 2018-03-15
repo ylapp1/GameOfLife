@@ -122,7 +122,7 @@ class TemplateInput extends BaseInput
             if ($templateName) $this->placeTemplate($_board, $_options, $templateName, false);
             else
             {
-                if ($_options->getOption("input") !== null && $_options->getOption("input") !== "template")
+                if ($_options->getOption("input") !== "template")
                 {
                     $randomInput = new RandomInput();
                     $randomInput->fillBoard($_board, new Getopt());
@@ -145,7 +145,7 @@ class TemplateInput extends BaseInput
         {
             if ($_options->getOption("input") !== null)
             {
-                if ($_options->getOption("input") == $defaultTemplateName) return $defaultTemplateName;
+                if (stristr($_options->getOption("input"), $defaultTemplateName)) return $defaultTemplateName;
             }
             else
             {
