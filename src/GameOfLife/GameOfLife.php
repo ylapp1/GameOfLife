@@ -78,21 +78,70 @@ class GameOfLife
      */
     public function initialize(): Bool
     {
-        $this->optionHandler->initializeOptions($this->options);
+        try
+        {
+            $this->optionHandler->initializeOptions($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while initializing the options: " . $_exception->getMessage() . "\n";
+            return false;
+        }
         $this->options->parse();
 
         $generalOptionUsed = $this->optionHandler->optionParser()->parseGeneralOptions($this->options);
         if ($generalOptionUsed) return false;
 
-        $board = $this->optionHandler->optionParser()->parseBoardOptions($this->options);
-        if (! $board) return false;
-        else $this->board = $board;
+        try
+        {
+            $this->board = $this->optionHandler->optionParser()->parseBoardOptions($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while parsing the board options: " . $_exception->getMessage() . "\n";
+            return false;
+        }
 
-        $this->input = $this->optionHandler->optionParser()->parseInputOptions($this->options);
-        $this->output = $this->optionHandler->optionParser()->parseOutputOptions($this->options);
+        try
+        {
+            $this->input = $this->optionHandler->optionParser()->parseInputOptions($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while parsing the input options: " . $_exception->getMessage() . "\n";
+            return false;
+        }
 
-        $rule = $this->optionHandler->optionParser()->parseRuleOptions($this->options);
-        $rule->initialize($this->options);
+        try
+        {
+            $this->output = $this->optionHandler->optionParser()->parseOutputOptions($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while parsing the output options: " . $_exception->getMessage() . "\n";
+            return false;
+        }
+
+        try
+        {
+            $rule = $this->optionHandler->optionParser()->parseRuleOptions($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while parsing the rule options: " . $_exception->getMessage() . "\n";
+            return false;
+        }
+
+        try
+        {
+            $rule->initialize($this->options);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while initializing the rule: " . $_exception->getMessage() . "\n";
+            return false;
+        }
+
         $this->gameLogic = new GameLogic($rule);
 
         return true;
@@ -103,7 +152,15 @@ class GameOfLife
      */
     public function startSimulation()
     {
-        $this->input->fillBoard($this->board, $this->options);
+        try
+        {
+            $this->input->fillBoard($this->board, $this->options);
+        }
+        catch(\Exception $_exception)
+        {
+            echo $_exception->getMessage() . "\n";
+            return;
+        }
         $this->output->startOutput($this->options, $this->board);
 
         // Game loop
@@ -118,6 +175,13 @@ class GameOfLife
         elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
         else $simulationEndReason = "All cells are dead, a repeating pattern was detected or maxSteps was reached";
 
-        $this->output->finishOutput($simulationEndReason);
+        try
+        {
+            $this->output->finishOutput($simulationEndReason);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while finishing the simulation: " . $_exception->getMessage() ."\n";
+        }
     }
 }

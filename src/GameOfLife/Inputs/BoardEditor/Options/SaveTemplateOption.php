@@ -71,6 +71,8 @@ class SaveTemplateOption extends BoardEditorOption
      * @param string $_templateName Thee template name
      *
      * @return bool Indicates whether the board editing is finished
+     *
+     * @throws \Exception
      */
     public function saveTemplate($_templateName)
     {
@@ -90,7 +92,7 @@ class SaveTemplateOption extends BoardEditorOption
         }
         else echo "Template successfully saved!\n\n";
 
-        echo 'You can set/unset more cells or start the simulation by typing "start"' . "\n\n";
+        echo "You can set/unset more cells or start the simulation by typing \"start\"\n\n";
 
         return false;
     }

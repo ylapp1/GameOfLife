@@ -29,11 +29,26 @@ class TemplateListPrinter extends TemplateHandler
      */
     public function printTemplateLists()
     {
-        $defaultTemplates = $this->fileSystemHandler->getFileList($this->defaultTemplatesDirectory . "/*.txt");
-        $customTemplates = $this->fileSystemHandler->getFileList($this->customTemplatesDirectory . "/*.txt");
+        try
+        {
+            $defaultTemplateFilePaths = $this->fileSystemHandler->getFileList($this->defaultTemplatesDirectory . "/*.txt");
+        }
+        catch(\Exception $_exception)
+        {
+            $defaultTemplateFilePaths = array();
+        }
+        $this->printTemplateList("Default templates", $defaultTemplateFilePaths);
 
-        $this->printTemplateList("Default templates", $defaultTemplates);
-        $this->printTemplateList("Custom templates", $customTemplates);
+        try
+        {
+            $customTemplateFilePaths = $this->fileSystemHandler->getFileList($this->customTemplatesDirectory . "/*.txt");
+        }
+        catch(\Exception $_exception)
+        {
+            $customTemplateFilePaths = array();
+        }
+
+        $this->printTemplateList("Custom templates", $customTemplateFilePaths);
     }
 
     /**

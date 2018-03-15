@@ -9,7 +9,6 @@
 namespace TemplateHandler;
 
 use GameOfLife\Board;
-use Utils\FileSystemHandler;
 
 /**
  * Saves templates in a template directory.
@@ -33,14 +32,17 @@ class TemplateSaver extends TemplateHandler
      * @param Board $_board The board whose fields will be saved to the template
      * @param Bool $_overwriteIfExists Indicates whether an existing template file with that name should be overwritten
      *
-     * @return Bool true: Template successfully saved
-     *              false: Error while saving template
+     * @throws \Exception
      */
-    public function saveCustomTemplate(String $_templateName, Board $_board, Bool $_overwriteIfExists = false): Bool
+    public function saveCustomTemplate(String $_templateName, Board $_board, Bool $_overwriteIfExists = false)
     {
-        $error = $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, $_overwriteIfExists);
-
-        if ($error === FileSystemHandler::NO_ERROR) return true;
-        else return false;
+        try
+        {
+            $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, $_overwriteIfExists);
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while saving template: " . $_exception->getMessage());
+        }
     }
 }

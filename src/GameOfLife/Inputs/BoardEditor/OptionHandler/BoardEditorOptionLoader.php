@@ -90,13 +90,22 @@ class BoardEditorOptionLoader
      * @param String $_optionsDirectory Directory in which the board editor options are stored
      *
      * @return BoardEditorOption[] array in the format ("optionName" => "optionObject")
+     *
+     * @throws \Exception
      */
     public function loadOptions(String $_optionsDirectory): array
     {
         $options = array();
 
         // Load each option from the options folder
-        $classes = $this->fileSystemHandler->getFileList($_optionsDirectory . "/*Option.php");
+        try
+        {
+            $classes = $this->fileSystemHandler->getFileList($_optionsDirectory . "/*Option.php");
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while loading the board editor options: " . $_exception->getMessage());
+        }
 
         foreach ($classes as $class)
         {

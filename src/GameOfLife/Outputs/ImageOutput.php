@@ -230,7 +230,14 @@ class ImageOutput extends BaseOutput
      */
     public function getNewGameId(String $_outputType): int
     {
-        $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+        try
+        {
+            $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+        }
+        catch (\Exception $_exception)
+        {
+            $fileNames = array();
+        }
 
         if (count($fileNames) == 0) $newGameId = 1;
         else

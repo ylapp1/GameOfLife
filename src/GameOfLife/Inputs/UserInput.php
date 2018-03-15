@@ -35,11 +35,21 @@ class UserInput extends BaseInput
 
     /**
      * UserInput constructor.
+     *
+     * @throws \Exception
      */
     public function __construct()
     {
         $this->templatesBaseDirectory = __DIR__ . "/../../../Input/Templates/";
-        $this->boardEditor = new BoardEditor($this->templatesBaseDirectory, null);
+
+        try
+        {
+            $this->boardEditor = new BoardEditor($this->templatesBaseDirectory, null);
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while constructing the UserInput: " . $_exception->getMessage());
+        }
     }
 
 
@@ -61,6 +71,8 @@ class UserInput extends BaseInput
      *
      * @param Board $_board The board that will be filled
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

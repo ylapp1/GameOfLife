@@ -173,6 +173,8 @@ class BoardEditorTest extends TestCase
      * @covers \BoardEditor\BoardEditor::readInput()
      *
      * @param String $_fileContent Content that will be written to a test file which is read by readInput()
+     *
+     * @throws Exception
      */
     public function testCanReadInput(String $_fileContent)
     {
@@ -186,7 +188,6 @@ class BoardEditorTest extends TestCase
         $fileSystemHandler->writeFile($testDirectory, $testFile, $_fileContent);
 
         $this->assertEquals($_fileContent, $boardEditor->readInput($testDirectory . "/" . $testFile));
-
         $fileSystemHandler->deleteDirectory($testDirectory, true);
     }
 

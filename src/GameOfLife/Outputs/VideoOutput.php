@@ -59,6 +59,8 @@ class VideoOutput extends ImageOutput
 
     /**
      * VideoOutput constructor.
+     *
+     * @throws \Exception
      */
     public function __construct()
     {
@@ -69,7 +71,14 @@ class VideoOutput extends ImageOutput
         $this->frames = array();
         $this->hasSound = false;
 
-        $this->ffmpegHelper = new FfmpegHelper(PHP_OS);
+        try
+        {
+            $this->ffmpegHelper = new FfmpegHelper(PHP_OS);
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while constructing VideoOutput: " . $_exception->getMessage());
+        }
     }
 
 
@@ -238,6 +247,8 @@ class VideoOutput extends ImageOutput
      * Creates the video file from the frames and adds a sound per game step.
      *
      * @param String $_simulationEndReason The reason why the simulation ended
+     *
+     * @throws \Exception
      */
     public function finishOutput(String $_simulationEndReason)
     {
@@ -252,14 +263,18 @@ class VideoOutput extends ImageOutput
         $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
+    /**
+     * Generates the video file.
+     *
+     * @throws \Exception
+     */
     private function generateVideoFile()
     {
         $ffmpegOutputDirectory = str_replace("\\", "/", $this->baseOutputDirectory);
 
         if (count($this->frames) == 0)
         {
-            echo "Error: No frames in frames folder found!\n";
-            return;
+            throw new \Exception("Error while generating the video file: No frames in frames folder found.");
         }
 
         // generate Audio files for each frame
@@ -280,13 +295,7 @@ class VideoOutput extends ImageOutput
                 $this->ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
                 $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
-                $error = $this->ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
-
-                if ($error)
-                {
-                    echo "\nError while creating the audio files. Is ffmpeg installed?\n";
-                    return;
-                }
+                $this->ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
 
                 file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
             }
@@ -313,13 +322,7 @@ class VideoOutput extends ImageOutput
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Save video in output folder
-        $error = $this->ffmpegHelper->executeCommand( $this->baseOutputDirectory . "Video/" . $fileName);
-
-        if ($error)
-        {
-            echo "\nError while creating the video file. Is ffmpeg installed?\n";
-            return;
-        }
+        $this->ffmpegHelper->executeCommand( $this->baseOutputDirectory . "Video/" . $fileName);
 
         echo "\nVideo creation complete!\n\n";
     }

@@ -56,6 +56,8 @@ class BoardEditor
      *
      * @param String $_templateDirectory The directory to which templates will be saved
      * @param Board $_board The board which will be edited
+     *
+     * @throws \Exception
      */
     public function __construct(String $_templateDirectory, Board $_board = null)
     {
@@ -153,7 +155,14 @@ class BoardEditor
      */
     public function launch()
     {
-        $this->optionHandler->parseInput("help");
+        try
+        {
+            $this->optionHandler->parseInput("help");
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Error while launching the board editor: " . $_exception->getMessage() . "\n";
+        }
         $this->output->outputBoard($this->board);
 
         $isInputFinished = false;
@@ -162,7 +171,15 @@ class BoardEditor
             echo "> ";
 
             $line = $this->readInput("php://stdin");
-            $isInputFinished = $this->optionHandler->parseInput($line);
+
+            try
+            {
+                $isInputFinished = $this->optionHandler->parseInput($line);
+            }
+            catch (\Exception $_exception)
+            {
+                echo "Error while parsing the option: " . $_exception->getMessage() . "\n";
+            }
         }
     }
 

@@ -19,6 +19,8 @@ class CustomRule extends BaseRule
      * Initializes the rule.
      *
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception
      */
     public function initialize(Getopt $_options)
     {
@@ -34,7 +36,7 @@ class CustomRule extends BaseRule
             {
                 $this->parseAlternateNotationString($rulesString);
             }
-            else echo "Error: Unknown rules notation";
+            else throw new \Exception("Error: Unknown rules notation.");
         }
         elseif ($_options->getOption("rulesBirth") !== null && $_options->getOption("rulesStayAlive") !== null)
         {
@@ -47,7 +49,7 @@ class CustomRule extends BaseRule
                 $this->rulesStayAlive = $this->getRulesFromNumericString($rulesStayAlive);
             }
         }
-        else echo "Error: Rules string is not set";
+        else throw new \Exception("Error: Rules string is not set.");
 
         parent::initialize($_options);
     }
@@ -77,6 +79,8 @@ class CustomRule extends BaseRule
      *
      * @return Bool True: The string is a <stayAlive>/<birth> string
      *              False: The string is not a <stayAlive>/<birth> string
+     *
+     * @throws \Exception
      */
     private function isStayAliveSlashBirthString(String $_rulesString): Bool
     {
@@ -89,16 +93,19 @@ class CustomRule extends BaseRule
                 if ($rulePart == "") unset($ruleParts[$index]);
             }
 
-            if (count($ruleParts) < 2) echo "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n";
+            if (count($ruleParts) < 2)
+            {
+                throw new \Exception("Error while parsing the rule string: The custom rule must have at least 1 birth condition and 1 stay alive condition.");
+            }
             elseif (count($ruleParts) == 2)
             {
                 if (is_numeric($ruleParts[0]) && is_numeric($ruleParts[1]))
                 {
                     return true;
                 }
-                else echo "Error: The custom rule parts may only contain \"/\" and numbers\n";
+                else throw new \Exception("Error while parsing the rule string:: The custom rule parts may only contain \"/\" and numbers.");
             }
-            else echo "Error: The custom rule parts may not contain more than two number strings\n";
+            else throw new \Exception("Error while parsing the rule string:: The custom rule parts may not contain more than two number strings.");
         }
 
         return false;
@@ -124,6 +131,8 @@ class CustomRule extends BaseRule
      *
      * @return Bool True: The string is a <stayAlive>G<stayAlive/birth> string
      *              False: The string is not a <stayAlive>G<stayAlive/birth> string
+     *
+     * @throws \Exception
      */
     private function isAlternateNotationString(String $_rulesString): Bool
     {
@@ -131,12 +140,18 @@ class CustomRule extends BaseRule
         {
             $ruleParts = explode("G", $_rulesString);
 
-            if (count($ruleParts) < 2) echo "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n";
-            elseif (count($ruleParts) > 2) echo "Error: The custom rule parts may not contain more than two number strings\n";
+            if (count($ruleParts) < 2)
+            {
+                throw new \Exception("Error: The custom rule must have at least 1 birth condition and 1 stay alive condition.");
+            }
+            elseif (count($ruleParts) > 2)
+            {
+                throw new \Exception ("Error: The custom rule parts may not contain more than two number strings.");
+            }
             else
             {
                 if ((is_numeric($ruleParts[0]) || $ruleParts[0] == "") && is_numeric($ruleParts[1])) return true;
-                else echo "Error: The custom rule parts may only contain \"G\" and numbers\n";
+                else throw new \Exception("Error: The custom rule parts may only contain \"G\" and numbers.");
             }
 
         }

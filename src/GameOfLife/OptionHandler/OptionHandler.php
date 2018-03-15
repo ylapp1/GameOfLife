@@ -9,6 +9,7 @@
 namespace OptionHandler;
 
 use Ulrichsg\Getopt;
+use Utils\FileSystemHandler;
 
 /**
  * Handles listing and parsing of command line options.
@@ -98,20 +99,24 @@ class OptionHandler
      * Initializes the command line options.
      *
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception
      */
     public function initializeOptions(Getopt $_options)
     {
         $this->optionLoader->addDefaultOptions($_options);
 
-        $inputClasses = glob(__DIR__ . "/../Inputs/*Input.php");
+        $fileSystemHandler = new FileSystemHandler();
+
+        $inputClasses = $fileSystemHandler->getFileList(__DIR__ . "/../Inputs/*Input.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $inputClasses, $this->excludeClasses, "Input");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $outputClasses = glob(__DIR__ . "/../Outputs/*Output.php");
+        $outputClasses = $fileSystemHandler->getFileList(__DIR__ . "/../Outputs/*Output.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $outputClasses, $this->excludeClasses, "Output");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $ruleClasses = glob(__DIR__ . "/../Rules/*Rule.php");
+        $ruleClasses = $fileSystemHandler->getFileList(__DIR__ . "/../Rules/*Rule.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $ruleClasses, $this->excludeClasses, "Rule");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
     }

@@ -143,6 +143,8 @@ class GifOutput extends ImageOutput
      * Creates an animated Gif from the gif files that were created by outputBoard().
      *
      * @param String $_simulationEndReason The reason why the simulation ended
+     *
+     * @throws \Exception
      */
     public function finishOutput(String $_simulationEndReason)
     {
@@ -174,8 +176,7 @@ class GifOutput extends ImageOutput
 
         if (! file_exists($filePath))
         {
-            echo "An error occurred during the gif creation. Stopping...";
-            return;
+            throw new \Exception("An error occurred during the gif creation.");
         }
 
         unset($this->imageCreator);

@@ -28,12 +28,15 @@ class FfmpegHelper
      * FfmpegHelper constructor.
      *
      * @param String $_osName The name of the operating system
+     *
+     * @throws \Exception
      */
     public function __construct(String $_osName)
     {
         $this->osName = strtolower($_osName);
         $this->fileSystemHandler = new FileSystemHandler();
         $this->shellExecutor = new ShellExecutor($_osName);
+
         $this->binaryPath = $this->findFFmpegBinary();
     }
 
@@ -103,6 +106,8 @@ class FfmpegHelper
      * Finds and returns the path to the ffmpeg binary file.
      *
      * @return String|bool The path to the ffmpeg binary file or false if the file was not found
+     *
+     * @throws \Exception
      */
     private function findFFmpegBinary()
     {
@@ -110,7 +115,15 @@ class FfmpegHelper
 
         if (stristr($this->osName, "win"))
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
-            $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
+
+            try
+            {
+                $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
+            }
+            catch (\Exception $_exception)
+            {
+                throw new \Exception("Error while searching for ffmpeg binary: " . $_exception->getMessage());
+            }
         }
         elseif (stristr($this->osName, "linux"))
         { // If OS is Linux check whether the ffmpeg command returns true
@@ -168,12 +181,15 @@ class FfmpegHelper
      *
      * @param String $_outputPath The Ffmpeg output path
      *
-     * @return bool|int The return value of the ffmpeg command
+     * @throws \Exception
      */
     public function executeCommand(String $_outputPath)
     {
         $error = $this->shellExecutor->executeCommand($this->generateCommand($_outputPath), true);
 
-        return $error;
+        if ($error)
+        {
+            throw new \Exception("Error while executing the ffmpeg command: " . $error);
+        }
     }
 }
