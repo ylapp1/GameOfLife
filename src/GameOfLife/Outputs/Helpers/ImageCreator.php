@@ -19,91 +19,9 @@ use Utils\FileSystemHandler;
  */
 class ImageCreator
 {
-    private $outputPath;
     private $cellSize;
     private $baseImage;
     private $cellImage;
-    private $fileSystemHandler;
-
-    /**
-     * Returns the cell size of the image.
-     *
-     * @return int  The cell size of the image
-     */
-    public function cellSize(): int
-    {
-        return $this->cellSize;
-    }
-
-    /**
-     * Sets the cell size of the image.
-     *
-     * @param int $_cellSize    The cell size of the image
-     */
-    public function setCellSize(int $_cellSize)
-    {
-        $this->cellSize = $_cellSize;
-    }
-
-    /**
-     * Returns the base image for all images (an empty grid with the colors that were defined in the ImageCreator).
-     *
-     * @return resource     The base image for all images
-     */
-    public function baseImage()
-    {
-        return $this->baseImage;
-    }
-
-    /**
-     * Sets the base image for all images.
-     *
-     * @param resource $_baseImage  The base image for all images
-     */
-    public function setBaseImage($_baseImage)
-    {
-        $this->baseImage = $_baseImage;
-    }
-
-    /**
-     * Returns the cell image for all images (a smiley with the colors that were defined in the ImageCreator).
-     *
-     * @return resource     The cell image for all images
-     */
-    public function cellImage()
-    {
-        return $this->cellImage;
-    }
-
-    /**
-     * Sets the cell image for all images.
-     *
-     * @param resource $_cellImage  The cell image for all images
-     */
-    public function setCellImage($_cellImage)
-    {
-        $this->cellImage = $_cellImage;
-    }
-
-    /**
-     * Returns the filesystem handler of this ImageCreator.
-     *
-     * @return FileSystemHandler    The filesystem handler
-     */
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    /**
-     * Sets the filesystem handler of this ImageCreator.
-     *
-     * @param FileSystemHandler $_fileSystemHandler     The filesystem handler
-     */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
 
 
     /**
@@ -124,8 +42,6 @@ class ImageCreator
         // Generate base images
         $this->baseImage = $this->initializeBaseImage($_boardWidth, $_boardHeight, $_backgroundColor, $_gridColor);
         $this->cellImage = $this->initializeCellImage($_backgroundColor, $_cellAliveColor);
-
-        $this->fileSystemHandler = new FileSystemHandler();
     }
 
     /**

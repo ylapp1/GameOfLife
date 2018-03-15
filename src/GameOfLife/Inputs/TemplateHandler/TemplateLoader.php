@@ -8,7 +8,6 @@
 
 namespace TemplateHandler;
 
-use GameOfLife\Board;
 use GameOfLife\Field;
 
 /**
@@ -19,32 +18,33 @@ class TemplateLoader extends TemplateHandler
     /**
      * TemplateLoader constructor.
      *
-     * @param String $_templateDirectory Template base directory
+     * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
-    public function __construct(String $_templateDirectory)
+    public function __construct(String $_templatesBaseDirectory)
     {
-        parent::__construct($_templateDirectory);
+        parent::__construct($_templatesBaseDirectory);
     }
 
     /**
      * Loads a template from a file.
      *
-     * @param Board $_board Parent board of the fields
-     * @param String $_templateName Name of the template
+     * @param String $_templateName The name of the template
      *
-     * @return Template|bool Loaded template or false
+     * @return array|Bool The loaded template or false if the template file was not found
      */
-    public function loadTemplate(Board $_board, String $_templateName)
+    public function loadTemplate(String $_templateName)
     {
-        $fileNameOfficial =  $this->templateDirectory . "/" . $_templateName . ".txt";
-        $fileNameCustom = $this->templateDirectory . "/Custom/" . $_templateName . ".txt";
+        $fileName = $_templateName . ".txt";
 
-        // check whether template exists
-        if (file_exists($fileNameOfficial)) $fileName = $fileNameOfficial;
-        elseif (file_exists($fileNameCustom)) $fileName = $fileNameCustom;
+        $defaultTemplatePath = $this->defaultTemplatesDirectory . "/" . $fileName;
+        $customTemplatePath = $this->customTemplatesDirectory . "/" . $fileName;
+
+        // Check whether the specified template exists
+        if (file_exists($defaultTemplatePath)) $fileName = $defaultTemplatePath;
+        elseif (file_exists($customTemplatePath)) $fileName = $customTemplatePath;
         else return false;
 
-        // Read template
+        // Read the template
         $lines = $this->fileSystemHandler->readFile($fileName);
 
         $fields = array();
@@ -55,13 +55,13 @@ class TemplateLoader extends TemplateHandler
 
             for ($x = 0; $x < count($row); $x++)
             {
-                $field = new Field($_board, $x, $y);
-                if ($row[$x] == "X") $field->setValue(true);
+                if ($row[$x] == "X") $cellState = true;
+                else $cellState = false;
 
-                $fields[$y][] = $field;
+                $fields[$y][] = new Field($x, $y, $cellState);
             }
         }
 
-        return new Template($fields);
+        return $fields;
     }
 }

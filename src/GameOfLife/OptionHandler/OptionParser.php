@@ -14,6 +14,7 @@ use Input\RandomInput;
 use Input\TemplateInput;
 use Output\BaseOutput;
 use Output\ConsoleOutput;
+use Rule\BaseRule;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 
@@ -107,38 +108,13 @@ class OptionParser
      *
      * @param Getopt $_options The option list
      *
-     * @return BaseInput $input The input object
+     * @return BaseInput The input object
      */
-    public function parseInputOptions(Getopt $_options)
+    public function parseInputOptions(Getopt $_options): BaseInput
     {
-        $input = new RandomInput();
-
-        if ($_options->getOption("input") !== null)
-        {
-            $input = false;
-            $className = ucfirst(strtolower($_options->getOption("input"))) . "Input";
-            $classPath = "Input\\" . $className;
-
-            if (class_exists($classPath) &&
-                ! in_array($className, $this->parentOptionHandler->excludeClasses()))
-            {
-                $input = new $classPath;
-            }
-
-            if (! $input) $input = new TemplateInput();
-        }
-
-        // check whether any linked option (input specific option) is set
-        foreach ($this->parentOptionHandler->linkedOptions() as $option => $className)
-        {
-            // if input specific option is set initialize new input of the class which the input refers to
-            if (stristr($className, "Input") && $_options->getOption($option) !== null)
-            {
-                $input = new $className;
-            }
-        }
-
-        return $input;
+        $input = $this->parseOptions($_options, "input", "Input", "Input");
+        if ($input) return $input;
+        else return new TemplateInput();
     }
 
     /**
@@ -148,32 +124,11 @@ class OptionParser
      *
      * @return BaseOutput The output object
      */
-    public function parseOutputOptions(Getopt $_options)
+    public function parseOutputOptions(Getopt $_options): BaseOutput
     {
-        $output = new ConsoleOutput();
-
-        if ($_options->getOption("output") !== null)
-        {
-            $className = ucfirst(strtolower($_options->getOption("output"))) . "Output";
-            $classPath = "Output\\" . $className;
-
-            if (class_exists($classPath) &&
-                ! in_array($className, $this->parentOptionHandler->excludeClasses()))
-            {
-                $output = new $classPath;
-            }
-        }
-
-        foreach ($this->parentOptionHandler->linkedOptions() as $option => $className)
-        {
-            // if input specific option is set initialize new input of the class which the input refers to
-            if (stristr($className, "Output") && $_options->getOption($option) !== null)
-            {
-                $output = new $className;
-            }
-        }
-
-        return $output;
+        $output = $this->parseOptions($_options, "output", "Output", "Output");
+        if ($output) return $output;
+        else return new ConsoleOutput();
     }
 
     /**
@@ -181,33 +136,49 @@ class OptionParser
      *
      * @param Getopt $_options The option list
      *
-     * @return ConwayRule
+     * @return BaseRule The rule object
      */
-    public function parseRuleOptions(Getopt $_options)
+    public function parseRuleOptions(Getopt $_options): BaseRule
     {
-        $rule = new ConwayRule();
+        $rule = $this->parseOptions($_options, "rules", "Rule", "Rule");
+        if ($rule) return $rule;
+        else return new ConwayRule();
+    }
 
-        if ($_options->getOption("rules") !== null)
+    /**
+     * Parses the input, output and rule options.
+     *
+     * @param Getopt $_options The options list
+     * @param String $_optionName The option name (input, output or rule)
+     * @param String $_classNameSpace The class name space
+     * @param String $_classSuffix The class suffix
+     *
+     * @return BaseInput|BaseOutput|BaseRule|Bool The class instance or false if no class was found from the options
+     */
+    private function parseOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
+    {
+        if ($_options->getOption($_optionName) !== null)
         {
-            $className = ucfirst(strtolower($_options->getOption("rules"))) . "Rule";
-            $classPath = "Rule\\" . $className;
+            $className = ucfirst(strtolower($_options->getOption($_optionName))) . $_classSuffix;
+            $classPath = $_classNameSpace . "\\" . $className;
 
             if (class_exists($classPath) &&
                 ! in_array($className, $this->parentOptionHandler->excludeClasses()))
             {
-                $rule = new $classPath;
+                return new $classPath;
             }
         }
 
+        // check whether any linked option (input/output/rule specific option) is set
         foreach ($this->parentOptionHandler->linkedOptions() as $option => $className)
         {
-            // if input specific option is set initialize new input of the class which the input refers to
-            if (stristr($className, "Rule") && $_options->getOption($option) !== null)
+            // if input/output/rule specific option is set return new instance of the class which the input refers to
+            if (stristr($className, $_classSuffix) && $_options->getOption($option) !== null)
             {
-                $rule = new $className;
+                return new $className;
             }
         }
 
-        return $rule;
+        return false;
     }
 }

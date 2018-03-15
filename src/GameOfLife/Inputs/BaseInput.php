@@ -24,19 +24,19 @@ class BaseInput
      *
      * @codeCoverageIgnore
      *
-     * @param Getopt $_options Option list to which the objects options are added
+     * @param Getopt $_options The option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
     }
 
     /**
-     * Fills a given board with cells.
+     * Fills a board with cells.
      *
      * @codeCoverageIgnore
      *
-     * @param Board $_board The board which shall be filled with cells
-     * @param Getopt $_options Object specific options (e.g. posX, posY, fillPercent)
+     * @param Board $_board The board which will be filled with cells
+     * @param Getopt $_options The option list
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

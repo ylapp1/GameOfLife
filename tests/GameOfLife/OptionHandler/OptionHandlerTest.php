@@ -33,7 +33,6 @@ class OptionHandlerTest extends TestCase
         $options = new Getopt();
 
         $this->assertEquals(0, count($optionHandler->linkedOptions()));
-        $this->assertTrue(in_array("BaseInput", $optionHandler->excludeClasses()));
         $this->assertInstanceOf(\OptionHandler\OptionParser::class, $optionHandler->optionParser());
 
         $optionHandler->initializeOptions($options);

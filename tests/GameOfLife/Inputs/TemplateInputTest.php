@@ -9,6 +9,7 @@
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Input\TemplateInput;
+use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\TemplatePlacer;
 use Ulrichsg\Getopt;
@@ -44,49 +45,25 @@ class TemplateInputTest extends TestCase
     }
 
     /**
+     * Checks whether the constructor works as expected.
+     *
      * @covers \Input\TemplateInput::__construct()
+     *
+     * @throws ReflectionException
      */
     public function testCanBeConstructed()
     {
         $input = new TemplateInput();
 
-        $this->assertInstanceOf(TemplateLoader::class, $input->templateLoader());
-        $this->assertInstanceOf(TemplatePlacer::class, $input->templatePlacer());
-    }
+        $reflectionClass = new ReflectionClass(\Input\TemplateInput::class);
 
-    /**
-     * @dataProvider setAttributesProvider
-     * @covers \Input\TemplateInput::setTemplateDirectory()
-     * @covers \Input\TemplateInput::templateDirectory()
-     * @covers \Input\TemplateInput::setTemplateLoader()
-     * @covers \Input\TemplateInput::templateLoader()
-     * @covers \Input\TemplateInput::setTemplatePlacer()
-     * @covers \Input\TemplateInput::templatePlacer()
-     *
-     * @param string $_templateDirectory    Template directory
-     */
-    public function testCanSetAttributes(string $_templateDirectory)
-    {
-        $templateLoader = new TemplateLoader($_templateDirectory);
-        $templatePlacer = new TemplatePlacer();
+        $reflectionProperty = $reflectionClass->getProperty("templateLoader");
+        $reflectionProperty->setAccessible(true);
+        $this->assertInstanceOf(TemplateLoader::class, $reflectionProperty->getValue($input));
 
-        $this->input->setTemplateDirectory($_templateDirectory);
-        $this->input->setTemplateLoader($templateLoader);
-        $this->input->setTemplatePlacer($templatePlacer);
-
-        $this->assertEquals($_templateDirectory, $this->input->templateDirectory());
-        $this->assertEquals($templateLoader, $this->input->templateLoader());
-        $this->assertEquals($templatePlacer, $this->input->templatePlacer());
-    }
-
-    public function setAttributesProvider()
-    {
-        return [
-            ["test"],
-            ["myDirectory"],
-            ["randomDirectory"],
-            ["testThisDirectory"]
-        ];
+        $reflectionProperty = $reflectionClass->getProperty("templatePlacer");
+        $reflectionProperty->setAccessible(true);
+        $this->assertInstanceOf(TemplatePlacer::class, $reflectionProperty->getValue($input));
     }
 
     /**
@@ -119,20 +96,21 @@ class TemplateInputTest extends TestCase
      */
     public function testCanLoadTemplate()
     {
-        $this->optionsMock->expects($this->exactly(7))
+        $this->optionsMock->expects($this->exactly(9))
             ->method("getOption")
-            ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"),
-                              array("height"), array("template"), array("invertTemplate"))
-            ->willReturn("unittest", null, null, null, null, "unittest", null);
+            ->withConsecutive(array("template"), array("template"), array("templatePosX"), array("templatePosY"),
+                              array("templatePosX"), array("templatePosY"),array("width"), array("height"),
+                              array("invertTemplate"))
+            ->willReturn("unittest", "unittest", null, null, null, null , null, null, null);
 
-        $field = new Field($this->board, 0, 0);
+        $field = new Field(0, 0, false, $this->board);
         $field->setValue(true);
 
         $unitTestBoard = array(
             array(0 => $field,
-                1 => new Field($this->board, 1, 0)),
-            array(0 => new Field($this->board,0, 1),
-                1 => new Field($this->board,1, 1))
+                1 => new Field(1, 0, false, $this->board)),
+            array(0 => new Field(0, 1, false, $this->board),
+                1 => new Field(1, 1, false, $this->board))
         );
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
@@ -147,8 +125,21 @@ class TemplateInputTest extends TestCase
      */
     public function testDetectsEmptyTemplateName()
     {
+        $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
+                            ->getMock();
+
+        $optionsMock->expects($this->exactly(6))
+                    ->method("getOption")
+                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("unittestPosX"),
+                                      array("unittestPosY"), array("input"))
+                    ->willReturn(null, null, null, null, null, "template");
+
         $this->expectOutputString("Error: No template file specified\n");
-        $this->input->fillBoard($this->board, new Getopt());
+
+        if ($optionsMock instanceof \Ulrichsg\Getopt)
+        {
+            $this->input->fillBoard($this->board, $optionsMock);
+        }
     }
 
     /**
@@ -158,10 +149,10 @@ class TemplateInputTest extends TestCase
      */
     public function testDetectsInvalidTemplateNames(string $_templateName)
     {
-        $this->optionsMock->expects($this->exactly(6))
+        $this->optionsMock->expects($this->exactly(2))
                           ->method("getOption")
-                          ->withConsecutive(array("template"), array("templatePosX"), array("templatePosY"), array("width"), array("height"), array("template"))
-                          ->willReturn($_templateName,null, null, null, null, $_templateName);
+                          ->withConsecutive(array("template"), array("template"))
+                          ->willReturn($_templateName, $_templateName);
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
         $this->expectOutputString("Error: Template file not found!\n");
@@ -180,7 +171,10 @@ class TemplateInputTest extends TestCase
 
     /**
      * @covers \Input\TemplateInput::fillBoard()
-     * @covers \Input\TemplateInput::listTemplates()
+     * @covers \TemplateHandler\TemplateListPrinter::printTemplateLists()
+     * @covers \TemplateHandler\TemplateListPrinter::printTemplateList()
+     *
+     * @throws ReflectionException
      */
     public function testCanListTemplates()
     {
@@ -202,7 +196,11 @@ class TemplateInputTest extends TestCase
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
         $fileSystemHandler->deleteDirectory($this->testTemplateDirectory . "/Custom", true);
 
-        $this->input->setTemplateDirectory(__DIR__);
+        $reflectionClass = new ReflectionClass(\Input\TemplateInput::class);
+
+        $reflectionProperty = $reflectionClass->getProperty("templateListPrinter");
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->input, new TemplateListPrinter(__DIR__));
         $expectedOutput = "Default templates:\n"
             . "  None\n\n"
             . "Custom templates:\n"
@@ -227,14 +225,14 @@ class TemplateInputTest extends TestCase
         $this->board->setWidth(10);
         $this->board->resetBoard();
 
-        $expectedAmountGetOptoinCalls = 9;
-        if ($_expectedString) $expectedAmountGetOptoinCalls = 8;
+        $expectedAmountGetOptionCalls = 8;
+        if ($_expectedString) $expectedAmountGetOptionCalls = 7;
 
-        $this->optionsMock->expects($this->exactly($expectedAmountGetOptoinCalls))
+        $this->optionsMock->expects($this->exactly($expectedAmountGetOptionCalls))
                           ->method("getOption")
-                          ->withConsecutive(array("template"), array("templatePosX"), array("templatePosX"), array("templatePosY"),
-                                            array("templatePosY"), array("width"), array("height"), array("template"), array("invertTemplate"))
-                          ->willReturn("unittest", $_posX, $_posX, $_posY, $_posY, null, null, "unittest", null);
+                          ->withConsecutive(array("template"), array("template"), array("templatePosX"), array("templatePosX"),
+                                            array("templatePosY"), array("templatePosY"), array("templatePosX"), array("invertTemplate"))
+                          ->willReturn("unittest", "unittest", $_posX, $_posX, $_posY, $_posY, $_posX, null);
 
         if ($_expectedString !== null) $this->expectOutputString($_expectedString);
 
@@ -266,18 +264,19 @@ class TemplateInputTest extends TestCase
      *
      * @covers \Input\TemplateInput::fillBoard()
      * @covers \Input\TemplateInput::placeTemplate()
+     * @covers \Input\TemplateInput::getTemplateNameFromLinkedOption()
      */
     public function testCanLoadDefaultTemplatesFromLinkedOption()
     {
         $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $optionsMock->expects($this->exactly(11))
+        $optionsMock->expects($this->exactly(9))
             ->method("getOption")
             ->withConsecutive(
                 array("template"), array("list-templates"), array("input"), array("unittestPosX"),
                 array("unittestPosX"), array("unittestPosX"), array("unittestPosY"), array("unittestPosY"),
-                array("width"), array("height"), array("invertTemplate")
+                array("invertTemplate")
             )
             ->willReturn(null, null, null, 5, 5, 5, 3, 3, null, null, null);
 
@@ -298,10 +297,10 @@ class TemplateInputTest extends TestCase
         $optionsMock = $this->getMockBuilder(Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $optionsMock->expects($this->exactly(6))
+        $optionsMock->expects($this->exactly(5))
                     ->method("getOption")
-                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"), array("input"))
-                    ->willReturn(null, null, "test", "test", "test", "test");
+                    ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"))
+                    ->willReturn(null, null, "test", "test", "test");
 
         $board = new Board(10, 8, 5, true);
 

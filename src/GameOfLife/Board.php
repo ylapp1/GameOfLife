@@ -16,7 +16,7 @@ class Board
     /**
      * Stores the fields of the current game step
      *
-     * @var Field[][]  $fields
+     * @var Field[][] $fields
      */
     private $fields;
 
@@ -301,7 +301,7 @@ class Board
             $board[$y] = array();
             for ($x = 0; $x < $this->width; $x++)
             {
-                $board[$y][] = new Field($this, $x, $y);
+                $board[$y][] = new Field($x, $y, false, $this);
             }
         }
 

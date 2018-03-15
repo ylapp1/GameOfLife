@@ -35,7 +35,7 @@ class TemplatePlacerTest extends TestCase
             $fields[] = array();
             for ($x = 0; $x < 3; $x++)
             {
-                $field = new Field($board, $x, $y);
+                $field = new Field($x, $y, false, $board);
 
                 if ($counter < 5) $field->setValue(true);
                 $counter++;
@@ -45,10 +45,9 @@ class TemplatePlacerTest extends TestCase
         }
 
         $templatePlacer = new TemplatePlacer();
-        $template = new Template($fields);
 
         // Dimensions adjustment test
-        $result = $templatePlacer->placeTemplate($template, $board, 0, 0, true);
+        $result = $templatePlacer->placeTemplate($fields, $board, 0, 0, true);
 
         $this->assertTrue($result);
         $this->assertEquals(5, $board->getAmountCellsAlive());
@@ -57,14 +56,14 @@ class TemplatePlacerTest extends TestCase
         $this->assertTrue($board->getFieldStatus(2, 0));
         $this->assertTrue($board->getFieldStatus(0, 1));
         $this->assertTrue($board->getFieldStatus(1, 1));
-        $this->assertEquals($template->width(), $board->width());
-        $this->assertEquals($template->height(), $board->height());
+        $this->assertEquals(count($fields[0]), $board->width());
+        $this->assertEquals(count($fields), $board->height());
 
 
         // No dimensions adjustment, valid position
         $board = new Board(10, 10, 1, true);
         $this->assertEquals(0, $board->getAmountCellsAlive());
-        $result = $templatePlacer->placeTemplate($template, $board, 0, 0, false);
+        $result = $templatePlacer->placeTemplate($fields, $board, 0, 0, false);
 
         $this->assertTrue($result);
         $this->assertEquals(5, $board->getAmountCellsAlive());
@@ -80,7 +79,7 @@ class TemplatePlacerTest extends TestCase
         // No dimensions adjustment, invalid position top left
         $board = new Board(10, 10, 1, true);
         $this->assertEquals(0, $board->getAmountCellsAlive());
-        $result = $templatePlacer->placeTemplate($template, $board, -1, -1, false);
+        $result = $templatePlacer->placeTemplate($fields, $board, -1, -1, false);
 
         $this->assertFalse($result);
         $this->assertEquals(0, $board->getAmountCellsAlive());
@@ -89,7 +88,7 @@ class TemplatePlacerTest extends TestCase
         // No dimensions adjustment, invalid position bottom right
         $board = new Board(10, 10, 1, true);
         $this->assertEquals(0, $board->getAmountCellsAlive());
-        $result = $templatePlacer->placeTemplate($template, $board, 10, 10, false);
+        $result = $templatePlacer->placeTemplate($fields, $board, 10, 10, false);
 
         $this->assertFalse($result);
         $this->assertEquals(0, $board->getAmountCellsAlive());

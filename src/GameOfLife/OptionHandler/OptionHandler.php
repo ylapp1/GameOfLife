@@ -37,7 +37,7 @@ class OptionHandler
     private $optionParser;
 
     /**
-     * The classes whose options will not be loaded
+     * The list of class names whose options will not be loaded
      *
      * @var String[] $excludeClasses
      */
@@ -69,19 +69,9 @@ class OptionHandler
      *
      * @return array The list of linked options
      */
-    public function linkedOptions()
+    public function linkedOptions(): array
     {
         return $this->linkedOptions;
-    }
-
-    /**
-     * Returns the list of excluded classes.
-     *
-     * @return String[] The list of excluded classes
-     */
-    public function excludeClasses()
-    {
-        return $this->excludeClasses;
     }
 
     /**
@@ -89,9 +79,19 @@ class OptionHandler
      *
      * @return OptionParser The option parser
      */
-    public function optionParser()
+    public function optionParser(): OptionParser
     {
         return $this->optionParser;
+    }
+
+    /**
+     * Returns the list of class names whose options will not be loaded.
+     *
+     * @return String[] The list of class names whose options will not be loaded
+     */
+    public function excludeClasses(): array
+    {
+        return $this->excludeClasses;
     }
 
     /**

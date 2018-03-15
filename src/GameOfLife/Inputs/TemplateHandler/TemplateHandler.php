@@ -11,7 +11,7 @@ namespace TemplateHandler;
 use Utils\FileSystemHandler;
 
 /**
- * Parent class for template loader and saver.
+ * Parent class for TemplateListPrinter, TemplateLoader and TemplateSaver.
  */
 class TemplateHandler
 {
@@ -23,62 +23,29 @@ class TemplateHandler
     protected $fileSystemHandler;
 
     /**
-     * Base directory from which templates are read
+     * The directory in which the default templates are stored.
      *
-     * @var string $templateDirectory
+     * @var String $defaultTemplatesDirectory
      */
-    protected $templateDirectory;
+    protected $defaultTemplatesDirectory;
+
+    /**
+     * The directory in which the custom templates are stored.
+     *
+     * @var String $customTemplatesDirectory
+     */
+    protected $customTemplatesDirectory;
 
 
     /**
      * TemplateLoader constructor.
      *
-     * @param String $_templateDirectory Template base directory
+     * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
-    public function __construct(String $_templateDirectory)
+    public function __construct(String $_templatesBaseDirectory)
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->templateDirectory = $_templateDirectory;
-    }
-
-
-    /**
-     * Returns the file system handler of this file input.
-     *
-     * @return FileSystemHandler The file system handler
-     */
-    public function fileSystemHandler(): FileSystemHandler
-    {
-        return $this->fileSystemHandler;
-    }
-
-    /**
-     * Sets the file system handler of this file input.
-     *
-     * @param FileSystemHandler $_fileSystemHandler     The file system handler
-     */
-    public function setFileSystemHandler(FileSystemhandler $_fileSystemHandler)
-    {
-        $this->fileSystemHandler = $_fileSystemHandler;
-    }
-
-    /**
-     * Returns the template directory.
-     *
-     * @return string   Template directory
-     */
-    public function templateDirectory(): string
-    {
-        return $this->templateDirectory;
-    }
-
-    /**
-     * Sets the template directory.
-     *
-     * @param string $_templateDirectory    Template directory
-     */
-    public function setTemplateDirectory(string $_templateDirectory)
-    {
-        $this->templateDirectory = $_templateDirectory;
+        $this->defaultTemplatesDirectory = $_templatesBaseDirectory;
+        $this->customTemplatesDirectory = $_templatesBaseDirectory . "/Custom";
     }
 }

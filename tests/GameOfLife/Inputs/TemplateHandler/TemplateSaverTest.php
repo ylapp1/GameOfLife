@@ -17,25 +17,14 @@ use PHPUnit\Framework\TestCase;
 class TemplateSaverTest extends TestCase
 {
     /**
-     * Checks whether the constructor works as expected.
-     *
-     * @covers \TemplateHandler\TemplateSaver
-     */
-    public function testCanBeConstructed()
-    {
-        $testDirectory = "myPersonalTest";
-        $templateSaver = new TemplateSaver($testDirectory);
-
-        $this->assertEquals($testDirectory, $templateSaver->templateDirectory());
-    }
-
-    /**
      * Checks whether templates can be saved.
+     *
+     * @throws ReflectionException
      */
     public function testCanSaveTemplate()
     {
         $fileSystemHandlerMock = $this->getMockBuilder(FileSystemHandler::class)
-            ->setMethods(array("createDirectory", "writeFile"))
+            ->setMethods(array("writeFile"))
             ->getMock();
 
         $testBoard = new Board(2, 3, 2, true);
@@ -48,11 +37,11 @@ class TemplateSaverTest extends TestCase
 
         if ($fileSystemHandlerMock instanceof FileSystemHandler)
         {
-            $templateSaver->setFileSystemHandler($fileSystemHandlerMock);
+            $reflectionClass = new ReflectionClass(\TemplateHandler\TemplateSaver::class);
+            $reflectionProperty = $reflectionClass->getProperty("fileSystemHandler");
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($templateSaver, $fileSystemHandlerMock);
 
-            $fileSystemHandlerMock->expects($this->exactly(2))
-                ->method("createDirectory")
-                ->with($testDirectory . "/Custom");
             $fileSystemHandlerMock->expects($this->exactly(2))
                 ->method("writeFile")
                 ->withConsecutive(array($testDirectory . "/Custom", "unitTest.txt", $boardString, true),
@@ -61,11 +50,11 @@ class TemplateSaverTest extends TestCase
 
 
             // Save successful
-            $result = $templateSaver->saveTemplate("unitTest", $testBoard, true);
+            $result = $templateSaver->saveCustomTemplate("unitTest", $testBoard, true);
             $this->assertTrue($result);
 
             // Save not successful
-            $result = $templateSaver->saveTemplate("unitTestSecond", $testBoard, false);
+            $result = $templateSaver->saveCustomTemplate("unitTestSecond", $testBoard, false);
             $this->assertFalse($result);
         }
     }

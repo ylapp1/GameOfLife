@@ -19,29 +19,26 @@ class TemplateSaver extends TemplateHandler
     /**
      * TemplateSaver constructor.
      *
-     * @param String $_templateDirectory Template directory
+     * @param String $_templatesBaseDirectory The base directory for default and custom templates
      */
-    public function __construct(String $_templateDirectory)
+    public function __construct(String $_templatesBaseDirectory)
     {
-        parent::__construct($_templateDirectory);
+        parent::__construct($_templatesBaseDirectory);
     }
 
     /**
-     * Saves a template to a file in the template directory
+     * Saves a custom template to the custom templates directory.
      *
-     * @param String $_templateName Template name
-     * @param Board $_board Board whose fields will be saved to the template
-     * @param bool $_overwriteIfExists Indicates whether an existing template file with that name should be overwritten
+     * @param String $_templateName The template name
+     * @param Board $_board The board whose fields will be saved to the template
+     * @param Bool $_overwriteIfExists Indicates whether an existing template file with that name should be overwritten
      *
-     * @return bool true: Template successfully saved
+     * @return Bool true: Template successfully saved
      *              false: Error while saving template
      */
-    public function saveTemplate(String $_templateName, Board $_board, bool $_overwriteIfExists = false): bool
+    public function saveCustomTemplate(String $_templateName, Board $_board, Bool $_overwriteIfExists = false): Bool
     {
-        $this->fileSystemHandler->createDirectory($this->templateDirectory . "/Custom");
-        $fileName = $_templateName . ".txt";
-
-        $error = $this->fileSystemHandler->writeFile($this->templateDirectory . "/Custom", $fileName, $_board, $_overwriteIfExists);
+        $error = $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, $_overwriteIfExists);
 
         if ($error === FileSystemHandler::NO_ERROR) return true;
         else return false;

@@ -75,10 +75,10 @@ class ColorSelector
     /**
      * Checks whether the color amount is less than 0 or more than 255 and adjusts the color accordingly.
      *
-     * @param int $_colorAmount     Amount of red, green or blue
+     * @param int $_colorAmount Amount of red, green or blue
      *
-     * @return int  Fixed color if input was a invalid color
-     *              Input color if input was a valid color
+     * @return int Fixed color if input was a invalid color
+     *             Input color if input was a valid color
      */
     public function validateColorAmount(int $_colorAmount): int
     {

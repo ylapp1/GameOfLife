@@ -19,6 +19,58 @@ namespace
     $loader->addPsr4("TemplateHandler\\", __DIR__ . "/../src/GameOfLife/Inputs/TemplateHandler");
     $loader->addPsr4("Ulrichsg\\", __DIR__ . "/../src/Ulrichsg");
     $loader->addPsr4("Utils\\", __DIR__ . "/../src/GameOfLife/Utils");
+
+    /**
+     * Returns a ReflectionProperty for the class of $_object.
+     * Also sets the attribute $_attributeName accessible
+     *
+     * @param mixed $_object The object
+     * @param String $_attributeName The name of the attribute
+     *
+     * @return ReflectionProperty The reflection property
+     *
+     * @throws ReflectionException
+     */
+    function getReflectionProperty($_object, $_attributeName)
+    {
+        $reflectionClass = new ReflectionClass($_object);
+
+        $reflectionProperty = $reflectionClass->getProperty($_attributeName);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty;
+    }
+
+    /**
+     * Sets a private attribute of an object.
+     *
+     * @param mixed $_object The object
+     * @param String $_attributeName The attribute name
+     * @param mixed $_value The value
+     *
+     * @throws ReflectionException
+     */
+    function setPrivateAttribute($_object, String $_attributeName, $_value)
+    {
+        $reflectionProperty = getReflectionProperty($_object, $_attributeName);
+        $reflectionProperty->setValue($_object, $_value);
+    }
+
+    /**
+     * Returns a private attribute of an object.
+     *
+     * @param mixed $_object The object
+     * @param String $_attributeName The attribute name
+     *
+     * @return mixed The attribute value
+     *
+     * @throws ReflectionException
+     */
+    function getPrivateAttribute($_object, String $_attributeName)
+    {
+        $reflectionProperty = getReflectionProperty($_object, $_attributeName);
+        return $reflectionProperty->getValue($_object);
+    }
 }
 
 namespace Utils

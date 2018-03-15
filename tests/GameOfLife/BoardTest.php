@@ -338,7 +338,7 @@ class BoardTest extends TestCase
                 {
                     if ($y != $field->y() || $x != $field->x())
                     {
-                        $tmpField = new Field($board, $x, $y);
+                        $tmpField = new Field($x, $y, false, $board);
 
                         $this->assertNotFalse(array_search($tmpField, $neighbors));
                     }
@@ -408,14 +408,10 @@ class BoardTest extends TestCase
         $board = new Board(2, 2, 1, true);
         $board->setField(1, 1, true);
 
-        $fieldZeroZero = new Field($board, 0, 0);
-        $fieldOneZero = new Field($board, 1, 0);
-        $fieldZeroOne = new Field($board, 0, 1);
-        $fieldOneOne = new Field($board, 1, 1);
-
-        $fieldZeroZero->setValue(true);
-        $fieldOneZero->setValue(true);
-        $fieldZeroOne->setValue(true);
+        $fieldZeroZero = new Field(0, 0, true, $board);
+        $fieldOneZero = new Field(1, 0, true, $board);
+        $fieldZeroOne = new Field(0, 1, true, $board);
+        $fieldOneOne = new Field(1, 1, false, $board);
 
         $expectedFields = array(
             array($fieldZeroZero, $fieldOneZero),

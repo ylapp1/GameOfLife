@@ -9,8 +9,8 @@
 
 namespace Input;
 
-use GameOfLife\Board;
 use BoardEditor\BoardEditor;
+use GameOfLife\Board;
 use Ulrichsg\Getopt;
 
 /**
@@ -26,11 +26,11 @@ class UserInput extends BaseInput
     private $boardEditor;
 
     /**
-     * Base directory of templates
+     * The base directory for default and custom templates
      *
-     * @var String $templateDirectory
+     * @var String $templatesBaseDirectory
      */
-    private $templateDirectory = __DIR__ . "/../../../Input/Templates/";
+    private $templatesBaseDirectory;
 
 
     /**
@@ -38,55 +38,15 @@ class UserInput extends BaseInput
      */
     public function __construct()
     {
-        $this->boardEditor = new BoardEditor($this->templateDirectory, null);
+        $this->templatesBaseDirectory = __DIR__ . "/../../../Input/Templates/";
+        $this->boardEditor = new BoardEditor($this->templatesBaseDirectory, null);
     }
 
-
-
-    /**
-     * Returns the board editor
-     *
-     * @return BoardEditor Board editor
-     */
-    public function boardEditor(): BoardEditor
-    {
-        return $this->boardEditor;
-    }
-
-    /**
-     * Sets the board editor
-     *
-     * @param BoardEditor $_boardEditor New board editor
-     */
-    public function setBoardEditor(BoardEditor $_boardEditor)
-    {
-        $this->boardEditor = $_boardEditor;
-    }
-
-    /**
-     * Returns the template directory in which UserInput will create the folder Custom where it saves custom templates.
-     *
-     * @return String Template directory
-     */
-    public function templateDirectory(): String
-    {
-        return $this->templateDirectory;
-    }
-
-    /**
-     * Sets the template directory.
-     *
-     * @param string $_templateDirectory Template directory
-     */
-    public function setTemplateDirectory(String $_templateDirectory)
-    {
-        $this->templateDirectory = $_templateDirectory;
-    }
 
     /**
      * Adds UserInputs specific options to the option list.
      *
-     * @param Getopt $_options Option list to which the objects options are added
+     * @param Getopt $_options The option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
@@ -99,15 +59,15 @@ class UserInput extends BaseInput
     /**
      * Launches a new board editor session.
      *
-     * @param Board $_board The board which will be filled
-     * @param Getopt $_options Options (edit, template)
+     * @param Board $_board The board that will be filled
+     * @param Getopt $_options The option list
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
         if ($_options->getOption("edit") !== null)
         {
-            $fileInput = new TemplateInput($this->templateDirectory);
-            $fileInput->fillBoard($_board, $_options);
+            $templateInput = new TemplateInput($this->templatesBaseDirectory);
+            $templateInput->fillBoard($_board, $_options);
         }
 
         $this->boardEditor->setBoard($_board);

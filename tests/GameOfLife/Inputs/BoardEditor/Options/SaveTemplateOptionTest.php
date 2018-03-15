@@ -86,7 +86,7 @@ class SaveTemplateOptionTest extends TestCase
         $this->assertEquals(1, $board->getAmountCellsAlive());
 
         $templateSaverMock = $this->getMockBuilder(TemplateSaver::class)
-                                  ->setMethods(array("saveTemplate"))
+                                  ->setMethods(array("saveCustomTemplate"))
                                   ->disableOriginalConstructor()
                                   ->getMock();
 
@@ -119,7 +119,7 @@ class SaveTemplateOptionTest extends TestCase
                 ->willReturn($board);
 
             $templateSaverMock->expects($this->exactly(4))
-                ->method("saveTemplate")
+                ->method("saveCustomTemplate")
                 ->withConsecutive(array("testTemplate", $board),
                     array("testTemplateAbort", $board),
                     array("testTemplateReplace", $board),
