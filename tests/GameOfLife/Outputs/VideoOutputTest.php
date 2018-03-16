@@ -267,6 +267,9 @@ class VideoOutputTest extends TestCase
      */
     public function testDetectsEmptyFramesFolder()
     {
+        // Hide output
+        $this->expectOutputRegex("/.*/");
+
         $exceptionOccurred = false;
         try
         {
