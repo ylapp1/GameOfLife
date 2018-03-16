@@ -39,13 +39,13 @@ class SetHeightOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the specified height is less than 1
      */
     public function setHeight($_height)
     {
         $height = (int)$_height;
 
-        if ($height < 1) throw new \Exception("Error: The board height may not be less than 1");
+        if ($height < 1) throw new \Exception("The board height may not be less than 1.");
         else
         {
             $fields = $this->parentBoardEditor->board()->fields();

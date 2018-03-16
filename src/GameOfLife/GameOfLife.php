@@ -158,7 +158,7 @@ class GameOfLife
         }
         catch(\Exception $_exception)
         {
-            echo $_exception->getMessage() . "\n";
+            echo "Error while filling the board: " . $_exception->getMessage() . "\n";
             return;
         }
         $this->output->startOutput($this->options, $this->board);

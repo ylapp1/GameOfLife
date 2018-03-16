@@ -74,7 +74,7 @@ class OptionParser
      *
      * @return Board The board
      *
-     * @throws \Exception
+     * @throws \Exception The exception when an invalid border type was specified
      */
     public function parseBoardOptions(Getopt $_options)
     {
@@ -107,7 +107,7 @@ class OptionParser
      *
      * @return BaseInput The input object
      *
-     * @throws \Exception
+     * @throws \Exception The exceptions of the input constructors
      */
     public function parseInputOptions(Getopt $_options): BaseInput
     {
@@ -123,7 +123,7 @@ class OptionParser
      *
      * @return BaseOutput The output object
      *
-     * @throws \Exception
+     * @throws \Exception The exceptions of the Output constructors
      */
     public function parseOutputOptions(Getopt $_options): BaseOutput
     {
@@ -139,7 +139,7 @@ class OptionParser
      *
      * @return BaseRule The rule object
      *
-     * @throws \Exception
+     * @throws \Exception The exceptions of the Rule constructors
      */
     public function parseRuleOptions(Getopt $_options): BaseRule
     {
@@ -158,7 +158,7 @@ class OptionParser
      *
      * @return BaseInput|BaseOutput|BaseRule|Bool The class instance or false if no class was found from the options
      *
-     * @throws \Exception
+     * @throws \Exception The exceptions of the Input, Output or Rule constructors
      */
     private function parseOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
     {

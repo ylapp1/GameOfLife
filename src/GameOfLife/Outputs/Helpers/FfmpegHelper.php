@@ -29,7 +29,7 @@ class FfmpegHelper
      *
      * @param String $_osName The name of the operating system
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the ffmpeg binary could not be found
      */
     public function __construct(String $_osName)
     {
@@ -105,9 +105,9 @@ class FfmpegHelper
     /**
      * Finds and returns the path to the ffmpeg binary file.
      *
-     * @return String|bool The path to the ffmpeg binary file or false if the file was not found
+     * @return String The path to the ffmpeg binary file
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the ffmpeg binary could not be found
      */
     private function findFFmpegBinary()
     {
@@ -115,15 +115,10 @@ class FfmpegHelper
 
         if (stristr($this->osName, "win"))
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
+            $searchDirectory = __DIR__ . "/../../../../Tools";
+            $binaryPath = $this->fileSystemHandler->findFileRecursive($searchDirectory, "ffmpeg.exe");
 
-            try
-            {
-                $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
-            }
-            catch (\Exception $_exception)
-            {
-                throw new \Exception("Error while searching for ffmpeg binary: " . $_exception->getMessage());
-            }
+            if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
         elseif (stristr($this->osName, "linux"))
         { // If OS is Linux check whether the ffmpeg command returns true
@@ -181,7 +176,7 @@ class FfmpegHelper
      *
      * @param String $_outputPath The Ffmpeg output path
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the ffmpeg command returns an error
      */
     public function executeCommand(String $_outputPath)
     {
@@ -189,7 +184,7 @@ class FfmpegHelper
 
         if ($error)
         {
-            throw new \Exception("Error while executing the ffmpeg command: " . $error);
+            throw new \Exception("Ffmpeg returned the error \"" . $error . "\".");
         }
     }
 }

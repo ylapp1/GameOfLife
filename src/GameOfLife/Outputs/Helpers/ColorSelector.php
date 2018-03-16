@@ -20,9 +20,9 @@ class ColorSelector
     /**
      * Parses a user input color and returns the selected color as ImageColor object.
      *
-     * @param String $_colorInput   User input
+     * @param String $_colorInput The user input text
      *
-     * @return ImageColor           The resulting color
+     * @return ImageColor The resulting color
      */
     public function getColor (string $_colorInput): ImageColor
     {

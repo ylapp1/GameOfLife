@@ -16,45 +16,6 @@ use Ulrichsg\Getopt;
 class CustomRule extends BaseRule
 {
     /**
-     * Initializes the rule.
-     *
-     * @param Getopt $_options The option list
-     *
-     * @throws \Exception
-     */
-    public function initialize(Getopt $_options)
-    {
-        if ($_options->getOption("rulesString") !== null)
-        {
-            $rulesString = $_options->getOption("rulesString");
-
-            if ($this->isStayAliveSlashBirthString($rulesString))
-            {
-                $this->parseStayAliveSlashBirthString($rulesString);
-            }
-            elseif ($this->isAlternateNotationString($rulesString))
-            {
-                $this->parseAlternateNotationString($rulesString);
-            }
-            else throw new \Exception("Error: Unknown rules notation.");
-        }
-        elseif ($_options->getOption("rulesBirth") !== null && $_options->getOption("rulesStayAlive") !== null)
-        {
-            $rulesBirth = $_options->getOption("rulesBirth");
-            $rulesStayAlive = $_options->getOption("rulesStayAlive");
-
-            if (is_numeric($rulesBirth) && is_numeric($rulesStayAlive))
-            {
-                $this->rulesBirth = $this->getRulesFromNumericString($rulesBirth);
-                $this->rulesStayAlive = $this->getRulesFromNumericString($rulesStayAlive);
-            }
-        }
-        else throw new \Exception("Error: Rules string is not set.");
-
-        parent::initialize($_options);
-    }
-
-    /**
      * Adds the rule options to a Getopt object.
      *
      * @param Getopt $_options The option list
@@ -71,6 +32,46 @@ class CustomRule extends BaseRule
         );
     }
 
+    /**
+     * Initializes the rule.
+     *
+     * @param Getopt $_options The option list
+     *
+     * @throws \Exception The exception when the rules are in an invalid format or not set
+     */
+    public function initialize(Getopt $_options)
+    {
+        if ($_options->getOption("rulesString") !== null)
+        {
+            $rulesString = $_options->getOption("rulesString");
+
+            if ($this->isStayAliveSlashBirthString($rulesString))
+            {
+                $this->parseStayAliveSlashBirthString($rulesString);
+            }
+            elseif ($this->isAlternateNotationString($rulesString))
+            {
+                $this->parseAlternateNotationString($rulesString);
+            }
+            else throw new \Exception("Unknown rules notation.");
+        }
+        elseif ($_options->getOption("rulesBirth") !== null && $_options->getOption("rulesStayAlive") !== null)
+        {
+            $rulesBirth = $_options->getOption("rulesBirth");
+            $rulesStayAlive = $_options->getOption("rulesStayAlive");
+
+            if (! is_numeric($rulesBirth)) throw new \Exception("The rule strings may contain only numbers.");
+            elseif (! is_numeric($rulesStayAlive)) throw new \Exception("The rule strings may contain only numbers.");
+            else
+            {
+                $this->rulesBirth = $this->getRulesFromNumericString($rulesBirth);
+                $this->rulesStayAlive = $this->getRulesFromNumericString($rulesStayAlive);
+            }
+        }
+        else throw new \Exception("The rules string is not set.");
+
+        parent::initialize($_options);
+    }
 
     /**
      * Checks and returns whether a string is a <stayAlive>/<birth> string.
@@ -80,7 +81,7 @@ class CustomRule extends BaseRule
      * @return Bool True: The string is a <stayAlive>/<birth> string
      *              False: The string is not a <stayAlive>/<birth> string
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the rule string is in an invalid format
      */
     private function isStayAliveSlashBirthString(String $_rulesString): Bool
     {
@@ -95,7 +96,7 @@ class CustomRule extends BaseRule
 
             if (count($ruleParts) < 2)
             {
-                throw new \Exception("Error while parsing the rule string: The custom rule must have at least 1 birth condition and 1 stay alive condition.");
+                throw new \Exception("The custom rule must have at least 1 birth condition and 1 stay alive condition.");
             }
             elseif (count($ruleParts) == 2)
             {
@@ -103,9 +104,9 @@ class CustomRule extends BaseRule
                 {
                     return true;
                 }
-                else throw new \Exception("Error while parsing the rule string:: The custom rule parts may only contain \"/\" and numbers.");
+                else throw new \Exception("The custom rule parts may only contain \"/\" and numbers.");
             }
-            else throw new \Exception("Error while parsing the rule string:: The custom rule parts may not contain more than two number strings.");
+            else throw new \Exception("The custom rule parts may not contain more than two number strings.");
         }
 
         return false;
@@ -132,7 +133,7 @@ class CustomRule extends BaseRule
      * @return Bool True: The string is a <stayAlive>G<stayAlive/birth> string
      *              False: The string is not a <stayAlive>G<stayAlive/birth> string
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the rule string is in an invalid format
      */
     private function isAlternateNotationString(String $_rulesString): Bool
     {
@@ -142,16 +143,16 @@ class CustomRule extends BaseRule
 
             if (count($ruleParts) < 2)
             {
-                throw new \Exception("Error: The custom rule must have at least 1 birth condition and 1 stay alive condition.");
+                throw new \Exception("The custom rule must have at least 1 birth condition and 1 stay alive condition.");
             }
             elseif (count($ruleParts) > 2)
             {
-                throw new \Exception ("Error: The custom rule parts may not contain more than two number strings.");
+                throw new \Exception ("The custom rule parts may not contain more than two number strings.");
             }
             else
             {
                 if ((is_numeric($ruleParts[0]) || $ruleParts[0] == "") && is_numeric($ruleParts[1])) return true;
-                else throw new \Exception("Error: The custom rule parts may only contain \"G\" and numbers.");
+                else throw new \Exception("The custom rule parts may only contain \"G\" and numbers.");
             }
 
         }

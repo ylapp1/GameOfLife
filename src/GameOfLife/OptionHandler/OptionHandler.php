@@ -100,7 +100,7 @@ class OptionHandler
      *
      * @param Getopt $_options The option list
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the Input, Output or Rule directory could not be found
      */
     public function initializeOptions(Getopt $_options)
     {

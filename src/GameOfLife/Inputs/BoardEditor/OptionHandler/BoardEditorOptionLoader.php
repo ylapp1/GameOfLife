@@ -91,21 +91,14 @@ class BoardEditorOptionLoader
      *
      * @return BoardEditorOption[] array in the format ("optionName" => "optionObject")
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the options directory was not found
      */
     public function loadOptions(String $_optionsDirectory): array
     {
         $options = array();
 
         // Load each option from the options folder
-        try
-        {
-            $classes = $this->fileSystemHandler->getFileList($_optionsDirectory . "/*Option.php");
-        }
-        catch (\Exception $_exception)
-        {
-            throw new \Exception("Error while loading the board editor options: " . $_exception->getMessage());
-        }
+        $classes = $this->fileSystemHandler->getFileList($_optionsDirectory . "/*Option.php");
 
         foreach ($classes as $class)
         {

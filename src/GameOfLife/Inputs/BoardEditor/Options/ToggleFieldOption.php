@@ -39,7 +39,7 @@ class ToggleFieldOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editor session is finished
      *
-     * @throws \Exception
+     * @throws \Exception The exception when one of the coordinates exceeds the board borders
      */
     public function toggleField($_x, $_y)
     {
@@ -63,7 +63,7 @@ class ToggleFieldOption extends BoardEditorOption
      *
      * @return int False or the integer coordinate
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the coordinate exceeds the board borders
      */
     private function getIntegerCoordinate(String $_inputCoordinate, String $_coordinateName, int $_minValue, int $_maxValue)
     {
@@ -71,7 +71,7 @@ class ToggleFieldOption extends BoardEditorOption
 
         if ($coordinate < $_minValue || $coordinate > $_maxValue)
         {
-            throw new \Exception("Error: Invalid value for " . $_coordinateName . " specified (Value must be between " . $_minValue . " and " . $_maxValue . ")");
+            throw new \Exception("Invalid value for " . $_coordinateName . " specified (Value must be between " . $_minValue . " and " . $_maxValue . ").");
         }
         else return $coordinate;
     }

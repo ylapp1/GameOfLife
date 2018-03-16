@@ -19,6 +19,8 @@ class FileSystemHandler
      * Creates a directory if it doesn't exist yet.
      *
      * @param string $_directoryPath The directory path
+     *
+     * @throws \Exception The exception when the target directory already exists
      */
     public function createDirectory(string $_directoryPath)
     {
@@ -27,6 +29,7 @@ class FileSystemHandler
             // create all directories in the directory path recursively (if they don't exist)
             mkdir($_directoryPath, 0777, true);
         }
+        else throw new \Exception("The directory \"" . $_directoryPath . "\" already exists.");
     }
 
     /**
@@ -35,7 +38,7 @@ class FileSystemHandler
      * @param string $_directoryPath The directory path
      * @param bool $_deleteWhenNotEmpty If set to true all files inside the directory will be deleted
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the target directory does not exist or is not empty and shall not be deleted in that case
      */
     public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
     {
@@ -64,13 +67,13 @@ class FileSystemHandler
      * Deletes a file.
      *
      * @param string $_filePath The path to the file that will be deleted
+     *
+     * @throws \Exception The exception when the target file does not exist
      */
     public function deleteFile(string $_filePath)
     {
-        if (file_exists($_filePath))
-        {
-            unlink($_filePath);
-        }
+        if (file_exists($_filePath)) unlink($_filePath);
+        else throw new \Exception("The file \"" . $_filePath . "\" does not exist.");
     }
 
     /**
@@ -80,7 +83,7 @@ class FileSystemHandler
      *
      * @return String[] The lines from the file
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the target file does not exist
      */
     public function readFile(string $_filePath): array
     {
@@ -96,17 +99,18 @@ class FileSystemHandler
      * @param string $_content The file content
      * @param bool $_overwriteIfExists If set to true, an existing file will be overwritten
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the file already exists and shall not be overwritten in that case
      */
     public function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
     {
         // Create directory if it doesn't exist
+        if (! file_exists($_filePath)) $this->createDirectory($_filePath);
+
         if (file_exists($_filePath . "/" . $_fileName))
         {
             if (! $_overwriteIfExists) throw new \Exception("The file already exists.");
             else $this->deleteFile($_filePath . "/" . $_fileName);
         }
-        else $this->createDirectory($_filePath);
 
         file_put_contents($_filePath . "/" . $_fileName, $_content);
     }
@@ -118,7 +122,7 @@ class FileSystemHandler
      *
      * @return array The file list
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the target directory does not exist
      */
     public function getFileList(String $_filePath): array
     {
@@ -137,7 +141,7 @@ class FileSystemHandler
      *
      * @return String|bool The file path or false
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the target directory does not exist
      */
     public function findFileRecursive(String $_baseFolder, String $_fileName)
     {

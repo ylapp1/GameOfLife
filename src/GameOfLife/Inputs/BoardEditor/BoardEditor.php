@@ -64,7 +64,15 @@ class BoardEditor
         if (isset($_board)) $this->board = $_board;
 
         $this->templateDirectory = $_templateDirectory;
-        $this->optionHandler = new BoardEditorOptionHandler($this);
+
+        try
+        {
+            $this->optionHandler = new BoardEditorOptionHandler($this);
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while initializing the board editor option handler: " . $_exception->getMessage());
+        }
         $this->output = new BoardEditorOutput();
     }
 
@@ -152,17 +160,12 @@ class BoardEditor
 
     /**
      * Launches the board editor session.
+     *
+     * @throws \Exception The exception when the option "help" could not be parsed
      */
     public function launch()
     {
-        try
-        {
-            $this->optionHandler->parseInput("help");
-        }
-        catch (\Exception $_exception)
-        {
-            echo "Error while launching the board editor: " . $_exception->getMessage() . "\n";
-        }
+        $this->optionHandler->parseInput("help");
         $this->output->outputBoard($this->board);
 
         $isInputFinished = false;

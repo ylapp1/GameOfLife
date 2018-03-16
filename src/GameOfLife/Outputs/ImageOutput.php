@@ -46,14 +46,14 @@ class ImageOutput extends BaseOutput
      *
      * @var string $imageOutputDirectory
      */
-    private $imageOutputDirectory;
+    protected $imageOutputDirectory;
 
     /**
      * Prefix for all Getopt options for the child class.
      *
      * @var string $optionPrefix
      */
-    private $optionPrefix;
+    protected $optionPrefix;
 
 
     /**
@@ -196,7 +196,14 @@ class ImageOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);
+        try
+        {
+            $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         $colorSelector = new ColorSelector();
 

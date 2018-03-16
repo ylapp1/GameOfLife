@@ -61,7 +61,7 @@ class BoardEditorOptionParser
      * @return bool True: Board Editor session is finished
      *              False: Board Editor session continues
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the option or its arguments are invalid
      */
     public function callOption(String $_input): bool
     {

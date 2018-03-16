@@ -72,7 +72,7 @@ class SaveTemplateOption extends BoardEditorOption
      *
      * @return bool Indicates whether the board editing is finished
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the template saver fails to save the template
      */
     public function saveTemplate($_templateName)
     {

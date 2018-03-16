@@ -36,7 +36,7 @@ class RandomInput extends BaseInput
      * @param Board $_board The Board which will be filled
      * @param Getopt $_options The option list
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the fill percentage is invalid
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
@@ -45,11 +45,11 @@ class RandomInput extends BaseInput
 
         if ($fillPercent > 100)
         {
-            throw new \Exception("Error while filling board: There can't be more living cells than 100% of the fields.");
+            throw new \Exception("There can't be more living cells than 100% of the fields.");
         }
         elseif ($fillPercent < 0)
         {
-            throw new \Exception("Error while filling board: There can't be less living cells than 0% of the fields.");
+            throw new \Exception("There can't be less living cells than 0% of the fields.");
         }
 
         // Fill the board with random set cells

@@ -32,17 +32,10 @@ class TemplateSaver extends TemplateHandler
      * @param Board $_board The board whose fields will be saved to the template
      * @param Bool $_overwriteIfExists Indicates whether an existing template file with that name should be overwritten
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the file could not be written
      */
     public function saveCustomTemplate(String $_templateName, Board $_board, Bool $_overwriteIfExists = false)
     {
-        try
-        {
-            $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, $_overwriteIfExists);
-        }
-        catch (\Exception $_exception)
-        {
-            throw new \Exception("Error while saving template: " . $_exception->getMessage());
-        }
+        $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, $_overwriteIfExists);
     }
 }

@@ -25,7 +25,7 @@ class TemplatePlacer
      * @param int $_posY The Y-coordinate of the top left corner of the template on the board
      * @param Bool $_adjustDimensions Indicates whether the board shall be adjusted to match the template width and height
      *
-     * @throws \Exception
+     * @throws \Exception The exception when the template exceeds a border of the board
      */
     public function placeTemplate(array $_templateFields, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions)
     {
@@ -53,7 +53,7 @@ class TemplatePlacer
             $exceededBorder = $this->isTemplateOutOfBounds($_board, $templateWidth, $templateHeight, $_posX, $_posY);
             if ($exceededBorder)
             {
-                throw new \Exception("\nError while placing the template: The template exceeds the " . $exceededBorder . " border of the board.\n");
+                throw new \Exception("The template exceeds the " . $exceededBorder . " border of the board.");
             }
             else
             {
@@ -78,7 +78,7 @@ class TemplatePlacer
      * @param int $_posX The X-coordinate of the top left border of the template
      * @param int $_posY The Y-coordinate of the top left border of the template
      *
-     * @return String|Bool Border that is exceeded or false if The template is out of bounds
+     * @return String|Bool The name of the border that is exceeded or false if the template is not out of bounds
      */
     public function isTemplateOutOfBounds(Board $_board, int $_templateWidth, int $_templateHeight, int $_posX, int $_posY)
     {

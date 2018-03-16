@@ -10,7 +10,6 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
 
 /**
  * Saves the game steps in .jpg files.
@@ -22,7 +21,6 @@ class JpgOutput extends ImageOutput
      */
     public function __construct()
     {
-        $this->fileSystemHandler = new FileSystemHandler();
         $outputDirectory = $this->baseOutputDirectory . "/JPG/Game_" . $this->getNewGameId("JPG");
         parent::__construct("jpg", $outputDirectory);
     }
@@ -50,10 +48,8 @@ class JpgOutput extends ImageOutput
         echo "\rGamestep: " . ($_board->gameStep() + 1);
         $image = $this->imageCreator->createImage($_board);
 
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
-
         $fileName = $_board->gameStep() . ".jpg";
-        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagejpeg($image, $filePath);
         unset($image);
