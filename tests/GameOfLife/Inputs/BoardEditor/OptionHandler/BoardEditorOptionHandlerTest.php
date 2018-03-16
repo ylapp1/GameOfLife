@@ -21,6 +21,8 @@ class BoardEditorOptionHandlerTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionHandler::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -45,6 +47,8 @@ class BoardEditorOptionHandlerTest extends TestCase
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionHandler::setOptionParser()
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionHandler::parentBoardEditor()
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionHandler::setParentBoardEditor()
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes()
     {
@@ -73,6 +77,8 @@ class BoardEditorOptionHandlerTest extends TestCase
      * Checks whether the option handler can successfully call the option parser.
      *
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionHandler::parseInput()
+     *
+     * @throws \Exception
      */
     public function testCanCallOptions()
     {

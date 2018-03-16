@@ -74,7 +74,7 @@ class BoardEditorOptionParser
 
             if ($numberOfArguments != $option->numberOfArguments())
             {
-                throw new \Exception("Invalid number of arguments (Expected " . $option->numberOfArguments() . ", Got " . $numberOfArguments . ")");
+                throw new \Exception("Invalid number of arguments (Expected " . $option->numberOfArguments() . ", Got " . $numberOfArguments . ").");
             }
             else
             {

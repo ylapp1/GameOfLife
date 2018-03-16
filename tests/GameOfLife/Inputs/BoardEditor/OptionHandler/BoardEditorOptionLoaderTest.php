@@ -23,6 +23,8 @@ class BoardEditorOptionLoaderTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionLoader::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -45,6 +47,8 @@ class BoardEditorOptionLoaderTest extends TestCase
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionLoader::setParentOptionHandler()
      *
      * @param String $_templateDirectory Template directory
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes(String $_templateDirectory)
     {
@@ -84,6 +88,8 @@ class BoardEditorOptionLoaderTest extends TestCase
      * Checks whether options can be successfully loaded.
      *
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionLoader::loadOptions()
+     *
+     * @throws \Exception
      */
     public function testCanLoadOptions()
     {

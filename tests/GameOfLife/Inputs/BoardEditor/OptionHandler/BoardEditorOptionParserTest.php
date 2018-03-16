@@ -23,6 +23,8 @@ class BoardEditorOptionParserTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionParser::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -41,6 +43,8 @@ class BoardEditorOptionParserTest extends TestCase
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionParser::setParentOptionHandler()
      *
      * @param String $_templateDirectory Template directory
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes(String $_templateDirectory)
     {
@@ -76,6 +80,8 @@ class BoardEditorOptionParserTest extends TestCase
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionParser::callOption()
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionParser::isOption()
      * @covers \BoardEditor\OptionHandler\BoardEditorOptionParser::splitOption()
+     *
+     * @throws \Exception
      */
     public function testCanCallOption()
     {
@@ -139,29 +145,53 @@ class BoardEditorOptionParserTest extends TestCase
 
 
             // Valid option with alias, invalid amount of arguments
-            $exitOptionMock->expects($this->exactly(1))
+            $exitOptionMock->expects($this->exactly(2))
                            ->method("numberOfArguments")
                            ->willReturn(1);
 
-            $this->expectOutputRegex("/.*Error: Invalid number of arguments.*/");
-            $result = $optionParser->callOption("quit");
-            $this->assertFalse($result);
+            $exceptionOccurred = false;
+            try
+            {
+                $optionParser->callOption("quit");
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("Invalid number of arguments (Expected 1, Got 0).", $_exception->getMessage());
+            }
+            $this->assertTrue($exceptionOccurred);
 
 
             // Invalid option
-            $this->expectOutputRegex("/.*Error: Invalid option or invalid coordinates format.*/");
-            $result = $optionParser->callOption("random");
-            $this->assertFalse($result);
+            $exceptionOccurred = false;
+            try
+            {
+                $optionParser->callOption("random");
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("Invalid option \"random\".", $_exception->getMessage());
+            }
+            $this->assertTrue($exceptionOccurred);
 
 
             // Alias for toggle
-            $toggleOptionMock->expects($this->exactly(1))
+            $toggleOptionMock->expects($this->exactly(2))
                              ->method("numberOfArguments")
                              ->willReturn(3);
 
-            $this->expectOutputRegex("/.*Error: Invalid option or invalid coordinates format.*/");
-            $result = $optionParser->callOption("1,2");
-            $this->assertFalse($result);
+            $exceptionOccurred = false;
+            try
+            {
+                $optionParser->callOption("1,2");
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("Invalid number of arguments (Expected 3, Got 2).", $_exception->getMessage());
+            }
+            $this->assertTrue($exceptionOccurred);
         }
     }
 }
