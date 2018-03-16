@@ -57,17 +57,24 @@ class CustomRuleTest extends TestCase
      * @covers \Rule\CustomRule::parseAlternateNotationString()
      * @covers \Rule\CustomRule::getRulesFromNumericString()
      */
-    public function testCanParseRuleStrings($_rulesString, array $_expectedRulesBirth, array $_expectedRulesStayAlive, String $_expectedErrorMessage = "")
+    public function testCanParseRuleStrings($_rulesString = "", array $_expectedRulesBirth, array $_expectedRulesStayAlive, String $_expectedErrorMessage = "")
     {
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
 
-        if ($_rulesString == null)
+        if ($_rulesString === "")
         {
-            $optionsMock->expects($this->exactly(3))
+            $optionsMock->expects($this->exactly(2))
                         ->method("getOption")
-                        ->withConsecutive(array("rulesString"), array("rulesBirth"), array("antiRules"))
-                        ->willReturn(null, null, null);
+                        ->withConsecutive(array("rulesString"), array("rulesBirth"))
+                        ->willReturn(null, null);
+        }
+        elseif ($_expectedErrorMessage)
+        {
+            $optionsMock->expects($this->exactly(2))
+                        ->method("getOption")
+                        ->withConsecutive(array("rulesString"), array("rulesString"))
+                        ->willReturn($_rulesString, $_rulesString);
         }
         else
         {
@@ -79,20 +86,29 @@ class CustomRuleTest extends TestCase
 
         $rule = new CustomRule();
 
+        // Hide output
+        $this->expectOutputRegex("/.*/");
+
         if ($optionsMock instanceof Ulrichsg\Getopt)
         {
-            if ($_expectedErrorMessage)
+            $exceptionOccurred = false;
+            try
             {
-                $expectedOutput = $_expectedErrorMessage;
-                if ($_rulesString !== null) $expectedOutput .=  "Error: Unknown rules notation";
-
-                $this->expectOutputRegex("/.*" . $expectedOutput . "/");
+                $rule->initialize($optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals($_expectedErrorMessage, $_exception->getMessage());
             }
 
-            $rule->initialize($optionsMock);
-
-            $this->assertEquals($_expectedRulesBirth, $rule->rulesBirth());
-            $this->assertEquals($_expectedRulesStayAlive, $rule->rulesStayAlive());
+            if ($_expectedErrorMessage) $this->assertTrue($exceptionOccurred);
+            else
+            {
+                $this->assertFalse($exceptionOccurred);
+                $this->assertEquals($_expectedRulesBirth, $rule->rulesBirth());
+                $this->assertEquals($_expectedRulesStayAlive, $rule->rulesStayAlive());
+            }
         }
     }
 
@@ -107,18 +123,18 @@ class CustomRuleTest extends TestCase
 
             // birth/stay-alive
             "Valid birth/stay-alive" => array("32/3", array(3), array(2, 3)),
-            "Invalid birth/stay-alive: Missing second number" => array("23/", array(), array(), "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n"),
-            "Invalid birth/stay-alive: Missing first number" => array("/3", array(), array(), "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n"),
-            "Invalid birth/stay-alive: Missing both numbers" => array("/", array(), array(), "Error: The custom rule must have at least 1 birth condition and 1 stay alive condition\n"),
-            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "Error: The custom rule parts may not contain more than two number strings\n"),
-            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "Error: The custom rule parts may only contain \"\/\" and numbers\n"),
+            "Invalid birth/stay-alive: Missing second number" => array("23/", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
+            "Invalid birth/stay-alive: Missing first number" => array("/3", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
+            "Invalid birth/stay-alive: Missing both numbers" => array("/", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
+            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "The custom rule parts may not contain more than two number strings."),
+            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "The custom rule parts may only contain \"/\" and numbers."),
 
             // stay-alive<G>birth/stay-alive
             "Valid stay-alive<G>birth/stay-alive" => array("2G4", array(4), array(2, 4)),
-            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "Error: The custom rule parts may only contain \"G\" and numbers\n"),
+            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "The custom rule parts may only contain \"G\" and numbers."),
 
             // empty rules string
-            "" => array(null, array(), array(), "Error: Rules string is not set")
+            "Empty rules string" => array("", array(), array(), "The rules string is not set.")
         );
     }
 
@@ -128,6 +144,8 @@ class CustomRuleTest extends TestCase
      * @param array $_returnValueMaps The return values for "getOption" in the format array("optionName", "returnValue")
      * @param array $_expectedRulesBirth The expected birth rules
      * @param array $_expectedRulesStayAlive The expected stay alive rules
+     *
+     * @throws \Exception
      *
      * @dataProvider parseBirthStayAliveOptionsProvider()
      *
