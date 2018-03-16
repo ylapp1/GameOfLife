@@ -219,7 +219,7 @@ class VideoOutput extends ImageOutput
         catch (\Exception $_exception)
         {
             // Remove the files from the directory
-            $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp/Audio");
+            $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
             $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
         }
 
@@ -286,8 +286,6 @@ class VideoOutput extends ImageOutput
             throw new \Exception("Error while generating the video file: No frames in frames folder found.");
         }
 
-        echo "\nGenerating video file ...";
-
         if ($this->hasSound == true)
         {
             $audioListFileName = $this->generateAudioFiles();
@@ -295,8 +293,10 @@ class VideoOutput extends ImageOutput
             // Create single sound from sound frames
             $this->ffmpegHelper->addOption("-f concat");
             $this->ffmpegHelper->addOption("-safe 0");
-            $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Audio/" . $audioListFileName);
+            $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Audio/" . $audioListFileName . "\"");
         }
+
+        echo "\nGenerating video file ...";
 
         // Create video from image frames
         $this->ffmpegHelper->addOption("-framerate " . $this->fps);
@@ -304,6 +304,12 @@ class VideoOutput extends ImageOutput
         // Input images
         $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Frames/%d.png\"");
         $this->ffmpegHelper->addOption("-pix_fmt yuv420p");
+
+        if (stristr(PHP_OS, "linux"))
+        {
+            // This option is necessary to avoid an error on Linux
+            $this->ffmpegHelper->addOption("-strict -2");
+        }
 
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 

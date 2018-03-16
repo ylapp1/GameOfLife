@@ -184,7 +184,19 @@ class FfmpegHelper
 
         if ($error)
         {
-            throw new \Exception("Ffmpeg returned the error \"" . $error . "\".");
+            $fileSystemHandler = new FileSystemHandler();
+
+            try
+            {
+                // Delete the damaged video file (if one was created)
+                $fileSystemHandler->deleteFile($_outputPath);
+            }
+            catch (\Exception $_exception)
+            {
+                // Ignore the exception
+            }
+
+            throw new \Exception("Ffmpeg returned the error code \"" . $error . "\".");
         }
     }
 }
