@@ -64,8 +64,7 @@ class VideoOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->baseOutputDirectory . "tmp/Frames";
-        parent::__construct("video", $outputDirectory);
+        parent::__construct("video", "/tmp/Frames");
 
         $this->fillPercentages = array();
         $this->frames = array();
@@ -247,7 +246,7 @@ class VideoOutput extends ImageOutput
         $image = $this->imageCreator->createImage($_board);
 
         $fileName = $_board->gameStep() . ".png";
-        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);
@@ -283,7 +282,7 @@ class VideoOutput extends ImageOutput
     {
         if (count($this->frames) == 0)
         {
-            throw new \Exception("Error while generating the video file: No frames in frames folder found.");
+            throw new \Exception("No frames in frames folder found.");
         }
 
         if ($this->hasSound == true)

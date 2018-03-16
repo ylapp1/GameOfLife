@@ -38,8 +38,7 @@ class GifOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->baseOutputDirectory . "/tmp/Frames";
-        parent::__construct("gif", $outputDirectory);
+        parent::__construct("gif", "/tmp/Frames");
     }
 
 

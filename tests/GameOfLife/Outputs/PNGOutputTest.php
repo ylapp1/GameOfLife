@@ -47,7 +47,14 @@ class PNGOutputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         unset($this->output);
         unset($this->board);
@@ -64,7 +71,7 @@ class PNGOutputTest extends TestCase
         $output = new PngOutput();
 
         $this->assertEquals("png", $output->optionPrefix());
-        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/PNG/"));
+        $this->assertNotEmpty(stristr($output->imageOutputDirectory(), "PNG/GAME_"));
     }
 
     /**
@@ -110,7 +117,14 @@ class PNGOutputTest extends TestCase
      */
     public function testCanCreateOutputDirectory()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
         $this->assertFalse(file_exists($this->outputDirectory));
 
         $this->expectOutputString("Starting PNG Output ...\n\n");

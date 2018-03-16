@@ -93,7 +93,7 @@ class OptionParser
             $borderType = $_options->getOption("border");
             if ($borderType == "solid") $hasBorder = true;
             elseif ($borderType == "passthrough") $hasBorder = false;
-            else throw new \Exception("Error: Invalid border type specified");
+            else throw new \Exception("Invalid border type specified.");
         }
         else $hasBorder = true;
 

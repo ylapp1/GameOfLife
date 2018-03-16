@@ -25,7 +25,7 @@ class ImageOutput extends BaseOutput
      *
      * @var String $outputDirectory
      */
-    protected $baseOutputDirectory = __DIR__ . "/../../../Output/";
+    protected $baseOutputDirectory = __DIR__ . "/../../../Output";
 
     /**
      * The file system handler
@@ -65,7 +65,7 @@ class ImageOutput extends BaseOutput
     public function __construct(String $_optionPrefix, String $_imageOutputDirectory)
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->imageOutputDirectory = $_imageOutputDirectory;
+        $this->imageOutputDirectory = $this->baseOutputDirectory . "/" . $_imageOutputDirectory;
         $this->optionPrefix = $_optionPrefix;
     }
 

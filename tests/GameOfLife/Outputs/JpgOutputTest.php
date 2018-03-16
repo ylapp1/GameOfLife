@@ -47,7 +47,14 @@ class JpgOutputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         unset($this->output);
         unset($this->board);
@@ -64,7 +71,7 @@ class JpgOutputTest extends TestCase
         $output = new JpgOutput();
 
         $this->assertEquals("jpg", $output->optionPrefix());
-        $this->assertNotFalse(stristr($output->imageOutputDirectory(), "/JPG/"));
+        $this->assertNotEmpty(stristr($output->imageOutputDirectory(), "JPG/Game_"));
     }
 
     /**
@@ -110,7 +117,14 @@ class JpgOutputTest extends TestCase
      */
     public function testCanCreateOutputDirectory()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
         $this->assertFalse(file_exists($this->outputDirectory));
 
         $this->expectOutputString("Starting JPG Output ...\n\n");

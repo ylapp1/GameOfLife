@@ -21,8 +21,8 @@ class PngOutput extends ImageOutput
      */
     public function __construct()
     {
-        parent::__construct("png", "PNG/Game_x");
-        $this->imageOutputDirectory = "PNG/Game_" . $this->getNewGameId("PNG");
+        parent::__construct("png", "/PNG");
+        $this->imageOutputDirectory .=  "/Game_" . $this->getNewGameId("PNG");
     }
 
 
@@ -49,7 +49,7 @@ class PngOutput extends ImageOutput
         $image = $this->imageCreator->createImage($_board);
 
         $fileName = $_board->gameStep() . ".png";
-        $filePath = $this->baseOutputDirectory .  "/" . $this->imageOutputDirectory . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);
