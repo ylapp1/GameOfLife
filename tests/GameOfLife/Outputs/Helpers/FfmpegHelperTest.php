@@ -19,6 +19,9 @@ class FfmpegHelperTest extends TestCase
     /** @var FfmpegHelper */
     private $ffmpegHelper;
 
+    /**
+     * @throws Exception
+     */
     protected function setUp()
     {
         $this->ffmpegHelper = new FfmpegHelper("Other");
@@ -33,6 +36,8 @@ class FfmpegHelperTest extends TestCase
     /**
      * Checks whether the constructor works as expected.
      *
+     * @throws \Exception
+     *
      * @covers \Output\Helpers\FfmpegHelper::__construct()
      * @covers \Output\Helpers\FfmpegHelper::findFFmpegBinary()
      */
@@ -45,7 +50,7 @@ class FfmpegHelperTest extends TestCase
     /**
      * Checks whether the ffmpeg helper can find the ffmpeg binary for windows.
      *
-     * @throws ReflectionException
+     * @throws \Exception
      *
      * @covers \Output\Helpers\FfmpegHelper::findFFmpegBinary()
      */
@@ -80,7 +85,7 @@ class FfmpegHelperTest extends TestCase
     /**
      * Checks whether the ffmpeg helper can find the ffmpeg binary for linux.
      *
-     * @throws ReflectionException
+     * @throws \Exception
      *
      * @covers \Output\Helpers\FfmpegHelper::findFFmpegBinary()
      */
@@ -196,6 +201,8 @@ class FfmpegHelperTest extends TestCase
      *
      * @param int $_shellExecutorReturnValue
      *
+     * @throws \Exception
+     *
      * @dataProvider executeCommandProvider()
      *
      * @covers \Output\Helpers\FfmpegHelper::executeCommand()
@@ -214,8 +221,19 @@ class FfmpegHelperTest extends TestCase
         {
             $this->ffmpegHelper->setShellExecutor($shellExecutorMock);
 
-            $error = $this->ffmpegHelper->executeCommand("Hello");
-            $this->assertEquals($_shellExecutorReturnValue, $error);
+            $exceptionOccurred = false;
+            try
+            {
+                $this->ffmpegHelper->executeCommand("Hello");
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("Ffmpeg returned the error code \"" . $_shellExecutorReturnValue . "\".", $_exception->getMessage());
+            }
+
+            if ($_shellExecutorReturnValue) $this->assertTrue($exceptionOccurred);
+            else $this->assertFalse($exceptionOccurred);
         }
     }
 

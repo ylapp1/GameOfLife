@@ -40,7 +40,14 @@ class ImageCreatorTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
         unset($this->fileSystemHandler);
         unset($this->imageCreator);
         unset($this->board);
@@ -62,6 +69,8 @@ class ImageCreatorTest extends TestCase
      * @covers \Output\Helpers\ImageCreator::__construct()
      * @covers \Output\Helpers\ImageCreator::initializeBaseImage()
      * @covers \Output\Helpers\ImageCreator::initializeCellImage()
+     *
+     * @throws \ReflectionException
      */
     public function testCanBeConstructed()
     {
