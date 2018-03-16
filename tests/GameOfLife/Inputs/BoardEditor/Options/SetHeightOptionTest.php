@@ -20,6 +20,8 @@ class SetHeightOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\SetHeightOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -37,6 +39,8 @@ class SetHeightOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\SetHeightOption::setHeight()
+     *
+     * @throws \Exception
      */
     public function testCanSetWidth()
     {
@@ -48,9 +52,20 @@ class SetHeightOptionTest extends TestCase
         $option = new SetHeightOption($boardEditor);
 
         // Invalid height
-        $this->expectOutputRegex("/Error: The board height may not be less than 1\n.*/");
-        $result = $option->setHeight(0);
-        $this->assertFalse($result);
+
+        $this->expectOutputRegex("/.*/"); // Hide output
+
+        $exceptionOccurred = false;
+        try
+        {
+            $option->setHeight(0);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("The board height may not be less than 1.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
 
         // Valid width, living cells still inside board
         $result = $option->setHeight(2);

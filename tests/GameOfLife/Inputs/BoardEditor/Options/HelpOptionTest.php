@@ -19,6 +19,8 @@ class HelpOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\HelpOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -36,6 +38,8 @@ class HelpOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\HelpOption::displayHelp()
+     *
+     * @throws \Exception
      */
     public function testCanDisplayHelp()
     {

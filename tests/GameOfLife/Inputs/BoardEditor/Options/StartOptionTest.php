@@ -19,6 +19,8 @@ class StartOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\StartOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -36,6 +38,8 @@ class StartOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\StartOption::startSimulation()
+     *
+     * @throws \Exception
      */
     public function testCanStartSimulation()
     {

@@ -20,6 +20,8 @@ class ResetOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\ResetOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -37,6 +39,8 @@ class ResetOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\ResetOption::resetBoard()
+     *
+     * @throws \Exception
      */
     public function testCanExitBoardEditor()
     {

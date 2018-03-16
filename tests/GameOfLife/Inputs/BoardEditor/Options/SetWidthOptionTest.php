@@ -20,6 +20,8 @@ class SetWidthOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\SetWidthOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -37,6 +39,8 @@ class SetWidthOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\SetWidthOption::setWidth()
+     *
+     * @throws \Exception
      */
     public function testCanSetWidth()
     {
@@ -48,9 +52,19 @@ class SetWidthOptionTest extends TestCase
         $option = new SetWidthOption($boardEditor);
 
         // Invalid width
-        $this->expectOutputRegex("/Error: The board width may not be less than 1\n.*/");
-        $result = $option->setWidth(0);
-        $this->assertFalse($result);
+        $this->expectOutputRegex("/.*/"); // Hide output
+
+        $exceptionOccurred = false;
+        try
+        {
+            $option->setWidth(0);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("The board width may not be less than 1.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
 
         // Valid width, living cells still inside board
         $result = $option->setWidth(2);
