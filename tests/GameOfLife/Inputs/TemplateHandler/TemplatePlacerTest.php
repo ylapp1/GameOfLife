@@ -85,6 +85,7 @@ class TemplatePlacerTest extends TestCase
         }
 
         if ($_expectedExceptionMessage) $this->assertTrue($exceptionOccurred);
+        else $this->assertFalse($exceptionOccurred);
 
         if ($_expectedExceptionMessage) $this->assertEquals(0, $this->board->getAmountCellsAlive());
         else

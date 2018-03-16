@@ -57,7 +57,7 @@ class UserInputTest extends TestCase
     /**
      * Function that is called before and after each test.
      *
-     * @throws ReflectionException
+     * @throws \Exception
      */
     protected function setUp()
     {
@@ -118,6 +118,8 @@ class UserInputTest extends TestCase
      * Checks whether a template can be loaded using the --edit option.
      *
      * @covers \Input\UserInput::fillBoard()
+     *
+     * @throws \Exception
      */
     public function testCanLoadTemplate()
     {

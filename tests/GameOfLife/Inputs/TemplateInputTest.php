@@ -29,6 +29,9 @@ class TemplateInputTest extends TestCase
     private $optionsMock;
     private $testTemplateDirectory = __DIR__ . "/../InputTemplates/";
 
+    /**
+     * @throws Exception
+     */
     protected function setUp()
     {
         $this->input = new TemplateInput($this->testTemplateDirectory);
@@ -49,7 +52,7 @@ class TemplateInputTest extends TestCase
      *
      * @covers \Input\TemplateInput::__construct()
      *
-     * @throws ReflectionException
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -93,6 +96,8 @@ class TemplateInputTest extends TestCase
     /**
      * @covers \Input\TemplateInput::fillBoard
      * @covers \Input\TemplateInput::placeTemplate()
+     *
+     * @throws \Exception
      */
     public function testCanLoadTemplate()
     {
@@ -122,6 +127,8 @@ class TemplateInputTest extends TestCase
 
     /**
      * @covers \Input\TemplateInput::fillBoard()
+     *
+     * @throws \Exception
      */
     public function testDetectsEmptyTemplateName()
     {
@@ -134,11 +141,19 @@ class TemplateInputTest extends TestCase
                                       array("unittestPosY"), array("input"))
                     ->willReturn(null, null, null, null, null, "template");
 
-        $this->expectOutputString("Error: No template file specified\n");
-
         if ($optionsMock instanceof \Ulrichsg\Getopt)
         {
-            $this->input->fillBoard($this->board, $optionsMock);
+            $exceptionOccurred = false;
+            try
+            {
+                $this->input->fillBoard($this->board, $optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("No template file specified.", $_exception->getMessage());
+            }
+            $this->assertTrue($exceptionOccurred);
         }
     }
 
@@ -146,6 +161,8 @@ class TemplateInputTest extends TestCase
      * @dataProvider invalidTemplateNamesProvider
      *
      * @param string $_templateName     Name of the template
+     *
+     * @throws \Exception
      */
     public function testDetectsInvalidTemplateNames(string $_templateName)
     {
@@ -154,15 +171,28 @@ class TemplateInputTest extends TestCase
                           ->withConsecutive(array("template"), array("template"))
                           ->willReturn($_templateName, $_templateName);
 
-        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
-        $this->expectOutputString("Error: Template file not found!\n");
+        if ($this->optionsMock instanceof Getopt)
+        {
+            $exceptionOccurred = false;
+            try
+            {
+                $this->input->fillBoard($this->board, $this->optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("The template file could not be found.", $_exception->getMessage());
+            }
+
+            $this->assertTrue($exceptionOccurred);
+        }
     }
 
     public function invalidTemplateNamesProvider()
     {
         return [
             ["test"],
-            ["mytest"],
+            ["theUnitTest"],
             ["notexisting"],
             ["mytemplate"],
             ["hello"]
@@ -174,7 +204,7 @@ class TemplateInputTest extends TestCase
      * @covers \TemplateHandler\TemplateListPrinter::printTemplateLists()
      * @covers \TemplateHandler\TemplateListPrinter::printTemplateList()
      *
-     * @throws ReflectionException
+     * @throws \Exception
      */
     public function testCanListTemplates()
     {
@@ -184,8 +214,16 @@ class TemplateInputTest extends TestCase
                           ->willReturn(null, true, null, true);
 
         $fileSystemHandler = new FileSystemHandler();
-        $fileSystemHandler->createDirectory($this->testTemplateDirectory . "/Custom");
-        touch($this->testTemplateDirectory . "/Custom/mytest.txt");
+
+        try
+        {
+            $fileSystemHandler->createDirectory($this->testTemplateDirectory . "/Custom");
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
+        $fileSystemHandler->writeFile($this->testTemplateDirectory . "/Custom", "mytest.txt", "");
 
         $expectedOutput = "Default templates:\n"
                         . "  1\) unittest\n\n"
@@ -218,6 +256,8 @@ class TemplateInputTest extends TestCase
      * @param int $_posX                X-Position of top left corner of the template
      * @param int $_posY                Y-Position of top left corner of the template
      * @param string $_expectedString   Expected error message
+     *
+     * @throws \Exception
      */
     public function testCanPlaceTemplate(int $_posX, int $_posY, string $_expectedString = null)
     {
@@ -234,26 +274,40 @@ class TemplateInputTest extends TestCase
                                             array("templatePosY"), array("templatePosY"), array("templatePosX"), array("invertTemplate"))
                           ->willReturn("unittest", "unittest", $_posX, $_posX, $_posY, $_posY, $_posX, null);
 
-        if ($_expectedString !== null) $this->expectOutputString($_expectedString);
-
-        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+        $exceptionOccurred = false;
+        if ($this->optionsMock instanceof Getopt)
+        {
+            try
+            {
+                $this->input->fillBoard($this->board, $this->optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals($_expectedString, $_exception->getMessage());
+            }
+        }
 
         if ($_expectedString === null)
         {
             $this->assertEquals(1, $this->board->getAmountCellsAlive());
             $this->assertTrue($this->board->getFieldStatus($_posX, $_posY));
+            $this->assertFalse($exceptionOccurred);
+        }
+        else
+        {
+            $this->assertEquals(0, $this->board->getAmountCellsAlive());
+            $this->assertTrue($exceptionOccurred);
         }
     }
 
     public function placeTemplateProvider()
     {
-        $error = "Error, the template may not exceed the field borders!\n";
-
         return [
-            [9, 0, $error],
-            [0 , 9, $error],
-            [0 , -1, $error],
-            [-1 , 0, $error],
+            [9, 0, "The template exceeds the right border of the board."],
+            [0 , 9, "The template exceeds the bottom border of the board."],
+            [0 , -1, "The template exceeds the top border of the board."],
+            [-1 , 0, "The template exceeds the left border of the board."],
             [0, 0],
             [1, 2]
         ];
@@ -265,6 +319,8 @@ class TemplateInputTest extends TestCase
      * @covers \Input\TemplateInput::fillBoard()
      * @covers \Input\TemplateInput::placeTemplate()
      * @covers \Input\TemplateInput::getTemplateNameFromLinkedOption()
+     *
+     * @throws \Exception
      */
     public function testCanLoadDefaultTemplatesFromLinkedOption()
     {
@@ -291,6 +347,8 @@ class TemplateInputTest extends TestCase
      * Checks whether the random input is selected when an invalid input type is selected.
      *
      * @covers \Input\TemplateInput::fillBoard()
+     *
+     * @throws \Exception
      */
     public function testCanFallBackToRandomInput()
     {

@@ -55,6 +55,8 @@ class RandomInputTest extends TestCase
 
     /**
      * @covers \Input\RandomInput::fillBoard()
+     *
+     * @throws \Exception
      */
     public function testCanFillBoardRandomPercentage()
     {
@@ -77,6 +79,8 @@ class RandomInputTest extends TestCase
      * @param bool $_expectsError   True: Expects error message
      *                              False: Expects no error message
      * @param string $_errorMessage The expected error message
+     *
+     * @throws \Exception
      */
     public function testCanFillBoardCustomPercentage(int $_fillPercentage, bool $_expectsError, string $_errorMessage = null)
     {
@@ -85,20 +89,38 @@ class RandomInputTest extends TestCase
                           ->with("fillPercent")
                           ->willReturn($_fillPercentage);
 
-        if ($_expectsError) $this->expectOutputString($_errorMessage);
-        if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
+        $exceptionOccurred = false;
+
+        if ($this->optionsMock instanceof Getopt)
+        {
+            try
+            {
+                $this->input->fillBoard($this->board, $this->optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals($_errorMessage, $_exception->getMessage());
+            }
+        }
 
         if (! $_expectsError)
         {
             $expectedAmountCellsAlive = ceil($this->board->width() * $this->board->height() * $_fillPercentage / 100);
             $this->assertEquals($expectedAmountCellsAlive, $this->board->getAmountCellsAlive());
+            $this->assertFalse($exceptionOccurred);
+        }
+        else
+        {
+            $this->assertEquals(0, $this->board->getAmountCellsAlive());
+            $this->assertTrue($exceptionOccurred);
         }
     }
 
     public function fillBoardCustomPercentageProvider()
     {
         return [
-            "-1% filled" => ["-1", true, "Error: There can't be less living cells than 0% of the fields.\n"],
+            "-1% filled" => ["-1", true, "There can't be less living cells than 0% of the fields."],
             "0% filled" => ["0", false],
             "20% filled" => ["20", false],
             "50% filled" => ["50", false],
@@ -106,9 +128,9 @@ class RandomInputTest extends TestCase
             "90% filled" => ["90", false],
             "99% filled" => ["99", false],
             "100% filled" => ["100", false],
-            "101% filled" => ["101", true, "Error: There can't be more living cells than 100% of the fields.\n"],
-            "130% filled" => ["130", true, "Error: There can't be more living cells than 100% of the fields.\n"],
-            "2500% filled" => ["2500", true, "Error: There can't be more living cells than 100% of the fields.\n"]
+            "101% filled" => ["101", true, "There can't be more living cells than 100% of the fields."],
+            "130% filled" => ["130", true, "There can't be more living cells than 100% of the fields."],
+            "2500% filled" => ["2500", true, "There can't be more living cells than 100% of the fields."]
         ];
     }
 }

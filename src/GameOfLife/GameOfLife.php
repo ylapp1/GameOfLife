@@ -84,7 +84,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while initializing the options: " . $_exception->getMessage() . "\n";
+            echo "\nError while initializing the options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
         $this->options->parse();
@@ -98,7 +98,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while parsing the board options: " . $_exception->getMessage() . "\n";
+            echo "\nError while parsing the board options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
 
@@ -108,7 +108,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while parsing the input options: " . $_exception->getMessage() . "\n";
+            echo "\nError while parsing the input options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
 
@@ -118,7 +118,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while parsing the output options: " . $_exception->getMessage() . "\n";
+            echo "\nError while parsing the output options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
 
@@ -128,7 +128,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while parsing the rule options: " . $_exception->getMessage() . "\n";
+            echo "\nError while parsing the rule options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
 
@@ -138,7 +138,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while initializing the rule: " . $_exception->getMessage() . "\n";
+            echo "\nError while initializing the rule: " . $_exception->getMessage() . "\n\n";
             return false;
         }
 
@@ -158,7 +158,7 @@ class GameOfLife
         }
         catch(\Exception $_exception)
         {
-            echo "Error while filling the board: " . $_exception->getMessage() . "\n";
+            echo "\nError while filling the board: " . $_exception->getMessage() . "\n\n";
             return;
         }
         $this->output->startOutput($this->options, $this->board);
@@ -181,7 +181,7 @@ class GameOfLife
         }
         catch (\Exception $_exception)
         {
-            echo "Error while finishing the simulation: " . $_exception->getMessage() ."\n";
+            echo "\nError while finishing the simulation: " . $_exception->getMessage() ."\n\n";
         }
     }
 }
