@@ -19,6 +19,8 @@ class BoardEditorOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\BoardEditorOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -52,6 +54,8 @@ class BoardEditorOptionTest extends TestCase
      * @param int $_numberOfArguments Number of arguments of the callback function
      * @param String $_description Short description of the option which will be displayed in the option list
      * @param String $_templateDirectory Template directory for the BoardEditor constructor
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes(String $_name, array $_aliases, String $_callback, int $_numberOfArguments, String $_description, String $_templateDirectory)
     {
@@ -93,6 +97,8 @@ class BoardEditorOptionTest extends TestCase
      * Checks whether an option can return whether an alias belongs to it.
      *
      * @covers \BoardEditor\BoardEditorOption::hasAlias()
+     *
+     * @throws \Exception
      */
     public function testCanFindAlias()
     {

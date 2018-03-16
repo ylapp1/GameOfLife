@@ -19,7 +19,7 @@ class TemplateSaverTest extends TestCase
     /**
      * Checks whether templates can be saved.
      *
-     * @throws ReflectionException
+     * @throws \Exception
      */
     public function testCanSaveTemplate()
     {
@@ -42,20 +42,32 @@ class TemplateSaverTest extends TestCase
             $reflectionProperty->setAccessible(true);
             $reflectionProperty->setValue($templateSaver, $fileSystemHandlerMock);
 
-            $fileSystemHandlerMock->expects($this->exactly(2))
-                ->method("writeFile")
-                ->withConsecutive(array($testDirectory . "/Custom", "unitTest.txt", $boardString, true),
-                    array($testDirectory . "/Custom", "unitTestSecond.txt", $boardString, false))
-                ->willReturn(FileSystemHandler::NO_ERROR, FileSystemHandler::ERROR_FILE_EXISTS);
-
-
             // Save successful
-            $result = $templateSaver->saveCustomTemplate("unitTest", $testBoard, true);
-            $this->assertTrue($result);
+            $fileSystemHandlerMock->expects($this->exactly(2))
+                                  ->method("writeFile")
+                                  ->withConsecutive(
+                                      array($testDirectory . "/Custom", "unitTest.txt", $boardString, true),
+                                      array($testDirectory . "/Custom", "unitTestSecond.txt", $boardString, false)
+                                  )
+                                  ->willReturnOnConsecutiveCalls(
+                                      $this->returnValue(null),
+                                      $this->throwException(new \Exception("File exists."))
+                                  );
+
+            $templateSaver->saveCustomTemplate("unitTest", $testBoard, true);
 
             // Save not successful
-            $result = $templateSaver->saveCustomTemplate("unitTestSecond", $testBoard, false);
-            $this->assertFalse($result);
+            $exceptionOccurred = false;
+            try
+            {
+                $templateSaver->saveCustomTemplate("unitTestSecond", $testBoard, false);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("File exists.", $_exception->getMessage());
+            }
+            $this->assertTrue($exceptionOccurred);
         }
     }
 }

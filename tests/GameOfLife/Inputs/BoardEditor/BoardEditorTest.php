@@ -63,6 +63,8 @@ class BoardEditorTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\BoardEditor::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -84,6 +86,8 @@ class BoardEditorTest extends TestCase
      * @covers \BoardEditor\BoardEditor::setOutput()
      * @covers \BoardEditor\BoardEditor::templateDirectory()
      * @covers \BoardEditor\BoardEditor::setTemplateDirectory()
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes()
     {
@@ -108,6 +112,8 @@ class BoardEditorTest extends TestCase
      * Checks whether the board editor can launch a board editor session.
      *
      * @covers \BoardEditor\BoardEditor::launch()
+     *
+     * @throws \Exception
      */
     public function testCanLaunchSession()
     {
