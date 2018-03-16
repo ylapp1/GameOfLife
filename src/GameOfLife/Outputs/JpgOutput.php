@@ -21,8 +21,8 @@ class JpgOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->baseOutputDirectory . "/JPG/Game_" . $this->getNewGameId("JPG");
-        parent::__construct("jpg", $outputDirectory);
+        parent::__construct("jpg", "JPG/Game_x");
+        $this->imageOutputDirectory = "JPG/Game_" . $this->getNewGameId("JPG");
     }
 
 
@@ -49,7 +49,7 @@ class JpgOutput extends ImageOutput
         $image = $this->imageCreator->createImage($_board);
 
         $fileName = $_board->gameStep() . ".jpg";
-        $filePath = $this->imageOutputDirectory . "/" . $fileName;
+        $filePath = $this->baseOutputDirectory . "/" . $this->imageOutputDirectory . "/" . $fileName;
 
         imagejpeg($image, $filePath);
         unset($image);
