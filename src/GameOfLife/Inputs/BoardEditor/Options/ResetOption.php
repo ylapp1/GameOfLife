@@ -29,7 +29,7 @@ class ResetOption extends BoardEditorOption
         $this->aliases = array("r");
         $this->callback = "resetBoard";
         $this->description = "Resets the edited board to an empty board";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**

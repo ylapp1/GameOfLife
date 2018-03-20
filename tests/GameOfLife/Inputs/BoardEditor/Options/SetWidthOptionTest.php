@@ -31,7 +31,7 @@ class SetWidthOptionTest extends TestCase
         $this->assertEquals("width", $option->name());
         $this->assertEquals("setWidth", $option->callback());
         $this->assertEquals("Sets the board width", $option->description());
-        $this->assertEquals(1, $option->numberOfArguments());
+        $this->assertEquals(1, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

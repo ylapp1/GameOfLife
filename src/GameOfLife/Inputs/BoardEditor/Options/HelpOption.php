@@ -29,7 +29,7 @@ class HelpOption extends BoardEditorOption
         $this->aliases = array("h");
         $this->callback = "displayHelp";
         $this->description = "Display help";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**

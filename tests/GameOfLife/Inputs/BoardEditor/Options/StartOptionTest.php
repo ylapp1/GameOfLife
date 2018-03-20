@@ -30,7 +30,7 @@ class StartOptionTest extends TestCase
         $this->assertEquals("start", $option->name());
         $this->assertEquals("startSimulation", $option->callback());
         $this->assertEquals("Starts the simulation", $option->description());
-        $this->assertEquals(0, $option->numberOfArguments());
+        $this->assertEquals(0, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

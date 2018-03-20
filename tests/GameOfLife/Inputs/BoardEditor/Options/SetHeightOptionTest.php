@@ -31,7 +31,7 @@ class SetHeightOptionTest extends TestCase
         $this->assertEquals("height", $option->name());
         $this->assertEquals("setHeight", $option->callback());
         $this->assertEquals("Sets the board height", $option->description());
-        $this->assertEquals(1, $option->numberOfArguments());
+        $this->assertEquals(1, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

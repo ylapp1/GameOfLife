@@ -29,7 +29,7 @@ class InvertBoardOption extends BoardEditorOption
         $this->aliases = array("invertBoard");
         $this->callback = "invertBoard";
         $this->description = "Inverts the board";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**

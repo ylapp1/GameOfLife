@@ -32,7 +32,7 @@ class ListOptionsOptionTest extends TestCase
         $this->assertEquals("options", $option->name());
         $this->assertEquals("listOptions", $option->callback());
         $this->assertEquals("Lists available options", $option->description());
-        $this->assertEquals(0, $option->numberOfArguments());
+        $this->assertEquals(0, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 
@@ -53,41 +53,58 @@ class ListOptionsOptionTest extends TestCase
                                   ->disableOriginalConstructor()
                                   ->getMock();
 
+        $boardEditorOptionMock = $this->getMockBuilder(BoardEditorOption::class)
+                                       ->setMethods(array("arguments", "description"))
+                                       ->disableOriginalConstructor()
+                                       ->getMock();
+
+        $testOption = clone $boardEditorOptionMock;
+        $testOption->expects($this->exactly(1))
+                   ->method("arguments")
+                   ->willReturn(array());
+        $testOption->expects($this->exactly(1))
+                   ->method("description")
+                   ->willReturn("Tests units");
+
+        $jumpOption = clone $boardEditorOptionMock;
+        $jumpOption->expects($this->exactly(1))
+                   ->method("arguments")
+                   ->willReturn(array("high jump"));
+        $jumpOption->expects($this->exactly(1))
+                   ->method("description")
+                   ->willReturn("Makes the board jump");
+
+        $flyOption = clone $boardEditorOptionMock;
+        $flyOption->expects($this->exactly(1))
+                  ->method("arguments")
+                  ->willReturn(array());
+        $flyOption->expects($this->exactly(1))
+                  ->method("description")
+                  ->willReturn("Makes the board fly");
+
         // Generate some fake options
-        $testOptions = array(
-            "test" => "Tests units",
-            "jumpVeryLongTestOption" => "Makes the board jump",
-            "flyShort" => "Makes the board fly"
+        $boardEditorOptions = array(
+            "test" => $testOption,
+            "jumpVeryLongTestOption" => $jumpOption,
+            "flyShort" => $flyOption
         );
-
-        $boardEditorOptions = array();
-        foreach ($testOptions as $optionName => $description)
-        {
-            if ($boardEditorMock instanceof BoardEditor)
-            {
-                $option = new BoardEditorOption($boardEditorMock);
-                $option->setDescription($description);
-                $boardEditorOptions[$optionName] = $option;
-            }
-        }
-
 
         if ($boardEditorMock instanceof BoardEditor)
         {
             $listOptionsOption = new ListOptionsOption($boardEditorMock);
 
-            $boardEditorMock->expects($this->exactly(2))
+            $boardEditorMock->expects($this->exactly(1))
                             ->method("optionHandler")
                             ->willReturn($optionHandlerMock);
 
-            $optionHandlerMock->expects($this->exactly(2))
+            $optionHandlerMock->expects($this->exactly(1))
                               ->method("options")
                               ->willReturn($boardEditorOptions);
 
             $expectedOutput = "\n\nOptions:"
-                            . "\n - test                   : Tests units"
-                            . "\n - jumpVeryLongTestOption : Makes the board jump"
-                            . "\n - flyShort               : Makes the board fly"
+                            . "\n - test                               : Tests units"
+                            . "\n - jumpVeryLongTestOption <high jump> : Makes the board jump"
+                            . "\n - flyShort                           : Makes the board fly"
                             . "\n\n";
 
             $this->expectOutputString($expectedOutput);
