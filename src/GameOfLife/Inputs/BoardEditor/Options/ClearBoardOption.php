@@ -11,13 +11,14 @@ namespace BoardEditor\Options;
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
+
 /**
- * Inverts the board.
+ * Clears the board.
  */
-class InvertBoardOption extends BoardEditorOption
+class ClearBoardOption extends BoardEditorOption
 {
     /**
-     * InvertBoardOption constructor.
+     * ClearBoardOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
      */
@@ -25,21 +26,21 @@ class InvertBoardOption extends BoardEditorOption
     {
         parent::__construct($_parentBoardEditor);
 
-        $this->name = "invert";
-        $this->aliases = array("invertBoard");
-        $this->callback = "invertBoard";
-        $this->description = "Inverts the board";
+        $this->name = "clear";
+        $this->aliases = array("clearBoard", "emptyBoard");
+        $this->callback = "clearBoard";
+        $this->description = "Clears the board";
         $this->arguments = array();
     }
 
     /**
-     * Inverts the board.
+     * Clears the board.
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function invertBoard(): bool
+    public function clearBoard(): bool
     {
-        $this->parentBoardEditor->board()->invertBoard();
+        $this->parentBoardEditor->board()->resetBoard();
         $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
         return false;
     }
