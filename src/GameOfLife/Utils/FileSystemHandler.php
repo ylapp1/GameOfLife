@@ -24,12 +24,14 @@ class FileSystemHandler
      */
     public function createDirectory(string $_directoryPath)
     {
-        if (! file_exists($_directoryPath))
+        $directoryPath = $this->convertSlashes($_directoryPath);
+
+        if (! file_exists($directoryPath))
         {
             // create all directories in the directory path recursively (if they don't exist)
-            mkdir($_directoryPath, 0777, true);
+            mkdir($directoryPath, 0777, true);
         }
-        else throw new \Exception("The directory \"" . $_directoryPath . "\" already exists.");
+        else throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
     }
 
     /**
@@ -42,10 +44,10 @@ class FileSystemHandler
      */
     public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
     {
-        if (! file_exists($_directoryPath)) throw new \Exception("The directory \"" . $_directoryPath . "\" does not exist.");
+        $directoryPath = $this->convertSlashes($_directoryPath);
+        if (! file_exists($directoryPath)) throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
 
-        if (substr($_directoryPath, strlen($_directoryPath) - 1, 1) != '/') $_directoryPath .= '/';
-        $files = $this->getFileList($_directoryPath . "/*");
+        $files = $this->getFileList($directoryPath . "/*");
 
         if (count($files) !== 0)
         {
@@ -60,7 +62,7 @@ class FileSystemHandler
             }
         }
 
-        rmdir($_directoryPath);
+        rmdir($directoryPath);
     }
 
     /**

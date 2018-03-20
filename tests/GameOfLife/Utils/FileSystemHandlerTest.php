@@ -19,12 +19,14 @@ class FileSystemHandlerTest extends TestCase
     /** @var string */
     private $testDirectory;
 
+    private $directorySeparator;
+
     protected function setUp()
     {
-        if (stristr(PHP_OS, "win")) $directorySeparator = "\\";
-        else $directorySeparator = "/";
+        if (stristr(PHP_OS, "win")) $this->directorySeparator = "\\";
+        else $this->directorySeparator = "/";
 
-        $this->testDirectory = __DIR__ . $directorySeparator . ".." . $directorySeparator . "FileSystemHandlerTest";
+        $this->testDirectory = __DIR__ . $this->directorySeparator . ".." . $this->directorySeparator . "FileSystemHandlerTest";
 
         $this->fileSystemHandler = new FileSystemHandler();
         mkdir($this->testDirectory);
@@ -110,7 +112,7 @@ class FileSystemHandlerTest extends TestCase
      */
     public function testCanDetectExistingDirectory()
     {
-        $directoryPath = $this->testDirectory . "/atest";
+        $directoryPath = $this->testDirectory . $this->directorySeparator . "atest";
         $this->assertFalse(file_exists($directoryPath));
 
         $exceptionOccurred = false;
@@ -163,7 +165,7 @@ class FileSystemHandlerTest extends TestCase
      */
     public function testCanHandleFiles(string $_fileName, string $_content, array $_expectedContent)
     {
-        $outputPath = $this->testDirectory . "/" . $_fileName;
+        $outputPath = $this->testDirectory . $this->directorySeparator . $_fileName;
         $this->assertFalse(file_exists($outputPath));
 
         $exceptionOccurred  = false;
@@ -234,7 +236,7 @@ class FileSystemHandlerTest extends TestCase
      */
     public function testCanDetectExistingFile()
     {
-        $filePath = $this->testDirectory . "/mytest.txt";
+        $filePath = $this->testDirectory . $this->directorySeparator . "mytest.txt";
 
         $this->assertFalse(file_exists($filePath));
 
@@ -324,12 +326,9 @@ class FileSystemHandlerTest extends TestCase
         $fileNames = array("Hello", "myFile", "myPersonalFile", "myPersonalTest", "thisIsAFile", "ThisIsMyFile");
         sort($fileNames);
 
-        if (stristr(PHP_OS, "win")) $directorySeparator = "\\";
-        else $directorySeparator = "/";
-
         foreach ($fileNames as $index => $fileName)
         {
-            touch($this->testDirectory . $directorySeparator . $fileName);
+            touch($this->testDirectory . $this->directorySeparator . $fileName);
         }
 
         $exceptionOccurred = false;
@@ -347,8 +346,8 @@ class FileSystemHandlerTest extends TestCase
 
         foreach ($files as $index => $file)
         {
-            $fileName = $this->testDirectory . $directorySeparator . $fileNames[$index];
-            $this->assertEquals($this->testDirectory . $directorySeparator . $fileNames[$index], $file);
+            $fileName = $this->testDirectory . $this->directorySeparator . $fileNames[$index];
+            $this->assertEquals($this->testDirectory . $this->directorySeparator . $fileNames[$index], $file);
             unlink($fileName);
         }
     }
@@ -367,18 +366,17 @@ class FileSystemHandlerTest extends TestCase
      */
     public function testCanFindFileRecursive(String $_directories, String $_filePath, String $_searchFilename, Bool $_expectsFilePath = true)
     {
-        $testDirectory = __DIR__ . "/test";
-        $testFilePath = $testDirectory . "/"  . $_filePath;
+        $testDirectory = __DIR__ . $this->directorySeparator . "test";
+        $testFilePath = $testDirectory . $this->directorySeparator  . $_filePath;
 
-        $testFilePath = str_replace("\\", "/", $testFilePath);
-
-        mkdir($testDirectory . "/" . $_directories, 0777, true);
+        mkdir($testDirectory . $this->directorySeparator . $_directories, 0777, true);
         touch($testFilePath);
 
         $exceptionOccurred = false;
         try
         {
             $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
+            if (stristr(PHP_OS, "win")) $filePath = str_replace("/", "\\", $filePath);
         }
         catch (\Exception $_exception)
         {
@@ -388,13 +386,13 @@ class FileSystemHandlerTest extends TestCase
         $this->assertFalse($exceptionOccurred);
 
         if ($_expectsFilePath) $this->assertEquals($testFilePath, $filePath);
-        else $this->assertFalse($filePath);
+        else $this->assertEmpty($filePath);
 
         // Delete the test file
         unlink($testFilePath);
 
         // Delete the test sub directories
-        $directories = explode("/", $_directories);
+        $directories = explode($this->directorySeparator, $_directories);
 
         for ($i = count($directories); $i > 0; $i--)
         {
@@ -402,7 +400,7 @@ class FileSystemHandlerTest extends TestCase
 
             for ($j = 0; $j < $i; $j++)
             {
-                $removeDirectory .= "/" . $directories[$j];
+                $removeDirectory .= $this->directorySeparator . $directories[$j];
             }
 
             rmdir($testDirectory . $removeDirectory);
@@ -420,10 +418,27 @@ class FileSystemHandlerTest extends TestCase
     public function findFileRecursiveProvider()
     {
         return array(
-            "Existing file in second sub folder" => array("testing/directory/mytest", "testing/directory/test.txt", "test.txt"),
-            "Existing file in first sub folder" => array("testing/directory/mytest", "testing/second.txt", "second.txt"),
-            "Existing file in third sub folder" => array("testing/directory/mytest", "testing/directory/mytest/thisIsMyTest.txt", "thisIsMyTest.txt"),
-            "Not existing file" => array("testing/directory/mytest", "testing/directory/mytest/test.txt", "nottest.txt", false)
+            "Existing file in second sub folder" => array(
+                "testing"  . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "test.txt",
+                "test.txt"
+            ),
+            "Existing file in first sub folder" => array(
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
+                "testing" . $this->directorySeparator . "second.txt",
+                "second.txt"
+            ),
+            "Existing file in third sub folder" => array(
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest" . $this->directorySeparator . "thisIsMyTest.txt",
+                "thisIsMyTest.txt"
+            ),
+            "Not existing file" => array(
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
+                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest" . $this->directorySeparator . "test.txt",
+                "nottest.txt",
+                false
+            )
         );
     }
 }
