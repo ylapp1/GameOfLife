@@ -40,7 +40,7 @@ class UserInput extends BaseInput
      */
     public function __construct()
     {
-        $this->templatesBaseDirectory = __DIR__ . "/../../../Input/Templates/";
+        $this->templatesBaseDirectory = __DIR__ . "/../../../Input/Templates";
         $this->boardEditor = new BoardEditor($this->templatesBaseDirectory, null);
     }
 

@@ -57,7 +57,7 @@ class BoardEditorOptionHandler
         $this->parentBoardEditor = $_parentBoardEditor;
         $this->optionLoader = new BoardEditorOptionLoader($this);
         $this->optionParser = new BoardEditorOptionParser($this);
-        $this->options = $this->optionLoader->loadOptions(__DIR__ . "/../Options/");
+        $this->options = $this->optionLoader->loadOptions(__DIR__ . "/../Options");
     }
 
 
