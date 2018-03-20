@@ -10,7 +10,6 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
 
 /**
  * Saves the boards as .png files.
@@ -22,9 +21,8 @@ class PngOutput extends ImageOutput
      */
     public function __construct()
     {
-        $this->fileSystemHandler = new FileSystemHandler();
-        $outputDirectory = $this->baseOutputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
-        parent::__construct("png", $outputDirectory);
+        parent::__construct("png", "/PNG");
+        $this->imageOutputDirectory .=  "/Game_" . $this->getNewGameId("PNG");
     }
 
 
@@ -50,10 +48,8 @@ class PngOutput extends ImageOutput
         echo "\rGamestep: " . ($_board->gameStep() + 1);
         $image = $this->imageCreator->createImage($_board);
 
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
-
         $fileName = $_board->gameStep() . ".png";
-        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);

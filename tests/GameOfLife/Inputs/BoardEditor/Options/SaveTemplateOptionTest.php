@@ -21,6 +21,8 @@ class SaveTemplateOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\SaveTemplateOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -46,6 +48,8 @@ class SaveTemplateOptionTest extends TestCase
      * @covers \BoardEditor\Options\SaveTemplateOption::setTemplateSaver()
      *
      * @param String $_templateDirectory
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes(String $_templateDirectory)
     {

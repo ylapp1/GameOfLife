@@ -21,6 +21,8 @@ class ListOptionsOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\ListOptionsOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {

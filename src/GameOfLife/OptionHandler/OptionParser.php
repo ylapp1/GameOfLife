@@ -10,7 +10,6 @@ namespace OptionHandler;
 
 use GameOfLife\Board;
 use Input\BaseInput;
-use Input\RandomInput;
 use Input\TemplateInput;
 use Output\BaseOutput;
 use Output\ConsoleOutput;
@@ -73,7 +72,9 @@ class OptionParser
      *
      * @param Getopt $_options The option list
      *
-     * @return Board|bool The board or false
+     * @return Board The board
+     *
+     * @throws \Exception The exception when an invalid border type was specified
      */
     public function parseBoardOptions(Getopt $_options)
     {
@@ -92,11 +93,7 @@ class OptionParser
             $borderType = $_options->getOption("border");
             if ($borderType == "solid") $hasBorder = true;
             elseif ($borderType == "passthrough") $hasBorder = false;
-            else
-            {
-                echo "Error: Invalid border type specified";
-                return false;
-            }
+            else throw new \Exception("Invalid border type specified.");
         }
         else $hasBorder = true;
 
@@ -109,6 +106,8 @@ class OptionParser
      * @param Getopt $_options The option list
      *
      * @return BaseInput The input object
+     *
+     * @throws \Exception The exceptions of the input constructors
      */
     public function parseInputOptions(Getopt $_options): BaseInput
     {
@@ -123,6 +122,8 @@ class OptionParser
      * @param Getopt $_options The option list
      *
      * @return BaseOutput The output object
+     *
+     * @throws \Exception The exceptions of the Output constructors
      */
     public function parseOutputOptions(Getopt $_options): BaseOutput
     {
@@ -137,6 +138,8 @@ class OptionParser
      * @param Getopt $_options The option list
      *
      * @return BaseRule The rule object
+     *
+     * @throws \Exception The exceptions of the Rule constructors
      */
     public function parseRuleOptions(Getopt $_options): BaseRule
     {
@@ -154,6 +157,8 @@ class OptionParser
      * @param String $_classSuffix The class suffix
      *
      * @return BaseInput|BaseOutput|BaseRule|Bool The class instance or false if no class was found from the options
+     *
+     * @throws \Exception The exceptions of the Input, Output or Rule constructors
      */
     private function parseOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
     {

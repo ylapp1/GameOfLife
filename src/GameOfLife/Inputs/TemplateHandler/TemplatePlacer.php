@@ -25,10 +25,9 @@ class TemplatePlacer
      * @param int $_posY The Y-coordinate of the top left corner of the template on the board
      * @param Bool $_adjustDimensions Indicates whether the board shall be adjusted to match the template width and height
      *
-     * @return Bool True: No error while placing the template
-     *              False: Error while placing the template
+     * @throws \Exception The exception when the template exceeds a border of the board
      */
-    public function placeTemplate(array $_templateFields, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions): Bool
+    public function placeTemplate(array $_templateFields, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions)
     {
         $templateHeight = count($_templateFields);
         $templateWidth = count($_templateFields[0]);
@@ -48,12 +47,14 @@ class TemplatePlacer
             }
 
             $_board->setFields($_templateFields);
-
-            return true;
         }
         else
         {
-            if ($this->isTemplateOutOfBounds($_board, $templateWidth, $templateHeight, $_posX, $_posY)) return false;
+            $exceededBorder = $this->isTemplateOutOfBounds($_board, $templateWidth, $templateHeight, $_posX, $_posY);
+            if ($exceededBorder)
+            {
+                throw new \Exception("The template exceeds the " . $exceededBorder . " border of the board.");
+            }
             else
             {
                 foreach ($_templateFields as $row)
@@ -64,8 +65,6 @@ class TemplatePlacer
                         $_board->setField($field->x() + $_posX, $field->y() + $_posY, $field->isAlive());
                     }
                 }
-
-                return true;
             }
         }
     }
@@ -79,18 +78,14 @@ class TemplatePlacer
      * @param int $_posX The X-coordinate of the top left border of the template
      * @param int $_posY The Y-coordinate of the top left border of the template
      *
-     * @return Bool True: The template is out of bounds
-     *              False: The template is not out of bounds
+     * @return String|Bool The name of the border that is exceeded or false if the template is not out of bounds
      */
-    public function isTemplateOutOfBounds(Board $_board, int $_templateWidth, int $_templateHeight, int $_posX, int $_posY): Bool
+    public function isTemplateOutOfBounds(Board $_board, int $_templateWidth, int $_templateHeight, int $_posX, int $_posY)
     {
-        if ($_posX < 0 ||
-            $_posY < 0 ||
-            $_posX + $_templateWidth > $_board->width() ||
-            $_posY + $_templateHeight > $_board->height())
-        {
-            return true;
-        }
+        if ($_posX < 0) return "left";
+        if ($_posY < 0) return "top";
+        if ($_posX + $_templateWidth > $_board->width()) return "right";
+        if ($_posY + $_templateHeight > $_board->height()) return "bottom";
         else return false;
     }
 }

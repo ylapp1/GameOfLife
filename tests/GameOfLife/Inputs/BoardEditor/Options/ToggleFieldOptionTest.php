@@ -21,6 +21,8 @@ class ToggleFieldOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\ToggleFieldOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -44,6 +46,8 @@ class ToggleFieldOptionTest extends TestCase
      * @param String $_x X-Coordinate
      * @param String $_y Y-Coordinate
      * @param String $_expectedErrorMessage Expected error message
+     *
+     * @throws \Exception
      */
     public function testCanToggleField(String $_x, String $_y, String $_expectedErrorMessage = null)
     {
@@ -67,19 +71,18 @@ class ToggleFieldOptionTest extends TestCase
             if ($_expectedErrorMessage)
             {
                 $amountBoardMethodCalls = 2;
-                $this->expectOutputString($_expectedErrorMessage);
             }
             else $amountBoardMethodCalls = 5;
 
 
-            $boardEditorMock->expects($this->exactly($amountBoardMethodCalls))
+            $boardEditorMock->expects($this->atMost($amountBoardMethodCalls))
                             ->method("board")
                             ->willReturn($boardMock);
 
-            $boardMock->expects($this->exactly(1))
+            $boardMock->expects($this->atMost(1))
                       ->method("width")
                       ->willReturn(10);
-            $boardMock->expects($this->exactly(1))
+            $boardMock->expects($this->atMost(1))
                       ->method("height")
                       ->willReturn(15);
 
@@ -101,8 +104,24 @@ class ToggleFieldOptionTest extends TestCase
                                       ->willReturn(null);
             }
 
-            $result = $option->toggleField($_x, $_y);
-            $this->assertFalse($result);
+            $exceptionOccurred = false;
+
+            try
+            {
+                $result = $option->toggleField($_x, $_y);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals($_expectedErrorMessage, $_exception->getMessage());
+            }
+
+            if ($_expectedErrorMessage) $this->assertTrue($exceptionOccurred);
+            else
+            {
+                $this->assertFalse($exceptionOccurred);
+                $this->assertFalse($result);
+            }
         }
     }
 
@@ -115,10 +134,10 @@ class ToggleFieldOptionTest extends TestCase
     {
         return array(
             "Valid input (0|0)" => array("0", "0"),
-            "X too low (-1|0)" => array("-1", "0", "Error: Invalid value for x specified (Value must be between 0 and 9)\n"),
-            "Y too low (0|-1)" => array("0", "-1", "Error: Invalid value for y specified (Value must be between 0 and 14)\n"),
-            "X too high (11, 0)" => array("11", "0", "Error: Invalid value for x specified (Value must be between 0 and 9)\n"),
-            "Y too high (0|16)" => array("0", "16", "Error: Invalid value for y specified (Value must be between 0 and 14)\n")
+            "X too low (-1|0)" => array("-1", "0", "Invalid value for x specified (Value must be between 0 and 9)."),
+            "Y too low (0|-1)" => array("0", "-1", "Invalid value for y specified (Value must be between 0 and 14)."),
+            "X too high (11, 0)" => array("11", "0", "Invalid value for x specified (Value must be between 0 and 9)."),
+            "Y too high (0|16)" => array("0", "16", "Invalid value for y specified (Value must be between 0 and 14).")
         );
     }
 }

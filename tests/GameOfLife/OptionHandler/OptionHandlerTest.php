@@ -18,6 +18,8 @@ class OptionHandlerTest extends TestCase
     /**
      * Checks whether the option handler can successfully initialize the option list.
      *
+     * @throws \Exception
+     *
      * @covers \OptionHandler\OptionHandler::__construct()
      * @covers \OptionHandler\OptionHandler::excludeClasses()
      * @covers \OptionHandler\OptionHandler::linkedOptions()

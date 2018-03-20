@@ -60,6 +60,8 @@ class BoardEditorOptionParser
      *
      * @return bool True: Board Editor session is finished
      *              False: Board Editor session continues
+     *
+     * @throws \Exception The exception when the option or its arguments are invalid
      */
     public function callOption(String $_input): bool
     {
@@ -68,10 +70,11 @@ class BoardEditorOptionParser
         if ($optionData)
         {
             $option = $this->parentOptionHandler->options()[$optionData["name"]];
+            $numberOfArguments = count($optionData["arguments"]);
 
-            if (count($optionData["arguments"]) != $option->numberOfArguments())
+            if ($numberOfArguments != $option->numberOfArguments())
             {
-                echo "Error: Invalid number of arguments\n";
+                throw new \Exception("Invalid number of arguments (Expected " . $option->numberOfArguments() . ", Got " . $numberOfArguments . ").");
             }
             else
             {
@@ -79,9 +82,16 @@ class BoardEditorOptionParser
                 return $sessionFinished;
             }
         }
-        else echo "Error: Invalid option or invalid coordinates format\n";
-
-        return false;
+        else
+        {
+            if (strlen($_input) == 0) throw new \Exception("Input is empty.");
+            else
+            {
+                $optionName = explode(" ", $_input)[0];
+                if (is_numeric($optionName)) throw new \Exception("Invalid coordinates format.");
+                else throw new \Exception("Invalid option \"" . $optionName . "\".");
+            }
+        }
     }
 
     /**

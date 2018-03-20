@@ -33,7 +33,14 @@ class ImageOutputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->testDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->testDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
         unset($this->fileSystemHandler);
         unset($this->output);
     }
@@ -50,7 +57,7 @@ class ImageOutputTest extends TestCase
         $output = new ImageOutput($_optionPrefix, $_imageOutputDirectory);
 
         $this->assertEquals($_optionPrefix, $output->optionPrefix());
-        $this->assertEquals($_imageOutputDirectory, $output->imageOutputDirectory());
+        $this->assertNotEmpty(stristr($output->imageOutputDirectory(), $_imageOutputDirectory));
     }
 
     public function constructionProvider()
@@ -101,6 +108,8 @@ class ImageOutputTest extends TestCase
 
     /**
      * @covers \Output\ImageOutput::startOutput()
+     *
+     * @throws \ReflectionException
      */
     public function testCanInitializeImageCreator()
     {
@@ -128,6 +137,8 @@ class ImageOutputTest extends TestCase
      * Checks whether the default values are successfully set.
      *
      * @covers \Output\ImageOutput::startOutput()
+     *
+     * @throws \ReflectionException
      */
     public function testCanSetDefaultValues()
     {

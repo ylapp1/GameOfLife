@@ -20,6 +20,8 @@ class ExitOptionTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\Options\ExitOption::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -37,6 +39,8 @@ class ExitOptionTest extends TestCase
      * Checks whether the option can exit the board editor.
      *
      * @covers \BoardEditor\Options\ExitOption::exitBoardEditor()
+     *
+     * @throws \Exception
      */
     public function testCanExitBoardEditor()
     {

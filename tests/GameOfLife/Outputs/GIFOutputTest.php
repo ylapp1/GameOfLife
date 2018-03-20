@@ -47,7 +47,14 @@ class GIFOutputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         unset($this->output);
         unset($this->board);
@@ -148,6 +155,8 @@ class GIFOutputTest extends TestCase
      * @covers \Output\GifOutput::outputBoard()
      * @covers \Output\GifOutput::finishOutput()
      * @covers \Output\BaseOutput::finishOutput()
+     *
+     * @throws \Exception
      */
     public function testCanCreateGif()
     {
@@ -180,26 +189,24 @@ class GIFOutputTest extends TestCase
      * Checks whether an empty frames folder is detected.
      *
      * @covers \Output\GifOutput::finishOutput()
+     *
+     * @throws \Exception
      */
     public function testDetectsEmptyFramesFolder()
     {
-        $this->expectOutputRegex("/.*Error: No frames in frames folder found!\n/");
-        $this->output->finishOutput("test");
-    }
+        // Hide output
+        $this->expectOutputRegex("/.*/");
 
-    /**
-     * Checks whether the output detects that the output folder does not exist.
-     *
-     * @covers \Output\GifOutput::finishOutput()
-     */
-    public function testDetectsOutputFolderNotExisting()
-    {
-        $this->output->startOutput(new Getopt(), $this->board);
-        $this->output->outputBoard($this->board);
-
-        $this->fileSystemHandler->deleteDirectory($this->output->baseOutputDirectory() . "Gif");
-
-        $this->expectOutputRegex("/.*An error occurred during the gif creation. Stopping.../");
-        @$this->output->finishOutput("test");
+        $exceptionOccurred = false;
+        try
+        {
+            $this->output->finishOutput("test");
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("No frames in frames folder found.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
     }
 }

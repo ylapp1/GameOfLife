@@ -28,12 +28,15 @@ class FfmpegHelper
      * FfmpegHelper constructor.
      *
      * @param String $_osName The name of the operating system
+     *
+     * @throws \Exception The exception when the ffmpeg binary could not be found
      */
     public function __construct(String $_osName)
     {
         $this->osName = strtolower($_osName);
         $this->fileSystemHandler = new FileSystemHandler();
         $this->shellExecutor = new ShellExecutor($_osName);
+
         $this->binaryPath = $this->findFFmpegBinary();
     }
 
@@ -102,7 +105,9 @@ class FfmpegHelper
     /**
      * Finds and returns the path to the ffmpeg binary file.
      *
-     * @return String|bool The path to the ffmpeg binary file or false if the file was not found
+     * @return String The path to the ffmpeg binary file
+     *
+     * @throws \Exception The exception when the ffmpeg binary could not be found
      */
     private function findFFmpegBinary()
     {
@@ -110,7 +115,10 @@ class FfmpegHelper
 
         if (stristr($this->osName, "win"))
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
-            $binaryPath = $this->fileSystemHandler->findFileRecursive(__DIR__ . "/../../../../Tools", "ffmpeg.exe");
+            $searchDirectory = __DIR__ . "/../../../../Tools";
+            $binaryPath = $this->fileSystemHandler->findFileRecursive($searchDirectory, "ffmpeg.exe");
+
+            if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
         elseif (stristr($this->osName, "linux"))
         { // If OS is Linux check whether the ffmpeg command returns true
@@ -168,12 +176,27 @@ class FfmpegHelper
      *
      * @param String $_outputPath The Ffmpeg output path
      *
-     * @return bool|int The return value of the ffmpeg command
+     * @throws \Exception The exception when the ffmpeg command returns an error
      */
     public function executeCommand(String $_outputPath)
     {
         $error = $this->shellExecutor->executeCommand($this->generateCommand($_outputPath), true);
 
-        return $error;
+        if ($error)
+        {
+            $fileSystemHandler = new FileSystemHandler();
+
+            try
+            {
+                // Delete the damaged video file (if one was created)
+                $fileSystemHandler->deleteFile($_outputPath);
+            }
+            catch (\Exception $_exception)
+            {
+                // Ignore the exception
+            }
+
+            throw new \Exception("Ffmpeg returned the error code \"" . $error . "\".");
+        }
     }
 }

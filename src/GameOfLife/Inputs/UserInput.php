@@ -35,6 +35,8 @@ class UserInput extends BaseInput
 
     /**
      * UserInput constructor.
+     *
+     * @throws \Exception The exception from the BoardEditor constructor
      */
     public function __construct()
     {
@@ -61,6 +63,8 @@ class UserInput extends BaseInput
      *
      * @param Board $_board The board that will be filled
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception The exceptions of the TemplateInput and the board editor launch method
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

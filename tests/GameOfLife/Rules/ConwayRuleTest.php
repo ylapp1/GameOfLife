@@ -10,9 +10,9 @@ use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Rule\ComwayRule works as expected
+ * Checks whether \Rule\ConwayRule works as expected
  */
-class ComwayRuleTest extends TestCase
+class ConwayRuleTest extends TestCase
 {
     /**
      * Checks whether the birth and stay alive rules are correctly set.

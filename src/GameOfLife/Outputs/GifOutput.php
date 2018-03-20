@@ -38,8 +38,7 @@ class GifOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->baseOutputDirectory . "/tmp/Frames";
-        parent::__construct("gif", $outputDirectory);
+        parent::__construct("gif", "/tmp/Frames");
     }
 
 
@@ -109,7 +108,14 @@ class GifOutput extends ImageOutput
         parent::startOutput($_options, $_board);
         echo "Starting GIF Output...\n\n";
 
-        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Gif");
+        try
+        {
+            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Gif");
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         // fetch options
         $frameTime = $_options->getOption("gifOutputFrameTime");
@@ -128,10 +134,8 @@ class GifOutput extends ImageOutput
 
         $image = $this->imageCreator->createImage($_board);
 
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
-
         $fileName = $_board->gameStep() . ".gif";
-        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagegif($image, $filePath);
         unset($image);
@@ -143,20 +147,19 @@ class GifOutput extends ImageOutput
      * Creates an animated Gif from the gif files that were created by outputBoard().
      *
      * @param String $_simulationEndReason The reason why the simulation ended
+     *
+     * @throws \Exception The exception when the frames folder is empty or the gif file could not be written
      */
     public function finishOutput(String $_simulationEndReason)
     {
         parent::finishOutput($_simulationEndReason);
+
+        unset($this->imageCreator);
         echo "\nStarting GIF creation. One moment please...";
 
-        if (count($this->frames) == 0)
-        {
-            echo "Error: No frames in frames folder found!\n";
-            return;
-        }
+        if (count($this->frames) == 0) throw new \Exception("No frames in frames folder found.");
 
         $frameDurations = array();
-
         for ($i = 0; $i < count($this->frames) - 1; $i++)
         {
             $frameDurations[] = $this->frameTime;
@@ -168,19 +171,11 @@ class GifOutput extends ImageOutput
         $gifCreator->create($this->frames, $frameDurations, 0);
 
         $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
-        $filePath = $this->baseOutputDirectory . "Gif/" . $fileName;
 
-        file_put_contents($filePath, $gifCreator->getGif());
-
-        if (! file_exists($filePath))
-        {
-            echo "An error occurred during the gif creation. Stopping...";
-            return;
-        }
-
-        unset($this->imageCreator);
+        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/Gif", $fileName, $gifCreator->getGif());
         $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
 
         echo "\nGIF creation complete.\n\n";
+        unset ($this->fileSystemHandler);
     }
 }

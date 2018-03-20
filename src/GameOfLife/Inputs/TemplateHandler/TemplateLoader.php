@@ -30,7 +30,9 @@ class TemplateLoader extends TemplateHandler
      *
      * @param String $_templateName The name of the template
      *
-     * @return array|Bool The loaded template or false if the template file was not found
+     * @return array The loaded template
+     *
+     * @throws \Exception The exception when the template file was not found or the file could not be read
      */
     public function loadTemplate(String $_templateName)
     {
@@ -42,7 +44,7 @@ class TemplateLoader extends TemplateHandler
         // Check whether the specified template exists
         if (file_exists($defaultTemplatePath)) $fileName = $defaultTemplatePath;
         elseif (file_exists($customTemplatePath)) $fileName = $customTemplatePath;
-        else return false;
+        else throw new \Exception("The template file could not be found.");
 
         // Read the template
         $lines = $this->fileSystemHandler->readFile($fileName);

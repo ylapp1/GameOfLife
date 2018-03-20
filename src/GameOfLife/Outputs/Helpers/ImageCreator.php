@@ -10,7 +10,6 @@ namespace Output\Helpers;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Utils\FileSystemHandler;
 
 /**
  * Creates an image of a board and returns its output path.

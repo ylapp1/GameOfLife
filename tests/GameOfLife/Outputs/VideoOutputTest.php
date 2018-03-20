@@ -35,6 +35,9 @@ class VideoOutputTest extends TestCase
     /** @var GameLogic $gameLogic */
     private $gameLogic;
 
+    /**
+     * @throws Exception
+     */
     protected function setUp()
     {
         $this->output = new VideoOutput();
@@ -52,7 +55,14 @@ class VideoOutputTest extends TestCase
 
     protected function tearDown()
     {
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->outputDirectory, true);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         unset($this->output);
         unset($this->board);
@@ -64,6 +74,8 @@ class VideoOutputTest extends TestCase
 
     /**
      * @covers \Output\VideoOutput::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -94,6 +106,8 @@ class VideoOutputTest extends TestCase
      * @param int $_fps                     Frames per second
      * @param array $_frames                Frame paths
      * @param bool $_hasSound               Indicates whether the video will have sound or not
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes(array $_fillPercentages, int $_fps, array $_frames, bool $_hasSound)
     {
@@ -153,6 +167,8 @@ class VideoOutputTest extends TestCase
 
     /**
      * @covers \Output\VideoOutput::startOutput()
+     *
+     * @throws \Exception
      */
     public function testCanCreateOutputDirectory()
     {
@@ -175,6 +191,8 @@ class VideoOutputTest extends TestCase
      * @covers \Output\VideoOutput::generateVideoFile()
      *
      * @param bool $_hasSound   Indicates whether the video will have sound or not
+     *
+     * @throws \Exception
      */
     public function testCanCreateVideo(bool $_hasSound)
     {
@@ -185,10 +203,6 @@ class VideoOutputTest extends TestCase
         $ffmpegHelperMock->expects($this->exactly(1 + $_hasSound * 10))
                          ->method("executeCommand")
                          ->willReturn(false);
-
-        $ffmpegHelperMock->expects($this->exactly(1))
-                         ->method("binaryPath")
-                         ->willReturn(true);
 
         if ($ffmpegHelperMock instanceof \Output\Helpers\FfmpegHelper)
         {
@@ -248,51 +262,24 @@ class VideoOutputTest extends TestCase
      *
      * @covers \Output\VideoOutput::finishOutput()
      * @covers \Output\VideoOutput::generateVideoFile()
+     *
+     * @throws \Exception
      */
     public function testDetectsEmptyFramesFolder()
     {
-        $this->expectOutputRegex("/.*Error: No frames in frames folder found!\n/");
-        $this->output->finishOutput("test");
-    }
+        // Hide output
+        $this->expectOutputRegex("/.*/");
 
-    /**
-     * Checks whether errors while creating the audio and the video files are detected.
-     *
-     * @covers \Output\VideoOutput::finishOutput()
-     * @covers \Output\VideoOutput::generateVideoFile()
-     */
-    public function testDetectsFfmpegErrors()
-    {
-        $ffmpegHelperMock = $this->getMockBuilder(\Output\Helpers\FfmpegHelper::class)
-                                 ->disableOriginalConstructor()
-                                 ->getMock();
-
-        $ffmpegHelperMock->expects($this->exactly(2))
-                         ->method("binaryPath")
-                         ->willReturn(true);
-
-        $ffmpegHelperMock->expects($this->exactly(2))
-                         ->method("executeCommand")
-                         ->willReturn("error");
-
-        if ($ffmpegHelperMock instanceof FfmpegHelper)
+        $exceptionOccurred = false;
+        try
         {
-            $this->output->setFfmpegHelper($ffmpegHelperMock);
-            $this->output->setFrames(array(true));
-            $this->output->setFillPercentages(array(2));
-            $this->output->setFps(2);
-
-            // With sound
-            $this->output->setHasSound(true);
-
-            $this->expectOutputRegex("/.*\nError while creating the audio files\. Is ffmpeg installed\?\n.*/");
-            $this->output->finishOutput("test");
-
-            // Without sound
-            $this->output->setHasSound(false);
-
-            $this->expectOutputRegex("/.*\nError while creating the video file\. Is ffmpeg installed\?\n/");
             $this->output->finishOutput("test");
         }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("No frames in frames folder found.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
     }
 }

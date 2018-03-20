@@ -102,10 +102,12 @@ class OptionParserTest extends TestCase
      * @param array $_returnValueMaps The return values for "getOption" in the format array("optionName", "returnValue")
      * @param Board|Bool $_expectedBoard The expected Board object or false
      *
+     * @throws \Exception
+     *
      * @dataProvider parseBoardOptionsProvider
      * @covers \OptionHandler\OptionParser::parseBoardOptions()
      */
-    public function testCanParseBoardOptions(array $_returnValueMaps, $_expectedBoard)
+    public function testCanParseBoardOptions(array $_returnValueMaps, $_expectedBoard = null)
     {
         $this->optionsMock->expects($this->exactly(count($_returnValueMaps)))
             ->method("getOption")
@@ -114,11 +116,23 @@ class OptionParserTest extends TestCase
 
         if ($this->optionsMock instanceof Getopt)
         {
-            // Hide output
-            $this->expectOutputRegex("/.*/");
+            $exceptionOccurred = false;
+            try
+            {
+                $board = $this->optionParser->parseBoardOptions($this->optionsMock);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+                $this->assertEquals("Invalid border type specified.", $_exception->getMessage());
+            }
 
-            $board = $this->optionParser->parseBoardOptions($this->optionsMock);
-            $this->assertEquals($_expectedBoard, $board);
+            if (! $_expectedBoard) $this->assertTrue($exceptionOccurred);
+            else
+            {
+                $this->assertFalse($exceptionOccurred);
+                $this->assertEquals($_expectedBoard, $board);
+            }
         }
     }
 

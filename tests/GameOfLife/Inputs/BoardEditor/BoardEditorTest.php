@@ -63,6 +63,8 @@ class BoardEditorTest extends TestCase
      * Checks whether the constructor works as expected.
      *
      * @covers \BoardEditor\BoardEditor::__construct()
+     *
+     * @throws \Exception
      */
     public function testCanBeConstructed()
     {
@@ -84,6 +86,8 @@ class BoardEditorTest extends TestCase
      * @covers \BoardEditor\BoardEditor::setOutput()
      * @covers \BoardEditor\BoardEditor::templateDirectory()
      * @covers \BoardEditor\BoardEditor::setTemplateDirectory()
+     *
+     * @throws \Exception
      */
     public function testCanSetAttributes()
     {
@@ -108,6 +112,8 @@ class BoardEditorTest extends TestCase
      * Checks whether the board editor can launch a board editor session.
      *
      * @covers \BoardEditor\BoardEditor::launch()
+     *
+     * @throws \Exception
      */
     public function testCanLaunchSession()
     {
@@ -173,6 +179,8 @@ class BoardEditorTest extends TestCase
      * @covers \BoardEditor\BoardEditor::readInput()
      *
      * @param String $_fileContent Content that will be written to a test file which is read by readInput()
+     *
+     * @throws Exception
      */
     public function testCanReadInput(String $_fileContent)
     {
@@ -186,7 +194,6 @@ class BoardEditorTest extends TestCase
         $fileSystemHandler->writeFile($testDirectory, $testFile, $_fileContent);
 
         $this->assertEquals($_fileContent, $boardEditor->readInput($testDirectory . "/" . $testFile));
-
         $fileSystemHandler->deleteDirectory($testDirectory, true);
     }
 

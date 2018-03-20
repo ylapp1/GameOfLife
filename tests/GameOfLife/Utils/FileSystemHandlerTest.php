@@ -17,10 +17,15 @@ class FileSystemHandlerTest extends TestCase
     /** @var FileSystemHandler */
     private $fileSystemHandler;
     /** @var string */
-    private $testDirectory = __DIR__ . "/../FileSystemHandlerTest";
+    private $testDirectory;
 
     protected function setUp()
     {
+        if (stristr(PHP_OS, "win")) $directorySeparator = "\\";
+        else $directorySeparator = "/";
+
+        $this->testDirectory = __DIR__ . $directorySeparator . ".." . $directorySeparator . "FileSystemHandlerTest";
+
         $this->fileSystemHandler = new FileSystemHandler();
         mkdir($this->testDirectory);
     }
@@ -38,23 +43,54 @@ class FileSystemHandlerTest extends TestCase
      *
      * @param string $_directoryName    Test directory name
      * @param array $_subDirectories    Sub directories that shall be created
+     *
+     * @throws \Exception
      */
     public function testCanHandleDirectories(string $_directoryName, array $_subDirectories = array())
     {
         $directoryPath = $this->testDirectory . "/" . $_directoryName;
         $this->assertFalse(file_exists($directoryPath));
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($directoryPath));
+
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->createDirectory($directoryPath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertTrue(file_exists($directoryPath));
 
         foreach ($_subDirectories as $subDirectory)
         {
             $subDirectoryPath = $this->testDirectory . "/" . $_directoryName . "/" . $subDirectory;
             $this->assertFalse(file_exists($subDirectoryPath));
-            $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($subDirectoryPath));
+
+            $exceptionOccurred = false;
+            try
+            {
+                $this->fileSystemHandler->createDirectory($subDirectoryPath);
+            }
+            catch (\Exception $_exception)
+            {
+                $exceptionOccurred = true;
+            }
+            $this->assertFalse($exceptionOccurred);
             $this->assertTrue(file_exists($subDirectoryPath));
         }
 
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($directoryPath, true);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertFalse(file_exists($directoryPath));
     }
 
@@ -76,12 +112,42 @@ class FileSystemHandlerTest extends TestCase
     {
         $directoryPath = $this->testDirectory . "/atest";
         $this->assertFalse(file_exists($directoryPath));
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->createDirectory($directoryPath));
+
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->createDirectory($directoryPath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertTrue(file_exists($directoryPath));
 
         // try to create the existing directory again
-        $this->assertEquals(FileSystemHandler::ERROR_DIRECTORY_EXISTS, $this->fileSystemHandler->createDirectory($directoryPath));
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteDirectory($directoryPath, true));
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->createDirectory($directoryPath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("The directory \"" . $directoryPath . "\" already exists.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
+
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($directoryPath, true);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertFalse(file_exists($directoryPath));
     }
 
@@ -98,16 +164,56 @@ class FileSystemHandlerTest extends TestCase
     public function testCanHandleFiles(string $_fileName, string $_content, array $_expectedContent)
     {
         $outputPath = $this->testDirectory . "/" . $_fileName;
-
         $this->assertFalse(file_exists($outputPath));
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content));
+
+        $exceptionOccurred  = false;
+        try
+        {
+            $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertTrue(file_exists($outputPath));
-        $this->assertEquals($_expectedContent, $this->fileSystemHandler->readFile($outputPath));
 
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($outputPath));
+        $exceptionOccurred = false;
+        try
+        {
+            $fileContent = $this->fileSystemHandler->readFile($outputPath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $fileContent = array();
+        }
+        $this->assertFalse($exceptionOccurred);
+        $this->assertEquals($_expectedContent, $fileContent);
+
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->deleteFile($outputPath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertFalse(file_exists($outputPath));
 
-        $this->assertEquals(FileSystemHandler::ERROR_FILE_NOT_EXISTS, $this->fileSystemHandler->deleteFile("nonExistingFile.notExisting"));
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->deleteFile("nonExistingFile.notExisting");
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("The file \"nonExistingFile.notExisting\" does not exist.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
     }
 
     public function writeFileProvider()
@@ -131,21 +237,82 @@ class FileSystemHandlerTest extends TestCase
         $filePath = $this->testDirectory . "/mytest.txt";
 
         $this->assertFalse(file_exists($filePath));
-        $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $error);
+
+        // Check whether file can be created with content
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertTrue(file_exists($filePath));
 
-        $this->assertEquals(array("Hello World!"), $this->fileSystemHandler->readFile($filePath));
+        // Check whether file content can be read
+        $exceptionOccurred = false;
+        try
+        {
+            $fileContent = $this->fileSystemHandler->readFile($filePath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $fileContent = array();
+        }
+        $this->assertFalse($exceptionOccurred);
+        $this->assertEquals(array("Hello World!"), $fileContent);
 
-        $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
-        $this->assertEquals(FileSystemHandler::ERROR_FILE_EXISTS, $error);
+        // Check whether trying to rewrite the file fails
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
+        }
+        catch (\Exception $_exception)
+        {
+            $this->assertEquals("The file already exists.", $_exception->getMessage());
+            $exceptionOccurred = true;
+        }
+        $this->assertTrue($exceptionOccurred);
 
-        // Check whether content of file was changed
-        $error = $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $error);
-        $this->assertEquals(array("Hello universe!"), $this->fileSystemHandler->readFile($filePath));
+        // Check whether content of file changes
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
 
-        $this->assertEquals(FileSystemHandler::NO_ERROR, $this->fileSystemHandler->deleteFile($filePath));
+        $exceptionOccurred = false;
+        try
+        {
+            $fileContent = $this->fileSystemHandler->readFile($filePath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $fileContent = array();
+        }
+        $this->assertFalse($exceptionOccurred);
+        $this->assertEquals(array("Hello universe!"), $fileContent);
+
+        $exceptionOccurred = false;
+        try
+        {
+            $this->fileSystemHandler->deleteFile($filePath);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+        }
+        $this->assertFalse($exceptionOccurred);
         $this->assertFalse(file_exists($filePath));
     }
 
@@ -157,17 +324,31 @@ class FileSystemHandlerTest extends TestCase
         $fileNames = array("Hello", "myFile", "myPersonalFile", "myPersonalTest", "thisIsAFile", "ThisIsMyFile");
         sort($fileNames);
 
+        if (stristr(PHP_OS, "win")) $directorySeparator = "\\";
+        else $directorySeparator = "/";
+
         foreach ($fileNames as $index => $fileName)
         {
-            touch($this->testDirectory . "/" . $fileName);
+            touch($this->testDirectory . $directorySeparator . $fileName);
         }
 
-        $files = $this->fileSystemHandler->getFileList($this->testDirectory . "/*");
+        $exceptionOccurred = false;
+        try
+        {
+            $files = $this->fileSystemHandler->getFileList($this->testDirectory . "/*");
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $files = array();
+        }
+        $this->assertFalse($exceptionOccurred);
+
 
         foreach ($files as $index => $file)
         {
-            $fileName = $this->testDirectory . "/" . $fileNames[$index];
-            $this->assertEquals($this->testDirectory . "/" . $fileNames[$index], $file);
+            $fileName = $this->testDirectory . $directorySeparator . $fileNames[$index];
+            $this->assertEquals($this->testDirectory . $directorySeparator . $fileNames[$index], $file);
             unlink($fileName);
         }
     }
@@ -194,7 +375,17 @@ class FileSystemHandlerTest extends TestCase
         mkdir($testDirectory . "/" . $_directories, 0777, true);
         touch($testFilePath);
 
-        $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
+        $exceptionOccurred = false;
+        try
+        {
+            $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $filePath = "";
+        }
+        $this->assertFalse($exceptionOccurred);
 
         if ($_expectsFilePath) $this->assertEquals($testFilePath, $filePath);
         else $this->assertFalse($filePath);

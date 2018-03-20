@@ -54,6 +54,8 @@ class TemplateLoaderTest extends TestCase
 
     /**
      * Checks whether templates are correctly loaded.
+     *
+     * @throws \Exception
      */
     public function testCanLoadTemplate()
     {
@@ -90,12 +92,28 @@ class TemplateLoaderTest extends TestCase
         $this->assertFalse($templateFields[1][1]->isAlive());
 
         $this->fileSystemHandler->deleteFile($this->templateDirectory . "/Custom/unittest2.txt");
-        $this->fileSystemHandler->deleteDirectory($this->templateDirectory . "/Custom");
+
+        try
+        {
+            $this->fileSystemHandler->deleteDirectory($this->templateDirectory . "/Custom");
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore exception
+        }
 
 
         // Non existent template
-        $template = $this->templateLoader->loadTemplate("invalidTemplate");
-
-        $this->assertfalse($template);
+        $exceptionOccurred = false;
+        try
+        {
+            $this->templateLoader->loadTemplate("invalidTemplate");
+        }
+        catch (\Exception $_exception)
+        {
+            $exceptionOccurred = true;
+            $this->assertEquals("The template file could not be found.", $_exception->getMessage());
+        }
+        $this->assertTrue($exceptionOccurred);
     }
 }

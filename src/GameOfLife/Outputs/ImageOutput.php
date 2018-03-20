@@ -25,7 +25,7 @@ class ImageOutput extends BaseOutput
      *
      * @var String $outputDirectory
      */
-    protected $baseOutputDirectory = __DIR__ . "/../../../Output/";
+    protected $baseOutputDirectory = __DIR__ . "/../../../Output";
 
     /**
      * The file system handler
@@ -46,14 +46,14 @@ class ImageOutput extends BaseOutput
      *
      * @var string $imageOutputDirectory
      */
-    private $imageOutputDirectory;
+    protected $imageOutputDirectory;
 
     /**
      * Prefix for all Getopt options for the child class.
      *
      * @var string $optionPrefix
      */
-    private $optionPrefix;
+    protected $optionPrefix;
 
 
     /**
@@ -65,7 +65,7 @@ class ImageOutput extends BaseOutput
     public function __construct(String $_optionPrefix, String $_imageOutputDirectory)
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->imageOutputDirectory = $_imageOutputDirectory;
+        $this->imageOutputDirectory = $this->baseOutputDirectory . "/" . $_imageOutputDirectory;
         $this->optionPrefix = $_optionPrefix;
     }
 
@@ -196,7 +196,14 @@ class ImageOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);
+        try
+        {
+            $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         $colorSelector = new ColorSelector();
 
@@ -230,7 +237,14 @@ class ImageOutput extends BaseOutput
      */
     public function getNewGameId(String $_outputType): int
     {
-        $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+        try
+        {
+            $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+        }
+        catch (\Exception $_exception)
+        {
+            $fileNames = array();
+        }
 
         if (count($fileNames) == 0) $newGameId = 1;
         else

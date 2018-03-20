@@ -38,13 +38,13 @@ class ToggleFieldOption extends BoardEditorOption
      * @param int $_y Y-Coordinate of the field
      *
      * @return bool Indicates whether the board editor session is finished
+     *
+     * @throws \Exception The exception when one of the coordinates exceeds the board borders
      */
     public function toggleField($_x, $_y)
     {
         $x = $this->getIntegerCoordinate($_x, "x", 0, $this->parentBoardEditor->board()->width() - 1);
         $y = $this->getIntegerCoordinate($_y, "y", 0, $this->parentBoardEditor->board()->height() - 1);
-
-        if ($x === false || $y === false) return false;
 
         $currentCellState = $this->parentBoardEditor->board()->getFieldStatus($x, $y);
         $this->parentBoardEditor->board()->setField($x, $y, !$currentCellState);
@@ -61,7 +61,9 @@ class ToggleFieldOption extends BoardEditorOption
      * @param int $_minValue The minimum value of the coordinate
      * @param int $_maxValue The maximum value of the coordinate
      *
-     * @return bool|int False or the integer coordinate
+     * @return int False or the integer coordinate
+     *
+     * @throws \Exception The exception when the coordinate exceeds the board borders
      */
     private function getIntegerCoordinate(String $_inputCoordinate, String $_coordinateName, int $_minValue, int $_maxValue)
     {
@@ -69,8 +71,7 @@ class ToggleFieldOption extends BoardEditorOption
 
         if ($coordinate < $_minValue || $coordinate > $_maxValue)
         {
-            echo "Error: Invalid value for " . $_coordinateName . " specified (Value must be between " . $_minValue . " and " . $_maxValue . ")\n";
-            return false;
+            throw new \Exception("Invalid value for " . $_coordinateName . " specified (Value must be between " . $_minValue . " and " . $_maxValue . ").");
         }
         else return $coordinate;
     }

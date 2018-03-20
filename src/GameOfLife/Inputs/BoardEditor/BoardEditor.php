@@ -56,13 +56,23 @@ class BoardEditor
      *
      * @param String $_templateDirectory The directory to which templates will be saved
      * @param Board $_board The board which will be edited
+     *
+     * @throws \Exception
      */
     public function __construct(String $_templateDirectory, Board $_board = null)
     {
         if (isset($_board)) $this->board = $_board;
 
         $this->templateDirectory = $_templateDirectory;
-        $this->optionHandler = new BoardEditorOptionHandler($this);
+
+        try
+        {
+            $this->optionHandler = new BoardEditorOptionHandler($this);
+        }
+        catch (\Exception $_exception)
+        {
+            throw new \Exception("Error while initializing the board editor option handler: " . $_exception->getMessage());
+        }
         $this->output = new BoardEditorOutput();
     }
 
@@ -150,6 +160,8 @@ class BoardEditor
 
     /**
      * Launches the board editor session.
+     *
+     * @throws \Exception The exception when the option "help" could not be parsed
      */
     public function launch()
     {
@@ -162,7 +174,15 @@ class BoardEditor
             echo "> ";
 
             $line = $this->readInput("php://stdin");
-            $isInputFinished = $this->optionHandler->parseInput($line);
+
+            try
+            {
+                $isInputFinished = $this->optionHandler->parseInput($line);
+            }
+            catch (\Exception $_exception)
+            {
+                echo "Error while parsing the option: " . $_exception->getMessage() . "\n";
+            }
         }
     }
 

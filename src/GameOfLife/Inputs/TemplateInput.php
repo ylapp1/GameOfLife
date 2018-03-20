@@ -9,7 +9,6 @@
 namespace Input;
 
 use GameOfLife\Board;
-use TemplateHandler\Template;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\TemplatePlacer;
@@ -54,10 +53,12 @@ class TemplateInput extends BaseInput
      * TemplateInput constructor.
      *
      * @param String $_templatesBaseDirectory The base directory for default and custom templates
+     *
+     * @throws \Exception The exception when the default template folder does not exist
      */
     public function __construct(String $_templatesBaseDirectory = null)
     {
-        $templatesBaseDirectory = __DIR__ . "/../../../Input/Templates/";
+        $templatesBaseDirectory = __DIR__ . "/../../../Input/Templates";
         if ($_templatesBaseDirectory !== null) $templatesBaseDirectory = $_templatesBaseDirectory;
 
         $this->templateListPrinter = new TemplateListPrinter($templatesBaseDirectory);
@@ -114,11 +115,19 @@ class TemplateInput extends BaseInput
      *
      * @param Board $_board The board
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception The exception of TemplatePlacer, TemplateListPrinter or if no template file was specified
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("template") !== null) $this->placeTemplate($_board, $_options, $_options->getOption("template"), true);
-        elseif ($_options->getOption("list-templates") !== null) $this->templateListPrinter->printTemplateLists();
+        if ($_options->getOption("template") !== null)
+        {
+            $this->placeTemplate($_board, $_options, $_options->getOption("template"), true);
+        }
+        elseif ($_options->getOption("list-templates") !== null)
+        {
+            $this->templateListPrinter->printTemplateLists();
+        }
         else
         {
             $templateName = $this->getTemplateNameFromLinkedOption($_options);
@@ -130,7 +139,7 @@ class TemplateInput extends BaseInput
                     $randomInput = new RandomInput();
                     $randomInput->fillBoard($_board, new Getopt());
                 }
-                else echo "Error: No template file specified\n";
+                else throw new \Exception("No template file specified.");
             }
         }
     }
@@ -170,15 +179,12 @@ class TemplateInput extends BaseInput
      * @param Getopt $_options The option list
      * @param String $_templateName The name of the template
      * @param Bool $_isTemplateOption Indicates whether this function was called because the option "template" was set
+     *
+     * @throws \Exception The exception when the template could not be loaded or exceeds one of the board borders
      */
     private function placeTemplate(Board $_board, Getopt $_options, String $_templateName, Bool $_isTemplateOption)
     {
         $templateFields = $this->templateLoader->loadTemplate($_templateName);
-        if ($templateFields == false)
-        {
-            echo "Error: Template file not found!\n";
-            return;
-        }
 
         $posOptionPrefix = "template";
         if (! $_isTemplateOption) $posOptionPrefix = $_templateName;
@@ -201,9 +207,9 @@ class TemplateInput extends BaseInput
 
         $isDimensionsAdjustment = $this->isDimensionsAdjustment($_options, $_board, $templateFields, $posOptionPrefix);
 
-        $result = $this->templatePlacer->placeTemplate($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
-        if ($result == false) echo "Error, the template may not exceed the field borders!\n";
-        elseif ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+        $this->templatePlacer->placeTemplate($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
+
+        if ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
     }
 
     /**

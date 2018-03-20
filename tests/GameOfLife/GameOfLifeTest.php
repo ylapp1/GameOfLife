@@ -52,11 +52,23 @@ class GameOfLifeTest extends TestCase
 
         foreach ($_optionParserReturnValues as $methodName => $returnValue)
         {
-            $optionParserMock->expects($this->exactly(1))
-                             ->method($methodName)
-                             ->willReturn($returnValue);
+            if ($methodName == "parseBoardOptions" && $returnValue == false)
+            {
+                $optionParserMock->expects($this->exactly(1))
+                                 ->method($methodName)
+                                 ->willThrowException(new \Exception("Board is empty."));
+            }
+            else
+            {
+                $optionParserMock->expects($this->exactly(1))
+                                 ->method($methodName)
+                                 ->willReturn($returnValue);
+            }
         }
 
+
+        // Hide output
+        $this->expectOutputRegex("/.*/");
 
         $gameOfLife = new GameOfLife();
 
@@ -82,6 +94,8 @@ class GameOfLifeTest extends TestCase
      * DataProvider for GameOfLifeTest::testCanBeInitialized().
      *
      * @return array Test values in the format array(methods => returnValues, expectedReturnValue)
+     *
+     * @throws \Exception
      */
     public function canBeInitializedProvider()
     {
@@ -122,7 +136,7 @@ class GameOfLifeTest extends TestCase
      *
      * @covers \GameOfLife\GameOfLife::startSimulation()
      *
-     * @throws ReflectionException
+     * @throws \Exception
      */
     public function testCanStartSimulation(int $_amountLoops, String $_endLoopMethodName)
     {

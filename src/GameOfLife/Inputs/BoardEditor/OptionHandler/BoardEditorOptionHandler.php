@@ -49,6 +49,8 @@ class BoardEditorOptionHandler
      * BoardEditorOptionHandler constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
+     *
+     * @throws \Exception The exception when the option loader fails to load the options from the specified directory
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
@@ -146,6 +148,8 @@ class BoardEditorOptionHandler
      * @param String $_input User input
      *
      * @return bool Indicates whether the board editor session is finished
+     *
+     * @throws \Exception The exception when the option or its arguments are invalid
      */
     public function parseInput(String $_input): bool
     {

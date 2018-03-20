@@ -59,11 +59,12 @@ class VideoOutput extends ImageOutput
 
     /**
      * VideoOutput constructor.
+     *
+     * @throws \Exception The exception when the ffmpeg helper could not be constructed
      */
     public function __construct()
     {
-        $outputDirectory = $this->baseOutputDirectory . "tmp/Frames";
-        parent::__construct("video", $outputDirectory);
+        parent::__construct("video", "/tmp/Frames");
 
         $this->fillPercentages = array();
         $this->frames = array();
@@ -193,18 +194,40 @@ class VideoOutput extends ImageOutput
      *
      * @param Getopt $_options User inputted option list
      * @param Board $_board Initial board
+     *
+     * @throws \Exception
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
         echo "Starting video output ...\n\n";
 
-        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Video");
-        $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
+        try
+        {
+            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Video");
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
+
+        try
+        {
+            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
+        }
+        catch (\Exception $_exception)
+        {
+            // Remove the files from the directory
+            $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
+            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
+        }
+
 
         // fetch options
-        $fps = $_options->getOption("videoOutputFPS");
-        if ($fps !== null) $this->fps = (int)$fps;
+        if ($_options->getOption("videoOutputFPS") !== null)
+        {
+            $this->fps = (int)$_options->getOption("videoOutputFPS");
+        }
         else $this->fps = 15;
 
         if ($_options->getOption("videoOutputAddSound") !== null) $this->hasSound = true;
@@ -222,10 +245,8 @@ class VideoOutput extends ImageOutput
 
         $image = $this->imageCreator->createImage($_board);
 
-        $this->fileSystemHandler->createDirectory($this->imageOutputDirectory());
-
         $fileName = $_board->gameStep() . ".png";
-        $filePath = $this->imageOutputDirectory() . "/" . $fileName;
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);
@@ -238,89 +259,99 @@ class VideoOutput extends ImageOutput
      * Creates the video file from the frames and adds a sound per game step.
      *
      * @param String $_simulationEndReason The reason why the simulation ended
+     *
+     * @throws \Exception The exception when the video file generation fails
      */
     public function finishOutput(String $_simulationEndReason)
     {
         parent::finishOutput($_simulationEndReason);
         echo "\nStarting video creation ...\n";
 
-        // Initialize ffmpeg helper
-        if (! $this->ffmpegHelper->binaryPath()) echo "Error: Ffmpeg binary not found\n";
-        else $this->generateVideoFile();
+        $this->generateVideoFile();
 
         unset($this->imageCreator);
         $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
+    /**
+     * Generates the video file.
+     *
+     * @throws \Exception The exception when the frames folder is empty or the ffmpeg command returns an error
+     */
     private function generateVideoFile()
     {
-        $ffmpegOutputDirectory = str_replace("\\", "/", $this->baseOutputDirectory);
-
         if (count($this->frames) == 0)
         {
-            echo "Error: No frames in frames folder found!\n";
-            return;
+            throw new \Exception("No frames in frames folder found.");
         }
 
-        // generate Audio files for each frame
         if ($this->hasSound == true)
         {
-            $amountFrames = count($this->frames);
-            $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
-            $audioListPath = $this->baseOutputDirectory . "tmp/Audio/list.txt";
+            $audioListFileName = $this->generateAudioFiles();
 
-            for ($i = 0; $i < count($this->frames); $i++)
-            {
-                echo "\rGenerating audio ... " . ($i + 1) . "/" . $amountFrames;
-                $outputPath = "tmp/Audio/" . $i . ".wav";
-
-                // Generate random beep sound
-                $this->ffmpegHelper->resetOptions();
-                $this->ffmpegHelper->addOption("-f lavfi");
-                $this->ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
-                $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
-
-                $error = $this->ffmpegHelper->executeCommand($ffmpegOutputDirectory . $outputPath);
-
-                if ($error)
-                {
-                    echo "\nError while creating the audio files. Is ffmpeg installed?\n";
-                    return;
-                }
-
-                file_put_contents($audioListPath, "file '" . $i . ".wav'\r\n", FILE_APPEND);
-            }
+            // Create single sound from sound frames
+            $this->ffmpegHelper->addOption("-f concat");
+            $this->ffmpegHelper->addOption("-safe 0");
+            $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Audio/" . $audioListFileName . "\"");
         }
 
         echo "\nGenerating video file ...";
 
-        // Create video
-        $this->ffmpegHelper->resetOptions();
-
-        if ($this->hasSound == true)
-        {
-            // Create single sound from sound frames
-            $this->ffmpegHelper->addOption("-f concat");
-            $this->ffmpegHelper->addOption("-safe 0");
-            $this->ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Audio/list.txt\"");
-        }
-
         // Create video from image frames
         $this->ffmpegHelper->addOption("-framerate " . $this->fps);
-        $this->ffmpegHelper->addOption("-i \"" . $ffmpegOutputDirectory . "tmp/Frames/%d.png\""); // Input Images
+
+        // Input images
+        $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Frames/%d.png\"");
         $this->ffmpegHelper->addOption("-pix_fmt yuv420p");
+
+        if (stristr(PHP_OS, "linux"))
+        {
+            // This option is necessary to avoid an error on Linux
+            $this->ffmpegHelper->addOption("-strict -2");
+        }
 
         $fileName = "Game_" . $this->getNewGameId("Video") . ".mp4";
 
         // Save video in output folder
-        $error = $this->ffmpegHelper->executeCommand( $this->baseOutputDirectory . "Video/" . $fileName);
-
-        if ($error)
-        {
-            echo "\nError while creating the video file. Is ffmpeg installed?\n";
-            return;
-        }
+        $this->ffmpegHelper->executeCommand( $this->baseOutputDirectory . "/Video/" . $fileName);
 
         echo "\nVideo creation complete!\n\n";
+    }
+
+    /**
+     * Generates the audio files for each frame and writes the paths to the files to a temporary file.
+     *
+     * @return String The path to the temporary audio list file
+     *
+     * @throws \Exception The exception when the ffmpeg command returned an error
+     */
+    private function generateAudioFiles(): String
+    {
+        $amountFrames = count($this->frames);
+        $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
+        $audioListContent = "";
+
+        $this->ffmpegHelper->resetOptions();
+
+        for ($i = 0; $i < count($this->frames); $i++)
+        {
+            echo "\rGenerating audio ... " . ($i + 1) . "/" . $amountFrames;
+            $outputPath = "tmp/Audio/" . $i . ".wav";
+
+            // Generate beep sound based on the fill percentage
+            $this->ffmpegHelper->addOption("-f lavfi");
+            $this->ffmpegHelper->addOption("-i \"sine=frequency=" . (10000 * $this->fillPercentages[$i]) . ":duration=1\"");
+            $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
+
+            $this->ffmpegHelper->executeCommand($this->baseOutputDirectory . "/" . $outputPath);
+            $audioListContent .= "file '" . $i . ".wav'\r\n";
+
+            $this->ffmpegHelper->resetOptions();
+        }
+
+        $fileName = "list.txt";
+        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/tmp/Audio", $fileName, $audioListContent);
+
+        return $fileName;
     }
 }

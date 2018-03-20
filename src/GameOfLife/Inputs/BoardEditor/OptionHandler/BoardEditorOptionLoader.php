@@ -90,6 +90,8 @@ class BoardEditorOptionLoader
      * @param String $_optionsDirectory Directory in which the board editor options are stored
      *
      * @return BoardEditorOption[] array in the format ("optionName" => "optionObject")
+     *
+     * @throws \Exception The exception when the options directory was not found
      */
     public function loadOptions(String $_optionsDirectory): array
     {
