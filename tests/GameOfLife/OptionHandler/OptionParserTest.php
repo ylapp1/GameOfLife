@@ -209,7 +209,7 @@ class OptionParserTest extends TestCase
      * @covers \OptionHandler\OptionParser::parseInputOptions()
      * @covers \OptionHandler\OptionParser::parseOutputOptions()
      * @covers \OptionHandler\OptionParser::parseRuleOptions()
-     * @covers \OptionHandler\OptionParser::parseOptions()
+     * @covers \OptionHandler\OptionParser::parseClassOptions()
      */
     public function testCanParseClassOptions(String $_optionParseFunction, array $_returnValueMaps, String $_expectedClass, array $_excludeClasses, array $_linkedOptions = array())
     {
