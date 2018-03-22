@@ -50,6 +50,14 @@ class BoardEditor
      */
     private $templateDirectory;
 
+    /**
+     * The coordinates of the top left and bottom right corner of the currently selected area
+     * The array is in the format array("A" => array("x", "y"))
+     *
+     * @var array $selection
+     */
+    private $selectionCoordinates;
+
 
     /**
      * BoardEditor constructor.
@@ -74,6 +82,7 @@ class BoardEditor
             throw new \Exception("Error while initializing the board editor option handler: " . $_exception->getMessage());
         }
         $this->output = new BoardEditorOutput();
+        $this->selection = array();
     }
 
 
@@ -248,5 +257,53 @@ class BoardEditor
         {
             throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
         }
+    }
+
+    /**
+     * Selects a part of the board.
+     *
+     * @param int $_x1 The x1 position
+     * @param int $_y1 The y1 position
+     * @param int $_x2 The x2 position
+     * @param int $_y2 The y2 position
+     *
+     * @throws \Exception The exception when one of the input coordinates is invalid
+     */
+    public function selectArea(int $_x1, int $_y1, int $_x2, int $_y2)
+    {
+        $pointACoordinate = array();
+        $pointBCoordinate = array();
+
+        // Get x coordinate of both points
+        $this->checkCoordinate($_x1, "X", 0, $this->board->width());
+        $this->checkCoordinate($_x2, "X", 0, $this->board->width());
+
+        if ($_x2 >= $_x1)
+        {
+            $pointACoordinate["x"] = $_x1;
+            $pointBCoordinate["x"] = $_x2;
+        }
+        else
+        {
+            $pointACoordinate["x"] = $_x2;
+            $pointBCoordinate["x"] = $_x1;
+        }
+
+        // Get y coordinate of both points
+        $this->checkCoordinate($_y1, "Y", 0, $this->board->height());
+        $this->checkCoordinate($_y2, "Y", 0, $this->board->height());
+
+        if ($_y2 >= $_y1)
+        {
+            $pointACoordinate["y"] = $_y1;
+            $pointBCoordinate["y"] = $_y2;
+        }
+        else
+        {
+            $pointACoordinate["y"] = $_y2;
+            $pointBCoordinate["y"] = $_y1;
+        }
+
+        $this->selectionCoordinates = array("A" => $pointACoordinate, "B" => $pointBCoordinate);
     }
 }
