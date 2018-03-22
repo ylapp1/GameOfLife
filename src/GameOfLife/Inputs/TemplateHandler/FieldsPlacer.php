@@ -14,7 +14,7 @@ use GameOfLife\Field;
 /**
  * Places a template on a board.
  */
-class TemplatePlacer
+class FieldsPlacer
 {
     /**
      * Places a template on a board.

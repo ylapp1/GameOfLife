@@ -9,11 +9,11 @@
 use GameOfLife\Board;
 use GameOfLife\Field;
 use TemplateHandler\Template;
-use TemplateHandler\TemplatePlacer;
+use TemplateHandler\FieldsPlacer;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Input\TemplateHandler\TemplatePlacer works as expected.
+ * Checks whether \Input\TemplateHandler\FieldsPlacer works as expected.
  */
 class TemplatePlacerTest extends TestCase
 {
@@ -63,15 +63,15 @@ class TemplatePlacerTest extends TestCase
      *
      * @throws \Exception
      *
-     * @covers \TemplateHandler\TemplatePlacer::placeTemplate()
-     * @covers \TemplateHandler\TemplatePlacer::isTemplateOutOfBounds()
+     * @covers \TemplateHandler\FieldsPlacer::placeTemplate()
+     * @covers \TemplateHandler\FieldsPlacer::isTemplateOutOfBounds()
      *
      *
      * @dataProvider placeTemplateProvider()
      */
     public function testCanPlaceTemplate(int $_templatePosX, int $_templatePosY, Bool $_adjustDimensions, String $_expectedExceptionMessage = "")
     {
-        $templatePlacer = new TemplatePlacer();
+        $templatePlacer = new FieldsPlacer();
 
         $exceptionOccurred = false;
         try
