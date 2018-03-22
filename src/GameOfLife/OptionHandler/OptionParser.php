@@ -111,7 +111,7 @@ class OptionParser
      */
     public function parseInputOptions(Getopt $_options): BaseInput
     {
-        $input = $this->parseOptions($_options, "input", "Input", "Input");
+        $input = $this->parseClassOptions($_options, "input", "Input", "Input");
         if ($input) return $input;
         else return new TemplateInput();
     }
@@ -127,7 +127,7 @@ class OptionParser
      */
     public function parseOutputOptions(Getopt $_options): BaseOutput
     {
-        $output = $this->parseOptions($_options, "output", "Output", "Output");
+        $output = $this->parseClassOptions($_options, "output", "Output", "Output");
         if ($output) return $output;
         else return new ConsoleOutput();
     }
@@ -143,7 +143,7 @@ class OptionParser
      */
     public function parseRuleOptions(Getopt $_options): BaseRule
     {
-        $rule = $this->parseOptions($_options, "rules", "Rule", "Rule");
+        $rule = $this->parseClassOptions($_options, "rules", "Rule", "Rule");
         if ($rule) return $rule;
         else return new ConwayRule();
     }
@@ -160,7 +160,7 @@ class OptionParser
      *
      * @throws \Exception The exceptions of the Input, Output or Rule constructors
      */
-    private function parseOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
+    private function parseClassOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
     {
         if ($_options->getOption($_optionName) !== null)
         {
