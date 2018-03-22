@@ -116,14 +116,16 @@ class ConsoleOutput extends BaseOutput
      * @param String $_leftEdgeSymbol The symbol for the left edge of the line
      * @param String $_rightEdgeSymbol The symbol for the right edge of the line
      * @param String $_lineSymbol The symbol for the line itself
+     * @param array $_specialSymbols The list of special symbols in the format array(position => symbol)
      *
      * @return String Line output string
      */
-    protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
+    protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol, array $_specialSymbols = null): String
     {
         $output = $_leftEdgeSymbol;
         for ($x = 0; $x < $_length; $x++)
         {
+            if (isset($_specialSymbols[$x])) $output .= $_specialSymbols[$x];
             $output .= $_lineSymbol;
         }
         $output .= $_rightEdgeSymbol;
