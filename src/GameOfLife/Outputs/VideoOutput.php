@@ -303,6 +303,7 @@ class VideoOutput extends ImageOutput
         // Input images
         $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Frames/%d.png\"");
         $this->ffmpegHelper->addOption("-pix_fmt yuv420p");
+        $this->ffmpegHelper->addOption("-vcodec mpeg4");
 
         if (stristr(PHP_OS, "linux"))
         {
