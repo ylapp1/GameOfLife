@@ -11,7 +11,6 @@ namespace BoardEditor\Options;
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
-
 /**
  * Clears the board.
  */

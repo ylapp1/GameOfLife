@@ -82,10 +82,26 @@ class LoadTemplateOption extends BoardEditorOption
         if (! $adjustDimensions)
         {
             if ($_posX) $posX = $_posX;
-            else $posX = $this->readCoordinate("X", 0, $this->parentBoardEditor->board()->width());
+            else
+            {
+                $posX = $this->parentBoardEditor->readCoordinate(
+                    "X",
+                    "top left border of the template on the board",
+                    0,
+                    $this->parentBoardEditor->board()->width()
+                );
+            }
 
             if ($_posY) $posY = $_posY;
-            else $posY = $this->readCoordinate("Y", 0, $this->parentBoardEditor->board()->height());
+            else
+            {
+                $posY = $this->parentBoardEditor->readCoordinate(
+                    "Y",
+                    "top left border of the template on the board",
+                    0,
+                    $this->parentBoardEditor->board()->height()
+                );
+            }
         }
         else
         {
@@ -96,37 +112,5 @@ class LoadTemplateOption extends BoardEditorOption
         $this->templatePlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $adjustDimensions);
         $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
         return false;
-    }
-
-    /**
-     * Reads an input coordinate.
-     *
-     * @param String $_coordinateAxisName The name of the coordinate axis ("X" or "Y")
-     * @param int $_minValue The minimum value of the coordinate
-     * @param int $_maxValue The maximum value of the coordinate
-     *
-     * @return int The read coordinate
-     *
-     * @throws \Exception The exception when the input value is invalid
-     */
-    private function readCoordinate(String $_coordinateAxisName, int $_minValue, int $_maxValue)
-    {
-        echo $_coordinateAxisName . "-Coordinate of the top left border of the template on the board: ";
-        $userInput = $this->parentBoardEditor->readInput("php://stdin");
-        if (! is_numeric($userInput)) throw new \Exception("The input value is no number.");
-        else
-        {
-            $coordinate = (int)$userInput;
-            if ($coordinate < $_minValue)
-            {
-                throw new \Exception("The " . $_coordinateAxisName . "-Position may not be smaller than " . $_minValue . ".");
-            }
-            elseif ($coordinate > $_maxValue)
-            {
-                throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
-            }
-        }
-
-        return $coordinate;
     }
 }
