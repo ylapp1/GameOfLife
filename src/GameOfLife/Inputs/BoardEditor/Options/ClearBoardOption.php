@@ -40,7 +40,7 @@ class ClearBoardOption extends BoardEditorOption
     public function clearBoard(): bool
     {
         $this->parentBoardEditor->board()->resetBoard();
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

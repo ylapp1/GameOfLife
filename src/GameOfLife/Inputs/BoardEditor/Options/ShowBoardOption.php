@@ -39,7 +39,7 @@ class ShowBoardOption extends BoardEditorOption
      */
     public function showBoard()
     {
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

@@ -40,7 +40,7 @@ class ResetOption extends BoardEditorOption
     public function resetBoard()
     {
         $this->parentBoardEditor->board()->resetBoard();
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

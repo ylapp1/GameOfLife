@@ -306,4 +306,15 @@ class BoardEditor
 
         $this->selectionCoordinates = array("A" => $pointACoordinate, "B" => $pointBCoordinate);
     }
+
+    /**
+     * Outputs the board editor board.
+     *
+     * @param int $_highLightX The X-position of the highlighted field
+     * @param int $_highLightY The Y-Position of the highlighted field
+     */
+    public function outputBoard(int $_highLightX = null, int $_highLightY = null)
+    {
+        $this->output->outputBoard($this->board, $_highLightX, $_highLightY);
+    }
 }

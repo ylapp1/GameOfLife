@@ -111,6 +111,7 @@ class LoadTemplateOption extends BoardEditorOption
 
         $this->templatePlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $adjustDimensions);
         $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

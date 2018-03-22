@@ -40,7 +40,7 @@ class InvertBoardOption extends BoardEditorOption
     public function invertBoard(): bool
     {
         $this->parentBoardEditor->board()->invertBoard();
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

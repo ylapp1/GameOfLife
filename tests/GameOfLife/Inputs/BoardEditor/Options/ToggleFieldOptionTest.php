@@ -56,13 +56,9 @@ class ToggleFieldOptionTest extends TestCase
                           ->getMock();
 
         $boardEditorMock = $this->getMockBuilder(BoardEditor::class)
-                                ->setMethods(array("board", "output"))
+                                ->setMethods(array("board", "outputBoard"))
                                 ->disableOriginalConstructor()
                                 ->getMock();
-
-        $boardEditorOutputMock = $this->getMockBuilder(BoardEditorOutput::class)
-                                      ->disableOriginalConstructor()
-                                      ->getMock();
 
         if ($boardEditorMock instanceof BoardEditor)
         {
@@ -96,12 +92,8 @@ class ToggleFieldOptionTest extends TestCase
                           ->with((int)$_x, (int)$_y, true);
 
                 $boardEditorMock->expects($this->exactly(1))
-                                ->method("output")
-                                ->willReturn($boardEditorOutputMock);
-
-                $boardEditorOutputMock->expects($this->exactly(1))
-                                      ->method("outputBoard")
-                                      ->willReturn(null);
+                                ->method("outputBoard")
+                                ->willReturn(null);
             }
 
             $exceptionOccurred = false;

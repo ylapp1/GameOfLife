@@ -52,8 +52,7 @@ class SelectAreaOption extends BoardEditorOption
         $posYBottom = $this->getPosYBottom($posYTop, $_height);
 
         $this->parentBoardEditor->selectArea($posXLeft, $posYTop, $posXRight, $posYBottom);
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
-        echo "Area successfully selected\n";
+        $this->parentBoardEditor->outputBoard();
 
         return false;
     }
