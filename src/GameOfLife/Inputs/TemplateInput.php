@@ -157,7 +157,7 @@ class TemplateInput extends BaseInput
         {
             if ($_options->getOption("input") !== null)
             {
-                if (stristr($_options->getOption("input"), $defaultTemplateName)) return $defaultTemplateName;
+                if (strtolower($defaultTemplateName) == strtolower($_options->getOption("input"))) return $defaultTemplateName;
             }
             else
             {
