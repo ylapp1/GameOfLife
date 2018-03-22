@@ -150,8 +150,8 @@ class BoardEditorOutput extends ConsoleOutput
 
         if ($this->isHighLight)
         {
-            if ($this->highLightX - 1 > 0) $specialSymbols[$this->highLightX] = $_symbolLeft;
-            if ($this->highLightX < $_boardWidth - 1) $specialSymbols[$this->highLightX + 1] = $_symbolRight;
+            if ($this->highLightX > 0) $specialSymbols[$this->highLightX] = $_symbolLeft;
+            if ($this->highLightX + 1 < $_boardWidth) $specialSymbols[$this->highLightX + 1] = $_symbolRight;
         }
 
         return $specialSymbols;
