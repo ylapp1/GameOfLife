@@ -28,7 +28,7 @@ class ToggleFieldOption extends BoardEditorOption
         $this->name = "toggle";
         $this->callback = "toggleField";
         $this->description = "Toggles a field";
-        $this->numberOfArguments = 2;
+        $this->arguments = array("X-Coordinate", "Y-Coordinate");
     }
 
     /**

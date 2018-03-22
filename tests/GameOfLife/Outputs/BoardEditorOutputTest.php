@@ -47,15 +47,15 @@ class BoardEditorOutputTest extends TestCase
 
         // With x/y highlighting
         $expectedOutput = "    2\n"
-                        . "╔═══════╗\n"
-                        . "║  ║ ║  ║\n"
-                        . "║  ║o║  ║\n"
-                        . "║ o║o║o ║\n"
-                        . "║═══════║\n"
-                        . "║  ║X║  ║ 3\n"
-                        . "║═══════║\n"
-                        . "║  ║ ║  ║\n"
-                        . "╚═══════╝\n";
+                        . "╔══╤═╤══╗\n"
+                        . "║  │ │  ║\n"
+                        . "║  │o│  ║\n"
+                        . "║ o│o│o ║\n"
+                        . "╟──┼─┼──╢\n"
+                        . "║  │X│  ║ 3\n"
+                        . "╟──┼─┼──╢\n"
+                        . "║  │ │  ║\n"
+                        . "╚══╧═╧══╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
         $output->outputBoard($testBoard, 2, 3);

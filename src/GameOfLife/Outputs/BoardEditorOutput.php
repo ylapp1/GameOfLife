@@ -16,7 +16,6 @@ use GameOfLife\Field;
  */
 class BoardEditorOutput extends ConsoleOutput
 {
-    private $bonusDashes;
     private $highLightX;
     private $highLightY;
     private $isHighLight;
@@ -36,17 +35,15 @@ class BoardEditorOutput extends ConsoleOutput
             $this->highLightY = $_highLightY;
             $this->isHighLight = true;
 
-            $this->bonusDashes = 2;
+            $bonusDashes = 2;
 
-            if ($_highLightX == 0) $this->bonusDashes -= 1;
-            if ($_highLightX == $_board->width() - 1) $this->bonusDashes -= 1;
+            if ($_highLightX == 0) $bonusDashes -= 1;
+            if ($_highLightX == $_board->width() - 1) $bonusDashes -= 1;
 
             // Output the X-Coordinate of the highlighted cell above the board
-            echo "\n" . str_pad("", $_highLightX + $this->bonusDashes, " ") . $_highLightX . "\n";
-        }
-        else
-        {
-            $this->bonusDashes = 0;
+            echo "\n" . str_pad("", $_highLightX + $bonusDashes, " ") . $_highLightX . "\n";
+
+            unset($bonusDashes);
         }
 
         echo $this->getBoardContentString($_board, "║", "o", " ");
@@ -68,7 +65,11 @@ class BoardEditorOutput extends ConsoleOutput
      */
     protected function getBoardContentString(Board $_board, String $_sideBorderSymbol, String $_cellAliveSymbol, String $_cellDeadSymbol): String
     {
-        $output =  $this->getHorizontalLineString($_board->width() + $this->bonusDashes, "╔", "╗", "═") . "\n";
+        $specialSymbolsTop = $this->getSpecialSymbols("╤", "╤", $_board->width());
+        $specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width());
+        $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width());
+
+        $output = $this->getHorizontalLineString($_board->width(), "╔", "╗", "═", $specialSymbolsTop) . "\n";
 
         for ($y = 0; $y < $_board->height(); $y++)
         {
@@ -78,7 +79,7 @@ class BoardEditorOutput extends ConsoleOutput
                     $y == $this->highLightY + 1 && $y < $_board->height())
                 { // Output lines below and above highlighted cell row
 
-                    $output .= $this->getHorizontalLineString($_board->width() + $this->bonusDashes, "║", "║", "═") . "\n";
+                    $output .= $this->getHorizontalLineString($_board->width(), "╟", "╢", "─", $specialSymbolsAboveBelow) . "\n";
                 }
             }
 
@@ -86,15 +87,11 @@ class BoardEditorOutput extends ConsoleOutput
             $output .= $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol);
             $output .= $_sideBorderSymbol;
 
-            if ($this->isHighLight)
-            {
-                if ($y == $this->highLightY) $output .= " " . $y;
-
-            }
+            if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
             $output .= "\n";
         }
 
-        $output .= $this->getHorizontalLineString($_board->width() + $this->bonusDashes, "╚", "╝", "═") . "\n";
+        $output .= $this->getHorizontalLineString($_board->width(), "╚", "╝", "═", $specialSymbolsBottom) . "\n";
 
         return $output;
     }
@@ -130,11 +127,33 @@ class BoardEditorOutput extends ConsoleOutput
                 if ($field->x() == $this->highLightX - 1  && $field->x() >= 0 ||
                     $field->x() == $this->highLightX && $field->x() < count($_fields) - 1)
                 { // Output lines left and right from highlighted cell X-Coordinate
-                    $output .= "║";
+                    $output .= "│";
                 }
             }
         }
 
         return $output;
+    }
+
+    /**
+     * Returns the array of special symbols for the line output string.
+     *
+     * @param String $_symbolLeft The symbol for the left side of the highlighted column
+     * @param String $_symbolRight The symbol for the right side of the highlighted column
+     * @param int $_boardWidth The board with
+     *
+     * @return array The special symbols array
+     */
+    private function getSpecialSymbols(String $_symbolLeft, String $_symbolRight, int $_boardWidth): array
+    {
+        $specialSymbols = array();
+
+        if ($this->isHighLight)
+        {
+            if ($this->highLightX > 0) $specialSymbols[$this->highLightX] = $_symbolLeft;
+            if ($this->highLightX + 1 < $_boardWidth) $specialSymbols[$this->highLightX + 1] = $_symbolRight;
+        }
+
+        return $specialSymbols;
     }
 }

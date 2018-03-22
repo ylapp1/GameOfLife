@@ -28,7 +28,7 @@ class ListOptionsOption extends BoardEditorOption
         $this->name = "options";
         $this->callback = "listOptions";
         $this->description = "Lists available options";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**
@@ -38,18 +38,28 @@ class ListOptionsOption extends BoardEditorOption
      */
     public function listOptions()
     {
-        // Get the length of the longest option name
+        $optionUsageOutputs = array();
         $longestOptionLength = 0;
+
+        // Get the length of the longest option name
         foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
         {
-            if (strlen($optionName) > $longestOptionLength) $longestOptionLength = strlen($optionName);
+            $optionUsageOutput = $optionName;
+            foreach ($option->arguments() as $argumentName)
+            {
+                $optionUsageOutput .= " <" . $argumentName . ">";
+            }
+
+            $optionUsageOutputs[$optionUsageOutput] = $option->description();
+
+            if (strlen($optionUsageOutput) > $longestOptionLength) $longestOptionLength = strlen($optionUsageOutput);
         }
 
         // Output the option list
         $output = "\n\nOptions:";
-        foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
+        foreach ($optionUsageOutputs as $optionUsageOutput => $optionDescription)
         {
-            $output .= "\n - " . str_pad($optionName, $longestOptionLength + 1) . ": " . $option->description();
+            $output .= "\n - " . str_pad($optionUsageOutput, $longestOptionLength + 1) . ": " . $optionDescription;
         }
         $output .= "\n\n";
 

@@ -28,7 +28,7 @@ class StartOption extends BoardEditorOption
         $this->name = "start";
         $this->callback = "startSimulation";
         $this->description = "Starts the simulation";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**

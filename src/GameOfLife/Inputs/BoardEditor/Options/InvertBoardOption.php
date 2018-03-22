@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017-2018 CN-Consult GmbH
+ * @copyright 2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -12,12 +12,12 @@ use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
 /**
- * Resets the currently edited board to an empty board.
+ * Inverts the board.
  */
-class ResetOption extends BoardEditorOption
+class InvertBoardOption extends BoardEditorOption
 {
     /**
-     * ResetOption constructor.
+     * InvertBoardOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
      */
@@ -25,21 +25,21 @@ class ResetOption extends BoardEditorOption
     {
         parent::__construct($_parentBoardEditor);
 
-        $this->name = "reset";
-        $this->aliases = array("r");
-        $this->callback = "resetBoard";
-        $this->description = "Resets the edited board to an empty board";
+        $this->name = "invert";
+        $this->aliases = array("invertBoard");
+        $this->callback = "invertBoard";
+        $this->description = "Inverts the board";
         $this->arguments = array();
     }
 
     /**
-     * Resets the currently edited board to an empty board and outputs the empty board.
+     * Inverts the board.
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function resetBoard()
+    public function invertBoard(): bool
     {
-        $this->parentBoardEditor->board()->resetBoard();
+        $this->parentBoardEditor->board()->invertBoard();
         $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
         return false;
     }

@@ -30,7 +30,7 @@ class HelpOptionTest extends TestCase
         $this->assertEquals("help", $option->name());
         $this->assertEquals("displayHelp", $option->callback());
         $this->assertEquals("Display help", $option->description());
-        $this->assertEquals(0, $option->numberOfArguments());
+        $this->assertEquals(0, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

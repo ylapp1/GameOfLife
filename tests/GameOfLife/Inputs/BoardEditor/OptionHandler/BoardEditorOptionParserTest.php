@@ -93,15 +93,15 @@ class BoardEditorOptionParserTest extends TestCase
             $optionParser = new BoardEditorOptionParser($optionHandlerMock);
 
             $startOptionMock = $this->getMockBuilder(StartOption::class)
-                                    ->setMethods(array("callback", "start", "numberOfArguments", "hasAlias"))
+                                    ->setMethods(array("callback", "start", "getNumberOfArguments", "hasAlias"))
                                     ->disableOriginalConstructor()
                                     ->getMock();
             $exitOptionMock = $this->getMockBuilder(ExitOption::class)
-                                   ->setMethods(array("hasAlias", "name", "numberOfArguments"))
+                                   ->setMethods(array("hasAlias", "name", "getNumberOfArguments"))
                                    ->disableOriginalConstructor()
                                    ->getMock();
             $toggleOptionMock = $this->getMockBuilder(ToggleFieldOption::class)
-                                     ->setMethods(array("hasAlias", "numberOfArguments"))
+                                     ->setMethods(array("hasAlias", "getNumberOfArguments"))
                                      ->disableOriginalConstructor()
                                      ->getMock();
 
@@ -120,7 +120,7 @@ class BoardEditorOptionParserTest extends TestCase
 
             // Valid option with main name, valid amount of arguments
             $startOptionMock->expects($this->exactly(1))
-                            ->method("numberOfArguments")
+                            ->method("getNumberOfArguments")
                             ->willReturn(0);
             $startOptionMock->expects($this->exactly(1))
                             ->method("callback")
@@ -146,7 +146,7 @@ class BoardEditorOptionParserTest extends TestCase
 
             // Valid option with alias, invalid amount of arguments
             $exitOptionMock->expects($this->exactly(2))
-                           ->method("numberOfArguments")
+                           ->method("getNumberOfArguments")
                            ->willReturn(1);
 
             $exceptionOccurred = false;
@@ -178,7 +178,7 @@ class BoardEditorOptionParserTest extends TestCase
 
             // Alias for toggle
             $toggleOptionMock->expects($this->exactly(2))
-                             ->method("numberOfArguments")
+                             ->method("getNumberOfArguments")
                              ->willReturn(3);
 
             $exceptionOccurred = false;

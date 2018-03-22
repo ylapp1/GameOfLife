@@ -201,4 +201,52 @@ class BoardEditor
 
         return rtrim($inputLine, "\n\r");
     }
+
+    /**
+     * Reads an input coordinate.
+     *
+     * @param String $_coordinateAxisName The name of the coordinate axis ("X" or "Y")
+     * @param String $_coordinateDescription The description of the coordinate
+     * @param int $_minValue The minimum value of the coordinate
+     * @param int $_maxValue The maximum value of the coordinate
+     *
+     * @return int The read coordinate
+     *
+     * @throws \Exception The exception when the input value is invalid
+     */
+    public function readCoordinate(String $_coordinateAxisName, String $_coordinateDescription, int $_minValue, int $_maxValue): int
+    {
+        echo $_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ";
+        $userInput = $this->readInput("php://stdin");
+        if (! is_numeric($userInput)) throw new \Exception("The input value is no number.");
+        else
+        {
+            $coordinate = (int)$userInput;
+            $this->checkCoordinate($coordinate, $_coordinateAxisName, $_minValue, $_maxValue);
+        }
+
+        return $coordinate;
+    }
+
+    /**
+     * Checks whether a coordinate is in the defined range.
+     *
+     * @param int $_coordinate The name of the coordinate axis ("X" or "Y")
+     * @param String $_coordinateAxisName The name of the
+     * @param int $_minValue The min value
+     * @param int $_maxValue The max value
+     *
+     * @throws \Exception The exception when the coordinate exceeds the range
+     */
+    public function checkCoordinate(int $_coordinate, String $_coordinateAxisName, int $_minValue, int $_maxValue)
+    {
+        if ($_coordinate < $_minValue)
+        {
+            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be smaller than " . $_minValue . ".");
+        }
+        elseif ($_coordinate > $_maxValue)
+        {
+            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
+        }
+    }
 }

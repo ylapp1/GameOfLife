@@ -35,7 +35,7 @@ class SaveTemplateOptionTest extends TestCase
         $this->assertEquals("save", $option->name());
         $this->assertEquals("saveTemplate", $option->callback());
         $this->assertEquals("Saves the board as a template", $option->description());
-        $this->assertEquals(1, $option->numberOfArguments());
+        $this->assertEquals(1, $option->getNumberOfArguments());
         $this->assertEquals($templateSaver, $option->templateSaver());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }

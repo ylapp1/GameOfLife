@@ -72,9 +72,9 @@ class BoardEditorOptionParser
             $option = $this->parentOptionHandler->options()[$optionData["name"]];
             $numberOfArguments = count($optionData["arguments"]);
 
-            if ($numberOfArguments != $option->numberOfArguments())
+            if ($numberOfArguments != $option->getNumberOfArguments())
             {
-                throw new \Exception("Invalid number of arguments (Expected " . $option->numberOfArguments() . ", Got " . $numberOfArguments . ").");
+                throw new \Exception("Invalid number of arguments (Expected " . $option->getNumberOfArguments() . ", Got " . $numberOfArguments . ").");
             }
             else
             {

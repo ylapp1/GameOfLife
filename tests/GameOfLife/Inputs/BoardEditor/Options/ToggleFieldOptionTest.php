@@ -32,7 +32,7 @@ class ToggleFieldOptionTest extends TestCase
         $this->assertEquals("toggle", $option->name());
         $this->assertEquals("toggleField", $option->callback());
         $this->assertEquals("Toggles a field", $option->description());
-        $this->assertEquals(2, $option->numberOfArguments());
+        $this->assertEquals(2, $option->getNumberOfArguments());
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
     }
 

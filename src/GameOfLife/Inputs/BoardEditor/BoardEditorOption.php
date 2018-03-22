@@ -40,11 +40,11 @@ class BoardEditorOption
     protected $callback;
 
     /**
-     * Stores the number of arguments of the callback function
+     * Stores the names of the arguments of the callback function
      *
-     * @var int $numberOfArguments
+     * @var String[] $arguments
      */
-    protected $numberOfArguments;
+    protected $arguments;
 
     /**
      * Short description of the option which will be displayed in the option list
@@ -134,23 +134,13 @@ class BoardEditorOption
     }
 
     /**
-     * Returns the number of arguments.
+     * Returns the option arguments.
      *
-     * @return int Number of arguments
+     * @return String[] The option arguments
      */
-    public function numberOfArguments(): int
+    public function arguments(): array
     {
-        return $this->numberOfArguments;
-    }
-
-    /**
-     * Sets the number of arguments.
-     *
-     * @param int $_numberOfArguments Number of arguments
-     */
-    public function setNumberOfArguments(int $_numberOfArguments)
-    {
-        $this->numberOfArguments = $_numberOfArguments;
+        return $this->arguments;
     }
 
     /**
@@ -206,5 +196,15 @@ class BoardEditorOption
         $alias = strtolower($_alias);
         if (in_array($alias, $this->aliases)) return true;
         else return false;
+    }
+
+    /**
+     * Returns the number of arguments.
+     *
+     * @return int The number of arguments
+     */
+    public function getNumberOfArguments(): int
+    {
+        return count($this->arguments);
     }
 }

@@ -29,7 +29,7 @@ class ExitOption extends BoardEditorOption
         $this->aliases = array("quit", "q");
         $this->callback = "exitBoardEditor";
         $this->description = "Exit the application";
-        $this->numberOfArguments = 0;
+        $this->arguments = array();
     }
 
     /**
