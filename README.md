@@ -7,17 +7,17 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 
 ## Options
 
-| Option              | Description                                     | Type    | Possible values                              |
-| ------------------- | ----------------------------------------------- | ------- | -------------------------------------------- |
-| --width <arg>       | Set the board width                             | Integer | Default: 20                                  |
-| --height <arg>      | Set the board height                            | Integer | Default: 10                                  |
-| --maxSteps <arg>    | Set the maximum amount of calculated game steps | Integer | Default: 50                                  |
-| --border <arg>      | Set the border type                             | String  | solid (Default), passthrough                 |
-| --input <arg>       | Fill the board with cells                       | String  | Blinker, Glider, Random (Default), Spaceship |
-| --output <arg>      | Set the output type                             | String  | console, png                                 |
-| --rules <arg>       | Set the rules                                   | String  | Comway (Default), Copy, Two45, Custom        |
-| --version           | Print script version                            | -       | -                                            |
-| -h, --help          | Show help                                       | -       | -                                            |
+| Option              | Description                                     | Type    | Possible values                                                  |
+| ------------------- | ----------------------------------------------- | ------- | ---------------------------------------------------------------- |
+| --width <arg>       | Set the board width                             | Integer | Default: 20                                                      |
+| --height <arg>      | Set the board height                            | Integer | Default: 10                                                      |
+| --maxSteps <arg>    | Set the maximum amount of calculated game steps | Integer | Default: 50                                                      |
+| --border <arg>      | Set the border type                             | String  | solid (Default), passthrough                                     |
+| --input <arg>       | Fill the board with cells                       | String  | Blinker, Glider, Random (Default), Spaceship                     |
+| --output <arg>      | Set the output type                             | String  | console, png                                                     |
+| --rules <arg>       | Set the rules                                   | String  | BlinkingStains, Conway (Default), Custom, Copy, Labyrinth, Two45 |
+| --version           | Print script version                            | -       | -                                                                |
+| -h, --help          | Show help                                       | -       | -                                                                |
 
 
 ## Input options
