@@ -315,6 +315,6 @@ class BoardEditor
      */
     public function outputBoard(int $_highLightX = null, int $_highLightY = null)
     {
-        $this->output->outputBoard($this->board, $_highLightX, $_highLightY);
+        $this->output->outputBoard($this->board, $_highLightX, $_highLightY, $this->selectionCoordinates);
     }
 }

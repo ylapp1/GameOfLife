@@ -126,7 +126,7 @@ class ConsoleOutput extends BaseOutput
         for ($x = 0; $x < $_length; $x++)
         {
             if (isset($_specialSymbols[$x])) $output .= $_specialSymbols[$x];
-            $output .= $_lineSymbol;
+            else $output .= $_lineSymbol;
         }
         $output .= $_rightEdgeSymbol;
 
