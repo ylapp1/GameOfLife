@@ -253,11 +253,14 @@ class BoardEditor
     {
         $inputLine = readline($_prompt);
 
-        /*
-         * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
-         * to navigate to previously used commands
-         */
-        readline_add_history($inputLine);
+        if (str_replace(" ", "", $inputLine) !== "")
+        {
+            /*
+             * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
+             * to navigate to previously used commands
+             */
+            readline_add_history($inputLine);
+        }
 
         return rtrim($inputLine, "\n\r");
     }
