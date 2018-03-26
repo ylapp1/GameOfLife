@@ -39,13 +39,13 @@ class HelpOption extends BoardEditorOption
      */
     public function displayHelp()
     {
-        $helpText = "Set the coordinates for the living cells as below:\n"
+        $helpText = "\nSet the coordinates for the living cells as below:\n"
             . "<X-Coordinate>,<Y-Coordinate>\n"
             . "Enter the coordinates of a set field to unset it.\n"
             . "The game starts when you type \"start\" in a new line and press <Enter>\n"
             . "You can save your board configuration before starting the simulation by typing \"save\"\n"
             . "Type \"options\" to see a list of all valid options\n"
-            . "Let's Go:\n";
+            . "Let's Go:\n\n";
 
         echo $helpText;
 

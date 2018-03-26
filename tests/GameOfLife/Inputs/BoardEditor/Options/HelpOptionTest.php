@@ -46,13 +46,13 @@ class HelpOptionTest extends TestCase
         $boardEditor = new BoardEditor("test");
         $option = new HelpOption($boardEditor);
 
-        $expectedOutput =  "Set the coordinates for the living cells as below:\n" .
+        $expectedOutput =  "\nSet the coordinates for the living cells as below:\n" .
                            "<X-Coordinate" . ">,<Y-Coordinate" . ">\n" .
                            "Enter the coordinates of a set field to unset it.\n" .
                            "The game starts when you type \"start\" in a new line and press <"."Enter>\n" .
                            "You can save your board configuration before starting the simulation by typing \"save\"\n" .
                            "Type \"options\" to see a list of all valid options\n" .
-                           "Let's Go:\n";
+                           "Let's Go:\n\n";
 
         $this->expectOutputString($expectedOutput);
 
