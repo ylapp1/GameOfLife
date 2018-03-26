@@ -47,7 +47,7 @@ class BoardEditorOutput extends ConsoleOutput
             // Output the X-Coordinate of the highlighted cell above the board
             echo "\n" . str_pad("", $_highLightX + $this->additionalSpace, " ") . $_highLightX . "\n";
         }
-        elseif ($_selectionCoordinates)
+        elseif ($_selectionCoordinates && $_selectionCoordinates != array())
         {
             $this->additionalSpace = 2;
 

@@ -147,6 +147,26 @@ class BoardEditor
     }
 
     /**
+     * Returns the selection coordinates.
+     *
+     * @return array The selection coordinates
+     */
+    public function selectionCoordinates(): array
+    {
+        return $this->selectionCoordinates;
+    }
+
+    /**
+     * Sets the selection coordinates.
+     *
+     * @param array $_selectionCoordinates The selection coordinates
+     */
+    public function setSelectionCoordinates(array $_selectionCoordinates)
+    {
+        $this->selectionCoordinates = $_selectionCoordinates;
+    }
+
+    /**
      * Returns the template directory.
      *
      * @return String Template directory
