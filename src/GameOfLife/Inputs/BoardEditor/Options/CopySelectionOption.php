@@ -37,10 +37,14 @@ class CopySelectionOption extends BoardEditorOption
      * Copies the fields in the current selection area.
      *
      * @return bool Indicates whether the board editing is finished
+     *
+     * @throws \Exception The exception when the selection coordinates are empty
      */
     public function copySelection(): Bool
     {
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
+        if ($selectionCoordinates == array()) throw new \Exception("There are no fields selected at the moment.");
+
         $copiedFields = array();
 
         for ($y = $selectionCoordinates["A"]["y"]; $y <= $selectionCoordinates["B"]["y"]; $y++)
