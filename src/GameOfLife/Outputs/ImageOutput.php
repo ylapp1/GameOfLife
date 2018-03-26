@@ -178,7 +178,7 @@ class ImageOutput extends BaseOutput
      */
     public function addOptions(Getopt $_options)
     {
-        $className = basename(get_called_class());
+        $className = basename(str_replace("\\", "/", get_called_class()));
 
         $_options->addOptions(
             array(
