@@ -183,7 +183,7 @@ class ImageOutput extends BaseOutput
                 array(null, $this->optionPrefix . "OutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
                 array(null, $this->optionPrefix . "OutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
                 array(null, $this->optionPrefix . "OutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-                array(null, $this->optionPrefix . "OutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+                array(null, $this->optionPrefix . "OutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
             )
         );
     }

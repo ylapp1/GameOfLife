@@ -44,7 +44,7 @@ class RandomInputTest extends TestCase
     public function testCanAddOptions()
     {
         $randomInputOptions = array(
-            array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
+            array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

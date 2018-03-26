@@ -102,7 +102,7 @@ class JpgOutputTest extends TestCase
             array(null, "jpgOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
             array(null, "jpgOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
             array(null, "jpgOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "jpgOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+            array(null, "jpgOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

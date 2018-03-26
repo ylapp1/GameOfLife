@@ -102,7 +102,7 @@ class PNGOutputTest extends TestCase
             array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
             array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
             array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

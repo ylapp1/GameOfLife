@@ -39,7 +39,7 @@ class OptionLoader
 
                 // other options
                 array(null, "version", Getopt::NO_ARGUMENT, "Print script version"),
-                array("h", "help", Getopt::NO_ARGUMENT)
+                array("h", "help", Getopt::NO_ARGUMENT, "Show this help screen\n")
             )
         );
     }

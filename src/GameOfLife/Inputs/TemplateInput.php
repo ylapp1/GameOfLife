@@ -93,7 +93,7 @@ class TemplateInput extends BaseInput
             $_options->addOptions(
                 array (
                     array(null, $defaultTemplateName . "PosX", Getopt::REQUIRED_ARGUMENT, "X position of the " . $defaultTemplateName),
-                    array(null, $defaultTemplateName . "PosY", Getopt::REQUIRED_ARGUMENT, "Y position of the " . $defaultTemplateName)
+                    array(null, $defaultTemplateName . "PosY", Getopt::REQUIRED_ARGUMENT, "Y position of the " . $defaultTemplateName . "\n")
                 )
             );
         }
@@ -105,7 +105,7 @@ class TemplateInput extends BaseInput
                 array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
                 array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
                 array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
-                array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template")
+                array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template\n")
             )
         );
     }

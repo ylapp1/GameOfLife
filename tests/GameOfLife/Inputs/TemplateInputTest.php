@@ -76,7 +76,7 @@ class TemplateInputTest extends TestCase
     {
         $templateOptions = array(
             array(null, "unittestPosX", Getopt::REQUIRED_ARGUMENT, "X position of the unittest"),
-            array(null, "unittestPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the unittest")
+            array(null, "unittestPosY", Getopt::REQUIRED_ARGUMENT, "Y position of the unittest\n")
         );
 
         $fileInputOptions = array(
@@ -84,7 +84,7 @@ class TemplateInputTest extends TestCase
             array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
             array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
             array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
-            array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template")
+            array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template\n")
         );
 
         $this->optionsMock->expects($this->exactly(2))

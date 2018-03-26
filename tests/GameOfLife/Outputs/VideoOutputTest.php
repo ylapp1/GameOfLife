@@ -146,20 +146,20 @@ class VideoOutputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $imageOutputOptions = array(
-            array(null, "videoOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-            array(null, "videoOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-            array(null, "videoOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "videoOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color"));
-
         $videoOutputOptions = array(
             array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos"),
             array(null, "videoOutputAddSound", Getopt::NO_ARGUMENT, "Add sound to the video")
         );
 
+        $imageOutputOptions = array(
+            array(null, "videoOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
+            array(null, "videoOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
+            array(null, "videoOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
+            array(null, "videoOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n"));
+
         $this->optionsMock->expects($this->exactly(2))
                           ->method("addOptions")
-                          ->withConsecutive([$imageOutputOptions], [$videoOutputOptions]);
+                          ->withConsecutive(array($videoOutputOptions), array($imageOutputOptions));
 
         if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }

@@ -182,11 +182,11 @@ class VideoOutput extends ImageOutput
      */
     public function addOptions(Getopt $_options)
     {
-        parent::addOptions($_options);
         $_options->addOptions(array(
-            array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos"),
-            array(null, "videoOutputAddSound", Getopt::NO_ARGUMENT, "Add sound to the video"))
+                array(null, "videoOutputFPS", Getopt::REQUIRED_ARGUMENT, "Frames per second of videos"),
+                array(null, "videoOutputAddSound", Getopt::NO_ARGUMENT, "Add sound to the video"))
         );
+        parent::addOptions($_options);
     }
 
     /**
