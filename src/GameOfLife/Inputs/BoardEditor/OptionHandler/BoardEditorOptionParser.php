@@ -72,13 +72,31 @@ class BoardEditorOptionParser
             $option = $this->parentOptionHandler->options()[$optionData["name"]];
             $numberOfArguments = count($optionData["arguments"]);
 
-            if ($numberOfArguments != $option->getNumberOfArguments())
+            if ($numberOfArguments > $option->getNumberOfArguments())
             {
                 throw new \Exception("Invalid number of arguments (Expected " . $option->getNumberOfArguments() . ", Got " . $numberOfArguments . ").");
             }
             else
             {
-                $sessionFinished = call_user_func_array(array($option, $option->callback()), $optionData["arguments"]);
+                // Convert the arguments to the argument types
+                $arguments = array();
+
+                foreach ($option->arguments() as $argumentName => $argumentType)
+                {
+                    $argument = current($optionData["arguments"]);
+                    if (! $argument)
+                    {
+                        $argument = $this->parentOptionHandler->parentBoardEditor()->readInput($argumentName . ": ");
+                        if (! $argument) throw new \Exception("Arguments may not be empty.");
+                    }
+
+                    settype($argument, $argumentType);
+                    $arguments[] = $argument;
+
+                    next($optionData["arguments"]);
+                }
+
+                $sessionFinished = call_user_func_array(array($option, $option->callback()), $arguments);
                 return $sessionFinished;
             }
         }
