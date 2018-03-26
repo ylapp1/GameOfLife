@@ -108,7 +108,7 @@ class SelectAreaOption extends BoardEditorOption
         else
         {
             echo "Width of the selection: ";
-            $userInput = $this->parentBoardEditor->readInput("php://stdin");
+            $userInput = $this->parentBoardEditor->readInput();
 
             if (is_numeric($userInput)) $width = (int)$userInput;
             else throw new \Exception("The entered value is not numeric.");
@@ -178,7 +178,7 @@ class SelectAreaOption extends BoardEditorOption
         else
         {
             echo "Height of the selection: ";
-            $userInput = $this->parentBoardEditor->readInput("php://stdin");
+            $userInput = $this->parentBoardEditor->readInput();
 
             if (is_numeric($userInput)) $height = (int)$userInput;
             else throw new \Exception("The entered value is not numeric.");

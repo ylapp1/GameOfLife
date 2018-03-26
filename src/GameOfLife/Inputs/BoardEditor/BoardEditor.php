@@ -229,9 +229,7 @@ class BoardEditor
         $isInputFinished = false;
         while (! $isInputFinished)
         {
-            echo "> ";
-
-            $line = $this->readInput("php://stdin");
+            $line = $this->readInput();
 
             try
             {
@@ -247,15 +245,17 @@ class BoardEditor
     /**
      * Reads user input from a input source.
      *
-     * @param String $_source Input source (e.g. php://stdin)
-     *
      * @return String User input with removed "\n\r"
      */
-    public function readInput(String $_source): String
+    public function readInput(): String
     {
-        $fileOpen = fopen($_source,'r');
-        $inputLine = fgets($fileOpen,1024);
-        fclose($fileOpen);
+        $inputLine = readline("> ");
+
+        /*
+         * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
+         * to navigate to previously used commands
+         */
+        readline_add_history($inputLine);
 
         return rtrim($inputLine, "\n\r");
     }
@@ -275,7 +275,7 @@ class BoardEditor
     public function readCoordinate(String $_coordinateAxisName, String $_coordinateDescription, int $_minValue, int $_maxValue): int
     {
         echo $_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ";
-        $userInput = $this->readInput("php://stdin");
+        $userInput = $this->readInput();
         if (! is_numeric($userInput)) throw new \Exception("The input value is no number.");
         else
         {
