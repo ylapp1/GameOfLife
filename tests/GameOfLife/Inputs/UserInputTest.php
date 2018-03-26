@@ -105,7 +105,7 @@ class UserInputTest extends TestCase
     public function testCanAddOptions()
     {
         $userInputOptions = array(
-            array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template\n")
+            array(null, "edit", Getopt::NO_ARGUMENT, "UserInput - Edit a template\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

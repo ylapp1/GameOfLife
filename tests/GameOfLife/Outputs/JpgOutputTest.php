@@ -99,10 +99,10 @@ class JpgOutputTest extends TestCase
     public function testCanAddOptions()
     {
         $pngOutputOptions = array(
-            array(null, "jpgOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-            array(null, "jpgOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-            array(null, "jpgOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "jpgOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
+            array(null, "jpgOutputSize", Getopt::REQUIRED_ARGUMENT, "JpgOutput - Size of a cell in pixels"),
+            array(null, "jpgOutputCellColor", Getopt::REQUIRED_ARGUMENT, "JpgOutput - Color of a cell"),
+            array(null, "jpgOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "JpgOutput - Background color"),
+            array(null, "jpgOutputGridColor", Getopt::REQUIRED_ARGUMENT, "JpgOutput - Grid color\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

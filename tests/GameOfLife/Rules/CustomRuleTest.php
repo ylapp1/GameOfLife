@@ -27,9 +27,9 @@ class CustomRuleTest extends TestCase
 
         $expectedOptionList = array
         (
-            array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "Rule string in the format <stayAlive>/<birth>"),
-            array(null, "rulesBirth", Getopt::REQUIRED_ARGUMENT, "The amounts of cells which will rebirth a dead cell as a single string"),
-            array(null, "rulesStayAlive", Getopt::REQUIRED_ARGUMENT, "The amounts of cells which will keep a living cell alive")
+            array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "CustomRule - Rule string in the format <stayAlive>/<birth> or <stayAlive>G<stayAlive/birth>"),
+            array(null, "rulesBirth", Getopt::REQUIRED_ARGUMENT, "CustomRule - The amounts of cells which will rebirth a dead cell as a single string"),
+            array(null, "rulesStayAlive", Getopt::REQUIRED_ARGUMENT, "CustomRule - The amounts of cells which will keep a living cell alive")
         );
 
         $optionsMock->expects($this->exactly(1))

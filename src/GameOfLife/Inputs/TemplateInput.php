@@ -92,8 +92,8 @@ class TemplateInput extends BaseInput
         {
             $_options->addOptions(
                 array (
-                    array(null, $defaultTemplateName . "PosX", Getopt::REQUIRED_ARGUMENT, "X position of the " . $defaultTemplateName),
-                    array(null, $defaultTemplateName . "PosY", Getopt::REQUIRED_ARGUMENT, "Y position of the " . $defaultTemplateName . "\n")
+                    array(null, $defaultTemplateName . "PosX", Getopt::REQUIRED_ARGUMENT, "TemplateInput - X position of the " . $defaultTemplateName),
+                    array(null, $defaultTemplateName . "PosY", Getopt::REQUIRED_ARGUMENT, "TemplateInput - Y position of the " . $defaultTemplateName . "\n")
                 )
             );
         }
@@ -101,11 +101,11 @@ class TemplateInput extends BaseInput
         $_options->addOptions(
             array
             (
-                array(null, "template", Getopt::REQUIRED_ARGUMENT, "Txt file that stores the board configuration"),
-                array(null, "list-templates", Getopt::NO_ARGUMENT, "Display a list of all templates"),
-                array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "X-Position of the top left corner of the template"),
-                array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "Y-Position of the top left corner of the template"),
-                array(null, "invertTemplate", Getopt::NO_ARGUMENT, "Inverts the loaded template\n")
+                array(null, "template", Getopt::REQUIRED_ARGUMENT, "TemplateInput - The name of the template file that shall be loaded"),
+                array(null, "list-templates", Getopt::NO_ARGUMENT, "TemplateInput - Display a list of all templates"),
+                array(null, "templatePosX", Getopt::REQUIRED_ARGUMENT, "TemplateInput - X-Position of the top left corner of the template"),
+                array(null, "templatePosY", Getopt::REQUIRED_ARGUMENT, "TemplateInput - Y-Position of the top left corner of the template"),
+                array(null, "invertTemplate", Getopt::NO_ARGUMENT, "TemplateInput - Inverts the loaded template\n")
             )
         );
     }

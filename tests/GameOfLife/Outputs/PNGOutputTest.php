@@ -99,10 +99,10 @@ class PNGOutputTest extends TestCase
     public function testCanAddOptions()
     {
         $pngOutputOptions = array(
-            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
+            array(null, "pngOutputSize", Getopt::REQUIRED_ARGUMENT, "PngOutput - Size of a cell in pixels"),
+            array(null, "pngOutputCellColor", Getopt::REQUIRED_ARGUMENT, "PngOutput - Color of a cell"),
+            array(null, "pngOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "PngOutput - Background color"),
+            array(null, "pngOutputGridColor", Getopt::REQUIRED_ARGUMENT, "PngOutput - Grid color\n")
         );
 
         $this->optionsMock->expects($this->exactly(1))

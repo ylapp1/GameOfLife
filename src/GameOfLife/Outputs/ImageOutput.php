@@ -178,12 +178,14 @@ class ImageOutput extends BaseOutput
      */
     public function addOptions(Getopt $_options)
     {
+        $className = basename(get_called_class());
+
         $_options->addOptions(
             array(
-                array(null, $this->optionPrefix . "OutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-                array(null, $this->optionPrefix . "OutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-                array(null, $this->optionPrefix . "OutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-                array(null, $this->optionPrefix . "OutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color\n")
+                array(null, $this->optionPrefix . "OutputSize", Getopt::REQUIRED_ARGUMENT, $className . " - Size of a cell in pixels"),
+                array(null, $this->optionPrefix . "OutputCellColor", Getopt::REQUIRED_ARGUMENT, $className . " - Color of a cell"),
+                array(null, $this->optionPrefix . "OutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, $className . " - Background color"),
+                array(null, $this->optionPrefix . "OutputGridColor", Getopt::REQUIRED_ARGUMENT, $className . " - Grid color\n")
             )
         );
     }

@@ -91,7 +91,7 @@ class GifOutput extends ImageOutput
     public function addOptions(Getopt $_options)
     {
         $_options->addOptions(array(
-                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
+                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "GifOutput - Frame time of gif (in milliseconds * 10)")
             )
         );
         parent::addOptions($_options);

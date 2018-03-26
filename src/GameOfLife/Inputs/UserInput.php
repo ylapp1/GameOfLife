@@ -54,7 +54,7 @@ class UserInput extends BaseInput
     {
         $_options->addOptions(
             array(
-                array(null, "edit", Getopt::NO_ARGUMENT, "Edit a template\n"))
+                array(null, "edit", Getopt::NO_ARGUMENT, "UserInput - Edit a template\n"))
         );
     }
 
