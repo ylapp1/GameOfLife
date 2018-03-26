@@ -57,8 +57,7 @@ class BoardEditorOutput extends ConsoleOutput
 
         echo $this->getBoardContentString($_board, "║", "o", " ", $_selectionCoordinates);
 
-        unset($this->highLightX);
-        unset($this->highLightY);
+        $this->isHighLight = false;
     }
 
     /**

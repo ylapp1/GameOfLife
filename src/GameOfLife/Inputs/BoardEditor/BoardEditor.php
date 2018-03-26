@@ -82,7 +82,7 @@ class BoardEditor
             throw new \Exception("Error while initializing the board editor option handler: " . $_exception->getMessage());
         }
         $this->output = new BoardEditorOutput();
-        $this->selection = array();
+        $this->selectionCoordinates = array();
     }
 
 
