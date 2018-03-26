@@ -29,7 +29,7 @@ class SelectAreaOption extends BoardEditorOption
         $this->aliases = array("selectArea");
         $this->callback = "selectArea";
         $this->description = "Selects an area of fields";
-        $this->arguments = array();
+        $this->arguments = array("posXLeft" => "int", "posYTop" => "int", "width" => "int", "height" => "int");
     }
 
     /**

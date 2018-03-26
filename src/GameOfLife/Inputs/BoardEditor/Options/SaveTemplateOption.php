@@ -38,7 +38,7 @@ class SaveTemplateOption extends BoardEditorOption
         $this->name = "save";
         $this->callback = "saveTemplate";
         $this->description = "Saves the board as a template";
-        $this->arguments = array("template name");
+        $this->arguments = array("template name" => "String");
 
         $this->templateSaver = new TemplateSaver($this->parentBoardEditor->templateDirectory());
     }

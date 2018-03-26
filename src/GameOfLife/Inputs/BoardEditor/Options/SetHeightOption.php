@@ -29,7 +29,7 @@ class SetHeightOption extends BoardEditorOption
         $this->name = "height";
         $this->callback = "setHeight";
         $this->description = "Sets the board height";
-        $this->arguments = array("number");
+        $this->arguments = array("height" => "int");
     }
 
     /**

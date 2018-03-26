@@ -38,7 +38,7 @@ class PasteCopiedFieldsOption extends BoardEditorOption
         $this->aliases = array("pastedCopiedFields");
         $this->callback = "pasteCopiedFields";
         $this->description = "Places the cached copied fields on the board";
-        $this->arguments = array();
+        $this->arguments = array("posX" => "int", "posY" => "int");
 
         $this->fieldsPlacer = new FieldsPlacer();
     }

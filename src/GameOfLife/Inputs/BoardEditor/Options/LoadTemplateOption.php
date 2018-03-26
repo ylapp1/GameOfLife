@@ -46,7 +46,7 @@ class LoadTemplateOption extends BoardEditorOption
         $this->aliases = array("loadTemplate", "placeTemplate");
         $this->callback = "loadTemplate";
         $this->description = "Clears the board";
-        $this->arguments = array("template name");
+        $this->arguments = array("template name" => "String", "posX" => "int", "posY" => "int", "adjustDimensions" => "Bool");
 
         $this->templateLoader = new TemplateLoader($this->parentBoardEditor->templateDirectory());
         $this->fieldsPlacer = new FieldsPlacer();

@@ -29,7 +29,7 @@ class SetWidthOption extends BoardEditorOption
         $this->name = "width";
         $this->callback = "setWidth";
         $this->description = "Sets the board width";
-        $this->arguments = array("number");
+        $this->arguments = array("width" => "int");
     }
 
     /**

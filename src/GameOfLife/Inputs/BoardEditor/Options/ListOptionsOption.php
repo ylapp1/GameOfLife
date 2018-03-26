@@ -45,7 +45,7 @@ class ListOptionsOption extends BoardEditorOption
         foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
         {
             $optionUsageOutput = $optionName;
-            foreach ($option->arguments() as $argumentName)
+            foreach ($option->arguments() as $argumentName => $argumentType)
             {
                 $optionUsageOutput .= " <" . $argumentName . ">";
             }
