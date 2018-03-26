@@ -76,7 +76,7 @@ class BoardEditorOutput extends ConsoleOutput
     {
         $specialSymbolsTop = $this->getSpecialSymbols("╤", "╤", $_board->width(), $_board->height(), $_selectionCoordinates);
         $specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width(), $_board->height(), $_selectionCoordinates);
-        $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $_selectionCoordinates);
+        $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $_selectionCoordinates, true);
 
         $output = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╔", "╗", "═", $specialSymbolsTop) . "\n";
 
@@ -233,10 +233,11 @@ class BoardEditorOutput extends ConsoleOutput
      * @param int $_boardWidth The board width
      * @param int $_boardHeight The board height
      * @param array $_selectionCoordinates The selection coordinates
+     * @param Bool $_isBottomBorder Indicates whether the border for which the special symbols will be used is a bottom border
      *
      * @return array The special symbols array
      */
-    private function getSpecialSymbols(String $_symbolLeft, String $_symbolRight, int $_boardWidth, int $_boardHeight, array $_selectionCoordinates = null): array
+    private function getSpecialSymbols(String $_symbolLeft, String $_symbolRight, int $_boardWidth, int $_boardHeight, array $_selectionCoordinates = null, Bool $_isBottomBorder = false): array
     {
         $specialSymbols = array();
 
@@ -247,7 +248,8 @@ class BoardEditorOutput extends ConsoleOutput
         }
         elseif ($_selectionCoordinates)
         {
-            if ($_selectionCoordinates["A"]["y"] == 0 || $_selectionCoordinates["B"]["y"] == $_boardHeight)
+            if ((! $_isBottomBorder && $_selectionCoordinates["A"]["y"] == 0) ||
+                ($_isBottomBorder && $_selectionCoordinates["B"]["y"] == $_boardHeight))
             {
                 if ($_selectionCoordinates["A"]["x"] > 0) $specialSymbols[$_selectionCoordinates["A"]["x"]] = $_symbolLeft;
                 if ($_selectionCoordinates["B"]["x"] < $_boardWidth) $specialSymbols[$_selectionCoordinates["B"]["x"]] = $_symbolRight;
