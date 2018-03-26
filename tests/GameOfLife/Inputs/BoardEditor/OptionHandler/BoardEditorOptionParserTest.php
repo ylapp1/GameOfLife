@@ -93,7 +93,7 @@ class BoardEditorOptionParserTest extends TestCase
             $optionParser = new BoardEditorOptionParser($optionHandlerMock);
 
             $startOptionMock = $this->getMockBuilder(StartOption::class)
-                                    ->setMethods(array("callback", "start", "getNumberOfArguments", "hasAlias"))
+                                    ->setMethods(array("callback", "start", "getNumberOfArguments", "hasAlias", "name"))
                                     ->disableOriginalConstructor()
                                     ->getMock();
             $exitOptionMock = $this->getMockBuilder(ExitOption::class)
@@ -101,7 +101,7 @@ class BoardEditorOptionParserTest extends TestCase
                                    ->disableOriginalConstructor()
                                    ->getMock();
             $toggleOptionMock = $this->getMockBuilder(ToggleFieldOption::class)
-                                     ->setMethods(array("hasAlias", "getNumberOfArguments"))
+                                     ->setMethods(array("hasAlias", "name", "getNumberOfArguments"))
                                      ->disableOriginalConstructor()
                                      ->getMock();
 
@@ -128,6 +128,9 @@ class BoardEditorOptionParserTest extends TestCase
             $startOptionMock->expects($this->exactly(1))
                             ->method("start")
                             ->willReturn(true);
+            $startOptionMock->expects($this->exactly(3))
+                            ->method("name")
+                            ->willReturn("start");
 
             $result = $optionParser->callOption("start");
             $this->assertTrue($result);
@@ -142,6 +145,9 @@ class BoardEditorOptionParserTest extends TestCase
                            ->method("hasAlias")
                            ->withConsecutive(array("quit"), array("random"))
                            ->willReturn(true, false);
+            $exitOptionMock->expects($this->exactly(2))
+                           ->method("name")
+                           ->willReturn("exit");
 
 
             // Valid option with alias, invalid amount of arguments
