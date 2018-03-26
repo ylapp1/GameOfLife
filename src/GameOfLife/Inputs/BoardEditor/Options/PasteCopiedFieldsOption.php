@@ -82,6 +82,18 @@ class PasteCopiedFieldsOption extends BoardEditorOption
         }
 
         $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, false);
+
+        // Update selection
+        $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
+        $selectionWidth = $selectionCoordinates["B"]["x"] - $selectionCoordinates["A"]["x"];
+        $selectionHeight = $selectionCoordinates["B"]["y"] - $selectionCoordinates["A"]["y"];
+
+        $updatedSelectionCoordinates = array(
+            "A" => array("x" => $posX, "y" => $posY),
+            "B" => array("x" => $posX + $selectionWidth, "y" => $posY + $selectionHeight)
+        );
+        $this->parentBoardEditor->setSelectionCoordinates($updatedSelectionCoordinates);
+
         $this->parentBoardEditor->outputBoard();
         return false;
     }
