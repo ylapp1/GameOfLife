@@ -10,9 +10,10 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
+use GameOfLife\Field;
 
 /**
- * Inverts the board.
+ * Inverts the current selection or the whole board.
  */
 class InvertBoardOption extends BoardEditorOption
 {
@@ -27,20 +28,43 @@ class InvertBoardOption extends BoardEditorOption
 
         $this->name = "invert";
         $this->aliases = array("invertBoard");
-        $this->callback = "invertBoard";
-        $this->description = "Inverts the board";
+        $this->callback = "invert";
+        $this->description = "Inverts the current selection or the whole board";
         $this->arguments = array();
     }
 
     /**
-     * Inverts the board.
+     * Inverts the current selection or the whole board.
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function invertBoard(): bool
+    public function invert()
     {
-        $this->parentBoardEditor->board()->invertBoard();
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
+
+        if ($selectionCoordinates != array()) $this->invertSelection($selectionCoordinates);
+        else $this->parentBoardEditor->board()->invertBoard();
+
+        $this->parentBoardEditor->outputBoard();
+
         return false;
+    }
+
+    /**
+     * Inverts the fields inside the selection.
+     *
+     * @param array $_selectionCoordinates The selection coordinates
+     */
+    private function invertSelection(array $_selectionCoordinates)
+    {
+        for ($y = $_selectionCoordinates["A"]["y"]; $y <= $_selectionCoordinates["B"]["y"]; $y++)
+        {
+            for ($x = $_selectionCoordinates["A"]["x"]; $x <= $_selectionCoordinates["B"]["x"]; $x++)
+            {
+                /** @var Field $field */
+                $field = $this->parentBoardEditor->board()->fields()[$y][$x];
+                $field->setValue(! $field->value());
+            }
+        }
     }
 }

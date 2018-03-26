@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017-2018 CN-Consult GmbH
+ * @copyright 2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -12,12 +12,12 @@ use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
 /**
- * Resets the currently edited board to an empty board.
+ * Resets the current selection.
  */
-class ResetOption extends BoardEditorOption
+class ResetSelectionOption extends BoardEditorOption
 {
     /**
-     * ResetOption constructor.
+     * ResetSelectionOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
      */
@@ -25,21 +25,21 @@ class ResetOption extends BoardEditorOption
     {
         parent::__construct($_parentBoardEditor);
 
-        $this->name = "reset";
-        $this->aliases = array("r");
-        $this->callback = "resetBoard";
-        $this->description = "Resets the edited board to an empty board";
+        $this->name = "resetSelection";
+        $this->aliases = array("unsetSelection", "unselect");
+        $this->callback = "resetSelection";
+        $this->description = "Resets the current selection";
         $this->arguments = array();
     }
 
     /**
-     * Resets the currently edited board to an empty board and outputs the empty board.
+     * Resets the current selection and outputs the board.
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function resetBoard()
+    public function resetSelection(): Bool
     {
-        $this->parentBoardEditor->board()->resetBoard();
+        $this->parentBoardEditor->setSelectionCoordinates(array());
         $this->parentBoardEditor->outputBoard();
         return false;
     }

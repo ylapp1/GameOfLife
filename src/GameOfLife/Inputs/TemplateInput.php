@@ -11,7 +11,7 @@ namespace Input;
 use GameOfLife\Board;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
-use TemplateHandler\TemplatePlacer;
+use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 
@@ -37,7 +37,7 @@ class TemplateInput extends BaseInput
     /**
      * The template placer
      *
-     * @var TemplatePlacer $templatePlacer
+     * @var FieldsPlacer $templatePlacer
      */
     private $templatePlacer;
 
@@ -63,7 +63,7 @@ class TemplateInput extends BaseInput
 
         $this->templateListPrinter = new TemplateListPrinter($templatesBaseDirectory);
         $this->templateLoader = new TemplateLoader($templatesBaseDirectory);
-        $this->templatePlacer = new TemplatePlacer();
+        $this->templatePlacer = new FieldsPlacer();
 
         $fileSystemHandler = new FileSystemHandler();
 
@@ -116,7 +116,7 @@ class TemplateInput extends BaseInput
      * @param Board $_board The board
      * @param Getopt $_options The option list
      *
-     * @throws \Exception The exception of TemplatePlacer, TemplateListPrinter or if no template file was specified
+     * @throws \Exception The exception of FieldsPlacer, TemplateListPrinter or if no template file was specified
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {

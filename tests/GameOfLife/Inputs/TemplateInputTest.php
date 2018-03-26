@@ -11,7 +11,7 @@ use GameOfLife\Field;
 use Input\TemplateInput;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
-use TemplateHandler\TemplatePlacer;
+use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +66,7 @@ class TemplateInputTest extends TestCase
 
         $reflectionProperty = $reflectionClass->getProperty("templatePlacer");
         $reflectionProperty->setAccessible(true);
-        $this->assertInstanceOf(TemplatePlacer::class, $reflectionProperty->getValue($input));
+        $this->assertInstanceOf(FieldsPlacer::class, $reflectionProperty->getValue($input));
     }
 
     /**

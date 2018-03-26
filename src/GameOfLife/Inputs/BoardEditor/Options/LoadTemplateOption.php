@@ -11,7 +11,7 @@ namespace BoardEditor\Options;
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 use TemplateHandler\TemplateLoader;
-use TemplateHandler\TemplatePlacer;
+use TemplateHandler\FieldsPlacer;
 
 /**
  * Loads a template and places it on the board.
@@ -26,11 +26,11 @@ class LoadTemplateOption extends BoardEditorOption
     private $templateLoader;
 
     /**
-     * The template placer
+     * The fields placer
      *
-     * @var TemplatePlacer $templatePlacer
+     * @var FieldsPlacer $fieldsPlacer
      */
-    private $templatePlacer;
+    private $fieldsPlacer;
 
 
     /**
@@ -49,7 +49,7 @@ class LoadTemplateOption extends BoardEditorOption
         $this->arguments = array("template name");
 
         $this->templateLoader = new TemplateLoader($this->parentBoardEditor->templateDirectory());
-        $this->templatePlacer = new TemplatePlacer();
+        $this->fieldsPlacer = new FieldsPlacer();
     }
 
 
@@ -109,8 +109,8 @@ class LoadTemplateOption extends BoardEditorOption
             $posY = 0;
         }
 
-        $this->templatePlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $adjustDimensions);
-        $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $adjustDimensions);
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }

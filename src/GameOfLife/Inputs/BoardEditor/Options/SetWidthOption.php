@@ -68,7 +68,7 @@ class SetWidthOption extends BoardEditorOption
                 }
             }
 
-            $this->parentBoardEditor->output()->outputBoard($this->parentBoardEditor->board());
+            $this->parentBoardEditor->outputBoard();
         }
 
         return false;

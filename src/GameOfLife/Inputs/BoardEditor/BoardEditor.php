@@ -10,6 +10,7 @@ namespace BoardEditor;
 
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
+use GameOfLife\Field;
 use Output\BoardEditorOutput;
 
 /**
@@ -50,6 +51,21 @@ class BoardEditor
      */
     private $templateDirectory;
 
+    /**
+     * The coordinates of the top left and bottom right corner of the currently selected area
+     * The array is in the format array("A" => array("x", "y"))
+     *
+     * @var array $selection
+     */
+    private $selectionCoordinates;
+
+    /**
+     * The cached copied fields.
+     *
+     * @var Field[] $copiedFields
+     */
+    private $copiedFields;
+
 
     /**
      * BoardEditor constructor.
@@ -74,6 +90,8 @@ class BoardEditor
             throw new \Exception("Error while initializing the board editor option handler: " . $_exception->getMessage());
         }
         $this->output = new BoardEditorOutput();
+        $this->selectionCoordinates = array();
+        $this->copiedFields = array();
     }
 
 
@@ -128,13 +146,33 @@ class BoardEditor
     }
 
     /**
-     * Sets the output which prints the board
+     * Sets the output which prints the board.
      *
      * @param BoardEditorOutput $_output Output which prints the board
      */
     public function setOutput(BoardEditorOutput $_output)
     {
         $this->output = $_output;
+    }
+
+    /**
+     * Returns the selection coordinates.
+     *
+     * @return array The selection coordinates
+     */
+    public function selectionCoordinates(): array
+    {
+        return $this->selectionCoordinates;
+    }
+
+    /**
+     * Sets the selection coordinates.
+     *
+     * @param array $_selectionCoordinates The selection coordinates
+     */
+    public function setSelectionCoordinates(array $_selectionCoordinates)
+    {
+        $this->selectionCoordinates = $_selectionCoordinates;
     }
 
     /**
@@ -148,13 +186,33 @@ class BoardEditor
     }
 
     /**
-     * Sets the template directory
+     * Sets the template directory.
      *
      * @param String $_templateDirectory Template directory
      */
     public function setTemplateDirectory(String $_templateDirectory)
     {
         $this->templateDirectory = $_templateDirectory;
+    }
+
+    /**
+     * Returns the cached copied fields.
+     *
+     * @return array The cached copied fields
+     */
+    public function copiedFields(): array
+    {
+        return $this->copiedFields;
+    }
+
+    /**
+     * Sets the cached copied fields.
+     *
+     * @param array $_copiedFields The cached copied fields
+     */
+    public function setCopiedFields(array $_copiedFields)
+    {
+        $this->copiedFields = $_copiedFields;
     }
 
 
@@ -248,5 +306,64 @@ class BoardEditor
         {
             throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
         }
+    }
+
+    /**
+     * Selects a part of the board.
+     *
+     * @param int $_x1 The x1 position
+     * @param int $_y1 The y1 position
+     * @param int $_x2 The x2 position
+     * @param int $_y2 The y2 position
+     *
+     * @throws \Exception The exception when one of the input coordinates is invalid
+     */
+    public function selectArea(int $_x1, int $_y1, int $_x2, int $_y2)
+    {
+        $pointACoordinate = array();
+        $pointBCoordinate = array();
+
+        // Get x coordinate of both points
+        $this->checkCoordinate($_x1, "X", 0, $this->board->width());
+        $this->checkCoordinate($_x2, "X", 0, $this->board->width());
+
+        if ($_x2 >= $_x1)
+        {
+            $pointACoordinate["x"] = $_x1;
+            $pointBCoordinate["x"] = $_x2;
+        }
+        else
+        {
+            $pointACoordinate["x"] = $_x2;
+            $pointBCoordinate["x"] = $_x1;
+        }
+
+        // Get y coordinate of both points
+        $this->checkCoordinate($_y1, "Y", 0, $this->board->height());
+        $this->checkCoordinate($_y2, "Y", 0, $this->board->height());
+
+        if ($_y2 >= $_y1)
+        {
+            $pointACoordinate["y"] = $_y1;
+            $pointBCoordinate["y"] = $_y2;
+        }
+        else
+        {
+            $pointACoordinate["y"] = $_y2;
+            $pointBCoordinate["y"] = $_y1;
+        }
+
+        $this->selectionCoordinates = array("A" => $pointACoordinate, "B" => $pointBCoordinate);
+    }
+
+    /**
+     * Outputs the board editor board.
+     *
+     * @param int $_highLightX The X-position of the highlighted field
+     * @param int $_highLightY The Y-Position of the highlighted field
+     */
+    public function outputBoard(int $_highLightX = null, int $_highLightY = null)
+    {
+        $this->output->outputBoard($this->board, $_highLightX, $_highLightY, $this->selectionCoordinates);
     }
 }
