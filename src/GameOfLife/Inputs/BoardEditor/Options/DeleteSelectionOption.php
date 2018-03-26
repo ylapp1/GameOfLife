@@ -48,7 +48,7 @@ class DeleteSelectionOption extends BoardEditorOption
             }
         }
 
-        $this->parentBoardEditor->outputBoard();
+        echo "Selection successfully deleted.\n";
         return false;
     }
 }
