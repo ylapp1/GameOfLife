@@ -84,10 +84,15 @@ class BoardEditorOptionParser
                 foreach ($option->arguments() as $argumentName => $argumentType)
                 {
                     $argument = current($optionData["arguments"]);
-                    if (! $argument)
+                    if ($argument === false)
                     {
                         $argument = $this->parentOptionHandler->parentBoardEditor()->readInput($argumentName . ": ");
-                        if (! $argument) throw new \Exception("Arguments may not be empty.");
+                    }
+
+                    if ($argument === "") throw new \Exception("Arguments may not be empty.");
+                    elseif ($argumentType == "int" && ! is_numeric($argument))
+                    {
+                        throw new \Exception("The argument must be a number.");
                     }
 
                     settype($argument, $argumentType);
