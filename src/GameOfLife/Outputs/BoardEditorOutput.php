@@ -52,7 +52,7 @@ class BoardEditorOutput extends ConsoleOutput
             $this->additionalSpace = 2;
 
             if ($_selectionCoordinates["A"]["x"] == 0) $this->additionalSpace -= 1;
-            if ($_selectionCoordinates["B"]["x"] == $_board->width() - 1) $this->additionalSpace -= 1;
+            if ($_selectionCoordinates["B"]["x"] == $_board->width()) $this->additionalSpace -= 1;
         }
 
         echo $this->getBoardContentString($_board, "║", "o", " ", $_selectionCoordinates);
@@ -157,7 +157,7 @@ class BoardEditorOutput extends ConsoleOutput
                 if ($_selectionCoordinates["A"]["x"] > 0) $hasLeftBorder = true;
 
                 if ($field->x() == $_selectionCoordinates["A"]["x"] - $hasLeftBorder && $field->x() > 0 ||
-                    $field->x() == $_selectionCoordinates["B"]["x"] - 1 - $hasLeftBorder && $field->x() < $boardWidth)
+                    $field->x() + 1 == $_selectionCoordinates["B"]["x"] - $hasLeftBorder && $field->x() + 1 < $boardWidth)
                 { // If x value is the same like one of the selection coordinates
 
                     if ($field->y() >= $_selectionCoordinates["A"]["y"] && $field->y() >= 0 &&
