@@ -10,6 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
+use GameOfLife\Field;
 
 /**
  * Copies the fields in the current selection area.
@@ -40,7 +41,6 @@ class CopySelectionOption extends BoardEditorOption
     public function copySelection(): Bool
     {
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
-
         $copiedFields = array();
 
         for ($y = $selectionCoordinates["A"]["y"]; $y <= $selectionCoordinates["B"]["y"]; $y++)
@@ -49,7 +49,12 @@ class CopySelectionOption extends BoardEditorOption
 
             for ($x = $selectionCoordinates["A"]["x"]; $x <= $selectionCoordinates["B"]["x"]; $x++)
             {
-                $copiedFields[$y][$x] = $this->parentBoardEditor->board()->fields()[$y][$x];
+                /** @var Field $field */
+                $field = clone $this->parentBoardEditor->board()->fields()[$y][$x];
+                $field->setX($x - $selectionCoordinates["A"]["x"]);
+                $field->setY($y - $selectionCoordinates["A"]["y"]);
+
+                $copiedFields[$y][$x] = $field;
             }
         }
 
