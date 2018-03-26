@@ -114,6 +114,8 @@ class SelectAreaOption extends BoardEditorOption
             else throw new \Exception("The entered value is not numeric.");
         }
 
+        if ($width == 0) throw new \Exception("The width of the selection may not be 0.");
+
         $posXRight = $_posXLeft + $width;
         $this->parentBoardEditor->checkCoordinate(
             $posXRight,
@@ -181,6 +183,8 @@ class SelectAreaOption extends BoardEditorOption
             if (is_numeric($userInput)) $height = (int)$userInput;
             else throw new \Exception("The entered value is not numeric.");
         }
+
+        if ($height == 0) throw new \Exception("The height of the selection may not be 0.");
 
         $posYBottom = $_posYTop + $height;
         $this->parentBoardEditor->checkCoordinate(
