@@ -141,16 +141,17 @@ class SaveTemplateOptionTest extends TestCase
             // Template name already exists -> abort
             $boardEditorMock->expects($this->exactly(2))
                 ->method("readInput")
+                ->withConsecutive(array("Overwrite the old file? (Yes|No): "), array("Overwrite the old file? (Yes|No): "))
                 ->willReturn("n", "Y");
 
-            $expectedOutput = "Warning: A template with that name already exists\. Overwrite the old file\? \(Y\|N\)\n"
+            $expectedOutput = "Warning: A template with that name already exists\.\n"
                             . "Saving aborted\.\n\n";
             $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
 
             $option->saveTemplate("testTemplateAbort");
 
             // Template name already exists -> overwrite
-            $expectedOutput = "Warning: A template with that name already exists\. Overwrite the old file\? \(Y\|N\)\n"
+            $expectedOutput = "Warning: A template with that name already exists\.\n"
                             . "Template successfully replaced!\n\n";
             $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
 

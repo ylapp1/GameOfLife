@@ -72,9 +72,7 @@ class LoadTemplateOption extends BoardEditorOption
         if ($_adjustDimensions) $adjustDimensions = (bool)$_adjustDimensions;
         else
         {
-            echo "Adjust the board to match the template dimensions? (Yes|No): ";
-
-            $userDecision = $this->parentBoardEditor->readInput();
+            $userDecision = $this->parentBoardEditor->readInput("Adjust the board to match the template dimensions? (Yes|No): ");
             if (stristr($userDecision, "yes") || stristr($userDecision, "y")) $adjustDimensions = true;
             else $adjustDimensions = false;
         }

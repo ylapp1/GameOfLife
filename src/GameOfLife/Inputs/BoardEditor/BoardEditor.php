@@ -276,8 +276,7 @@ class BoardEditor
      */
     public function readCoordinate(String $_coordinateAxisName, String $_coordinateDescription, int $_minValue, int $_maxValue): int
     {
-        echo $_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ";
-        $userInput = $this->readInput();
+        $userInput = $this->readInput($_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ");
         if (! is_numeric($userInput)) throw new \Exception("The input value is no number.");
         else
         {

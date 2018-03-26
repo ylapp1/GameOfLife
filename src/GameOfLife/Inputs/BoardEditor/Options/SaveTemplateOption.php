@@ -80,8 +80,8 @@ class SaveTemplateOption extends BoardEditorOption
 
         if ($result == false)
         {
-            echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)\n";
-            $input = $this->parentBoardEditor->readInput();
+            echo "Warning: A template with that name already exists.\n";
+            $input = $this->parentBoardEditor->readInput("Overwrite the old file? (Yes|No): ");
 
             if (stristr($input, "y") || stristr($input, "yes"))
             {
