@@ -12,12 +12,12 @@ use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
 
 /**
- * Unsets the fields in the current selection area.
+ * Copies the fields in the current selection area.
  */
-class DeleteSelectionOption extends BoardEditorOption
+class CopySelectionOption extends BoardEditorOption
 {
     /**
-     * DeleteSelectionOption constructor.
+     * ExitOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
      */
@@ -25,30 +25,37 @@ class DeleteSelectionOption extends BoardEditorOption
     {
         parent::__construct($_parentBoardEditor);
 
-        $this->name = "deleteSelection";
-        $this->callback = "deleteSelection";
-        $this->description = "Unsets the fields in the current selection area";
+        $this->name = "copy";
+        $this->aliases = array("copySelection");
+        $this->callback = "copySelection";
+        $this->description = "Copies the fields in the current selection area";
         $this->arguments = array();
     }
 
     /**
-     * Unsets the fields in the current selection area.
+     * Copies the fields in the current selection area.
      *
      * @return bool Indicates whether the board editing is finished
      */
-    public function deleteSelection(): Bool
+    public function copySelection(): Bool
     {
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
 
+        $copiedFields = array();
+
         for ($y = $selectionCoordinates["A"]["y"]; $y <= $selectionCoordinates["B"]["y"]; $y++)
         {
+            $copiedFields[$y] = array();
+
             for ($x = $selectionCoordinates["A"]["x"]; $x <= $selectionCoordinates["B"]["x"]; $x++)
             {
-                $this->parentBoardEditor->board()->setField($x, $y, false);
+                $copiedFields[$y][$x] = $this->parentBoardEditor->board()->fields()[$y][$x];
             }
         }
 
-        $this->parentBoardEditor->outputBoard();
+        $this->parentBoardEditor->setCopiedFields($copiedFields);
+        echo "Fields successfully copied.\n";
+
         return false;
     }
 }

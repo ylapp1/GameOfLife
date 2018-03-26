@@ -16,6 +16,11 @@ use BoardEditor\BoardEditorOption;
  */
 class ResetSelectionOption extends BoardEditorOption
 {
+    /**
+     * ResetSelectionOption constructor.
+     *
+     * @param BoardEditor $_parentBoardEditor Parent board editor
+     */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
         parent::__construct($_parentBoardEditor);

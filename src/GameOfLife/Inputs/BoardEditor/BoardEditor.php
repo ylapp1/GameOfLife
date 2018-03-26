@@ -10,6 +10,7 @@ namespace BoardEditor;
 
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
+use GameOfLife\Field;
 use Output\BoardEditorOutput;
 
 /**
@@ -58,6 +59,13 @@ class BoardEditor
      */
     private $selectionCoordinates;
 
+    /**
+     * The cached copied fields.
+     *
+     * @var Field[] $copiedFields
+     */
+    private $copiedFields;
+
 
     /**
      * BoardEditor constructor.
@@ -83,6 +91,7 @@ class BoardEditor
         }
         $this->output = new BoardEditorOutput();
         $this->selectionCoordinates = array();
+        $this->copiedFields = array();
     }
 
 
@@ -137,7 +146,7 @@ class BoardEditor
     }
 
     /**
-     * Sets the output which prints the board
+     * Sets the output which prints the board.
      *
      * @param BoardEditorOutput $_output Output which prints the board
      */
@@ -177,13 +186,33 @@ class BoardEditor
     }
 
     /**
-     * Sets the template directory
+     * Sets the template directory.
      *
      * @param String $_templateDirectory Template directory
      */
     public function setTemplateDirectory(String $_templateDirectory)
     {
         $this->templateDirectory = $_templateDirectory;
+    }
+
+    /**
+     * Returns the cached copied fields.
+     *
+     * @return array The cached copied fields
+     */
+    public function copiedFields(): array
+    {
+        return $this->copiedFields;
+    }
+
+    /**
+     * Sets the cached copied fields.
+     *
+     * @param array $_copiedFields The cached copied fields
+     */
+    public function setCopiedFields(array $_copiedFields)
+    {
+        $this->copiedFields = $_copiedFields;
     }
 
 
