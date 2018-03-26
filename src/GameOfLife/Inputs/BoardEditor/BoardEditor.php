@@ -308,7 +308,7 @@ class BoardEditor
         }
         elseif ($_coordinate > $_maxValue)
         {
-            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
+            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue . ".");
         }
     }
 
