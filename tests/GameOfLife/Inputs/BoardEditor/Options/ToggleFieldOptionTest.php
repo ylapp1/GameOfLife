@@ -41,7 +41,6 @@ class ToggleFieldOptionTest extends TestCase
      *
      * @dataProvider toggleFieldProvider()
      * @covers \BoardEditor\Options\ToggleFieldOption::toggleField()
-     * @covers \BoardEditor\Options\ToggleFieldOption::getIntegerCoordinate()
      *
      * @param String $_x X-Coordinate
      * @param String $_y Y-Coordinate
