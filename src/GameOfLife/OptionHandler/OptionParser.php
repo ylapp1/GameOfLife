@@ -60,7 +60,7 @@ class OptionParser
         elseif ($_options->getOption("help") !== null)
         {
             echo "\n";
-            $_options->showHelp();
+            $_options->showHelp(36);
             return true;
         }
 

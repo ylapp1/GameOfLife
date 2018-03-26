@@ -119,20 +119,20 @@ class GIFOutputTest extends TestCase
      */
     public function testCanAddOptions()
     {
-        $imageOutputOptions = array(
-            array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "Size of a cell in pixels"),
-            array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "Color of a cell"),
-            array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "Background color"),
-            array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "Grid color")
+        $gifOutputOptions = array(
+            array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "GifOutput - Frame time of gif (in milliseconds * 10)")
         );
 
-        $gifOutputOptions = array(
-            array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
+        $imageOutputOptions = array(
+            array(null, "gifOutputSize", Getopt::REQUIRED_ARGUMENT, "GifOutput - Size of a cell in pixels"),
+            array(null, "gifOutputCellColor", Getopt::REQUIRED_ARGUMENT, "GifOutput - Color of a cell"),
+            array(null, "gifOutputBackgroundColor", Getopt::REQUIRED_ARGUMENT, "GifOutput - Background color"),
+            array(null, "gifOutputGridColor", Getopt::REQUIRED_ARGUMENT, "GifOutput - Grid color\n")
         );
 
         $this->optionsMock->expects($this->exactly(2))
                           ->method("addOptions")
-                          ->withConsecutive([$imageOutputOptions], [$gifOutputOptions]);
+                          ->withConsecutive(array($gifOutputOptions), array($imageOutputOptions));
 
         if ($this->optionsMock instanceof Getopt) $this->output->addOptions($this->optionsMock);
     }

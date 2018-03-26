@@ -25,7 +25,7 @@ class RandomInput extends BaseInput
     {
         $_options->addOptions(
             array(
-                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
+                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "RandomInput - Percentage of living cells on a random board\n")
             )
         );
     }
