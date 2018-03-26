@@ -229,7 +229,7 @@ class BoardEditor
         $isInputFinished = false;
         while (! $isInputFinished)
         {
-            $line = $this->readInput();
+            $line = $this->readInput("> ");
 
             try
             {
@@ -245,11 +245,13 @@ class BoardEditor
     /**
      * Reads user input from a input source.
      *
+     * @param String $_prompt The prompt
+     *
      * @return String User input with removed "\n\r"
      */
-    public function readInput(): String
+    public function readInput(String $_prompt = ""): String
     {
-        $inputLine = readline("> ");
+        $inputLine = readline($_prompt);
 
         /*
          * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
