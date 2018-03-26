@@ -193,9 +193,12 @@ class BoardEditorOption
      */
     public function hasAlias(String $_alias)
     {
-        $alias = strtolower($_alias);
-        if (in_array($alias, $this->aliases)) return true;
-        else return false;
+        foreach ($this->aliases as $alias)
+        {
+            if (strtolower($_alias) == strtolower($alias)) return true;
+        }
+
+        return false;
     }
 
     /**
