@@ -76,7 +76,7 @@ class SelectAreaOption extends BoardEditorOption
                 $posXLeft,
                 "X",
                 0,
-                $this->parentBoardEditor->board()->width()
+                $this->parentBoardEditor->board()->width() - 1
             );
         }
         else
@@ -85,7 +85,7 @@ class SelectAreaOption extends BoardEditorOption
                 "X",
                 "top left border of the selection",
                 0,
-                $this->parentBoardEditor->board()->width()
+                $this->parentBoardEditor->board()->width() - 1
             );
         }
 
@@ -116,12 +116,12 @@ class SelectAreaOption extends BoardEditorOption
 
         if ($width == 0) throw new \Exception("The width of the selection may not be 0.");
 
-        $posXRight = $_posXLeft + $width;
+        $posXRight = $_posXLeft - 1 + $width;
         $this->parentBoardEditor->checkCoordinate(
             $posXRight,
             "X",
             0,
-            $this->parentBoardEditor->board()->width()
+            $this->parentBoardEditor->board()->width() - 1
         );
 
         return $posXRight;
@@ -146,7 +146,7 @@ class SelectAreaOption extends BoardEditorOption
                 $posYTop,
                 "Y",
                 0,
-                $this->parentBoardEditor->board()->height()
+                $this->parentBoardEditor->board()->height() - 1
             );
         }
         else
@@ -155,7 +155,7 @@ class SelectAreaOption extends BoardEditorOption
                 "Y",
                 "top left border of the selection",
                 0,
-                $this->parentBoardEditor->board()->height()
+                $this->parentBoardEditor->board()->height() - 1
             );
         }
 
@@ -186,12 +186,12 @@ class SelectAreaOption extends BoardEditorOption
 
         if ($height == 0) throw new \Exception("The height of the selection may not be 0.");
 
-        $posYBottom = $_posYTop + $height;
+        $posYBottom = $_posYTop - 1 + $height;
         $this->parentBoardEditor->checkCoordinate(
             $posYBottom,
             "Y",
             0,
-            $this->parentBoardEditor->board()->height()
+            $this->parentBoardEditor->board()->height() - 1
         );
 
         return $posYBottom;

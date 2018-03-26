@@ -52,7 +52,7 @@ class BoardEditorOutput extends ConsoleOutput
             $this->additionalSpace = 2;
 
             if ($_selectionCoordinates["A"]["x"] == 0) $this->additionalSpace -= 1;
-            if ($_selectionCoordinates["B"]["x"] == $_board->width()) $this->additionalSpace -= 1;
+            if ($_selectionCoordinates["B"]["x"] == $_board->width() - 1) $this->additionalSpace -= 1;
         }
 
         echo $this->getBoardContentString($_board, "║", "o", " ", $_selectionCoordinates);
@@ -152,15 +152,12 @@ class BoardEditorOutput extends ConsoleOutput
             }
             elseif ($_selectionCoordinates)
             {
-                $hasLeftBorder = false;
-                if ($_selectionCoordinates["A"]["x"] > 0) $hasLeftBorder = true;
-
-                if ($field->x() == $_selectionCoordinates["A"]["x"] - $hasLeftBorder && $field->x() > 0 ||
-                    $field->x() + 1 == $_selectionCoordinates["B"]["x"] - $hasLeftBorder && $field->x() + 1 < $boardWidth)
+                if ($field->x() == $_selectionCoordinates["A"]["x"] - 1 && $field->x() > 0 ||
+                    $field->x() == $_selectionCoordinates["B"]["x"] && $field->x() + 1 < $boardWidth)
                 { // If x value is the same like one of the selection coordinates
 
                     if ($field->y() >= $_selectionCoordinates["A"]["y"] && $field->y() >= 0 &&
-                        $field->y() < $_selectionCoordinates["B"]["y"] && $field->y() < $_boardHeight)
+                        $field->y() < $_selectionCoordinates["B"]["y"] + 1 && $field->y() < $_boardHeight)
                     {
                         $output .= "┋";
                     }
@@ -185,36 +182,42 @@ class BoardEditorOutput extends ConsoleOutput
     private function getSelectionBorderRowString(int $_y, array $_selectionCoordinates, Board $_board, String $_sideBorderSymbol)
     {
         if ($_y == $_selectionCoordinates["A"]["y"] && $_y > 0 ||
-            $_y == $_selectionCoordinates["B"]["y"] && $_y < $_board->height())
+            $_y == $_selectionCoordinates["B"]["y"] + 1 && $_y < $_board->height())
         {
+            $specialSymbols = array();
+
             $leftBorderSymbol = $_sideBorderSymbol;
             $rightBorderSymbol = $_sideBorderSymbol;
 
-            $specialSymbols = array();
-            for ($x = $_selectionCoordinates["A"]["x"]; $x <= $_selectionCoordinates["B"]["x"]; $x++)
-            {
-                $specialSymbols[$x] = "╍";
-            }
-
-            $numberOfBorderSymbols = 0;
+            $hasLeftBorder = false;
             if ($_selectionCoordinates["A"]["x"] > 0)
             {
-                $numberOfBorderSymbols++;
+                $hasLeftBorder = true;
+
                 if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["A"]["x"]] = "┏";
                 else $specialSymbols[$_selectionCoordinates["A"]["x"]] = "┗";
             }
             else $leftBorderSymbol = "╟";
 
-            if ($_selectionCoordinates["B"]["x"] < $_board->width())
+            $hasRightBorder = false;
+            if ($_selectionCoordinates["B"]["x"] + 1 < $_board->width())
             {
-                $numberOfBorderSymbols++;
-                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["B"]["x"]] = "┓";
-                else $specialSymbols[$_selectionCoordinates["B"]["x"]] = "┛";
+                $hasRightBorder = true;
+
+                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "┓";
+                else $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "┛";
             }
             else $rightBorderSymbol = "╢";
 
+            $startX = $_selectionCoordinates["A"]["x"] + $hasLeftBorder;
+            $endX = $_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1;
+            for ($x = $startX; $x <= $endX - $hasRightBorder; $x++)
+            {
+                $specialSymbols[$x] = "╍";
+            }
+
             return $this->getHorizontalLineString(
-                $_board->width() + $numberOfBorderSymbols,
+                $_board->width() + $hasLeftBorder + $hasRightBorder,
                     $leftBorderSymbol,
                     $rightBorderSymbol,
                 " ",
@@ -248,10 +251,10 @@ class BoardEditorOutput extends ConsoleOutput
         elseif ($_selectionCoordinates)
         {
             if ((! $_isBottomBorder && $_selectionCoordinates["A"]["y"] == 0) ||
-                ($_isBottomBorder && $_selectionCoordinates["B"]["y"] == $_boardHeight))
+                ($_isBottomBorder && $_selectionCoordinates["B"]["y"] == $_boardHeight - 1))
             {
                 if ($_selectionCoordinates["A"]["x"] > 0) $specialSymbols[$_selectionCoordinates["A"]["x"]] = $_symbolLeft;
-                if ($_selectionCoordinates["B"]["x"] < $_boardWidth) $specialSymbols[$_selectionCoordinates["B"]["x"]] = $_symbolRight;
+                if ($_selectionCoordinates["B"]["x"] + 1 < $_boardWidth - 1) $specialSymbols[$_selectionCoordinates["B"]["x"] + count($specialSymbols) + 1] = $_symbolRight;
             }
         }
 
