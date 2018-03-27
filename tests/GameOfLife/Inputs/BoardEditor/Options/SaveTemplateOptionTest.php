@@ -123,12 +123,27 @@ class SaveTemplateOptionTest extends TestCase
                 ->willReturn($board);
 
             $templateSaverMock->expects($this->exactly(4))
-                ->method("saveCustomTemplate")
-                ->withConsecutive(array("testTemplate", $board),
-                    array("testTemplateAbort", $board),
-                    array("testTemplateReplace", $board),
-                    array("testTemplateReplace", $board))
-                ->willReturn(true, false, false, true);
+                              ->method("saveCustomTemplate");
+
+            $templateSaverMock->expects($this->at(0))
+                              ->method("saveCustomTemplate")
+                              ->with("testTemplate", $board)
+                              ->willReturn(null);
+
+            $templateSaverMock->expects($this->at(1))
+                              ->method("saveCustomTemplate")
+                              ->with("testTemplateAbort", $board)
+                              ->willThrowException(new \Exception("Hello"));
+
+            $templateSaverMock->expects($this->at(2))
+                              ->method("saveCustomTemplate")
+                              ->with("testTemplateReplace", $board)
+                              ->willThrowException(new \Exception("Hello"));
+
+            $templateSaverMock->expects($this->at(3))
+                              ->method("saveCustomTemplate")
+                              ->with("testTemplateReplace", $board)
+                              ->willReturn(null);
 
             // Template saved successfully
             $expectedOutput = "Template successfully saved!\n\n"
