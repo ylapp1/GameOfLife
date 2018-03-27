@@ -10,7 +10,6 @@ namespace Output;
 
 use GameOfLife\Board;
 use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
 use Utils\FileSystemHandler;
@@ -195,6 +194,8 @@ class ImageOutput extends BaseOutput
      *
      * @param Getopt $_options User inputted option list
      * @param Board $_board Initial board
+     *
+     * @throws \Exception The exception when one of the input colors is invalid
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -214,17 +215,17 @@ class ImageOutput extends BaseOutput
         if ($cellSize !== null) $cellSize = (int)$cellSize;
         else $cellSize = 100;
 
-        $cellColor = $_options->getOption($this->optionPrefix . "OutputCellColor");
-        if ($cellColor !== null) $cellColor = $colorSelector->getColor($cellColor);
-        else $cellColor = new ImageColor(0,0,0);
+        $cellColorString = $_options->getOption($this->optionPrefix . "OutputCellColor");
+        if ($cellColorString === null) $cellColorString = "black";
+        $cellColor = $colorSelector->getColor($cellColorString);
 
-        $backgroundColor = $_options->getoption($this->optionPrefix . "OutputBackgroundColor");
-        if ($backgroundColor !== null) $backgroundColor = $colorSelector->getColor($backgroundColor);
-        else $backgroundColor = new ImageColor(255, 255,255);
+        $backgroundColorString = $_options->getoption($this->optionPrefix . "OutputBackgroundColor");
+        if ($backgroundColorString === null) $backgroundColorString = "white";
+        $backgroundColor = $colorSelector->getColor($backgroundColorString);
 
-        $gridColor = $_options->getoption($this->optionPrefix . "OutputGridColor");
-        if ($gridColor !== null) $gridColor = $colorSelector->getColor($gridColor);
-        else $gridColor = new ImageColor(0, 0, 0);
+        $gridColorString = $_options->getoption($this->optionPrefix . "OutputGridColor");
+        if ($gridColorString === null) $gridColorString = "black";
+        $gridColor = $colorSelector->getColor($gridColorString);
 
         // initialize the ImageCreator
         $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor);
