@@ -29,169 +29,42 @@ class SelectAreaOption extends BoardEditorOption
         $this->aliases = array("selectArea");
         $this->callback = "selectArea";
         $this->description = "Selects an area of fields";
-        $this->arguments = array("posXLeft" => "int", "posYTop" => "int", "width" => "int", "height" => "int");
+        $this->arguments = array(
+            "X-Coordinate (left border)" => "int",
+            "Width" => "int",
+            "Y-Coordinate (top border)" => "int",
+            "Height" => "int"
+        );
     }
 
     /**
      * Selects an area of fields on the board.
      *
-     * @param String $_posXLeft The user inputted posX left
-     * @param String $_posYTop The user inputted posY top
-     * @param String $_width The user inputted width
-     * @param String $_height The user inputted height
+     * @param int $_posXLeft The user inputted posX left
+     * @param int $_width The user inputted width
+     * @param int $_posYTop The user inputted posY top
+     * @param int $_height The user inputted height
      *
      * @return bool Indicates whether the board editing is finished
      *
      * @throws \Exception The exception when the coordinate is invalid.
      */
-    public function selectArea($_posXLeft = null, $_posYTop = null, $_width = null, $_height = null): bool
+    public function selectArea(int $_posXLeft, int $_width, int $_posYTop, int $_height): bool
     {
-        $posXLeft = $this->getPosXLeft($_posXLeft);
-        $posXRight = $this->getPosXRight($posXLeft, $_width);
-        $posYTop = $this->getPosYTop($_posYTop);
-        $posYBottom = $this->getPosYBottom($posYTop, $_height);
+        $this->parentBoardEditor->checkCoordinate($_posXLeft, "X", 0, $this->parentBoardEditor->board()->width() - 1);
+        $this->parentBoardEditor->checkCoordinate($_posYTop, "Y", 0, $this->parentBoardEditor->board()->height() - 1);
 
-        $this->parentBoardEditor->selectArea($posXLeft, $posYTop, $posXRight, $posYBottom);
+        if ($_width == 0) throw new \Exception("The width of the selection may not be 0.");
+        $posXRight = $_posXLeft + $_width;
+        $this->parentBoardEditor->checkCoordinate($posXRight, "X", 0, $this->parentBoardEditor->board()->width() - 1);
+
+        if ($_height == 0) throw new \Exception("The height of the selection may not be 0.");
+        $posYBottom = $_posYTop + $_height;
+        $this->parentBoardEditor->checkCoordinate($posYBottom, "Y", 0, $this->parentBoardEditor->board()->height() - 1);
+
+        $this->parentBoardEditor->selectArea($_posXLeft, $_posYTop, $posXRight, $posYBottom);
         $this->parentBoardEditor->outputBoard();
 
         return false;
-    }
-
-    /**
-     * Returns the X-Position of the left border of the selection.
-     *
-     * @param String $_posXLeft The user inputted value
-     *
-     * @return int The X-Position of the left border of the selection
-     *
-     * @throws \Exception The exception when the value is invalid
-     */
-    private function getPosXLeft($_posXLeft = null)
-    {
-        if ($_posXLeft)
-        {
-            $posXLeft = (int)$_posXLeft;
-
-            $this->parentBoardEditor->checkCoordinate(
-                $posXLeft,
-                "X",
-                0,
-                $this->parentBoardEditor->board()->width() - 1
-            );
-        }
-        else
-        {
-            $posXLeft = $this->parentBoardEditor->readCoordinate(
-                "X",
-                "top left border of the selection",
-                0,
-                $this->parentBoardEditor->board()->width() - 1
-            );
-        }
-
-        return $posXLeft;
-    }
-
-    /**
-     * Returns the X-Position of the right border of the selection.
-     *
-     * @param int $_posXLeft The X-Position of the left border of the selection
-     * @param String $_width The user inputted value
-     *
-     * @return int The X-Position of the right border of the selection
-     *
-     * @throws \Exception The exception when the value is invalid
-     */
-    private function getPosXRight($_posXLeft, $_width = null)
-    {
-        if ($_width) $width = (int)$_width;
-        else
-        {
-            $userInput = $this->parentBoardEditor->readInput("Width of the selection: ");
-
-            if (is_numeric($userInput)) $width = (int)$userInput;
-            else throw new \Exception("The entered value is not numeric.");
-        }
-
-        if ($width == 0) throw new \Exception("The width of the selection may not be 0.");
-
-        $posXRight = $_posXLeft - 1 + $width;
-        $this->parentBoardEditor->checkCoordinate(
-            $posXRight,
-            "X",
-            0,
-            $this->parentBoardEditor->board()->width() - 1
-        );
-
-        return $posXRight;
-    }
-
-    /**
-     * Returns the Y-Position of the top border of the selection.
-     *
-     * @param String $_posYTop The user inputted value
-     *
-     * @return int The Y-Position of the top border of the selection
-     *
-     * @throws \Exception The exception when the value is invalid
-     */
-    private function getPosYTop($_posYTop = null)
-    {
-        if ($_posYTop)
-        {
-            $posYTop = (int)$_posYTop;
-
-            $this->parentBoardEditor->checkCoordinate(
-                $posYTop,
-                "Y",
-                0,
-                $this->parentBoardEditor->board()->height() - 1
-            );
-        }
-        else
-        {
-            $posYTop = $this->parentBoardEditor->readCoordinate(
-                "Y",
-                "top left border of the selection",
-                0,
-                $this->parentBoardEditor->board()->height() - 1
-            );
-        }
-
-        return $posYTop;
-    }
-
-    /**
-     * Returns the Y-Position of the bottom border of the selection.
-     *
-     * @param int $_posYTop The Y-Position of the top border of the selection
-     * @param String $_height The user inputted value
-     *
-     * @return int The Y-Position of the bottom border of the selection
-     *
-     * @throws \Exception The exception when the value is invalid
-     */
-    private function getPosYBottom($_posYTop, $_height = null)
-    {
-        if ($_height) $height = (int)$_height;
-        else
-        {
-            $userInput = $this->parentBoardEditor->readInput("Height of the selection: ");
-
-            if (is_numeric($userInput)) $height = (int)$userInput;
-            else throw new \Exception("The entered value is not numeric.");
-        }
-
-        if ($height == 0) throw new \Exception("The height of the selection may not be 0.");
-
-        $posYBottom = $_posYTop - 1 + $height;
-        $this->parentBoardEditor->checkCoordinate(
-            $posYBottom,
-            "Y",
-            0,
-            $this->parentBoardEditor->board()->height() - 1
-        );
-
-        return $posYBottom;
     }
 }
