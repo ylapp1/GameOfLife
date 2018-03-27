@@ -33,9 +33,53 @@ class ColorSelector
         elseif (stristr($_colorInput, ";")) $delimiter = ";";
 
         if ($delimiter) $color = $this->getColorFromColorParts(explode($delimiter, $_colorInput));
+        elseif (substr($_colorInput, 0, 1) == "#") $color = $this->getColorFromHexString($_colorInput);
         else $color = $this->getColorFromColorName($_colorInput);
 
         return $color;
+    }
+
+    /**
+     * Returns the color from a hexadecimal color string.
+     *
+     * @param String $_hexString The hex string in the format #FFFFFF
+     *
+     * @return ImageColor The image color
+     *
+     * @throws \Exception The exception when the hex string is invalid
+     */
+    private function getColorFromHexString(String $_hexString): ImageColor
+    {
+        if (strlen($_hexString) != 7) throw new \Exception("The hex string must contain exactly two digits per color amount (R, G and B).");
+
+        $hexString = trim($_hexString, "#");
+        $hexValueStrings = str_split($hexString, 2);
+
+        $amountRed = $this->getColorAmountFromHexString($hexValueStrings[0]);
+        $amountGreen = $this->getColorAmountFromHexString($hexValueStrings[1]);
+        $amountBlue = $this->getColorAmountFromHexString($hexValueStrings[2]);
+
+        return new ImageColor($amountRed, $amountGreen, $amountBlue);
+    }
+
+    /**
+     * Returns the color amount from a hex string.
+     *
+     * @param String $_hexValueString The hexadecimal value string
+     *
+     * @return int The color amount
+     *
+     * @throws \Exception The exception when the hexadecimal value is invalid
+     */
+    private function getColorAmountFromHexString(String $_hexValueString): int
+    {
+        if (strlen($_hexValueString) != 2) throw new \Exception("The hex values may contain only two digits.");
+        elseif (! preg_match("/[0-9A-F]{2}/", $_hexValueString))
+        {
+            throw new \Exception("The hex values may contain only hexadecimal characters (0-9, A-F).");
+        }
+
+        return hexdec($_hexValueString);
     }
 
     /**
@@ -43,7 +87,7 @@ class ColorSelector
      *
      * @param String[] $_colorAmounts The list of color amounts
      *
-     * @return ImageColor
+     * @return ImageColor The image color
      *
      * @throws \Exception The exception when the amount of color amount parts is invalid
      */
