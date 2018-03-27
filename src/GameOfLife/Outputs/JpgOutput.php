@@ -31,6 +31,8 @@ class JpgOutput extends ImageOutput
      *
      * @param Getopt $_options User inputted option list
      * @param Board $_board Initial board
+     *
+     * @throws \Exception The exception when one of the input colors is invalid
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
