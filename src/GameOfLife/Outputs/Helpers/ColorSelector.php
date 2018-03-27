@@ -23,70 +23,103 @@ class ColorSelector
      * @param String $_colorInput The user input text
      *
      * @return ImageColor The resulting color
+     *
+     * @throws \Exception The exception when the input color is invalid
      */
-    public function getColor (string $_colorInput): ImageColor
+    public function getColor(string $_colorInput): ImageColor
     {
-        // if color input is a "R,G,B" string
-        if (stristr($_colorInput, ",") != false)
-        {
-            $parts = explode(",", $_colorInput);
+        $delimiter = "";
+        if (stristr($_colorInput, ",")) $delimiter = ",";
+        elseif (stristr($_colorInput, ";")) $delimiter = ";";
 
-            $red = $this->validateColorAmount(intval($parts[0]));
-            $green = $this->validateColorAmount(intval($parts[1]));
-            $blue = $this->validateColorAmount(intval($parts[2]));
-
-            if ($red < 0) $red = 0;
-
-            $color = new ImageColor($red, $green, $blue);
-        }
-        // if color input is a color name (e.g. "red", "blue", "green")
-        else
-        {
-            switch (strtolower($_colorInput)) {
-                case "red":
-                    $color = new ImageColor(255, 0, 0);
-                    break;
-                case "green":
-                    $color = new ImageColor(0, 255, 0);
-                    break;
-                case "blue":
-                    $color = new ImageColor(0, 0, 255);
-                    break;
-                case "yellow":
-                    $color = new ImageColor(255, 255, 0);
-                    break;
-                case "pink":
-                    $color = new ImageColor(255, 0, 255);
-                    break;
-                case "cyan":
-                    $color = new ImageColor(0, 255, 255);
-                    break;
-                case "white":
-                    $color = new ImageColor(255, 255, 255);
-                    break;
-                default:
-                    $color = new ImageColor(0, 0, 0);
-            }
-        }
+        if ($delimiter) $color = $this->getColorFromColorParts(explode($delimiter, $_colorInput));
+        else $color = $this->getColorFromColorName($_colorInput);
 
         return $color;
     }
 
     /**
-     * Checks whether the color amount is less than 0 or more than 255 and adjusts the color accordingly.
+     * Returns an ImageColor from a list of color amounts.
      *
-     * @param int $_colorAmount Amount of red, green or blue
+     * @param String[] $_colorAmounts The list of color amounts
      *
-     * @return int Fixed color if input was a invalid color
-     *             Input color if input was a valid color
+     * @return ImageColor
+     *
+     * @throws \Exception The exception when the amount of color amount parts is invalid
      */
-    public function validateColorAmount(int $_colorAmount): int
+    private function getColorFromColorParts(array $_colorAmounts): ImageColor
     {
-        $colorAmount = $_colorAmount;
+        if (count($_colorAmounts) > 3) throw new \Exception("The color amount string may not contain more than three numbers.");
+        elseif (count($_colorAmounts) < 3) throw new \Exception("The color amount string may not contain less than three numbers.");
 
-        if ($_colorAmount < 0) $colorAmount = 0;
-        if ($_colorAmount > 255) $colorAmount = 255;
+        $amountRed = $this->getColorAmountFromString($_colorAmounts[0]);
+        $amountGreen = $this->getColorAmountFromString($_colorAmounts[1]);
+        $amountBlue = $this->getColorAmountFromString($_colorAmounts[2]);
+
+        return new ImageColor($amountRed, $amountGreen, $amountBlue);
+    }
+
+    /**
+     * Returns the color amount from a string.
+     *
+     * @param String $_colorAmountString The color amount string (must be numeric)
+     *
+     * @return int The color amount
+     *
+     * @throws \Exception The exception when the color amount string is invalid
+     */
+    private function getColorAmountFromString(String $_colorAmountString): int
+    {
+        if (! is_numeric($_colorAmountString)) throw new \Exception("The color amounts must be numbers.");
+
+        $colorAmount = (int)$_colorAmountString;
+
+        if ($colorAmount < 0) throw new \Exception("The color amounts may not be smaller than 0.");
+        if ($colorAmount > 255) throw new \Exception("The color amounts may not be bigger than 255.");
 
         return $colorAmount;
+    }
+
+    /**
+     * Returns the color from a color name (e.g. "red", "blue", "green").
+     *
+     * @param String $_colorName The color name
+     *
+     * @return ImageColor The corresponding image color
+     *
+     * @throws \Exception The exception when the color name is invalid
+     */
+    private function getColorFromColorName(String $_colorName): ImageColor
+    {
+        switch (strtolower($_colorName)) {
+            case "red":
+                $color = new ImageColor(255, 0, 0);
+                break;
+            case "green":
+                $color = new ImageColor(0, 255, 0);
+                break;
+            case "blue":
+                $color = new ImageColor(0, 0, 255);
+                break;
+            case "yellow":
+                $color = new ImageColor(255, 255, 0);
+                break;
+            case "pink":
+                $color = new ImageColor(255, 0, 255);
+                break;
+            case "cyan":
+                $color = new ImageColor(0, 255, 255);
+                break;
+            case "white":
+                $color = new ImageColor(255, 255, 255);
+                break;
+            case "black":
+                $color = new ImageColor(0, 0, 0);
+                break;
+            default:
+                throw new \Exception("The color name \"" . $_colorName . "\" is invalid.");
+        }
+
+        return $color;
     }
 }
