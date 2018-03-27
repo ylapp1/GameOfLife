@@ -119,7 +119,13 @@ class BoardEditorOptionParser
         foreach ($_option->arguments() as $argumentName => $argumentType)
         {
             $argument = current($_arguments);
-            if ($argument === false) $argument = $this->readArgument($argumentName, $argumentType);
+            if ($argument === false)
+            {
+                if ($this->canArgumentBeOmitted($argumentType, $arguments)) continue;
+
+                $argumentType = explode("|", $argumentType)[0];
+                $argument = $this->readArgument($argumentName, $argumentType);
+            }
 
             $this->checkArgument($argument, $argumentType);
             $argument = $this->changeArgumentType($argument, $argumentType);
@@ -129,6 +135,42 @@ class BoardEditorOptionParser
         }
 
         return $arguments;
+    }
+
+    /**
+     * Checks whether the argument can be omitted.
+     *
+     * @param String $_argumentType The type of the argument
+     * @param String[] $_arguments The list of already read arguments
+     *
+     * @return Bool True: The argument can be omitted
+     *              False: The argument can not be omitted
+     */
+    private function canArgumentBeOmitted(String $_argumentType, array $_arguments): Bool
+    {
+        // Split string into option parts
+        $argumentTypeParts = explode("|", $_argumentType);
+
+        // Remove the argument type from the argument type parts
+        array_shift($argumentTypeParts);
+
+        $conditions = $argumentTypeParts;
+
+        foreach ($conditions as $condition)
+        {
+            $conditionParts = explode("=", $condition);
+            $conditionArgumentId = (int)$conditionParts[0];
+
+            $conditionArgumentParts = explode(",", $conditionParts[1]);
+
+            $conditionArgumentType = $conditionArgumentParts[0];
+            $conditionArgumentValue = $conditionArgumentParts[1];
+            settype($conditionArgumentValue, $conditionArgumentType);
+
+            if ($_arguments[$conditionArgumentId] === $conditionArgumentValue) return true;
+        }
+
+        return false;
     }
 
     /**

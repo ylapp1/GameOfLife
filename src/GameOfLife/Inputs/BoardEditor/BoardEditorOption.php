@@ -42,6 +42,10 @@ class BoardEditorOption
     /**
      * Stores the names of the arguments of the callback function
      *
+     * The array must be in the format "argumentName" => "argumentType"
+     * The argumentType may contain conditions to omit the argument, the conditions must be appended
+     * to the argumentType with "|" and they have to be in the format "<argumentId=type,value>"
+     *
      * @var String[] $arguments
      */
     protected $arguments;

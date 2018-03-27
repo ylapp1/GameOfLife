@@ -49,8 +49,8 @@ class LoadTemplateOption extends BoardEditorOption
         $this->arguments = array(
             "Template name" => "String",
             "Adjust board dimensions" => "Bool",
-            "X-Coordinate (left border)" => "int",
-            "Y-Coordinate (top border)" => "int"
+            "X-Coordinate (left border)" => "int|1=bool,1",
+            "Y-Coordinate (top border)" => "int|1=bool,1"
         );
 
         $this->templateLoader = new TemplateLoader($this->parentBoardEditor->templateDirectory());
@@ -62,15 +62,15 @@ class LoadTemplateOption extends BoardEditorOption
      * Loads a template and places it on the board.
      *
      * @param String $_templateName The template name
+     * @param Bool $_adjustDimensions Indicates whether the board dimensions shall be adjusted to match the template dimensions
      * @param int $_posX The X-Position of the top left corner of the template on the board
      * @param int $_posY The Y-Position of the top left corner of the template on the board
-     * @param Bool $_adjustDimensions Indicates whether the board dimensions shall be adjusted to match the template dimensions
      *
      * @return bool Indicates whether the board editing is finished
      *
      * @throws \Exception The exception when the template file could not be found or the input value is invalid
      */
-    public function loadTemplate(String $_templateName, Bool $_adjustDimensions, int $_posX, int $_posY): bool
+    public function loadTemplate(String $_templateName, Bool $_adjustDimensions, int $_posX = 0, int $_posY = 0): bool
     {
         $templateFields = $this->templateLoader->loadTemplate($_templateName);
 
@@ -78,17 +78,9 @@ class LoadTemplateOption extends BoardEditorOption
         {
             $this->parentBoardEditor->checkCoordinate($_posX, "X", 0, $this->parentBoardEditor->board()->width());
             $this->parentBoardEditor->checkCoordinate($_posY, "Y", 0, $this->parentBoardEditor->board()->height());
-
-            $posX = $_posX;
-            $posY = $_posY;
-        }
-        else
-        {
-            $posX = 0;
-            $posY = 0;
         }
 
-        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $_adjustDimensions);
+        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, $_adjustDimensions);
         $this->parentBoardEditor->outputBoard();
         return false;
     }
