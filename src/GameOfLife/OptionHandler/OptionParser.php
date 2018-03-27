@@ -61,6 +61,9 @@ class OptionParser
         {
             echo "\n";
             $_options->showHelp(36);
+            echo "\n\nThe available colors are: ";
+            echo "aqua, black, blue, fuchsia, gray, green, lime, maroon, navy, olive, purple, red, silver, teal, white and yellow\n";
+
             return true;
         }
 
