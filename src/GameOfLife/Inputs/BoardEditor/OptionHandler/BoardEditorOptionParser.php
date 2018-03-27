@@ -7,6 +7,7 @@
  */
 
 namespace BoardEditor\OptionHandler;
+use BoardEditor\BoardEditorOption;
 
 /**
  * Parses board editor options.
@@ -78,29 +79,7 @@ class BoardEditorOptionParser
             }
             else
             {
-                // Convert the arguments to the argument types
-                $arguments = array();
-
-                foreach ($option->arguments() as $argumentName => $argumentType)
-                {
-                    $argument = current($optionData["arguments"]);
-                    if ($argument === false)
-                    {
-                        $argument = $this->parentOptionHandler->parentBoardEditor()->readInput($argumentName . ": ");
-                    }
-
-                    if ($argument === "") throw new \Exception("Arguments may not be empty.");
-                    elseif ($argumentType == "int" && ! is_numeric($argument))
-                    {
-                        throw new \Exception("The argument must be a number.");
-                    }
-
-                    settype($argument, $argumentType);
-                    $arguments[] = $argument;
-
-                    next($optionData["arguments"]);
-                }
-
+                $arguments = $this->getOptionArguments($option, $optionData["arguments"]);
                 $sessionFinished = call_user_func_array(array($option, $option->callback()), $arguments);
                 return $sessionFinished;
             }
@@ -110,11 +89,105 @@ class BoardEditorOptionParser
             if (strlen($_input) == 0) throw new \Exception("Input is empty.");
             else
             {
-                $optionName = explode(" ", $_input)[0];
-                if (is_numeric($optionName)) throw new \Exception("Invalid coordinates format.");
+                $optionParts = explode(" ", $_input);
+                $optionName = $optionParts[0];
+
+                if (is_numeric($optionName))
+                {
+                    if (count($optionParts) == 2) return $this->callOption($optionParts[0] . "," . $optionParts[1]);
+                    else throw new \Exception("Invalid coordinates format.");
+                }
                 else throw new \Exception("Invalid option \"" . $optionName . "\".");
             }
         }
+    }
+
+    /**
+     * Reads missing arguments and returns the full list of arguments.
+     *
+     * @param BoardEditorOption $_option The option
+     * @param String[] $_arguments The already inputted arguments
+     *
+     * @return String[] The complete list of arguments
+     *
+     * @throws \Exception The exception when the user input is invalid
+     */
+    private function getOptionArguments(BoardEditorOption $_option, array $_arguments): array
+    {
+        $arguments = array();
+
+        foreach ($_option->arguments() as $argumentName => $argumentType)
+        {
+            $argument = current($_arguments);
+            if ($argument === false) $argument = $this->readArgument($argumentName, $argumentType);
+
+            $this->checkArgument($argument, $argumentType);
+            $argument = $this->changeArgumentType($argument, $argumentType);
+
+            $arguments[] = $argument;
+            next($_arguments);
+        }
+
+        return $arguments;
+    }
+
+    /**
+     * Reads an argument from the console.
+     *
+     * @param String $_argumentName The argument name
+     * @param String $_argumentType The argument type
+     *
+     * @return String The argument that was entered by the user
+     */
+    public function readArgument(String $_argumentName, String $_argumentType): String
+    {
+        $argumentName = $_argumentName;
+        if ($_argumentType == "Bool") $argumentName .= "(Yes|No)";
+
+        return $this->parentOptionHandler->parentBoardEditor()->readInput($argumentName . ": ");
+    }
+
+    /**
+     * Checks whether an argument is valid.
+     *
+     * @param String $_argument The argument
+     * @param String $_argumentType The argument type
+     *
+     * @throws \Exception The exception when the argument is not valid
+     */
+    public function checkArgument(String $_argument, String $_argumentType)
+    {
+        if ($_argument === "") throw new \Exception("Arguments may not be empty.");
+        elseif ($_argumentType == "int" && ! is_numeric($_argument))
+        {
+            throw new \Exception("The argument must be a number.");
+        }
+    }
+
+    /**
+     * Changes the type of an argument to $_argumentType.
+     *
+     * @param String $_argument The argument
+     * @param String $_argumentType The desired argument type
+     *
+     * @return mixed The converted argument
+     */
+    public function changeArgumentType(String $_argument, String $_argumentType)
+    {
+        $argument = $_argument;
+
+        if ($_argumentType == "Bool")
+        {
+            if (stristr($_argument, "yes") || stristr($_argument, "y"))
+            {
+                $argument = true;
+            }
+            else $argument = false;
+        }
+
+        settype($argument, $_argumentType);
+
+        return $argument;
     }
 
     /**
