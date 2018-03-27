@@ -50,7 +50,7 @@ class SetWidthOption extends BoardEditorOption
 
             // Update selection coordinates
             $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
-            if ($_width - 1 < $selectionCoordinates["B"]["x"])
+            if ($selectionCoordinates != array() && $_width - 1 < $selectionCoordinates["B"]["x"])
             {
                 $selectionCoordinates["B"]["x"] = $_width - 1;
                 if ($selectionCoordinates["B"]["x"] - $selectionCoordinates["A"]["x"] < 1)

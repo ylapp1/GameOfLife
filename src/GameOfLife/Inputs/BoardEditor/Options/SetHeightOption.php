@@ -50,7 +50,7 @@ class SetHeightOption extends BoardEditorOption
 
             // Update selection coordinates
             $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
-            if ($_height - 1 < $selectionCoordinates["B"]["y"])
+            if ($selectionCoordinates != array() && $_height - 1 < $selectionCoordinates["B"]["y"])
             {
                 $selectionCoordinates["B"]["y"] = $_height - 1;
                 if ($selectionCoordinates["B"]["y"] - $selectionCoordinates["A"]["y"] < 1)
