@@ -170,7 +170,16 @@ class GameOfLife
             echo "\nError while filling the board: " . $_exception->getMessage() . "\n\n";
             return;
         }
-        $this->output->startOutput($this->options, $this->board);
+
+        try
+        {
+            $this->output->startOutput($this->options, $this->board);
+        }
+        catch (\Exception $_exception)
+        {
+            echo "\nError while starting the output: " . $_exception->getMessage() . "\n\n";
+            return;
+        }
 
         // Game loop
         while (! ($this->gameLogic->isMaxStepsReached($this->board) || $this->gameLogic->isLoopDetected() || $this->gameLogic->isBoardEmpty($this->board)))
