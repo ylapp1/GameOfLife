@@ -124,7 +124,7 @@ class BoardEditorOutput extends ConsoleOutput
     {
         $output = "";
 
-        $boardWidth = count($_fields) - 1;
+        $boardWidth = count($_fields);
 
         foreach ($_fields as $field)
         {
@@ -145,7 +145,7 @@ class BoardEditorOutput extends ConsoleOutput
             if ($this->isHighLight)
             {
                 if ($field->x() == $this->highLightX - 1  && $field->x() >= 0 ||
-                    $field->x() == $this->highLightX && $field->x() < $boardWidth)
+                    $field->x() == $this->highLightX && $field->x() < $boardWidth - 1)
                 { // Output lines left and right from highlighted cell X-Coordinate
                     $output .= "│";
                 }
