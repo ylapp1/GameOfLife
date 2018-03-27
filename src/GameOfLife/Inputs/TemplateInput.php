@@ -189,17 +189,15 @@ class TemplateInput extends BaseInput
         $posOptionPrefix = "template";
         if (! $_isTemplateOption) $posOptionPrefix = $_templateName;
 
-        $boardCenter = $_board->getCenter();
-
         // Get X position
-        $templatePosX = $boardCenter["x"];
+        $templatePosX = ceil(($_board->width() - count($templateFields[0])) / 2);
         if ($_options->getOption($posOptionPrefix . "PosX") !== null)
         {
             $templatePosX = (int)$_options->getOption($posOptionPrefix . "PosX");
         }
 
         // Get Y position
-        $templatePosY = $boardCenter["y"];
+        $templatePosY =  ceil(($_board->height() - count($templateFields)) / 2);
         if ($_options->getOption($posOptionPrefix . "PosY") !== null)
         {
             $templatePosY = (int)$_options->getOption($posOptionPrefix . "PosY");
@@ -228,8 +226,8 @@ class TemplateInput extends BaseInput
     {
         if ($_posOptionPrefix !== "template")
         { // If the template was selected by using --input
-            $templatePosX = $_board->getCenter()["x"];
-            $templatePosY = $_board->getCenter()["y"];
+            $templatePosX = ceil(($_board->width() - count($_templateFields[0])) / 2);
+            $templatePosY =  ceil(($_board->height() - count($_templateFields)) / 2);
 
             $templateHeight = count($_templateFields);
             $templateWidth = count($_templateFields[0]);

@@ -232,31 +232,6 @@ class BoardTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider calculateCenterProvider
-     * @covers \GameOfLife\Board::getCenter()
-     *
-     * @param int $_boardWidth      Board width
-     * @param int $_boardHeight     Board height
-     * @param array $_expected      Coordinates of the center
-     */
-    public function testCanCalculateCenter(int $_boardWidth, int $_boardHeight, array $_expected)
-    {
-        $this->board->setWidth($_boardWidth);
-        $this->board->setHeight($_boardHeight);
-
-        $this->assertEquals($_expected, $this->board->getCenter());
-    }
-
-    public function calculateCenterProvider()
-    {
-        return [
-            "10x15 Board, Center = 4|7" => [10, 15, ["x" => 4, "y" => 7]],
-            "23x48 Board, Center = 11|23" => [23, 48, ["x" => 11, "y" => 23]],
-            "1x7 Board, Center 0|3" => [1, 7, ["x" => 0, "y" => 3]]
-        ];
-    }
-
 
     /**
      * @covers \GameOfLife\Board::__tostring()

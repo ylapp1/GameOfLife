@@ -250,19 +250,6 @@ class Board
     }
 
     /**
-     * Calculates and returns the center of the board.
-     *
-     * @return int[][] Coordinates of the center (array structure: [["x"] => X-Coordinate, ["y"] => Y-Coordinate])
-     */
-    public function getCenter(): array
-    {
-        $centerX = ceil($this->width / 2) - 1;
-        $centerY = ceil($this->height / 2) - 1;
-
-        return array("x" => $centerX, "y" => $centerY);
-    }
-
-    /**
      * Returns the status of a specific field.
      *
      * @param int $_x X-Coordinate of the field
