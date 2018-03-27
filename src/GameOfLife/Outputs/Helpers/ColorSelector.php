@@ -83,6 +83,8 @@ class ColorSelector
     /**
      * Returns the color from a color name (e.g. "red", "blue", "green").
      *
+     * The color names contain the names from this list: http://www.kleines-lexikon.de/tools/pal5.html
+     *
      * @param String $_colorName The color name
      *
      * @return ImageColor The corresponding image color
@@ -92,29 +94,53 @@ class ColorSelector
     private function getColorFromColorName(String $_colorName): ImageColor
     {
         switch (strtolower($_colorName)) {
-            case "red":
-                $color = new ImageColor(255, 0, 0);
+            case "black":
+                $color = new ImageColor(0, 0, 0);
                 break;
-            case "green":
-                $color = new ImageColor(0, 255, 0);
+            case "gray":
+                $color = new ImageColor(128, 128, 128);
                 break;
-            case "blue":
-                $color = new ImageColor(0, 0, 255);
-                break;
-            case "yellow":
-                $color = new ImageColor(255, 255, 0);
-                break;
-            case "pink":
-                $color = new ImageColor(255, 0, 255);
-                break;
-            case "cyan":
-                $color = new ImageColor(0, 255, 255);
+            case "silver":
+                $color = new ImageColor(192, 192, 192);
                 break;
             case "white":
                 $color = new ImageColor(255, 255, 255);
                 break;
-            case "black":
-                $color = new ImageColor(0, 0, 0);
+            case "navy":
+                $color = new ImageColor(0, 0, 128);
+                break;
+            case "blue":
+                $color = new ImageColor(0, 0, 255);
+                break;
+            case "teal":
+                $color = new ImageColor(0,  128, 128);
+                break;
+            case "aqua":
+                $color = new ImageColor(0, 255 , 255);
+                break;
+            case "green":
+                $color = new ImageColor(0, 128, 0);
+                break;
+            case "lime":
+                $color = new ImageColor(0, 255, 0);
+                break;
+            case "maroon":
+                $color = new ImageColor(128, 0, 0);
+                break;
+            case "red":
+                $color = new ImageColor(255, 0, 0);
+                break;
+            case "purple":
+                $color = new ImageColor(128, 0, 128);
+                break;
+            case "fuchsia":
+                $color = new ImageColor(255, 0, 255);
+                break;
+            case "olive":
+                $color = new ImageColor(128, 128, 0);
+                break;
+            case "yellow":
+                $color = new ImageColor(255, 255, 0);
                 break;
             default:
                 throw new \Exception("The color name \"" . $_colorName . "\" is invalid.");
