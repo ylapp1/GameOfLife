@@ -152,7 +152,7 @@ class BoardEditorOutput extends ConsoleOutput
             }
             elseif ($_selectionCoordinates)
             {
-                if ($field->x() == $_selectionCoordinates["A"]["x"] - 1 && $field->x() > 0 ||
+                if ($field->x() == $_selectionCoordinates["A"]["x"] - 1 && $field->x() + 1 > 0 ||
                     $field->x() == $_selectionCoordinates["B"]["x"] && $field->x() + 1 < $boardWidth)
                 { // If x value is the same like one of the selection coordinates
 
