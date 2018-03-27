@@ -39,11 +39,9 @@ class ColorSelectorTest extends TestCase
         return [
             "100,150,200" => ["100,150,200", 100, 150, 200],
             "red" => ["red", 255, 0, 0],
-            "green" => ["green", 0, 255, 0],
+            "green" => ["green", 0, 128, 0],
             "blue" => ["blue", 0, 0, 255],
             "yellow" => ["yellow", 255, 255, 0],
-            "pink" => ["pink", 255, 0, 255],
-            "cyan" => ["cyan", 0, 255, 255],
             "white" => ["white", 255, 255, 255],
             //"invalid" => ["invalid", 0, 0, 0],
             "black" => ["black", 0, 0, 0],
