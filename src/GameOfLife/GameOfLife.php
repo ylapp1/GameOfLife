@@ -87,7 +87,16 @@ class GameOfLife
             echo "\nError while initializing the options: " . $_exception->getMessage() . "\n\n";
             return false;
         }
-        $this->options->parse();
+
+        try
+        {
+            $this->options->parse();
+        }
+        catch (\Exception $_exception)
+        {
+            echo "\nError while parsing the options: " . $_exception->getMessage() . "\n\n";
+            return false;
+        }
 
         $generalOptionUsed = $this->optionHandler->optionParser()->parseGeneralOptions($this->options);
         if ($generalOptionUsed) return false;
