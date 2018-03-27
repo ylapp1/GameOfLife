@@ -41,7 +41,6 @@ class ToggleFieldOptionTest extends TestCase
      *
      * @dataProvider toggleFieldProvider()
      * @covers \BoardEditor\Options\ToggleFieldOption::toggleField()
-     * @covers \BoardEditor\Options\ToggleFieldOption::getIntegerCoordinate()
      *
      * @param String $_x X-Coordinate
      * @param String $_y Y-Coordinate
@@ -126,10 +125,10 @@ class ToggleFieldOptionTest extends TestCase
     {
         return array(
             "Valid input (0|0)" => array("0", "0"),
-            "X too low (-1|0)" => array("-1", "0", "Invalid value for x specified (Value must be between 0 and 9)."),
-            "Y too low (0|-1)" => array("0", "-1", "Invalid value for y specified (Value must be between 0 and 14)."),
-            "X too high (11, 0)" => array("11", "0", "Invalid value for x specified (Value must be between 0 and 9)."),
-            "Y too high (0|16)" => array("0", "16", "Invalid value for y specified (Value must be between 0 and 14).")
+            "X too low (-1|0)" => array("-1", "0", "The X-Position may not be smaller than 0."),
+            "Y too low (0|-1)" => array("0", "-1", "The Y-Position may not be smaller than 0."),
+            "X too high (11, 0)" => array("11", "0", "The X-Position may not be larger than 9."),
+            "Y too high (0|16)" => array("0", "16", "The Y-Position may not be larger than 14.")
         );
     }
 }

@@ -38,7 +38,7 @@ class PasteCopiedFieldsOption extends BoardEditorOption
         $this->aliases = array("pastedCopiedFields");
         $this->callback = "pasteCopiedFields";
         $this->description = "Places the cached copied fields on the board";
-        $this->arguments = array();
+        $this->arguments = array("X-Coordinate (left border)" => "int", "Y-Coordinate (top border)" => "int");
 
         $this->fieldsPlacer = new FieldsPlacer();
     }
@@ -47,41 +47,22 @@ class PasteCopiedFieldsOption extends BoardEditorOption
     /**
      * Places the cached copied fields on the board.
      *
-     * @param String $_posX The X-Position of the top left corner of the template on the board
-     * @param String $_posY The Y-Position of the top left corner of the template on the board
+     * @param int $_posX The X-Position of the top left corner of the template on the board
+     * @param int $_posY The Y-Position of the top left corner of the template on the board
      *
      * @return bool Indicates whether the board editing is finished
      *
      * @throws \Exception The exception when the input coordinates are invalid
      */
-    public function pasteCopiedFields($_posX = null, $_posY = null): Bool
+    public function pasteCopiedFields(int $_posX, int $_posY): Bool
     {
         $templateFields = $this->parentBoardEditor->copiedFields();
         if ($templateFields == array()) throw new \Exception("The list of cached copied fields is empty.");
 
-        if ($_posX) $posX = $_posX;
-        else
-        {
-            $posX = $this->parentBoardEditor->readCoordinate(
-                "X",
-                "top left border of the copied fields on the board",
-                0,
-                $this->parentBoardEditor->board()->width()
-            );
-        }
+        $this->parentBoardEditor->checkCoordinate($_posX, "X", 0, $this->parentBoardEditor->board()->width());
+        $this->parentBoardEditor->checkCoordinate($_posY, "Y", 0, $this->parentBoardEditor->board()->height());
 
-        if ($_posY) $posY = $_posY;
-        else
-        {
-            $posY = $this->parentBoardEditor->readCoordinate(
-                "Y",
-                "top left border of the copied fields on the board",
-                0,
-                $this->parentBoardEditor->board()->height()
-            );
-        }
-
-        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, false);
+        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, false);
 
         // Update selection
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
@@ -89,8 +70,8 @@ class PasteCopiedFieldsOption extends BoardEditorOption
         $selectionHeight = $selectionCoordinates["B"]["y"] - $selectionCoordinates["A"]["y"];
 
         $updatedSelectionCoordinates = array(
-            "A" => array("x" => $posX, "y" => $posY),
-            "B" => array("x" => $posX + $selectionWidth, "y" => $posY + $selectionHeight)
+            "A" => array("x" => $_posX, "y" => $_posY),
+            "B" => array("x" => $_posX + $selectionWidth, "y" => $_posY + $selectionHeight)
         );
         $this->parentBoardEditor->setSelectionCoordinates($updatedSelectionCoordinates);
 

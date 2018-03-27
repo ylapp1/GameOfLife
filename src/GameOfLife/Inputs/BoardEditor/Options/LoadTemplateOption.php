@@ -46,7 +46,12 @@ class LoadTemplateOption extends BoardEditorOption
         $this->aliases = array("loadTemplate", "placeTemplate");
         $this->callback = "loadTemplate";
         $this->description = "Clears the board";
-        $this->arguments = array("template name");
+        $this->arguments = array(
+            "Template name" => "String",
+            "Adjust board dimensions" => "Bool",
+            "X-Coordinate (left border)" => "int|1=bool,1",
+            "Y-Coordinate (top border)" => "int|1=bool,1"
+        );
 
         $this->templateLoader = new TemplateLoader($this->parentBoardEditor->templateDirectory());
         $this->fieldsPlacer = new FieldsPlacer();
@@ -57,59 +62,25 @@ class LoadTemplateOption extends BoardEditorOption
      * Loads a template and places it on the board.
      *
      * @param String $_templateName The template name
-     * @param String $_posX The X-Position of the top left corner of the template on the board
-     * @param String $_posY The Y-Position of the top left corner of the template on the board
-     * @param String $_adjustDimensions Indicates whether the board dimensions shall be adjusted to match the template dimensions
+     * @param Bool $_adjustDimensions Indicates whether the board dimensions shall be adjusted to match the template dimensions
+     * @param int $_posX The X-Position of the top left corner of the template on the board
+     * @param int $_posY The Y-Position of the top left corner of the template on the board
      *
      * @return bool Indicates whether the board editing is finished
      *
      * @throws \Exception The exception when the template file could not be found or the input value is invalid
      */
-    public function loadTemplate($_templateName, $_posX = null, $_posY = null, $_adjustDimensions = null): bool
+    public function loadTemplate(String $_templateName, Bool $_adjustDimensions, int $_posX = 0, int $_posY = 0): bool
     {
         $templateFields = $this->templateLoader->loadTemplate($_templateName);
 
-        if ($_adjustDimensions) $adjustDimensions = (bool)$_adjustDimensions;
-        else
+        if (! $_adjustDimensions)
         {
-            echo "Adjust the board to match the template dimensions? (Yes|No): ";
-
-            $userDecision = $this->parentBoardEditor->readInput();
-            if (stristr($userDecision, "yes") || stristr($userDecision, "y")) $adjustDimensions = true;
-            else $adjustDimensions = false;
+            $this->parentBoardEditor->checkCoordinate($_posX, "X", 0, $this->parentBoardEditor->board()->width());
+            $this->parentBoardEditor->checkCoordinate($_posY, "Y", 0, $this->parentBoardEditor->board()->height());
         }
 
-        if (! $adjustDimensions)
-        {
-            if ($_posX) $posX = $_posX;
-            else
-            {
-                $posX = $this->parentBoardEditor->readCoordinate(
-                    "X",
-                    "top left border of the template on the board",
-                    0,
-                    $this->parentBoardEditor->board()->width()
-                );
-            }
-
-            if ($_posY) $posY = $_posY;
-            else
-            {
-                $posY = $this->parentBoardEditor->readCoordinate(
-                    "Y",
-                    "top left border of the template on the board",
-                    0,
-                    $this->parentBoardEditor->board()->height()
-                );
-            }
-        }
-        else
-        {
-            $posX = 0;
-            $posY = 0;
-        }
-
-        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $posX, $posY, $adjustDimensions);
+        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, $_adjustDimensions);
         $this->parentBoardEditor->outputBoard();
         return false;
     }

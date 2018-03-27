@@ -49,8 +49,6 @@ class CopySelectionOption extends BoardEditorOption
 
         for ($y = $selectionCoordinates["A"]["y"]; $y <= $selectionCoordinates["B"]["y"]; $y++)
         {
-            $copiedFields[$y] = array();
-
             for ($x = $selectionCoordinates["A"]["x"]; $x <= $selectionCoordinates["B"]["x"]; $x++)
             {
                 /** @var Field $field */
@@ -58,7 +56,7 @@ class CopySelectionOption extends BoardEditorOption
                 $field->setX($x - $selectionCoordinates["A"]["x"]);
                 $field->setY($y - $selectionCoordinates["A"]["y"]);
 
-                $copiedFields[$y][$x] = $field;
+                $copiedFields[$field->y()][$field->x()] = $field;
             }
         }
 

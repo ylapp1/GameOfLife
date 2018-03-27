@@ -38,7 +38,7 @@ class SaveTemplateOption extends BoardEditorOption
         $this->name = "save";
         $this->callback = "saveTemplate";
         $this->description = "Saves the board as a template";
-        $this->arguments = array("template name");
+        $this->arguments = array("Template name" => "String");
 
         $this->templateSaver = new TemplateSaver($this->parentBoardEditor->templateDirectory());
     }
@@ -74,14 +74,16 @@ class SaveTemplateOption extends BoardEditorOption
      *
      * @throws \Exception The exception when the template saver fails to save the template
      */
-    public function saveTemplate($_templateName)
+    public function saveTemplate(String $_templateName)
     {
-        $result = $this->templateSaver->saveCustomTemplate($_templateName, $this->parentBoardEditor->board());
-
-        if ($result == false)
+        try
         {
-            echo "Warning: A template with that name already exists. Overwrite the old file? (Y|N)\n";
-            $input = $this->parentBoardEditor->readInput();
+            $this->templateSaver->saveCustomTemplate($_templateName, $this->parentBoardEditor->board());
+        }
+        catch (\Exception $_exception)
+        {
+            echo "Warning: A template with that name already exists.\n";
+            $input = $this->parentBoardEditor->readInput("Overwrite the old file? (Yes|No): ");
 
             if (stristr($input, "y") || stristr($input, "yes"))
             {
@@ -89,9 +91,11 @@ class SaveTemplateOption extends BoardEditorOption
                 echo "Template successfully replaced!\n\n";
             }
             else echo "Saving aborted.\n\n";
-        }
-        else echo "Template successfully saved!\n\n";
 
+            return false;
+        }
+
+        echo "Template successfully saved!\n\n";
         echo "You can set/unset more cells or start the simulation by typing \"start\"\n\n";
 
         return false;

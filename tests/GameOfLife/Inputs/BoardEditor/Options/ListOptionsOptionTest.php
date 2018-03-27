@@ -69,7 +69,7 @@ class ListOptionsOptionTest extends TestCase
         $jumpOption = clone $boardEditorOptionMock;
         $jumpOption->expects($this->exactly(1))
                    ->method("arguments")
-                   ->willReturn(array("high jump"));
+                   ->willReturn(array("high jump" => "Bool"));
         $jumpOption->expects($this->exactly(1))
                    ->method("description")
                    ->willReturn("Makes the board jump");

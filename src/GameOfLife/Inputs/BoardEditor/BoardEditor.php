@@ -229,7 +229,7 @@ class BoardEditor
         $isInputFinished = false;
         while (! $isInputFinished)
         {
-            $line = $this->readInput();
+            $line = $this->readInput("> ");
 
             try
             {
@@ -245,17 +245,22 @@ class BoardEditor
     /**
      * Reads user input from a input source.
      *
+     * @param String $_prompt The prompt
+     *
      * @return String User input with removed "\n\r"
      */
-    public function readInput(): String
+    public function readInput(String $_prompt = ""): String
     {
-        $inputLine = readline("> ");
+        $inputLine = readline($_prompt);
 
-        /*
-         * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
-         * to navigate to previously used commands
-         */
-        readline_add_history($inputLine);
+        if (str_replace(" ", "", $inputLine) !== "")
+        {
+            /*
+             * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
+             * to navigate to previously used commands
+             */
+            readline_add_history($inputLine);
+        }
 
         return rtrim($inputLine, "\n\r");
     }
@@ -274,8 +279,7 @@ class BoardEditor
      */
     public function readCoordinate(String $_coordinateAxisName, String $_coordinateDescription, int $_minValue, int $_maxValue): int
     {
-        echo $_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ";
-        $userInput = $this->readInput();
+        $userInput = $this->readInput($_coordinateAxisName . "-Coordinate of the " . $_coordinateDescription . ": ");
         if (! is_numeric($userInput)) throw new \Exception("The input value is no number.");
         else
         {
@@ -304,7 +308,7 @@ class BoardEditor
         }
         elseif ($_coordinate > $_maxValue)
         {
-            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue);
+            throw new \Exception("The " . $_coordinateAxisName . "-Position may not be larger than " . $_maxValue . ".");
         }
     }
 

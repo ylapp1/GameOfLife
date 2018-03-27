@@ -29,7 +29,7 @@ class SetHeightOption extends BoardEditorOption
         $this->name = "height";
         $this->callback = "setHeight";
         $this->description = "Sets the board height";
-        $this->arguments = array("number");
+        $this->arguments = array("Height" => "int");
     }
 
     /**
@@ -41,29 +41,37 @@ class SetHeightOption extends BoardEditorOption
      *
      * @throws \Exception The exception when the specified height is less than 1
      */
-    public function setHeight($_height)
+    public function setHeight(int $_height): Bool
     {
-        $height = (int)$_height;
-
-        if ($height < 1) throw new \Exception("The board height may not be less than 1.");
+        if ($_height < 1) throw new \Exception("The board height may not be less than 1.");
         else
         {
             $fields = $this->parentBoardEditor->board()->fields();
 
-            $this->parentBoardEditor->board()->setHeight($height);
+            // Update selection coordinates
+            $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
+            if ($selectionCoordinates != array() && $_height - 1 < $selectionCoordinates["B"]["y"])
+            {
+                $selectionCoordinates["B"]["y"] = $_height - 1;
+                if ($selectionCoordinates["B"]["y"] - $selectionCoordinates["A"]["y"] < 1)
+                {
+                    $selectionCoordinates = array();
+                }
+
+                $this->parentBoardEditor->setSelectionCoordinates($selectionCoordinates);
+            }
+
+            $this->parentBoardEditor->board()->setHeight($_height);
             $this->parentBoardEditor->board()->resetBoard();
 
             foreach ($fields as $row)
             {
+                /** @var Field $field */
                 foreach ($row as $field)
                 {
-                    if ($field instanceof Field)
+                    if ($field->y() < $this->parentBoardEditor()->board()->height())
                     {
-                        if ($field->x() < $this->parentBoardEditor()->board()->width() &&
-                            $field->y() < $this->parentBoardEditor()->board()->height())
-                        {
-                            $this->parentBoardEditor()->board()->setField($field->x(), $field->y(), $field->isAlive());
-                        }
+                        $this->parentBoardEditor()->board()->setField($field->x(), $field->y(), $field->isAlive());
                     }
                 }
             }

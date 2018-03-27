@@ -93,7 +93,7 @@ class BoardEditorOptionParserTest extends TestCase
             $optionParser = new BoardEditorOptionParser($optionHandlerMock);
 
             $startOptionMock = $this->getMockBuilder(StartOption::class)
-                                    ->setMethods(array("callback", "start", "getNumberOfArguments", "hasAlias", "name"))
+                                    ->setMethods(array("callback", "arguments", "start", "getNumberOfArguments", "hasAlias", "name"))
                                     ->disableOriginalConstructor()
                                     ->getMock();
             $exitOptionMock = $this->getMockBuilder(ExitOption::class)
@@ -131,6 +131,9 @@ class BoardEditorOptionParserTest extends TestCase
             $startOptionMock->expects($this->exactly(3))
                             ->method("name")
                             ->willReturn("start");
+            $startOptionMock->expects($this->exactly(1))
+                            ->method("arguments")
+                            ->willReturn(array());
 
             $result = $optionParser->callOption("start");
             $this->assertTrue($result);
@@ -158,12 +161,12 @@ class BoardEditorOptionParserTest extends TestCase
             $exceptionOccurred = false;
             try
             {
-                $optionParser->callOption("quit");
+                $optionParser->callOption("quit 4 4");
             }
             catch (\Exception $_exception)
             {
                 $exceptionOccurred = true;
-                $this->assertEquals("Invalid number of arguments (Expected 1, Got 0).", $_exception->getMessage());
+                $this->assertEquals("Invalid number of arguments (Expected 1, Got 2).", $_exception->getMessage());
             }
             $this->assertTrue($exceptionOccurred);
 
@@ -190,12 +193,12 @@ class BoardEditorOptionParserTest extends TestCase
             $exceptionOccurred = false;
             try
             {
-                $optionParser->callOption("1,2");
+                $optionParser->callOption("1,2,3,4");
             }
             catch (\Exception $_exception)
             {
                 $exceptionOccurred = true;
-                $this->assertEquals("Invalid number of arguments (Expected 3, Got 2).", $_exception->getMessage());
+                $this->assertEquals("Invalid number of arguments (Expected 3, Got 4).", $_exception->getMessage());
             }
             $this->assertTrue($exceptionOccurred);
         }
