@@ -284,7 +284,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
+            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", false, true);
         }
         catch (\Exception $_exception)
         {

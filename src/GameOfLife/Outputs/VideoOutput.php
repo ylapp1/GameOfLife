@@ -286,12 +286,12 @@ class VideoOutput extends ImageOutput
 
         if ($this->hasSound == true)
         {
-            $audioListFileName = $this->generateAudioFiles();
+            $audioListFilePath = $this->generateAudioFiles();
 
             // Create single sound from sound frames
             $this->ffmpegHelper->addOption("-f concat");
             $this->ffmpegHelper->addOption("-safe 0");
-            $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Audio/" . $audioListFileName . "\"");
+            $this->ffmpegHelper->addOption("-i \"" . $audioListFilePath . "\"");
         }
 
         echo "\nGenerating video file ...";
@@ -329,9 +329,19 @@ class VideoOutput extends ImageOutput
     {
         $amountFrames = count($this->frames);
         $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
-        $audioListContent = "";
+        $audioListFilePath = $this->baseOutputDirectory . "/tmp/Audio";
+        $audioListFileName = "list.txt";
 
         $this->ffmpegHelper->resetOptions();
+
+        try
+        {
+            $this->fileSystemHandler->deleteFile($audioListFilePath . "/" . $audioListFileName);
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         for ($i = 0; $i < count($this->frames); $i++)
         {
@@ -344,14 +354,11 @@ class VideoOutput extends ImageOutput
             $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
             $this->ffmpegHelper->executeCommand($this->baseOutputDirectory . "/" . $outputPath);
-            $audioListContent .= "file '" . $i . ".wav'\r\n";
+            $this->fileSystemHandler->writeFile($audioListFilePath, $audioListFileName, "file '" . $i . ".wav'\r\n", true);
 
             $this->ffmpegHelper->resetOptions();
         }
 
-        $fileName = "list.txt";
-        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/tmp/Audio", $fileName, $audioListContent);
-
-        return $fileName;
+        return $audioListFilePath . "/" . $audioListFileName;
     }
 }

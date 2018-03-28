@@ -110,27 +110,32 @@ class FileSystemHandler
     }
 
     /**
-     * Write text to file.
+     * Writes text to a file.
+     * Will create the file if it doesn't exist
      *
      * @param string $_filePath The file path
      * @param string $_fileName The name of the new file
      * @param string $_content The file content
+     * @param Bool  $_appendToFile Indicates whether the content will be appended to the file
      * @param bool $_overwriteIfExists If set to true, an existing file will be overwritten
      *
      * @throws \Exception The exception when the file already exists and shall not be overwritten in that case
      */
-    public function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
+    public function writeFile(string $_filePath, string $_fileName, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
     {
         // Create directory if it doesn't exist
         if (! file_exists($_filePath)) $this->createDirectory($_filePath);
 
+        $flags = 0;
+
         if (file_exists($_filePath . "/" . $_fileName))
         {
-            if (! $_overwriteIfExists) throw new \Exception("The file already exists.");
+            if ($_appendToFile) $flags = FILE_APPEND;
+            elseif (! $_overwriteIfExists) throw new \Exception("The file already exists.");
             else $this->deleteFile($_filePath . "/" . $_fileName);
         }
 
-        file_put_contents($_filePath . "/" . $_fileName, $_content);
+        file_put_contents($_filePath . "/" . $_fileName, $_content, $flags);
     }
 
     /**
