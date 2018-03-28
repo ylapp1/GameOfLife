@@ -108,6 +108,12 @@ class ShellExecutor
     public function clearScreen()
     {
         if (stristr($this->osName, "linux")) system("clear");
+        elseif(stristr($this->osName, "win"))
+        {
+            // For some reason adding more lines runs smoother than adding less lines
+            // The disadvantage is that you have to add lines below the board in order to move it back up to the top
+            echo str_repeat("\n", 1000);
+        }
 
         /*
          * It's not possible to clear the screen in cmd. (Ideas were using "cls" or moving the cursor position up)
