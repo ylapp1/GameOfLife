@@ -218,8 +218,7 @@ class VideoOutput extends ImageOutput
         catch (\Exception $_exception)
         {
             // Remove the files from the directory
-            $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
-            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
+            $this->fileSystemHandler->deleteFilesInDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
         }
 
 

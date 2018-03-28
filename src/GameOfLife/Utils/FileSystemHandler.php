@@ -51,18 +51,34 @@ class FileSystemHandler
 
         if (count($files) !== 0)
         {
-            if (! $_deleteWhenNotEmpty) throw new \Exception("The directory is not empty");
+            if (! $_deleteWhenNotEmpty) throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
             else
             {
-                foreach ($files as $file)
-                {
-                    if (is_dir($file)) $this->deleteDirectory($file, $_deleteWhenNotEmpty);
-                    else unlink($file);
-                }
+                $this->deleteFilesInDirectory($directoryPath, true);
             }
         }
 
         rmdir($directoryPath);
+    }
+
+    /**
+     * Deletes all files in a directory without deleting the directory.
+     *
+     * @param String $_directoryPath The path to the directory
+     * @param bool $_deleteNonEmptySubDirectories Indicates whether non empty subdirectories should be deleted
+     *
+     * @throws \Exception The exception when the target directory does not exist
+     */
+    public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
+    {
+        $directoryPath = $this->convertSlashes($_directoryPath);
+        $files = $this->getFileList($directoryPath . "/*");
+
+        foreach ($files as $file)
+        {
+            if (is_dir($file)) $this->deleteDirectory($file, $_deleteNonEmptySubDirectories);
+            else unlink($file);
+        }
     }
 
     /**
