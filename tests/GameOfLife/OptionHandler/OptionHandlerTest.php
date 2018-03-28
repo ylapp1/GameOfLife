@@ -39,7 +39,7 @@ class OptionHandlerTest extends TestCase
 
         $optionHandler->initializeOptions($options);
 
-        $this->assertEquals(49, count($options->getOptionList()));
-        $this->assertEquals(39, count($optionHandler->linkedOptions()));
+        $this->assertEquals(50, count($options->getOptionList()));
+        $this->assertEquals(40, count($optionHandler->linkedOptions()));
     }
 }
