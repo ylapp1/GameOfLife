@@ -36,6 +36,6 @@ class TemplateSaver extends TemplateHandler
      */
     public function saveCustomTemplate(String $_templateName, Board $_board, Bool $_overwriteIfExists = false)
     {
-        $this->fileSystemHandler->writeFile($this->customTemplatesDirectory, $_templateName . ".txt", $_board, false, $_overwriteIfExists);
+        $this->fileSystemHandler->writeFile($this->customTemplatesDirectory . "/" . $_templateName . ".txt", $_board, false, $_overwriteIfExists);
     }
 }

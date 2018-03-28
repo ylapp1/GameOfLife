@@ -329,14 +329,13 @@ class VideoOutput extends ImageOutput
     {
         $amountFrames = count($this->frames);
         $secondsPerFrame = floatval(ceil(1000 / $this->fps) / 1000);
-        $audioListFilePath = $this->baseOutputDirectory . "/tmp/Audio";
-        $audioListFileName = "list.txt";
+        $audioListFilePath = $this->baseOutputDirectory . "/tmp/Audio/list.txt";
 
         $this->ffmpegHelper->resetOptions();
 
         try
         {
-            $this->fileSystemHandler->deleteFile($audioListFilePath . "/" . $audioListFileName);
+            $this->fileSystemHandler->deleteFile($audioListFilePath);
         }
         catch (\Exception $_exception)
         {
@@ -354,11 +353,11 @@ class VideoOutput extends ImageOutput
             $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
             $this->ffmpegHelper->executeCommand($this->baseOutputDirectory . "/" . $outputPath);
-            $this->fileSystemHandler->writeFile($audioListFilePath, $audioListFileName, "file '" . $i . ".wav'\r\n", true);
+            $this->fileSystemHandler->writeFile($audioListFilePath, "file '" . $i . ".wav'\r\n", true);
 
             $this->ffmpegHelper->resetOptions();
         }
 
-        return $audioListFilePath . "/" . $audioListFileName;
+        return $audioListFilePath;
     }
 }

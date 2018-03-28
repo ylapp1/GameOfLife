@@ -171,7 +171,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred  = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content);
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/" . $_fileName, $_content);
         }
         catch (\Exception $_exception)
         {
@@ -244,7 +244,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello World!");
         }
         catch (\Exception $_exception)
         {
@@ -271,7 +271,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!");
         }
         catch (\Exception $_exception)
         {
@@ -284,7 +284,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", false, true);
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!", false, true);
         }
         catch (\Exception $_exception)
         {

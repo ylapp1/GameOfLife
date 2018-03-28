@@ -114,42 +114,44 @@ class FileSystemHandler
      * Will create the file if it doesn't exist
      *
      * @param string $_filePath The file path
-     * @param string $_fileName The name of the new file
      * @param string $_content The file content
      * @param Bool  $_appendToFile Indicates whether the content will be appended to the file
      * @param bool $_overwriteIfExists If set to true, an existing file will be overwritten
      *
      * @throws \Exception The exception when the file already exists and shall not be overwritten in that case
      */
-    public function writeFile(string $_filePath, string $_fileName, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
+    public function writeFile(string $_filePath, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
     {
+        $filePath = $this->convertSlashes($_filePath);
+        $directoryPath = dirname($filePath);
+
         // Create directory if it doesn't exist
-        if (! file_exists($_filePath)) $this->createDirectory($_filePath);
+        if (! file_exists($directoryPath)) $this->createDirectory($directoryPath);
 
         $flags = 0;
 
-        if (file_exists($_filePath . "/" . $_fileName))
+        if (file_exists($filePath))
         {
             if ($_appendToFile) $flags = FILE_APPEND;
             elseif (! $_overwriteIfExists) throw new \Exception("The file already exists.");
-            else $this->deleteFile($_filePath . "/" . $_fileName);
+            else $this->deleteFile($filePath);
         }
 
-        file_put_contents($_filePath . "/" . $_fileName, $_content, $flags);
+        file_put_contents($filePath, $_content, $flags);
     }
 
     /**
      * Returns an array of files in a directory.
      *
-     * @param string $_filePath The directory of which a file list will be returned
+     * @param string $_directoryPath The directory of which a file list will be returned
      *
      * @return array The file list
      *
      * @throws \Exception The exception when the target directory does not exist
      */
-    public function getFileList(String $_filePath): array
+    public function getFileList(String $_directoryPath): array
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->convertSlashes($_directoryPath);
         $directoryName = dirname($filePath);
 
         if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");

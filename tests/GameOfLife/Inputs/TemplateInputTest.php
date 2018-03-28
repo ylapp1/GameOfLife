@@ -223,7 +223,7 @@ class TemplateInputTest extends TestCase
         {
             // Ignore the exception
         }
-        $fileSystemHandler->writeFile($this->testTemplateDirectory . "/Custom", "mytest.txt", "");
+        $fileSystemHandler->writeFile($this->testTemplateDirectory . "/Custom/mytest.txt", "");
 
         $expectedOutput = "Default templates:\n"
                         . "  1\) unittest\n\n"
