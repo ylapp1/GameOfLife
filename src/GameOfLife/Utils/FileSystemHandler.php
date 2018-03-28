@@ -52,10 +52,7 @@ class FileSystemHandler
         if (count($files) !== 0)
         {
             if (! $_deleteWhenNotEmpty) throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
-            else
-            {
-                $this->deleteFilesInDirectory($directoryPath, true);
-            }
+            else $this->deleteFilesInDirectory($directoryPath, true);
         }
 
         rmdir($directoryPath);
@@ -90,8 +87,10 @@ class FileSystemHandler
      */
     public function deleteFile(string $_filePath)
     {
-        if (file_exists($_filePath)) unlink($_filePath);
-        else throw new \Exception("The file \"" . $_filePath . "\" does not exist.");
+        $filePath = $this->convertSlashes($_filePath);
+
+        if (file_exists($filePath)) unlink($filePath);
+        else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
     }
 
     /**
@@ -105,8 +104,10 @@ class FileSystemHandler
      */
     public function readFile(string $_filePath): array
     {
-        if (! file_exists($_filePath)) throw new \Exception("The file \"" . $_filePath . "\" does not exist.");
-        else return file($_filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $filePath = $this->convertSlashes($_filePath);
+
+        if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
+        else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
     }
 
     /**
@@ -170,16 +171,16 @@ class FileSystemHandler
      */
     public function findFileRecursive(String $_baseFolder, String $_fileName)
     {
-        if (! is_dir(dirname($_baseFolder))) throw new \Exception("The directory \"" . $_baseFolder . "\" does not exist.");
+        $baseFolder = $this->convertSlashes($_baseFolder);
+        if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
 
-        $directoryIterator = new \RecursiveDirectoryIterator($_baseFolder);
+        $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
 
         foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
         {
-            if (stripos($file, $_fileName) == strlen($file) - strlen($_fileName))
+            if (strtolower(basename($file)) == strtolower($_fileName))
             {
-                $filePath = str_replace("\\", "/", $file);
-                return $filePath;
+                return $this->convertSlashes($file);
             }
         }
 
