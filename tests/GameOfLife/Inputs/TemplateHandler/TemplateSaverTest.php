@@ -46,8 +46,8 @@ class TemplateSaverTest extends TestCase
             $fileSystemHandlerMock->expects($this->exactly(2))
                                   ->method("writeFile")
                                   ->withConsecutive(
-                                      array($testDirectory . "/Custom", "unitTest.txt", $boardString, true),
-                                      array($testDirectory . "/Custom", "unitTestSecond.txt", $boardString, false)
+                                      array($testDirectory . "/Custom/unitTest.txt", $boardString, false, true),
+                                      array($testDirectory . "/Custom/unitTestSecond.txt", $boardString, false, false)
                                   )
                                   ->willReturnOnConsecutiveCalls(
                                       $this->returnValue(null),

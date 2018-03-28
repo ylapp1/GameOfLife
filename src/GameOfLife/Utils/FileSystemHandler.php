@@ -51,18 +51,31 @@ class FileSystemHandler
 
         if (count($files) !== 0)
         {
-            if (! $_deleteWhenNotEmpty) throw new \Exception("The directory is not empty");
-            else
-            {
-                foreach ($files as $file)
-                {
-                    if (is_dir($file)) $this->deleteDirectory($file, $_deleteWhenNotEmpty);
-                    else unlink($file);
-                }
-            }
+            if (! $_deleteWhenNotEmpty) throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
+            else $this->deleteFilesInDirectory($directoryPath, true);
         }
 
         rmdir($directoryPath);
+    }
+
+    /**
+     * Deletes all files in a directory without deleting the directory.
+     *
+     * @param String $_directoryPath The path to the directory
+     * @param bool $_deleteNonEmptySubDirectories Indicates whether non empty subdirectories should be deleted
+     *
+     * @throws \Exception The exception when the target directory does not exist
+     */
+    public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
+    {
+        $directoryPath = $this->convertSlashes($_directoryPath);
+        $files = $this->getFileList($directoryPath . "/*");
+
+        foreach ($files as $file)
+        {
+            if (is_dir($file)) $this->deleteDirectory($file, $_deleteNonEmptySubDirectories);
+            else unlink($file);
+        }
     }
 
     /**
@@ -74,8 +87,10 @@ class FileSystemHandler
      */
     public function deleteFile(string $_filePath)
     {
-        if (file_exists($_filePath)) unlink($_filePath);
-        else throw new \Exception("The file \"" . $_filePath . "\" does not exist.");
+        $filePath = $this->convertSlashes($_filePath);
+
+        if (file_exists($filePath)) unlink($filePath);
+        else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
     }
 
     /**
@@ -89,46 +104,55 @@ class FileSystemHandler
      */
     public function readFile(string $_filePath): array
     {
-        if (! file_exists($_filePath)) throw new \Exception("The file \"" . $_filePath . "\" does not exist.");
-        else return file($_filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $filePath = $this->convertSlashes($_filePath);
+
+        if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
+        else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
     }
 
     /**
-     * Write text to file.
+     * Writes text to a file.
+     * Will create the file if it doesn't exist
      *
      * @param string $_filePath The file path
-     * @param string $_fileName The name of the new file
      * @param string $_content The file content
+     * @param Bool  $_appendToFile Indicates whether the content will be appended to the file
      * @param bool $_overwriteIfExists If set to true, an existing file will be overwritten
      *
      * @throws \Exception The exception when the file already exists and shall not be overwritten in that case
      */
-    public function writeFile(string $_filePath, string $_fileName, string $_content, bool $_overwriteIfExists = false)
+    public function writeFile(string $_filePath, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
     {
-        // Create directory if it doesn't exist
-        if (! file_exists($_filePath)) $this->createDirectory($_filePath);
+        $filePath = $this->convertSlashes($_filePath);
+        $directoryPath = dirname($filePath);
 
-        if (file_exists($_filePath . "/" . $_fileName))
+        // Create directory if it doesn't exist
+        if (! file_exists($directoryPath)) $this->createDirectory($directoryPath);
+
+        $flags = 0;
+
+        if (file_exists($filePath))
         {
-            if (! $_overwriteIfExists) throw new \Exception("The file already exists.");
-            else $this->deleteFile($_filePath . "/" . $_fileName);
+            if ($_appendToFile) $flags = FILE_APPEND;
+            elseif (! $_overwriteIfExists) throw new \Exception("The file already exists.");
+            else $this->deleteFile($filePath);
         }
 
-        file_put_contents($_filePath . "/" . $_fileName, $_content);
+        file_put_contents($filePath, $_content, $flags);
     }
 
     /**
      * Returns an array of files in a directory.
      *
-     * @param string $_filePath The directory of which a file list will be returned
+     * @param string $_directoryPath The directory of which a file list will be returned
      *
      * @return array The file list
      *
      * @throws \Exception The exception when the target directory does not exist
      */
-    public function getFileList(String $_filePath): array
+    public function getFileList(String $_directoryPath): array
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->convertSlashes($_directoryPath);
         $directoryName = dirname($filePath);
 
         if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");
@@ -147,16 +171,16 @@ class FileSystemHandler
      */
     public function findFileRecursive(String $_baseFolder, String $_fileName)
     {
-        if (! is_dir(dirname($_baseFolder))) throw new \Exception("The directory \"" . $_baseFolder . "\" does not exist.");
+        $baseFolder = $this->convertSlashes($_baseFolder);
+        if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
 
-        $directoryIterator = new \RecursiveDirectoryIterator($_baseFolder);
+        $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
 
         foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
         {
-            if (stripos($file, $_fileName) == strlen($file) - strlen($_fileName))
+            if (strtolower(basename($file)) == strtolower($_fileName))
             {
-                $filePath = str_replace("\\", "/", $file);
-                return $filePath;
+                return $this->convertSlashes($file);
             }
         }
 

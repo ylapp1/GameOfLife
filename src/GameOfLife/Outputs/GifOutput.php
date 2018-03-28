@@ -174,7 +174,7 @@ class GifOutput extends ImageOutput
 
         $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
 
-        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/Gif", $fileName, $gifCreator->getGif());
+        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/Gif/" . $fileName, $gifCreator->getGif());
         $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
 
         echo "\nGIF creation complete.\n\n";

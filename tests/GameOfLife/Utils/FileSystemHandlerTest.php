@@ -171,7 +171,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred  = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, $_fileName, $_content);
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/" . $_fileName, $_content);
         }
         catch (\Exception $_exception)
         {
@@ -244,7 +244,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello World!");
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello World!");
         }
         catch (\Exception $_exception)
         {
@@ -271,7 +271,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!");
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!");
         }
         catch (\Exception $_exception)
         {
@@ -284,7 +284,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory, "mytest.txt", "Hello universe!", true);
+            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!", false, true);
         }
         catch (\Exception $_exception)
         {
@@ -376,7 +376,6 @@ class FileSystemHandlerTest extends TestCase
         try
         {
             $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
-            if (stristr(PHP_OS, "win")) $filePath = str_replace("/", "\\", $filePath);
         }
         catch (\Exception $_exception)
         {
@@ -417,25 +416,28 @@ class FileSystemHandlerTest extends TestCase
      */
     public function findFileRecursiveProvider()
     {
+        if (stristr(PHP_OS, "win")) $directorySeparator = "\\";
+        else $directorySeparator = "/";
+
         return array(
             "Existing file in second sub folder" => array(
-                "testing"  . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "test.txt",
+                "testing"  . $directorySeparator . "directory" . $directorySeparator . "mytest",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "test.txt",
                 "test.txt"
             ),
             "Existing file in first sub folder" => array(
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
-                "testing" . $this->directorySeparator . "second.txt",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest",
+                "testing" . $directorySeparator . "second.txt",
                 "second.txt"
             ),
             "Existing file in third sub folder" => array(
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest" . $this->directorySeparator . "thisIsMyTest.txt",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest" . $directorySeparator . "thisIsMyTest.txt",
                 "thisIsMyTest.txt"
             ),
             "Not existing file" => array(
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest",
-                "testing" . $this->directorySeparator . "directory" . $this->directorySeparator . "mytest" . $this->directorySeparator . "test.txt",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest" . $directorySeparator . "test.txt",
                 "nottest.txt",
                 false
             )

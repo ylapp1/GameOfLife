@@ -76,7 +76,7 @@ class TemplateLoaderTest extends TestCase
         $this->assertFalse($templateFields[1][1]->isAlive());
 
         // Custom template
-        $this->fileSystemHandler->writeFile($this->templateDirectory . "/Custom", "unittest2.txt", ".X\r\n..");
+        $this->fileSystemHandler->writeFile($this->templateDirectory . "/Custom/unittest2.txt", ".X\r\n..");
 
         /** @var Field[][] $templateFields */
         $templateFields = $this->templateLoader->loadTemplate("unittest2");
