@@ -25,6 +25,13 @@ class ConsoleOutput extends BaseOutput
      */
     private $shellExecutor;
 
+    /**
+     * The time for which the program will sleep between each game step in milliseconds
+     *
+     * @var int $sleepTime
+     */
+    private $sleepTime;
+
 
     /**
      * ConsoleOutput constructor.
@@ -32,8 +39,27 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         $this->shellExecutor = new ShellExecutor(PHP_OS);
+        $this->sleepTime = 100;
     }
 
+
+    /**
+     * Adds ConsoleOutputs specific options to a Getopt object.
+     *
+     * @param Getopt $_options The option list to which the options are added
+     */
+    public function addOptions(Getopt $_options)
+    {
+        $_options->addOptions(array(
+                array(
+                    null,
+                    "consoleOutputSleepTime",
+                    Getopt::REQUIRED_ARGUMENT,
+                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.1 seconds)\n"
+                )
+            )
+        );
+    }
 
     /**
      * Initializes the output.
@@ -43,6 +69,11 @@ class ConsoleOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        if ($_options->getOption("consoleOutputSleepTime") !== null)
+        {
+            $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
+        }
+
         echo "\nStarting the simulation ...\n";
     }
 
@@ -60,8 +91,7 @@ class ConsoleOutput extends BaseOutput
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
-        // wait for 0.1 seconds before printing the next board
-        usleep(100000);
+        usleep($this->sleepTime * 1000);
     }
 
     /**
