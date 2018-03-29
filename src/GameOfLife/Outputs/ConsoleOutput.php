@@ -62,7 +62,7 @@ class ConsoleOutput extends BaseOutput
     {
         $this->shellOutputHelper = new ShellOutputHelper();
         $this->shellInformationFetcher = new ShellInformationFetcher();
-        $this->sleepTime = 100;
+        $this->sleepTime = 50;
         $this->numberOfNewLinesOutputBoard = 0;
         $this->numberOfNewLinesFinishOutput = 0;
     }
@@ -80,7 +80,7 @@ class ConsoleOutput extends BaseOutput
                     null,
                     "consoleOutputSleepTime",
                     Getopt::REQUIRED_ARGUMENT,
-                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.1 seconds)\n"
+                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.05 seconds)\n"
                 )
             )
         );
