@@ -11,7 +11,8 @@ namespace Output;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Ulrichsg\Getopt;
-use Utils\ShellExecutor;
+use Utils\Shell\ShellInformationFetcher;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * Prints boards to the console.
@@ -19,11 +20,18 @@ use Utils\ShellExecutor;
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * The shell executor
+     * The shell output helper
      *
-     * @var ShellExecutor $shellExecutor
+     * @var ShellOutputHelper $shellOutputHelper
      */
-    private $shellExecutor;
+    private $shellOutputHelper;
+
+    /**
+     * The shell information fetcher
+     *
+     * @var ShellInformationFetcher $shellInformationFetcher
+     */
+    private $shellInformationFetcher;
 
     /**
      * The time for which the program will sleep between each game step in milliseconds
@@ -38,7 +46,8 @@ class ConsoleOutput extends BaseOutput
      */
     public function __construct()
     {
-        $this->shellExecutor = new ShellExecutor(PHP_OS);
+        $this->shellOutputHelper = new ShellOutputHelper();
+        $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->sleepTime = 100;
     }
 
@@ -84,7 +93,7 @@ class ConsoleOutput extends BaseOutput
      */
     public function outputBoard(Board $_board)
     {
-        $this->shellExecutor->clearScreen();
+        $this->shellOutputHelper->clearScreen();
         echo "\n\n";
 
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
@@ -93,7 +102,7 @@ class ConsoleOutput extends BaseOutput
         if (stristr(PHP_OS, "win"))
         {
             // +4 is because: 2x border, 1x gamestep, 1x empty line
-            echo str_repeat("\n", $this->shellExecutor->getNumberOfShellLines() - ($_board->height() + 4));
+            echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 4));
         }
 
         usleep($this->sleepTime * 1000);

@@ -47,10 +47,10 @@ class ConsoleOutputTest extends TestCase
         $output = new ConsoleOutput();
 
         $reflectionClass = new ReflectionClass(\Output\ConsoleOutput::class);
-        $reflectionProperty = $reflectionClass->getProperty("shellExecutor");
+        $reflectionProperty = $reflectionClass->getProperty("shellOutputHelper");
         $reflectionProperty->setAccessible(true);
 
-        $this->assertInstanceOf(\Utils\ShellExecutor::class, $reflectionProperty->getValue($output));
+        $this->assertInstanceOf(\Utils\Shell\ShellOutputHelper::class, $reflectionProperty->getValue($output));
     }
 
 

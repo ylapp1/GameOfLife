@@ -9,7 +9,7 @@
 use Output\Helpers\FfmpegHelper;
 use PHPUnit\Framework\TestCase;
 use Utils\FileSystemHandler;
-use Utils\ShellExecutor;
+use Utils\Shell\ShellExecutor;
 
 /**
  * Checks whether \Output\Helpers\FfmpegHelper works as expected.
@@ -95,7 +95,7 @@ class FfmpegHelperTest extends TestCase
 
         $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
 
-        $shellExecutorMock = $this->getMockBuilder(\Utils\ShellExecutor::class)
+        $shellExecutorMock = $this->getMockBuilder(\Utils\Shell\ShellExecutor::class)
                                   ->setConstructorArgs(array(PHP_OS))
                                   ->getMock();
 
@@ -209,7 +209,7 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanExecuteCommand(int $_shellExecutorReturnValue)
     {
-        $shellExecutorMock = $this->getMockBuilder(\Utils\ShellExecutor::class)
+        $shellExecutorMock = $this->getMockBuilder(\Utils\Shell\ShellExecutor::class)
                                   ->disableOriginalConstructor()
                                   ->getMock();
 
@@ -217,7 +217,7 @@ class FfmpegHelperTest extends TestCase
                           ->method("executeCommand")
                           ->willReturn($_shellExecutorReturnValue);
 
-        if ($shellExecutorMock instanceof \Utils\ShellExecutor)
+        if ($shellExecutorMock instanceof \Utils\Shell\ShellExecutor)
         {
             $this->ffmpegHelper->setShellExecutor($shellExecutorMock);
 
