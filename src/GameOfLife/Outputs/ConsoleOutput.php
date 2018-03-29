@@ -40,6 +40,20 @@ class ConsoleOutput extends BaseOutput
      */
     private $sleepTime;
 
+    /**
+     * Contains the number new lines for outputBoard()
+     *
+     * @var int $numberOfNewLinesOutputBoard
+     */
+    private $numberOfNewLinesOutputBoard;
+
+    /**
+     * Contains the number of new lines for finishOutput()
+     *
+     * @var int $numberOfNewLinesFinishOutput
+     */
+    private $numberOfNewLinesFinishOutput;
+
 
     /**
      * ConsoleOutput constructor.
@@ -49,6 +63,8 @@ class ConsoleOutput extends BaseOutput
         $this->shellOutputHelper = new ShellOutputHelper();
         $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->sleepTime = 100;
+        $this->numberOfNewLinesOutputBoard = 0;
+        $this->numberOfNewLinesFinishOutput = 0;
     }
 
 
@@ -83,29 +99,48 @@ class ConsoleOutput extends BaseOutput
             $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
         }
 
-        echo "\nStarting the simulation ...\n";
+        // +5 is because: 2x border, 1x gamestep, 2x empty line
+        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 5);
+
+        // Subtract 4 new lines because 1x simulation finished, 3x empty lines
+        $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
+
+        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
     }
 
     /**
      * Outputs one game step.
      *
      * @param Board $_board Current board
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         $this->shellOutputHelper->clearScreen();
-        echo "\n\n";
 
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
-        if (stristr(PHP_OS, "win"))
+        if (! $_isFinalBoard)
         {
-            // +4 is because: 2x border, 1x gamestep, 1x empty line
-            echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 4));
+            echo str_repeat("\n", $this->numberOfNewLinesOutputBoard);
+            usleep($this->sleepTime * 1000);
         }
+    }
 
-        usleep($this->sleepTime * 1000);
+    /**
+     * Finish output (Display that simulation is finished, write files and delete temporary files).
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
+     */
+    public function finishOutput(String $_simulationEndReason)
+    {
+        parent::finishOutput($_simulationEndReason);
+
+        $additionalNewLine = "";
+        if (stristr(PHP_OS, "linux")) $additionalNewLine = "\n";
+
+        echo str_repeat("\n", $this->numberOfNewLinesFinishOutput) . $additionalNewLine;
     }
 
     /**

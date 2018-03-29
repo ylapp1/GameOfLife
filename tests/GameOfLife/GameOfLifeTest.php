@@ -195,7 +195,7 @@ class GameOfLifeTest extends TestCase
         \setPrivateAttribute($gameOfLife, "gameLogic", $gameLogicMock);
 
         // Hide output
-        $this->expectOutputRegex("/.*Starting the simulation.*Simulation finished.*/s");
+        $this->expectOutputRegex("/.*Simulation finished.*/s");
         $gameOfLife->startSimulation();
     }
 

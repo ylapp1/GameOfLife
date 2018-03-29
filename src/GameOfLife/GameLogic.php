@@ -177,7 +177,7 @@ class GameLogic
      */
     public function isMaxStepsReached(Board $_board): bool
     {
-        if ($_board->gameStep() >= $_board->maxSteps()) return true;
+        if ($_board->gameStep() >= $_board->maxSteps() - 1) return true;
         else return false;
     }
 

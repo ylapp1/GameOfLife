@@ -182,24 +182,38 @@ class GameOfLife
         }
 
         // Game loop
-        while (! ($this->gameLogic->isMaxStepsReached($this->board) || $this->gameLogic->isLoopDetected() || $this->gameLogic->isBoardEmpty($this->board)))
+        do
         {
-            $this->output->outputBoard($this->board);
-            $this->gameLogic->calculateNextBoard($this->board);
-        }
+            $isFinalBoard = $this->getSimulationEndReason();
+            $this->output->outputBoard($this->board, $isFinalBoard);
+            if ($isFinalBoard) break;
 
-        if ($this->gameLogic->isMaxStepsReached($this->board)) $simulationEndReason = "Max steps reached";
-        elseif ($this->gameLogic->isLoopDetected()) $simulationEndReason = "Loop detected";
-        elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
-        else $simulationEndReason = "All cells are dead, a repeating pattern was detected or maxSteps was reached";
+            $this->gameLogic->calculateNextBoard($this->board);
+
+        } while (true);
 
         try
         {
-            $this->output->finishOutput($simulationEndReason);
+            $this->output->finishOutput($this->getSimulationEndReason());
         }
         catch (\Exception $_exception)
         {
             echo "\nError while finishing the simulation: " . $_exception->getMessage() ."\n\n";
         }
+    }
+
+    /**
+     * Returns the simulation end reason or an empty string if the simulation has not ended yet.
+     *
+     * @return String The simulation end reason
+     */
+    private function getSimulationEndReason(): String
+    {
+        if ($this->gameLogic->isMaxStepsReached($this->board)) $simulationEndReason = "Max steps reached";
+        elseif ($this->gameLogic->isLoopDetected()) $simulationEndReason = "Loop detected";
+        elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
+        else $simulationEndReason = "";
+
+        return $simulationEndReason;
     }
 }

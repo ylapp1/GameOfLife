@@ -37,7 +37,7 @@ class ShellOutputHelper
      */
     public function clearScreen()
     {
-        if (stristr(PHP_OS, "linux")) system("clear");
+        if (stristr(PHP_OS, "linux")) echo "\e[1;1H \n";
         elseif(stristr(PHP_OS, "win")) echo $this->fakeClearScreenForWindows;
     }
 }

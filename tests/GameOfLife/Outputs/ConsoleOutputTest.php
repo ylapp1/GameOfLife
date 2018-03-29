@@ -53,16 +53,6 @@ class ConsoleOutputTest extends TestCase
         $this->assertInstanceOf(\Utils\Shell\ShellOutputHelper::class, $reflectionProperty->getValue($output));
     }
 
-
-    /**
-     * @covers \Output\ConsoleOutput::startOutput()
-     */
-    public function testCanStartOutput()
-    {
-        $this->expectOutputString("\nStarting the simulation ...\n");
-        $this->output->startOutput(new Getopt(),$this->board);
-    }
-
     /**
      * @covers \Output\ConsoleOutput::outputBoard()
      * @covers \Output\ConsoleOutput::getBoardContentString()
@@ -89,7 +79,7 @@ class ConsoleOutputTest extends TestCase
         $outputString = "/" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
-        $this->output->outputBoard($this->board);
+        $this->output->outputBoard($this->board, false);
     }
 
     /**
@@ -99,7 +89,7 @@ class ConsoleOutputTest extends TestCase
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\nSimulation finished: All cells are dead.\n\n");
+        $this->expectOutputRegex("/.*Simulation finished: All cells are dead\..*/");
         $this->output->finishOutput("All cells are dead");
     }
 }

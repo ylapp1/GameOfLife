@@ -193,7 +193,7 @@ class GameLogicTest extends TestCase
      */
     public function testCanDetectMaxStepsReached()
     {
-        $board = new Board(1, 1, 2, true);
+        $board = new Board(1, 1, 3, true);
         $gameLogic = new GameLogic(new ConwayRule());
 
         // Less than max steps
