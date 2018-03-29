@@ -12,6 +12,7 @@ use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
+use Utils\Shell\ShellInputReader;
 
 /**
  * Lets the user edit a board by using options or toggling cells.
@@ -43,6 +44,13 @@ class BoardEditor
      * @var BoardEditorOutput $output
      */
     private $output;
+
+    /**
+     * The shell input reader
+     *
+     * @var ShellInputReader $shellInputReader
+     */
+    private $shellInputReader;
 
     /**
      * Template directory which will be used in this board editor session
@@ -92,6 +100,8 @@ class BoardEditor
         $this->output = new BoardEditorOutput();
         $this->selectionCoordinates = array();
         $this->copiedFields = array();
+
+        $this->shellInputReader = new ShellInputReader();
     }
 
 
@@ -251,18 +261,7 @@ class BoardEditor
      */
     public function readInput(String $_prompt = ""): String
     {
-        $inputLine = readline($_prompt);
-
-        if (str_replace(" ", "", $inputLine) !== "")
-        {
-            /*
-             * Add the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
-             * to navigate to previously used commands
-             */
-            readline_add_history($inputLine);
-        }
-
-        return rtrim($inputLine, "\n\r");
+        return $this->shellInputReader->readInput($_prompt);
     }
 
     /**
