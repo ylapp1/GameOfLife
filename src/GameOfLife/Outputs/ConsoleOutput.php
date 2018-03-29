@@ -32,14 +32,6 @@ class ConsoleOutput extends BaseOutput
      */
     private $sleepTime;
 
-    /**
-     * Hardcoded number of lines in the output shell.
-     * Found no way to get the number of lines with a command in cmd
-     *
-     * @var int
-     */
-    private $numberOfLines = 29;
-
 
     /**
      * ConsoleOutput constructor.
@@ -101,7 +93,7 @@ class ConsoleOutput extends BaseOutput
         if (stristr(PHP_OS, "win"))
         {
             // +4 is because: 2x border, 1x gamestep, 1x empty line
-            echo str_repeat("\n", $this->numberOfLines - ($_board->height() + 4));
+            echo str_repeat("\n", $this->shellExecutor->getNumberOfShellLines() - ($_board->height() + 4));
         }
 
         usleep($this->sleepTime * 1000);

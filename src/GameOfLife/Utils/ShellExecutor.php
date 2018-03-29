@@ -41,6 +41,20 @@ class ShellExecutor
      */
     private $osName;
 
+    /**
+     * The output of the last executed command
+     *
+     * @var array $output
+     */
+    private $output;
+
+    /**
+     * The fake clear screen for windows (100 new lines)
+     *
+     * @var String $fakeClearScreenForWindows
+     */
+    private $fakeClearScreenForWindows;
+
 
     /**
      * ShellExecutor constructor.
@@ -49,7 +63,9 @@ class ShellExecutor
      */
     public function __construct(String $_osName)
     {
+        $this->fakeClearScreenForWindows = str_repeat("\n", 100);
         $this->osName = $_osName;
+        $this->output = array();
     }
 
 
@@ -84,11 +100,11 @@ class ShellExecutor
      */
     public function executeCommand(String $_command, Bool $_hideOutput = false)
     {
-        $output = array();
         $returnValue = 0;
+        $this->output = array();
 
         if ($_hideOutput) $_command .= " 2>" . $this->getOutputHideRedirect();
-        exec($_command, $output, $returnValue);
+        exec($_command, $this->output, $returnValue);
 
         return $returnValue;
     }
@@ -108,15 +124,52 @@ class ShellExecutor
     public function clearScreen()
     {
         if (stristr($this->osName, "linux")) system("clear");
-        elseif(stristr($this->osName, "win"))
+        elseif(stristr($this->osName, "win")) echo $this->fakeClearScreenForWindows;
+    }
+
+    /**
+     * Returns the number of shell lines.
+     */
+    public function getNumberOfShellLines()
+    {
+        // 29 lines is the default height in cmd
+        // 50 lines is the default height in powershell
+        // Found no way to determine the height in lines in windows
+        $height = 29;
+
+        if (stristr($this->osName, "linux"))
         {
-            // For some reason adding more lines runs smoother than adding less lines
-            // The disadvantage is that you have to add lines below the board in order to move it back up to the top
-            echo str_repeat("\n", 1000);
+            $this->executeCommand("tput lines");
+            $height = (int)$this->output[0];
         }
 
-        /*
-         * It's not possible to clear the screen in cmd. (Ideas were using "cls" or moving the cursor position up)
-         */
+        return $height;
+    }
+
+    /**
+     * Returns the number of shell columns.
+     *
+     * @return int The number of shell columns
+     */
+    public function getNumberOfShellColumns()
+    {
+        // 120 is the default number of columns for cmd and powershell
+        $numberOfColumns = 120;
+
+        if (stristr($this->osName, "win"))
+        {
+            $this->executeCommand("mode con /status");
+
+            $matches = array();
+            preg_match("/\d{1,3}/", $this->output[4], $matches);
+            $numberOfColumns = (int)$matches[0];
+        }
+        elseif (stristr($this->osName, "linux"))
+        {
+            $this->executeCommand("tput cols");
+            $numberOfColumns = (int)$this->output[0];
+        }
+
+        return $numberOfColumns;
     }
 }
