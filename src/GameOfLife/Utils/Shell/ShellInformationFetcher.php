@@ -63,6 +63,7 @@ class ShellInformationFetcher
 
         if (stristr(PHP_OS, "win"))
         {
+            // This command will return a wrong number of columns in PowerShell when reducing the width of the window
             $this->shellExecutor->executeCommand("mode con /status");
 
             $matches = array();
