@@ -101,9 +101,11 @@ class ConsoleOutput extends BaseOutput
 
         // +5 is because: 2x border, 1x gamestep, 2x empty line
         $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 5);
+        if ($this->numberOfNewLinesOutputBoard < 0) $this->numberOfNewLinesOutputBoard = 0;
 
         // Subtract 4 new lines because 1x simulation finished, 3x empty lines
         $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
+        if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
 
         if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
     }
@@ -234,3 +236,4 @@ class ConsoleOutput extends BaseOutput
         return $output;
     }
 }
+
