@@ -135,16 +135,16 @@ class BoardEditorTest extends TestCase
             }
         }
 
-        $expectedOutputTitle = "\nGAME OF LIFE\nBOARD EDITOR\n\n";
-        $expectedOutputBoard = "╔═════╗\n"
-                             . "║     ║\n"
-                             . "║     ║\n"
-                             . "║     ║\n"
-                             . "║     ║\n"
-                             . "║     ║\n"
-                             . "╚═════╝\n";
+        $expectedOutputTitleRegex = "\n *GAME OF LIFE\n *BOARD EDITOR\n\n";
+        $expectedOutputBoardRegex = " *╔═════╗\n"
+                                  . " *║     ║\n"
+                                  . " *║     ║\n"
+                                  . " *║     ║\n"
+                                  . " *║     ║\n"
+                                  . " *║     ║\n"
+                                  . " *╚═════╝\n";
 
-        $this->expectOutputRegex("/" . $expectedOutputTitle . ".*" . $expectedOutputBoard . "/");
+        $this->expectOutputRegex("/" . $expectedOutputTitleRegex . ".*" . $expectedOutputBoardRegex . "/");
 
         $optionHandlerMock->expects($this->exactly(2))
                           ->method("parseInput")
