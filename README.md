@@ -78,7 +78,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --rulesStayAlive <arg> | The amounts of cells which will keep a living cell alive               | String | numeric string                                                     |
 
 
-# Setup a development environment
+# Set up a development environment
 
 ## Linux version
 1. Download and install vagrant and virtualbox
