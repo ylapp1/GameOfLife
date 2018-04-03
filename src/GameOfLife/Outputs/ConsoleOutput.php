@@ -11,28 +11,12 @@ namespace Output;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Ulrichsg\Getopt;
-use Utils\Shell\ShellInformationFetcher;
-use Utils\Shell\ShellOutputHelper;
 
 /**
  * Prints boards to the console.
  */
 class ConsoleOutput extends BaseOutput
 {
-    /**
-     * The shell output helper
-     *
-     * @var ShellOutputHelper $shellOutputHelper
-     */
-    private $shellOutputHelper;
-
-    /**
-     * The shell information fetcher
-     *
-     * @var ShellInformationFetcher $shellInformationFetcher
-     */
-    private $shellInformationFetcher;
-
     /**
      * The time for which the program will sleep between each game step in milliseconds
      *
@@ -60,8 +44,7 @@ class ConsoleOutput extends BaseOutput
      */
     public function __construct()
     {
-        $this->shellOutputHelper = new ShellOutputHelper();
-        $this->shellInformationFetcher = new ShellInformationFetcher();
+        parent::__construct("CONSOLE OUTPUT");
         $this->sleepTime = 50;
         $this->numberOfNewLinesOutputBoard = 0;
         $this->numberOfNewLinesFinishOutput = 0;
@@ -94,20 +77,21 @@ class ConsoleOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        parent::startOutput($_options, $_board);
+
         if ($_options->getOption("consoleOutputSleepTime") !== null)
         {
             $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
         }
 
-        // +5 is because: 2x border, 1x gamestep, 2x empty line
-        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 5);
+        // +8 is because: 2x border, 1x game step, 2x empty line, 3x Title
+        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 8);
         if ($this->numberOfNewLinesOutputBoard < 0) $this->numberOfNewLinesOutputBoard = 0;
 
-        // Subtract 4 new lines because 1x simulation finished, 3x empty lines
+        // Subtract 4 new lines because 1x simulation finished, 2x empty lines, 1x Command prompt of shell
         $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
         if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
 
-        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
     }
 
     /**
@@ -119,8 +103,10 @@ class ConsoleOutput extends BaseOutput
     public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         $this->shellOutputHelper->clearScreen();
+        $this->printTitle();
 
-        echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
+        $gameStepString = "Game step: " . ($_board->gameStep() + 1) . "\n";
+        echo $this->shellOutputHelper->getCenteredOutputString($gameStepString);
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
         if (! $_isFinalBoard)
@@ -157,35 +143,17 @@ class ConsoleOutput extends BaseOutput
      */
     protected function getBoardContentString(Board $_board, String $_sideBorderSymbol, String $_cellAliveSymbol, String $_cellDeadSymbol): String
     {
-        $output =  $this->getHorizontalLineString($_board->width(), "╔", "╗", "═") . "\n";
+        $row =  $this->getHorizontalLineString($_board->width(), "╔", "╗", "═");
+        $output = $this->shellOutputHelper->getCenteredOutputString($row) . "\n";
 
         for ($y = 0; $y < $_board->height(); $y++)
         {
-            $output .= $_sideBorderSymbol;
-            $output .= $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol);
-            $output .= $_sideBorderSymbol . "\n";
+            $row = $_sideBorderSymbol . $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol) . $_sideBorderSymbol;
+            $output .= $this->shellOutputHelper->getCenteredOutputString($row) . "\n";
         }
 
-        $output .= $this->getHorizontalLineString($_board->width(), "╚", "╝", "═") . "\n";
-
-        return $output;
-    }
-
-    /**
-     * Returns the title string of the board (the current game step with padding).
-     *
-     * @param int $_boardWidth The board width
-     * @param int $_gameStep The current game step
-     *
-     * @return String The title string
-     */
-    private function getBoardTitleString(int $_boardWidth, int $_gameStep): String
-    {
-        $output = "Game step: " . ($_gameStep + 1);
-        $paddingLeft = ceil(($_boardWidth - strlen($output)) / 2) + 1;
-
-        $padding = str_pad("", $paddingLeft);
-        $output = $padding . $output . "\n";
+        $row = $this->getHorizontalLineString($_board->width(), "╚", "╝", "═");
+        $output .= $this->shellOutputHelper->getCenteredOutputString($row) . "\n";
 
         return $output;
     }
@@ -236,4 +204,3 @@ class ConsoleOutput extends BaseOutput
         return $output;
     }
 }
-

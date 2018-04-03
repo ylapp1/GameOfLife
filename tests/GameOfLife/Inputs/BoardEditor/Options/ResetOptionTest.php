@@ -51,14 +51,14 @@ class ResetOptionTest extends TestCase
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new ResetOption($boardEditor);
 
-        $expectedOutput = "╔════╗\n"
-                        . "║    ║\n"
-                        . "║    ║\n"
-                        . "║    ║\n"
-                        . "║    ║\n"
-                        . "╚════╝\n";
+        $expectedOutputRegex = " *╔════╗\n"
+                             . " *║    ║\n"
+                             . " *║    ║\n"
+                             . " *║    ║\n"
+                             . " *║    ║\n"
+                             . " *╚════╝\n";
 
-        $this->expectOutputString($expectedOutput);
+        $this->expectOutputRegex("/" . $expectedOutputRegex . "/");
         $result = $option->resetBoard();
         $this->assertFalse($result);
         $this->assertEquals(0, $testBoard->getAmountCellsAlive());

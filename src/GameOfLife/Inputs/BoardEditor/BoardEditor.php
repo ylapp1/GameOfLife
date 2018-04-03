@@ -12,6 +12,7 @@ use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
+use Ulrichsg\Getopt;
 use Utils\Shell\ShellInputReader;
 
 /**
@@ -233,6 +234,7 @@ class BoardEditor
      */
     public function launch()
     {
+        $this->output->startOutput(new Getopt(), new Board(0, 0, 0, false));
         $this->optionHandler->parseInput("help");
         $this->output->outputBoard($this->board);
 

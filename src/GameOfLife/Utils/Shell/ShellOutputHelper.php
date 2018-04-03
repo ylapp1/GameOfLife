@@ -22,6 +22,13 @@ class ShellOutputHelper
      */
     private $fakeClearScreenForWindows;
 
+    /**
+     * The number of shell columns
+     *
+     * @var int $numberOfShellColumns
+     */
+    private $numberOfShellColumns;
+
 
     /**
      * ShellExecutor constructor.
@@ -29,7 +36,11 @@ class ShellOutputHelper
     public function __construct()
     {
         $shellInformationFetcher = new ShellInformationFetcher();
+
         $this->fakeClearScreenForWindows = str_repeat("\n", $shellInformationFetcher->getNumberOfShellLines());
+        $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
+
+        unset($shellInformationFetcher);
     }
 
 
@@ -40,5 +51,20 @@ class ShellOutputHelper
     {
         if (stristr(PHP_OS, "linux")) echo "\e[1;1H \n";
         elseif(stristr(PHP_OS, "win")) echo $this->fakeClearScreenForWindows;
+    }
+
+    /**
+     * Returns a centered output string relative to the number of shell columns.
+     *
+     * @param String $_outputString The output string
+     *
+     * @return String The centered output string
+     */
+    public function getCenteredOutputString(String $_outputString): String
+    {
+        $stringLength = mb_strlen($_outputString);
+        $paddingLeft = ceil(($this->numberOfShellColumns - $stringLength) / 2) + 1;
+
+        return str_repeat(" ", $paddingLeft) . $_outputString;
     }
 }

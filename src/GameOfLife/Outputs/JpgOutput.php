@@ -21,7 +21,7 @@ class JpgOutput extends ImageOutput
      */
     public function __construct()
     {
-        parent::__construct("jpg", "/JPG");
+        parent::__construct("JPG OUTPUT", "jpg", "/JPG");
         $this->imageOutputDirectory .= "/Game_" . $this->getNewGameId("JPG");
     }
 

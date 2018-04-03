@@ -56,7 +56,6 @@ class ConsoleOutputTest extends TestCase
     /**
      * @covers \Output\ConsoleOutput::outputBoard()
      * @covers \Output\ConsoleOutput::getBoardContentString()
-     * @covers \Output\ConsoleOutput::getBoardTitleString()
      * @covers \Output\ConsoleOutput::getRowOutputString()
      * @covers \Output\ConsoleOutput::getHorizontalLineString()
      */
@@ -72,11 +71,11 @@ class ConsoleOutputTest extends TestCase
             $expectedPadding .= " ";
         }
 
-        $board = "\n╔══╗" .
-                 "\n║  ║" .
-                 "\n║  ║" .
-                 "\n╚══╝";
-        $outputString = "/" . $expectedPadding . $gameStepString . ".*" . $board . "/";
+        $board = "\n *╔══╗" .
+                 "\n *║  ║" .
+                 "\n *║  ║" .
+                 "\n *╚══╝";
+        $outputString = "/ *" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
         $this->output->outputBoard($this->board, false);

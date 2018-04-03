@@ -145,7 +145,7 @@ class GIFOutputTest extends TestCase
     {
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting GIF Output...\n\n");
+        $this->expectOutputRegex("/\n *GAME OF LIFE\n *GIF OUTPUT\n\nStarting GIF Output...\n\n/");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "Gif"));
         $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));

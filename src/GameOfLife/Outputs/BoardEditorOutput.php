@@ -16,6 +16,15 @@ use GameOfLife\Field;
  */
 class BoardEditorOutput extends ConsoleOutput
 {
+    /**
+     * BoardEditorOutput constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->outputTitle = "BOARD EDITOR";
+    }
+
     private $additionalSpace;
     private $highLightX;
     private $highLightY;
@@ -40,13 +49,18 @@ class BoardEditorOutput extends ConsoleOutput
             $this->highLightY = $_highLightY;
             $this->isHighLight = true;
 
-            $this->additionalSpace = 2;
+            $hasLeftBorder = true;
+            if ($_highLightX == 0) $hasLeftBorder = false;
+            $hasRightBorder = true;
+            if ($_highLightX == $_board->width() - 1) $hasRightBorder = false;
 
-            if ($_highLightX == 0) $this->additionalSpace -= 1;
-            if ($_highLightX == $_board->width() - 1) $this->additionalSpace -= 1;
+            $this->additionalSpace = $hasLeftBorder + $hasRightBorder;
 
             // Output the X-Coordinate of the highlighted cell above the board
-            echo "\n" . str_pad("", $_highLightX + $this->additionalSpace, " ") . $_highLightX . "\n";
+            $paddingLeft = str_repeat(" ", $_highLightX + $hasLeftBorder);
+            $xCoordinateHighLightString = str_pad($paddingLeft . $_highLightX, $_board->width() + $this->additionalSpace);
+
+            echo "\n" . $this->shellOutputHelper->getCenteredOutputString($xCoordinateHighLightString) . "\n";
         }
         elseif ($_selectionCoordinates && $_selectionCoordinates != array())
         {
@@ -78,34 +92,39 @@ class BoardEditorOutput extends ConsoleOutput
         $specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width(), $_board->height(), $_selectionCoordinates);
         $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $_selectionCoordinates, true);
 
-        $output = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╔", "╗", "═", $specialSymbolsTop) . "\n";
+        $topBorderString = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╔", "╗", "═", $specialSymbolsTop);
+        $output = $this->shellOutputHelper->getCenteredOutputString($topBorderString) . "\n";
 
         for ($y = 0; $y < $_board->height(); $y++)
         {
+            $row = "";
+
             if ($this->isHighLight)
             {
                 if ($y == $this->highLightY && $y > 0 ||
                     $y == $this->highLightY + 1 && $y < $_board->height())
                 { // Output lines below and above highlighted cell row
 
-                    $output .= $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╟", "╢", "─", $specialSymbolsAboveBelow) . "\n";
+                    $row = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╟", "╢", "─", $specialSymbolsAboveBelow);
                 }
             }
             elseif ($_selectionCoordinates)
             {
                 $borderRowString = $this->getSelectionBorderRowString($y, $_selectionCoordinates, $_board, $_sideBorderSymbol);
-                if ($borderRowString) $output .= $borderRowString;
+                if ($borderRowString) $row = $borderRowString;
             }
 
-            $output .= $_sideBorderSymbol;
-            $output .= $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol, $_board->height(), $_selectionCoordinates);
-            $output .= $_sideBorderSymbol;
+            if ($row) $output .= $this->shellOutputHelper->getCenteredOutputString($row) . "\n";
+
+            $row = $_sideBorderSymbol . $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol, $_board->height(), $_selectionCoordinates) . $_sideBorderSymbol;
+            $output .= $this->shellOutputHelper->getCenteredOutputString($row);
 
             if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
             $output .= "\n";
         }
 
-        $output .= $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╚", "╝", "═", $specialSymbolsBottom) . "\n";
+        $bottomBorderString = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╚", "╝", "═", $specialSymbolsBottom);
+        $output .= $this->shellOutputHelper->getCenteredOutputString($bottomBorderString) . "\n\n";
 
         return $output;
     }
@@ -223,7 +242,7 @@ class BoardEditorOutput extends ConsoleOutput
                     $rightBorderSymbol,
                 " ",
                 $specialSymbols
-                ) . "\n";
+                );
         }
         else return false;
     }

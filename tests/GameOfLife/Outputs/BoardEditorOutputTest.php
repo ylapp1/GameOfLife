@@ -34,28 +34,28 @@ class BoardEditorOutputTest extends TestCase
         $output = new BoardEditorOutput;
 
         // Without highlighting
-        $expectedOutput = "╔═════╗\n"
-                        . "║     ║\n"
-                        . "║  o  ║\n"
-                        . "║ ooo ║\n"
-                        . "║  o  ║\n"
-                        . "║     ║\n"
-                        . "╚═════╝\n";
+        $expectedOutput = " *╔═════╗\n"
+                        . " *║     ║\n"
+                        . " *║  o  ║\n"
+                        . " *║ ooo ║\n"
+                        . " *║  o  ║\n"
+                        . " *║     ║\n"
+                        . " *╚═════╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
         $output->outputBoard($testBoard);
 
         // With x/y highlighting
-        $expectedOutput = "    2\n"
-                        . "╔══╤═╤══╗\n"
-                        . "║  │ │  ║\n"
-                        . "║  │o│  ║\n"
-                        . "║ o│o│o ║\n"
-                        . "╟──┼─┼──╢\n"
-                        . "║  │X│  ║ 3\n"
-                        . "╟──┼─┼──╢\n"
-                        . "║  │ │  ║\n"
-                        . "╚══╧═╧══╝\n";
+        $expectedOutput = " *    2   \n"
+                        . " *╔══╤═╤══╗\n"
+                        . " *║  │ │  ║\n"
+                        . " *║  │o│  ║\n"
+                        . " *║ o│o│o ║\n"
+                        . " *╟──┼─┼──╢\n"
+                        . " *║  │X│  ║ 3\n"
+                        . " *╟──┼─┼──╢\n"
+                        . " *║  │ │  ║\n"
+                        . " *╚══╧═╧══╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
         $output->outputBoard($testBoard, false, 2, 3);

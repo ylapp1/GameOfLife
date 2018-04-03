@@ -127,7 +127,7 @@ class JpgOutputTest extends TestCase
         }
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting JPG Output ...\n\n");
+        $this->expectOutputRegex("/\n *GAME OF LIFE\n *JPG OUTPUT\n\nStarting JPG Output ...\n\n/");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1"));
     }

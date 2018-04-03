@@ -10,6 +10,8 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
+use Utils\Shell\ShellInformationFetcher;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * BaseOutput from which all other outputs must inherit.
@@ -21,6 +23,52 @@ use Ulrichsg\Getopt;
  */
 class BaseOutput
 {
+    /**
+     * The title of the output that will be printed when the output is started
+     *
+     * @var String $outputTitle
+     */
+    protected $outputTitle;
+
+    /**
+     * The shell information fetcher
+     *
+     * @var ShellInformationFetcher $shellInformationFetcher
+     */
+    protected $shellInformationFetcher;
+
+    /**
+     * The shell output helper
+     *
+     * @var ShellOutputHelper $shellOutputHelper
+     */
+    protected $shellOutputHelper;
+
+
+    /**
+     * BaseOutput constructor.
+     *
+     * @param String $_outputTitle The title of the output that will be printed when the output is started
+     */
+    protected function __construct(String $_outputTitle)
+    {
+        $this->outputTitle = $_outputTitle;
+        $this->shellInformationFetcher = new ShellInformationFetcher();
+        $this->shellOutputHelper = new ShellOutputHelper();
+    }
+
+
+    /**
+     * Prints the title of the output to the screen.
+     */
+    protected function printTitle()
+    {
+        $mainTitle = "GAME OF LIFE";
+
+        echo $this->shellOutputHelper->getCenteredOutputString($mainTitle);
+        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($this->outputTitle) . "\n\n";
+    }
+
     /**
      * Adds output specific options to the option list.
      *
@@ -37,11 +85,12 @@ class BaseOutput
      *
      * @param Getopt $_options User inputted option list
      * @param Board $_board Initial board
-     *
-     * @codeCoverageIgnore
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
+        $this->shellOutputHelper->clearScreen();
+        $this->printTitle();
     }
 
     /**
