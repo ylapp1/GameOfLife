@@ -237,8 +237,9 @@ class VideoOutput extends ImageOutput
      * Creates PNG files which will later be combined to a video.
      *
      * @param Board $_board The board from which the ImageCreator will create an image
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 

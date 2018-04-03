@@ -7,8 +7,9 @@
  */
 
 namespace Output\Helpers;
+
 use Utils\FileSystemHandler;
-use Utils\ShellExecutor;
+use Utils\Shell\ShellExecutor;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -35,7 +36,7 @@ class FfmpegHelper
     {
         $this->osName = strtolower($_osName);
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->shellExecutor = new ShellExecutor($_osName);
+        $this->shellExecutor = new ShellExecutor();
 
         $this->binaryPath = $this->findFFmpegBinary();
     }

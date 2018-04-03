@@ -118,12 +118,12 @@ class BoardEditorOptionParser
 
         foreach ($_option->arguments() as $argumentName => $argumentType)
         {
+            $argumentType = explode("|", $argumentType)[0];
+
             $argument = current($_arguments);
             if ($argument === false)
             {
                 if ($this->canArgumentBeOmitted($argumentType, $arguments)) continue;
-
-                $argumentType = explode("|", $argumentType)[0];
                 $argument = $this->readArgument($argumentName, $argumentType);
             }
 

@@ -58,6 +58,6 @@ class BoardEditorOutputTest extends TestCase
                         . "╚══╧═╧══╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
-        $output->outputBoard($testBoard, 2, 3);
+        $output->outputBoard($testBoard, false, 2, 3);
     }
 }

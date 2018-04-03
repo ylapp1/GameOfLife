@@ -11,7 +11,8 @@ namespace Output;
 use GameOfLife\Board;
 use GameOfLife\Field;
 use Ulrichsg\Getopt;
-use Utils\ShellExecutor;
+use Utils\Shell\ShellInformationFetcher;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * Prints boards to the console.
@@ -19,11 +20,18 @@ use Utils\ShellExecutor;
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * The shell executor
+     * The shell output helper
      *
-     * @var ShellExecutor $shellExecutor
+     * @var ShellOutputHelper $shellOutputHelper
      */
-    private $shellExecutor;
+    private $shellOutputHelper;
+
+    /**
+     * The shell information fetcher
+     *
+     * @var ShellInformationFetcher $shellInformationFetcher
+     */
+    private $shellInformationFetcher;
 
     /**
      * The time for which the program will sleep between each game step in milliseconds
@@ -32,14 +40,31 @@ class ConsoleOutput extends BaseOutput
      */
     private $sleepTime;
 
+    /**
+     * Contains the number new lines for outputBoard()
+     *
+     * @var int $numberOfNewLinesOutputBoard
+     */
+    private $numberOfNewLinesOutputBoard;
+
+    /**
+     * Contains the number of new lines for finishOutput()
+     *
+     * @var int $numberOfNewLinesFinishOutput
+     */
+    private $numberOfNewLinesFinishOutput;
+
 
     /**
      * ConsoleOutput constructor.
      */
     public function __construct()
     {
-        $this->shellExecutor = new ShellExecutor(PHP_OS);
-        $this->sleepTime = 100;
+        $this->shellOutputHelper = new ShellOutputHelper();
+        $this->shellInformationFetcher = new ShellInformationFetcher();
+        $this->sleepTime = 50;
+        $this->numberOfNewLinesOutputBoard = 0;
+        $this->numberOfNewLinesFinishOutput = 0;
     }
 
 
@@ -55,7 +80,7 @@ class ConsoleOutput extends BaseOutput
                     null,
                     "consoleOutputSleepTime",
                     Getopt::REQUIRED_ARGUMENT,
-                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.1 seconds)\n"
+                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.05 seconds)\n"
                 )
             )
         );
@@ -74,24 +99,50 @@ class ConsoleOutput extends BaseOutput
             $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
         }
 
-        echo "\nStarting the simulation ...\n";
+        // +5 is because: 2x border, 1x gamestep, 2x empty line
+        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 5);
+        if ($this->numberOfNewLinesOutputBoard < 0) $this->numberOfNewLinesOutputBoard = 0;
+
+        // Subtract 4 new lines because 1x simulation finished, 3x empty lines
+        $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
+        if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
+
+        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
     }
 
     /**
      * Outputs one game step.
      *
      * @param Board $_board Current board
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
-        $this->shellExecutor->clearScreen();
-
-        echo "\n\n";
+        $this->shellOutputHelper->clearScreen();
 
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
-        usleep($this->sleepTime * 1000);
+        if (! $_isFinalBoard)
+        {
+            echo str_repeat("\n", $this->numberOfNewLinesOutputBoard);
+            usleep($this->sleepTime * 1000);
+        }
+    }
+
+    /**
+     * Finish output (Display that simulation is finished, write files and delete temporary files).
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
+     */
+    public function finishOutput(String $_simulationEndReason)
+    {
+        parent::finishOutput($_simulationEndReason);
+
+        $additionalNewLine = "";
+        if (stristr(PHP_OS, "linux")) $additionalNewLine = "\n";
+
+        echo str_repeat("\n", $this->numberOfNewLinesFinishOutput) . $additionalNewLine;
     }
 
     /**
@@ -185,3 +236,4 @@ class ConsoleOutput extends BaseOutput
         return $output;
     }
 }
+

@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils;
+namespace Utils\Shell;
 
 /**
- * Executes shell commands.
+ * Handles executing of shell commands.
  */
 class ShellExecutor
 {
@@ -35,42 +35,30 @@ class ShellExecutor
     private $outputHideRedirectOther = "output.txt";
 
     /**
-     * The os name
+     * The output of the last executed command
      *
-     * @var String $osName
+     * @var array $output
      */
-    private $osName;
+    private $output;
 
 
     /**
      * ShellExecutor constructor.
-     *
-     * @param String $_osName The os name
      */
-    public function __construct(String $_osName)
+    public function __construct()
     {
-        $this->osName = $_osName;
+        $this->output = array();
     }
 
 
     /**
-     * Returns the os name.
+     * Returns the output of the last executed command.
      *
-     * @return String The os name
+     * @return String[] The output of the last executed command
      */
-    public function osName(): String
+    public function output()
     {
-        return $this->osName;
-    }
-
-    /**
-     * Sets the os name.
-     *
-     * @param String $_osName The os name
-     */
-    public function setOsname(String $_osName)
-    {
-        $this->osName = $_osName;
+        return $this->output;
     }
 
 
@@ -84,11 +72,11 @@ class ShellExecutor
      */
     public function executeCommand(String $_command, Bool $_hideOutput = false)
     {
-        $output = array();
         $returnValue = 0;
+        $this->output = array();
 
         if ($_hideOutput) $_command .= " 2>" . $this->getOutputHideRedirect();
-        exec($_command, $output, $returnValue);
+        exec($_command, $this->output, $returnValue);
 
         return $returnValue;
     }
@@ -100,17 +88,8 @@ class ShellExecutor
      */
     private function getOutputHideRedirect()
     {
-        if (stristr($this->osName, "win")) return $this->outputHideRedirectWindows;
-        elseif (stristr($this->osName, "linux")) return $this->outputHideRedirectLinux;
+        if (stristr(PHP_OS, "win")) return $this->outputHideRedirectWindows;
+        elseif (stristr(PHP_OS, "linux")) return $this->outputHideRedirectLinux;
         else return $this->outputHideRedirectOther;
-    }
-
-    public function clearScreen()
-    {
-        if (stristr($this->osName, "linux")) system("clear");
-
-        /*
-         * It's not possible to clear the screen in cmd. (Ideas were using "cls" or moving the cursor position up)
-         */
     }
 }

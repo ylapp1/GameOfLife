@@ -145,7 +145,7 @@ class PNGOutputTest extends TestCase
         for ($i = 0; $i < 10; $i++)
         {
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
-            $this->output->outputBoard($this->board);
+            $this->output->outputBoard($this->board, false);
             $gameLogic->calculateNextBoard($this->board);
             $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1/" . $i . ".png"));
         }

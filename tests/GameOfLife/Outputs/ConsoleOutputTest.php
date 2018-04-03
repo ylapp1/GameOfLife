@@ -47,20 +47,10 @@ class ConsoleOutputTest extends TestCase
         $output = new ConsoleOutput();
 
         $reflectionClass = new ReflectionClass(\Output\ConsoleOutput::class);
-        $reflectionProperty = $reflectionClass->getProperty("shellExecutor");
+        $reflectionProperty = $reflectionClass->getProperty("shellOutputHelper");
         $reflectionProperty->setAccessible(true);
 
-        $this->assertInstanceOf(\Utils\ShellExecutor::class, $reflectionProperty->getValue($output));
-    }
-
-
-    /**
-     * @covers \Output\ConsoleOutput::startOutput()
-     */
-    public function testCanStartOutput()
-    {
-        $this->expectOutputString("\nStarting the simulation ...\n");
-        $this->output->startOutput(new Getopt(),$this->board);
+        $this->assertInstanceOf(\Utils\Shell\ShellOutputHelper::class, $reflectionProperty->getValue($output));
     }
 
     /**
@@ -89,7 +79,7 @@ class ConsoleOutputTest extends TestCase
         $outputString = "/" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
-        $this->output->outputBoard($this->board);
+        $this->output->outputBoard($this->board, false);
     }
 
     /**
@@ -99,7 +89,7 @@ class ConsoleOutputTest extends TestCase
      */
     public function testCanFinishOutput()
     {
-        $this->expectOutputString("\nSimulation finished: All cells are dead.\n\n");
+        $this->expectOutputRegex("/.*Simulation finished: All cells are dead\..*/");
         $this->output->finishOutput("All cells are dead");
     }
 }
