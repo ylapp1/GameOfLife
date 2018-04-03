@@ -123,6 +123,8 @@ class ImageOutputTest extends TestCase
 
         $board = new Board(1,1,1,true);
 
+        // Hide output
+        $this->expectOutputRegex("/.*/");
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
 
         $imageCreator = $this->output->imageCreator();
@@ -152,6 +154,8 @@ class ImageOutputTest extends TestCase
 
         $board = new Board(1,1,1,true);
 
+        // Hide output
+        $this->expectOutputRegex("/.*/");
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
 
         $imageCreator = $this->output->imageCreator();
