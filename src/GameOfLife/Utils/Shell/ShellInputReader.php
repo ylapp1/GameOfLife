@@ -53,11 +53,18 @@ class ShellInputReader
      */
     private function addLineToHistory(String $_line)
     {
-        if (str_replace(" ", "", $_line) !== "" &&
-            $this->lastHistoryLine != $_line)
+        $line = trim($_line);
+
+        if ($line != "" &&
+            $line != $this->lastHistoryLine ||
+            stristr(PHP_OS, "win"))
         {
-            readline_add_history($_line);
-            $this->lastHistoryLine = $_line;
+            /*
+             * For windows the readline_add_history method must be called after every readline call,
+             * otherwise the history will be broken
+             */
+            readline_add_history($line);
+            $this->lastHistoryLine = $line;
         }
     }
 }
