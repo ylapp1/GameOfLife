@@ -48,7 +48,7 @@ cd
 
 # Fixing the timezone
 
-# Change the system timezone (fixes time for web interface)
+# Change the system timezone
 timedatectl set-timezone Europe/Berlin
 
 # Change the php timezone (fixes time for cli commands)
