@@ -21,7 +21,7 @@ class PngOutput extends ImageOutput
      */
     public function __construct()
     {
-        parent::__construct("png", "/PNG");
+        parent::__construct("PNG OUTPUT", "png", "/PNG");
         $this->imageOutputDirectory .=  "/Game_" . $this->getNewGameId("PNG");
     }
 

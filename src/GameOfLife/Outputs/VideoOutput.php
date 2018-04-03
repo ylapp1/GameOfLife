@@ -64,7 +64,7 @@ class VideoOutput extends ImageOutput
      */
     public function __construct()
     {
-        parent::__construct("video", "/tmp/Frames");
+        parent::__construct("VIDEO OUTPUT", "video", "/tmp/Frames");
 
         $this->fillPercentages = array();
         $this->frames = array();

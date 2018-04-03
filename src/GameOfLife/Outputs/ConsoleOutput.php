@@ -60,6 +60,7 @@ class ConsoleOutput extends BaseOutput
      */
     public function __construct()
     {
+        parent::__construct("CONSOLE OUTPUT");
         $this->shellOutputHelper = new ShellOutputHelper();
         $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->sleepTime = 50;
@@ -94,16 +95,18 @@ class ConsoleOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        parent::startOutput($_options, $_board);
+
         if ($_options->getOption("consoleOutputSleepTime") !== null)
         {
             $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
         }
 
-        // +5 is because: 2x border, 1x gamestep, 2x empty line
-        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 5);
+        // +9 is because: 2x border, 1x gamestep, 2x empty line, 4x Title
+        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 9);
         if ($this->numberOfNewLinesOutputBoard < 0) $this->numberOfNewLinesOutputBoard = 0;
 
-        // Subtract 4 new lines because 1x simulation finished, 3x empty lines
+        // Subtract 4 new lines because 1x simulation finished, 2x empty lines, 1x Command prompt of shell
         $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
         if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
 
@@ -119,6 +122,7 @@ class ConsoleOutput extends BaseOutput
     public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         $this->shellOutputHelper->clearScreen();
+        $this->printTitle();
 
         echo $this->getBoardTitleString($_board->width(), $_board->gameStep());
         echo $this->getBoardContentString($_board, "║", "☻", " ");

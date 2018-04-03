@@ -58,11 +58,13 @@ class ImageOutput extends BaseOutput
     /**
      * ImageOutput constructor.
      *
+     * @param String $_outputTitle The title of the output
      * @param String $_optionPrefix Prefix for all options of this output
      * @param String $_imageOutputDirectory The directory in which the images will be saved
      */
-    public function __construct(String $_optionPrefix, String $_imageOutputDirectory)
+    public function __construct(String $_outputTitle, String $_optionPrefix, String $_imageOutputDirectory)
     {
+        parent::__construct($_outputTitle);
         $this->fileSystemHandler = new FileSystemHandler();
         $this->imageOutputDirectory = $this->baseOutputDirectory . "/" . $_imageOutputDirectory;
         $this->optionPrefix = $_optionPrefix;
@@ -199,6 +201,8 @@ class ImageOutput extends BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        parent::startOutput($_options, $_board);
+
         try
         {
             $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);

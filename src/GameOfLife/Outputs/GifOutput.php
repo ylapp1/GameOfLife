@@ -38,7 +38,7 @@ class GifOutput extends ImageOutput
      */
     public function __construct()
     {
-        parent::__construct("gif", "/tmp/Frames");
+        parent::__construct("GIF OUTPUT", "gif", "/tmp/Frames");
     }
 
 

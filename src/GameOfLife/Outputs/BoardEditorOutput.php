@@ -16,6 +16,15 @@ use GameOfLife\Field;
  */
 class BoardEditorOutput extends ConsoleOutput
 {
+    /**
+     * BoardEditorOutput constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->outputTitle = "BOARD EDITOR";
+    }
+
     private $additionalSpace;
     private $highLightX;
     private $highLightY;

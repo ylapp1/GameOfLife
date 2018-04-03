@@ -28,7 +28,7 @@ class ImageOutputTest extends TestCase
     protected function setUp()
     {
         $this->fileSystemHandler = new FileSystemHandler();
-        $this->output = new ImageOutput("test", $this->testDirectory);
+        $this->output = new ImageOutput("TEST IMAGE OUTPUT", "test", $this->testDirectory);
     }
 
     protected function tearDown()
@@ -54,7 +54,7 @@ class ImageOutputTest extends TestCase
      */
     public function testCanBeConstructed(string $_optionPrefix, string $_imageOutputDirectory)
     {
-        $output = new ImageOutput($_optionPrefix, $_imageOutputDirectory);
+        $output = new ImageOutput("TEST IMAGE OUTPUT", $_optionPrefix, $_imageOutputDirectory);
 
         $this->assertEquals($_optionPrefix, $output->optionPrefix());
         $this->assertNotEmpty(stristr($output->imageOutputDirectory(), $_imageOutputDirectory));

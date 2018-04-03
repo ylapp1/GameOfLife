@@ -127,7 +127,7 @@ class PNGOutputTest extends TestCase
         }
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputString("Starting PNG Output ...\n\n");
+        $this->expectOutputString("\nGAME OF LIFE\nPNG OUTPUT\n\nStarting PNG Output ...\n\n");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1"));
     }
