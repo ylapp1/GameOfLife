@@ -10,6 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
+use GameOfLife\Field;
 
 /**
  * Clears the board.
@@ -26,7 +27,7 @@ class ClearBoardOption extends BoardEditorOption
         parent::__construct($_parentBoardEditor);
 
         $this->name = "clear";
-        $this->aliases = array("clearBoard", "emptyBoard");
+        $this->aliases = array("clearBoard", "emptyBoard", "reset", "r");
         $this->callback = "clearBoard";
         $this->description = "Clears the board";
         $this->arguments = array();
@@ -39,8 +40,30 @@ class ClearBoardOption extends BoardEditorOption
      */
     public function clearBoard(): bool
     {
-        $this->parentBoardEditor->board()->resetBoard();
+        $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
+
+        if ($selectionCoordinates != array()) $this->clearSelection($selectionCoordinates);
+        else $this->parentBoardEditor->board()->resetBoard();
+
         $this->parentBoardEditor->outputBoard();
         return false;
+    }
+
+    /**
+     * Clears the fields inside the selection.
+     *
+     * @param array $_selectionCoordinates The selection coordinates
+     */
+    private function clearSelection(array $_selectionCoordinates)
+    {
+        for ($y = $_selectionCoordinates["A"]["y"]; $y <= $_selectionCoordinates["B"]["y"]; $y++)
+        {
+            for ($x = $_selectionCoordinates["A"]["x"]; $x <= $_selectionCoordinates["B"]["x"]; $x++)
+            {
+                /** @var Field $field */
+                $field = $this->parentBoardEditor->board()->fields()[$y][$x];
+                $field->setValue(false);
+            }
+        }
     }
 }
