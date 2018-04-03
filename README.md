@@ -78,5 +78,17 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --rulesStayAlive <arg> | The amounts of cells which will keep a living cell alive               | String | numeric string                                                     |
 
 
-You have to download ffmpeg and extract it to "GameOfLife/Tools/" in order to use the video output in Windows.
-You have to install ffmpeg with your package manager to use the video output in Linux.
+# Setup a development environment
+
+## Linux version
+1. Download and install vagrant and virtualbox
+2. Clone this repository and navigate to the repository folder in a console
+3. Type ````vagrant up```` to initialize the vagrant box
+4. Type ````vagrant ssh```` to connect to the vagrant box and navigate to ````/vagrant````
+5. Type ````composer install```` to install the dependencies for this project
+
+## Windows version
+1. Install php and composer
+2. Clone this repository and navigate to the repository folder in a console
+3. Type ````composer install```` to install the dependencies for this project
+4. Download ffmpeg and extract it to ````GameOfLife/Tools/````
