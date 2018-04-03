@@ -10,6 +10,8 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
+use Utils\Shell\ShellInformationFetcher;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * BaseOutput from which all other outputs must inherit.
@@ -28,6 +30,20 @@ class BaseOutput
      */
     protected $outputTitle;
 
+    /**
+     * The shell information fetcher
+     *
+     * @var ShellInformationFetcher $shellInformationFetcher
+     */
+    protected $shellInformationFetcher;
+
+    /**
+     * The shell output helper
+     *
+     * @var ShellOutputHelper $shellOutputHelper
+     */
+    protected $shellOutputHelper;
+
 
     /**
      * BaseOutput constructor.
@@ -37,6 +53,8 @@ class BaseOutput
     protected function __construct(String $_outputTitle)
     {
         $this->outputTitle = $_outputTitle;
+        $this->shellInformationFetcher = new ShellInformationFetcher();
+        $this->shellOutputHelper = new ShellOutputHelper();
     }
 
 
@@ -45,8 +63,10 @@ class BaseOutput
      */
     protected function printTitle()
     {
-        echo "\nGAME OF LIFE\n";
-        echo $this->outputTitle . "\n\n";
+        $mainTitle = "GAME OF LIFE";
+
+        echo $this->shellOutputHelper->getCenteredOutputString($mainTitle);
+        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($this->outputTitle) . "\n\n";
     }
 
     /**
@@ -68,6 +88,8 @@ class BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
+        $this->shellOutputHelper->clearScreen();
         $this->printTitle();
     }
 
