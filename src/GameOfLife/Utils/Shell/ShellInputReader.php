@@ -40,6 +40,7 @@ class ShellInputReader
     public function readInput(String $_prompt): String
     {
         $inputLine = readline($_prompt);
+        $inputLine = trim($inputLine);
         $this->addLineToHistory($inputLine);
 
         return $inputLine;
@@ -53,18 +54,16 @@ class ShellInputReader
      */
     private function addLineToHistory(String $_line)
     {
-        $line = trim($_line);
-
-        if ($line != "" &&
-            $line != $this->lastHistoryLine ||
+        if ($_line != "" &&
+            $_line != $this->lastHistoryLine ||
             stristr(PHP_OS, "win"))
         {
             /*
              * For windows the readline_add_history method must be called after every readline call,
              * otherwise the history will be broken
              */
-            readline_add_history($line);
-            $this->lastHistoryLine = $line;
+            readline_add_history($_line);
+            $this->lastHistoryLine = $_line;
         }
     }
 }

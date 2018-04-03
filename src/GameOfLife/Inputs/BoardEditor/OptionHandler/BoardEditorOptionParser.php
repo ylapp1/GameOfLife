@@ -7,6 +7,7 @@
  */
 
 namespace BoardEditor\OptionHandler;
+
 use BoardEditor\BoardEditorOption;
 
 /**
@@ -244,7 +245,7 @@ class BoardEditorOptionParser
         $optionData = $this->splitOption($_input, " ");
         $options = $this->parentOptionHandler->options();
 
-        if (stristr($_input, ","))
+        if (stristr($_input, ",") && is_numeric(substr($optionData["name"], 0, 1)))
         {
             $optionData = $this->splitOption("toggle," . $_input, ",");
             return $optionData;
