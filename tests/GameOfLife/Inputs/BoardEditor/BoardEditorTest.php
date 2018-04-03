@@ -144,7 +144,7 @@ class BoardEditorTest extends TestCase
                              . "║     ║\n"
                              . "╚═════╝\n";
 
-        $this->expectOutputString($expectedOutputTitle . $expectedOutputBoard);
+        $this->expectOutputRegex("/" . $expectedOutputTitle . ".*" . $expectedOutputBoard . "/");
 
         $optionHandlerMock->expects($this->exactly(2))
                           ->method("parseInput")
