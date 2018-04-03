@@ -28,7 +28,8 @@ class ShellOutputHelper
      */
     public function __construct()
     {
-        $this->fakeClearScreenForWindows = str_repeat("\n", 100);
+        $shellInformationFetcher = new ShellInformationFetcher();
+        $this->fakeClearScreenForWindows = str_repeat("\n", $shellInformationFetcher->getNumberOfShellLines());
     }
 
 
