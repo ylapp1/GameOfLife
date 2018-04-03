@@ -44,6 +44,10 @@ class SetWidthOption extends BoardEditorOption
     public function setWidth(int $_width): Bool
     {
         if ($_width < 1) throw new \Exception("The board width may not be less than 1.");
+        elseif ($_width == $this->parentBoardEditor->board()->width())
+        {
+            throw new \Exception("The board width is already " . $_width . ".");
+        }
         else
         {
             $fields = $this->parentBoardEditor->board()->fields();
