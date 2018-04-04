@@ -44,6 +44,11 @@ class FileSystemWriter extends FileSystemHandler
         {
             // create all directories in the directory path recursively (if they don't exist)
             mkdir($directoryPath, 0777, true);
+
+            if (! file_exists($directoryPath))
+            {
+                throw new \Exception("Unknown error while creating the directory \"" . $directoryPath . "\".");
+            }
         }
         else throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
     }
@@ -70,6 +75,11 @@ class FileSystemWriter extends FileSystemHandler
         }
 
         rmdir($directoryPath);
+
+        if (file_exists($directoryPath))
+        {
+            throw new \Exception("Unknown error while deleting the directory \"" . $directoryPath . "\".");
+        }
     }
 
     /**
@@ -90,6 +100,11 @@ class FileSystemWriter extends FileSystemHandler
             if (is_dir($file)) $this->deleteDirectory($file, $_deleteNonEmptySubDirectories);
             else unlink($file);
         }
+
+        if ($this->fileSystemReader->getFileList($directoryPath . "/*") !== array())
+        {
+            throw new \Exception("Unknown error while deleting the files in the directory \"" . $directoryPath . "\".");
+        }
     }
 
     /**
@@ -105,6 +120,11 @@ class FileSystemWriter extends FileSystemHandler
 
         if (file_exists($filePath)) unlink($filePath);
         else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
+
+        if (file_exists($filePath))
+        {
+            throw new \Exception("Unknown error while deleting the file \"" . $filePath . "\".");
+        }
     }
 
     /**
@@ -136,5 +156,10 @@ class FileSystemWriter extends FileSystemHandler
         }
 
         file_put_contents($filePath, $_content, $flags);
+
+        if (! file_exists($filePath))
+        {
+            throw new \Exception("Unknown error while writing the file \"" . $filePath . "\".");
+        }
     }
 }
