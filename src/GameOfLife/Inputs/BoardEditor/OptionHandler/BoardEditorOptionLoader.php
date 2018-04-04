@@ -9,7 +9,7 @@
 namespace BoardEditor\OptionHandler;
 
 use BoardEditor\BoardEditorOption;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
 
 /**
  * Loads the board editor options and returns a list of options.
@@ -19,9 +19,9 @@ class BoardEditorOptionLoader
     /**
      * The file system handler
      *
-     * @var FileSystemHandler $fileSystemHandler
+     * @var FileSystemReader $fileSystemReader
      */
-    private $fileSystemHandler;
+    private $fileSystemReader;
 
     /**
      * The parent option handler
@@ -38,29 +38,29 @@ class BoardEditorOptionLoader
      */
     public function __construct(BoardEditorOptionHandler $_parentOptionHandler)
     {
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemReader = new FileSystemReader();
         $this->parentOptionHandler = $_parentOptionHandler;
     }
 
 
     /**
-     * Returns the file system handler.
+     * Returns the file system reader.
      *
-     * @return FileSystemHandler File system handler
+     * @return FileSystemReader File system reader
      */
-    public function fileSystemHandler(): FileSystemHandler
+    public function fileSystemHandler(): FileSystemReader
     {
-        return $this->fileSystemHandler;
+        return $this->fileSystemReader;
     }
 
     /**
-     * Sets the file system handler.
+     * Sets the file system reader.
      *
-     * @param FileSystemHandler $_fileSystemHandler File system handler
+     * @param FileSystemReader $_fileSystemReader File system reader
      */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    public function setFileSystemHandler(FileSystemReader $_fileSystemReader)
     {
-        $this->fileSystemHandler = $_fileSystemHandler;
+        $this->fileSystemReader = $_fileSystemReader;
     }
 
     /**
@@ -98,7 +98,7 @@ class BoardEditorOptionLoader
         $options = array();
 
         // Load each option from the options folder
-        $classes = $this->fileSystemHandler->getFileList($_optionsDirectory . "/*Option.php");
+        $classes = $this->fileSystemReader->getFileList($_optionsDirectory . "/*Option.php");
 
         foreach ($classes as $class)
         {

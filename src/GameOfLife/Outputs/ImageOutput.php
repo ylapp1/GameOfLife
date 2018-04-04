@@ -12,7 +12,8 @@ use GameOfLife\Board;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
 
 /**
  * Parent class for all classes that output images or process temporary output images.
@@ -27,11 +28,18 @@ class ImageOutput extends BaseOutput
     protected $baseOutputDirectory = __DIR__ . "/../../../Output";
 
     /**
-     * The file system handler
+     * The file system reader
      *
-     * @var FileSystemHandler $fileSystemHandler
+     * @var FileSystemReader $fileSystemReader
      */
-    protected $fileSystemHandler;
+    protected $fileSystemReader;
+
+    /**
+     * The file system writer
+     *
+     * @var FileSystemWriter $fileSystemWriter
+     */
+    protected $fileSystemWriter;
 
     /**
      * The image creator
@@ -65,7 +73,8 @@ class ImageOutput extends BaseOutput
     public function __construct(String $_outputTitle, String $_optionPrefix, String $_imageOutputDirectory)
     {
         parent::__construct($_outputTitle);
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemReader = new FileSystemReader();
+        $this->fileSystemWriter = new FileSystemWriter();
         $this->imageOutputDirectory = $this->baseOutputDirectory . "/" . $_imageOutputDirectory;
         $this->optionPrefix = $_optionPrefix;
     }
@@ -92,23 +101,23 @@ class ImageOutput extends BaseOutput
     }
 
     /**
-     * Returns the filesystem handler of this output.
+     * Returns the filesystem writer of this output.
      *
-     * @return FileSystemHandler Filesystem handler
+     * @return FileSystemWriter Filesystem writer
      */
-    public function fileSystemHandler(): FileSystemHandler
+    public function fileSystemHandler(): FileSystemWriter
     {
-        return $this->fileSystemHandler;
+        return $this->fileSystemWriter;
     }
 
     /**
      * Sets the filesystem handler of this output.
      *
-     * @param FileSystemHandler $_fileSystemHandler Filesystem handler
+     * @param FileSystemWriter $_fileSystemWriter Filesystem writer
      */
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    public function setFileSystemHandler(FileSystemWriter $_fileSystemWriter)
     {
-        $this->fileSystemHandler = $_fileSystemHandler;
+        $this->fileSystemWriter = $_fileSystemWriter;
     }
 
     /**
@@ -205,7 +214,7 @@ class ImageOutput extends BaseOutput
 
         try
         {
-            $this->fileSystemHandler->createDirectory($this->imageOutputDirectory);
+            $this->fileSystemWriter->createDirectory($this->imageOutputDirectory);
         }
         catch (\Exception $_exception)
         {
@@ -246,7 +255,7 @@ class ImageOutput extends BaseOutput
     {
         try
         {
-            $fileNames = $this->fileSystemHandler->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+            $fileNames = $this->fileSystemReader->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
         }
         catch (\Exception $_exception)
         {

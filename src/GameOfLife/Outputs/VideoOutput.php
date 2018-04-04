@@ -204,7 +204,7 @@ class VideoOutput extends ImageOutput
 
         try
         {
-            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Video");
+            $this->fileSystemWriter->createDirectory($this->baseOutputDirectory . "/Video");
         }
         catch (\Exception $_exception)
         {
@@ -213,12 +213,12 @@ class VideoOutput extends ImageOutput
 
         try
         {
-            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
+            $this->fileSystemWriter->createDirectory($this->baseOutputDirectory . "/tmp/Audio");
         }
         catch (\Exception $_exception)
         {
             // Remove the files from the directory
-            $this->fileSystemHandler->deleteFilesInDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
+            $this->fileSystemWriter->deleteFilesInDirectory($this->baseOutputDirectory . "/tmp/Audio", true);
         }
 
 
@@ -270,7 +270,7 @@ class VideoOutput extends ImageOutput
         $this->generateVideoFile();
 
         unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
+        $this->fileSystemWriter->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
     /**
@@ -336,7 +336,7 @@ class VideoOutput extends ImageOutput
 
         try
         {
-            $this->fileSystemHandler->deleteFile($audioListFilePath);
+            $this->fileSystemWriter->deleteFile($audioListFilePath);
         }
         catch (\Exception $_exception)
         {
@@ -354,7 +354,7 @@ class VideoOutput extends ImageOutput
             $this->ffmpegHelper->addOption("-t " . $secondsPerFrame);
 
             $this->ffmpegHelper->executeCommand($this->baseOutputDirectory . "/" . $outputPath);
-            $this->fileSystemHandler->writeFile($audioListFilePath, "file '" . $i . ".wav'\r\n", true);
+            $this->fileSystemWriter->writeFile($audioListFilePath, "file '" . $i . ".wav'\r\n", true);
 
             $this->ffmpegHelper->resetOptions();
         }

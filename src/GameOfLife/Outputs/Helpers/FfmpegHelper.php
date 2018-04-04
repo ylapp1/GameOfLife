@@ -8,7 +8,8 @@
 
 namespace Output\Helpers;
 
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
 use Utils\Shell\ShellExecutor;
 
 /**
@@ -19,7 +20,8 @@ use Utils\Shell\ShellExecutor;
 class FfmpegHelper
 {
     private $binaryPath;
-    private $fileSystemHandler;
+    private $fileSystemReader;
+    private $fileSystemWriter;
     private $options = array();
     private $osName;
     private $shellExecutor;
@@ -35,7 +37,8 @@ class FfmpegHelper
     public function __construct(String $_osName)
     {
         $this->osName = strtolower($_osName);
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemReader = new FileSystemReader();
+        $this->fileSystemWriter = new FileSystemWriter();
         $this->shellExecutor = new ShellExecutor();
 
         $this->binaryPath = $this->findFFmpegBinary();
@@ -62,14 +65,14 @@ class FfmpegHelper
         $this->binaryPath = $_binaryPath;
     }
 
-    public function fileSystemHandler(): FileSystemHandler
+    public function fileSystemHandler(): FileSystemReader
     {
-        return $this->fileSystemHandler;
+        return $this->fileSystemReader;
     }
 
-    public function setFileSystemHandler(FileSystemHandler $_fileSystemHandler)
+    public function setFileSystemHandler(FileSystemReader $_fileSystemReader)
     {
-        $this->fileSystemHandler = $_fileSystemHandler;
+        $this->fileSystemReader = $_fileSystemReader;
     }
 
     /**
@@ -117,7 +120,7 @@ class FfmpegHelper
         if (stristr($this->osName, "win"))
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
             $searchDirectory = __DIR__ . "/../../../../Tools";
-            $binaryPath = $this->fileSystemHandler->findFileRecursive($searchDirectory, "ffmpeg.exe");
+            $binaryPath = $this->fileSystemReader->findFileRecursive($searchDirectory, "ffmpeg.exe");
 
             if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
@@ -185,12 +188,10 @@ class FfmpegHelper
 
         if ($error)
         {
-            $fileSystemHandler = new FileSystemHandler();
-
             try
             {
                 // Delete the damaged video file (if one was created)
-                $fileSystemHandler->deleteFile($_outputPath);
+                $this->fileSystemWriter->deleteFile($_outputPath);
             }
             catch (\Exception $_exception)
             {
