@@ -13,7 +13,7 @@ use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class GIFOutputTest extends TestCase
     private $board;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
     /** @var string */
     private $outputDirectory = __DIR__ . "/../GifOutputTest/";
@@ -37,7 +37,7 @@ class GIFOutputTest extends TestCase
         $this->output = new GifOutput();
         $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
 
         $this->board = new Board(10, 10, 50, true);
 
@@ -90,7 +90,7 @@ class GIFOutputTest extends TestCase
      */
     public function testCanSetAttributes(array $_frames, int $_frameTime)
     {
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemWriter();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(2, 2, 2, $colorBlack, $colorBlack, $colorBlack);
 

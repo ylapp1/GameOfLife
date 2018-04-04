@@ -8,7 +8,7 @@
 
 use GameOfLife\Board;
 use TemplateHandler\TemplateSaver;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -23,7 +23,7 @@ class TemplateSaverTest extends TestCase
      */
     public function testCanSaveTemplate()
     {
-        $fileSystemHandlerMock = $this->getMockBuilder(FileSystemHandler::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(FileSystemWriter::class)
             ->setMethods(array("writeFile"))
             ->getMock();
 
@@ -35,12 +35,9 @@ class TemplateSaverTest extends TestCase
         $testDirectory = __DIR__ . "/test";
         $templateSaver = new TemplateSaver($testDirectory);
 
-        if ($fileSystemHandlerMock instanceof FileSystemHandler)
+        if ($fileSystemHandlerMock instanceof FileSystemWriter)
         {
-            $reflectionClass = new ReflectionClass(\TemplateHandler\TemplateSaver::class);
-            $reflectionProperty = $reflectionClass->getProperty("fileSystemHandler");
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($templateSaver, $fileSystemHandlerMock);
+            setPrivateAttribute($templateSaver, "fileSystemWriter", $fileSystemHandlerMock);
 
             // Save successful
             $fileSystemHandlerMock->expects($this->exactly(2))

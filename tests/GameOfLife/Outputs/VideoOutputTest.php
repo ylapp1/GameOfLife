@@ -14,6 +14,7 @@ use Output\Helpers\ImageCreator;
 use Output\VideoOutput;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
+use Utils\FileSystem\FileSystemWriter;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -28,7 +29,7 @@ class VideoOutputTest extends TestCase
     private $board;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
     /** @var string */
     private $outputDirectory = __DIR__ . "/../VideoOutputTest/";
@@ -43,7 +44,7 @@ class VideoOutputTest extends TestCase
         $this->output = new VideoOutput();
         $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
 
         $this->board = new Board(10, 10, 50, true);
 
@@ -111,7 +112,7 @@ class VideoOutputTest extends TestCase
      */
     public function testCanSetAttributes(array $_fillPercentages, int $_fps, array $_frames, bool $_hasSound)
     {
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemWriter();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
         $ffmpegHelper = new FfmpegHelper("Mein lustiger test");

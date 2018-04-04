@@ -13,7 +13,7 @@ use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -213,7 +213,7 @@ class TemplateInputTest extends TestCase
                           ->withConsecutive(["template"], ["list-templates"], ["template"], ["list-templates"])
                           ->willReturn(null, true, null, true);
 
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemWriter();
 
         try
         {

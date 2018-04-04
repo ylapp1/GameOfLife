@@ -13,7 +13,7 @@ use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,7 +27,7 @@ class JpgOutputTest extends TestCase
     private $board;
     /** @var \PHPUnit_Framework_MockObject_MockObject */
     private $optionsMock;
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
     /** @var string */
     private $outputDirectory = __DIR__ . "/../PNGOutputTest/";
@@ -37,7 +37,7 @@ class JpgOutputTest extends TestCase
         $this->output = new JpgOutput();
         $this->output->setBaseOutputDirectory($this->outputDirectory);
         $this->output->setImageOutputDirectory($this->outputDirectory . "/JPG/Game_1/");
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
 
         $this->board = new Board(10, 10, 50, true);
 
@@ -82,7 +82,7 @@ class JpgOutputTest extends TestCase
      */
     public function testCanSetAttributes()
     {
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemWriter();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
 

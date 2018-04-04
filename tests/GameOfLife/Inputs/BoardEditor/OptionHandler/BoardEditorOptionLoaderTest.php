@@ -11,7 +11,7 @@ use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use BoardEditor\OptionHandler\BoardEditorOptionLoader;
 use BoardEditor\Options\StartOption;
 use BoardEditor\Options\ExitOption;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,7 +33,7 @@ class BoardEditorOptionLoaderTest extends TestCase
 
         $optionLoader = new BoardEditorOptionLoader($optionHandler);
 
-        $this->assertEquals(new FileSystemHandler(), $optionLoader->fileSystemHandler());
+        $this->assertEquals(new FileSystemReader(), $optionLoader->fileSystemHandler());
         $this->assertEquals($optionHandler, $optionLoader->parentOptionHandler());
     }
 
@@ -52,7 +52,7 @@ class BoardEditorOptionLoaderTest extends TestCase
      */
     public function testCanSetAttributes(String $_templateDirectory)
     {
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemReader = new FileSystemReader();
 
         $boardEditor = new BoardEditor("test");
         $optionHandler = new BoardEditorOptionHandler($boardEditor);
@@ -62,10 +62,10 @@ class BoardEditorOptionLoaderTest extends TestCase
 
         $optionLoader = new BoardEditorOptionLoader($optionHandler);
 
-        $optionLoader->setFileSystemHandler(($fileSystemHandler));
+        $optionLoader->setFileSystemHandler(($fileSystemReader));
         $optionLoader->setParentOptionHandler($testOptionHandler);
 
-        $this->assertEquals($fileSystemHandler, $optionLoader->fileSystemHandler());
+        $this->assertEquals($fileSystemReader, $optionLoader->fileSystemHandler());
         $this->assertEquals($testOptionHandler, $optionLoader->parentOptionHandler());
     }
 
@@ -97,9 +97,9 @@ class BoardEditorOptionLoaderTest extends TestCase
         $optionHandler = new BoardEditorOptionHandler($boardEditor);
         $optionLoader = new BoardEditorOptionLoader($optionHandler);
 
-        $fileSystemHandlerMock = $this->getMockBuilder(FileSystemHandler::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(FileSystemReader::class)
                                       ->getMock();
-        if ($fileSystemHandlerMock instanceof FileSystemHandler) $optionLoader->setFileSystemHandler($fileSystemHandlerMock);
+        if ($fileSystemHandlerMock instanceof FileSystemReader) $optionLoader->setFileSystemHandler($fileSystemHandlerMock);
 
         $templateDirectory = "testing";
         $fileSystemHandlerMock->expects($this->exactly(1))
