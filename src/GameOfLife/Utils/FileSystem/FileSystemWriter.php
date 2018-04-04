@@ -2,19 +2,33 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017-2018 CN-Consult GmbH
+ * @copyright 2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils;
+namespace Utils\FileSystem;
 
 /**
- * Handles directory and file creation/deletion.
- *
- * @package Output\Helpers
+ * Provides methods to write files and directories to the file system.
  */
-class FileSystemHandler
+class FileSystemWriter extends FileSystemHandler
 {
+    /**
+     * The file system reader
+     *
+     * @var FileSystemReader $fileSystemReader
+     */
+    private $fileSystemReader;
+
+
+    /**
+     * FileSystemWriter constructor.
+     */
+    public function __construct()
+    {
+        $this->fileSystemReader = new FileSystemReader();
+    }
+
     /**
      * Creates a directory if it doesn't exist yet.
      *
@@ -30,6 +44,11 @@ class FileSystemHandler
         {
             // create all directories in the directory path recursively (if they don't exist)
             mkdir($directoryPath, 0777, true);
+
+            if (! file_exists($directoryPath))
+            {
+                throw new \Exception("Unknown error while creating the directory \"" . $directoryPath . "\".");
+            }
         }
         else throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
     }
@@ -47,7 +66,7 @@ class FileSystemHandler
         $directoryPath = $this->convertSlashes($_directoryPath);
         if (! file_exists($directoryPath)) throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
 
-        $files = $this->getFileList($directoryPath . "/*");
+        $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
 
         if (count($files) !== 0)
         {
@@ -56,6 +75,11 @@ class FileSystemHandler
         }
 
         rmdir($directoryPath);
+
+        if (file_exists($directoryPath))
+        {
+            throw new \Exception("Unknown error while deleting the directory \"" . $directoryPath . "\".");
+        }
     }
 
     /**
@@ -69,12 +93,17 @@ class FileSystemHandler
     public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
     {
         $directoryPath = $this->convertSlashes($_directoryPath);
-        $files = $this->getFileList($directoryPath . "/*");
+        $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
 
         foreach ($files as $file)
         {
             if (is_dir($file)) $this->deleteDirectory($file, $_deleteNonEmptySubDirectories);
             else unlink($file);
+        }
+
+        if ($this->fileSystemReader->getFileList($directoryPath . "/*") !== array())
+        {
+            throw new \Exception("Unknown error while deleting the files in the directory \"" . $directoryPath . "\".");
         }
     }
 
@@ -91,23 +120,11 @@ class FileSystemHandler
 
         if (file_exists($filePath)) unlink($filePath);
         else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
-    }
 
-    /**
-     * Read text from file.
-     *
-     * @param string $_filePath The path to the file that will be read
-     *
-     * @return String[] The lines from the file
-     *
-     * @throws \Exception The exception when the target file does not exist
-     */
-    public function readFile(string $_filePath): array
-    {
-        $filePath = $this->convertSlashes($_filePath);
-
-        if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
-        else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        if (file_exists($filePath))
+        {
+            throw new \Exception("Unknown error while deleting the file \"" . $filePath . "\".");
+        }
     }
 
     /**
@@ -139,65 +156,10 @@ class FileSystemHandler
         }
 
         file_put_contents($filePath, $_content, $flags);
-    }
 
-    /**
-     * Returns an array of files in a directory.
-     *
-     * @param string $_directoryPath The directory of which a file list will be returned
-     *
-     * @return array The file list
-     *
-     * @throws \Exception The exception when the target directory does not exist
-     */
-    public function getFileList(String $_directoryPath): array
-    {
-        $filePath = $this->convertSlashes($_directoryPath);
-        $directoryName = dirname($filePath);
-
-        if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");
-        else return glob($filePath);
-    }
-
-    /**
-     * Searches a folder for a file.
-     *
-     * @param String $_baseFolder The folder path
-     * @param String $_fileName The file name
-     *
-     * @return String|bool The file path or false
-     *
-     * @throws \Exception The exception when the target directory does not exist
-     */
-    public function findFileRecursive(String $_baseFolder, String $_fileName)
-    {
-        $baseFolder = $this->convertSlashes($_baseFolder);
-        if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
-
-        $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
-
-        foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
+        if (! file_exists($filePath))
         {
-            if (strtolower(basename($file)) == strtolower($_fileName))
-            {
-                return $this->convertSlashes($file);
-            }
+            throw new \Exception("Unknown error while writing the file \"" . $filePath . "\".");
         }
-
-        return false;
-    }
-
-    /**
-     * Converts the slashes to backslashes (Windows) or the backslashes to slashes (Linux).
-     *
-     * @param String $_path The path with mixed slashes and backslashes
-     *
-     * @return String The path with either only slashes or only backslashes
-     */
-    private function convertSlashes(String $_path): String
-    {
-        if (stristr(PHP_OS, "win")) return str_replace("/", "\\", $_path);
-        elseif (stristr(PHP_OS, "linux")) return str_replace("\\", "/", $_path);
-        else return $_path;
     }
 }

@@ -12,7 +12,7 @@ use Output\Helpers\ImageCreator;
 use Output\ImageOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 
 /**
  * Checks whether \Output\ImageOutput works as expected.
@@ -22,12 +22,12 @@ class ImageOutputTest extends TestCase
     /** @var ImageOutput */
     private $output;
     private $testDirectory = __DIR__ . "/../ImageOutputTest/";
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
 
     protected function setUp()
     {
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
         $this->output = new ImageOutput("TEST IMAGE OUTPUT", "test", $this->testDirectory);
     }
 
@@ -89,7 +89,7 @@ class ImageOutputTest extends TestCase
      */
     public function testCanSetAttributes($_imageOutputDirectory, $_optionPrefix)
     {
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemHandler = new FileSystemWriter();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1,2,1, $colorBlack, $colorBlack, $colorBlack);
 
@@ -170,12 +170,12 @@ class ImageOutputTest extends TestCase
      */
     public function testCanGetNewGameId()
     {
-        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystemHandler::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystem\FileSystemReader::class)
                                       ->getMock();
 
-        if ($fileSystemHandlerMock instanceof \Utils\FileSystemHandler)
+        if ($fileSystemHandlerMock instanceof \Utils\FileSystem\FileSystemReader)
         {
-            $this->output->setFileSystemHandler($fileSystemHandlerMock);
+            setPrivateAttribute($this->output, "fileSystemReader", $fileSystemHandlerMock);
         }
 
         $fileSystemHandlerMock->expects($this->exactly(3))

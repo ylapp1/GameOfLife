@@ -10,7 +10,8 @@ use GameOfLife\Board;
 use GameOfLife\Field;
 use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
 
 /**
  * Checks whether \TemplateHandler\TemplateLoader works as expected.
@@ -18,11 +19,11 @@ use Utils\FileSystemHandler;
 class TemplateLoaderTest extends TestCase
 {
     /**
-     * File system handler
+     * The file system writer.
      *
-     * @var FileSystemHandler $fileSystemHandler
+     * @var FileSystemWriter $fileSystemWriter
      */
-    private $fileSystemHandler;
+    private $fileSystemWriter;
 
     /**
      * Test template directory
@@ -41,7 +42,7 @@ class TemplateLoaderTest extends TestCase
 
     public function setUp()
     {
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemWriter = new FileSystemWriter();
         $this->templateDirectory = __DIR__ . "/../../InputTemplates";
         $this->templateLoader = new TemplateLoader($this->templateDirectory);
     }
@@ -76,7 +77,7 @@ class TemplateLoaderTest extends TestCase
         $this->assertFalse($templateFields[1][1]->isAlive());
 
         // Custom template
-        $this->fileSystemHandler->writeFile($this->templateDirectory . "/Custom/unittest2.txt", ".X\r\n..");
+        $this->fileSystemWriter->writeFile($this->templateDirectory . "/Custom/unittest2.txt", ".X\r\n..");
 
         /** @var Field[][] $templateFields */
         $templateFields = $this->templateLoader->loadTemplate("unittest2");
@@ -91,11 +92,11 @@ class TemplateLoaderTest extends TestCase
         $this->assertFalse($templateFields[1][0]->isAlive());
         $this->assertFalse($templateFields[1][1]->isAlive());
 
-        $this->fileSystemHandler->deleteFile($this->templateDirectory . "/Custom/unittest2.txt");
+        $this->fileSystemWriter->deleteFile($this->templateDirectory . "/Custom/unittest2.txt");
 
         try
         {
-            $this->fileSystemHandler->deleteDirectory($this->templateDirectory . "/Custom");
+            $this->fileSystemWriter->deleteDirectory($this->templateDirectory . "/Custom");
         }
         catch (\Exception $_exception)
         {

@@ -112,7 +112,7 @@ class GifOutput extends ImageOutput
 
         try
         {
-            $this->fileSystemHandler->createDirectory($this->baseOutputDirectory . "/Gif");
+            $this->fileSystemWriter->createDirectory($this->baseOutputDirectory . "/Gif");
         }
         catch (\Exception $_exception)
         {
@@ -175,8 +175,8 @@ class GifOutput extends ImageOutput
 
         $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
 
-        $this->fileSystemHandler->writeFile($this->baseOutputDirectory . "/Gif/" . $fileName, $gifCreator->getGif());
-        $this->fileSystemHandler->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
+        $this->fileSystemWriter->writeFile($this->baseOutputDirectory . "/Gif/" . $fileName, $gifCreator->getGif());
+        $this->fileSystemWriter->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
 
         echo "\nGIF creation complete.\n\n";
         unset ($this->fileSystemHandler);

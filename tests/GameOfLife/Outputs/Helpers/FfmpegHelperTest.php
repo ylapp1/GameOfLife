@@ -7,9 +7,9 @@
  */
 
 use Output\Helpers\FfmpegHelper;
-use PHPUnit\Framework\TestCase;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
 use Utils\Shell\ShellExecutor;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Output\Helpers\FfmpegHelper works as expected.
@@ -58,23 +58,18 @@ class FfmpegHelperTest extends TestCase
     {
         $ffmpegHelper = new FfmpegHelper("test");
 
-        $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
 
-        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystemHandler::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystem\FileSystemReader::class)
                                       ->getMock();
 
         $fileSystemHandlerMock->expects($this->exactly(1))
                               ->method("findFileRecursive")
                               ->willReturn("ffmpeg.exe");
 
-        $reflectionProperty = $reflectionClass->getProperty("fileSystemHandler");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($ffmpegHelper, $fileSystemHandlerMock);
+        setPrivateAttribute($ffmpegHelper, "fileSystemReader", $fileSystemHandlerMock);
+        setPrivateAttribute($ffmpegHelper, "osName", "Windows");
 
-        $reflectionProperty = $reflectionClass->getProperty("osName");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($ffmpegHelper, "Windows");
-
+        $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
         $reflectionMethod = $reflectionClass->getMethod("findFfmpegBinary");
         $reflectionMethod->setAccessible(true);
         $result = $reflectionMethod->invoke($ffmpegHelper);
@@ -137,8 +132,8 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanSetAttributes(string $_binaryPath, array $_options)
     {
-        $shellExecutor = new ShellExecutor("test");
-        $fileSystemHandler = new FileSystemHandler();
+        $shellExecutor = new ShellExecutor();
+        $fileSystemHandler = new FileSystemReader();
 
         $this->ffmpegHelper->setBinaryPath($_binaryPath);
         $this->ffmpegHelper->setOptions($_options);

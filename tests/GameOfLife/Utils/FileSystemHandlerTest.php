@@ -6,7 +6,8 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FileSystemHandlerTest extends TestCase
 {
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
     /** @var string */
     private $testDirectory;
@@ -28,7 +29,7 @@ class FileSystemHandlerTest extends TestCase
 
         $this->testDirectory = __DIR__ . $this->directorySeparator . ".." . $this->directorySeparator . "FileSystemHandlerTest";
 
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
         mkdir($this->testDirectory);
     }
 
@@ -40,8 +41,8 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider createDirectoryProvider()
-     * @covers \Utils\FileSystemHandler::createDirectory()
-     * @covers \Utils\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
      *
      * @param string $_directoryName    Test directory name
      * @param array $_subDirectories    Sub directories that shall be created
@@ -107,8 +108,8 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystemHandler::createDirectory()
-     * @covers \Utils\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
      */
     public function testCanDetectExistingDirectory()
     {
@@ -155,9 +156,9 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider writeFileProvider
-     * @covers \Utils\FileSystemHandler::writeFile()
-     * @covers \Utils\FileSystemHandler::readFile()
-     * @covers \Utils\FileSystemHandler::deleteFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
+     * @covers \Utils\FileSystem\FileSystemReader::readFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
      *
      * @param string $_fileName         File name of the test file
      * @param string $_content          Content of the test file
@@ -167,6 +168,7 @@ class FileSystemHandlerTest extends TestCase
     {
         $outputPath = $this->testDirectory . $this->directorySeparator . $_fileName;
         $this->assertFalse(file_exists($outputPath));
+        $fileSystemReader = new FileSystemReader();
 
         $exceptionOccurred  = false;
         try
@@ -183,7 +185,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $fileContent = $this->fileSystemHandler->readFile($outputPath);
+            $fileContent = $fileSystemReader->readFile($outputPath);
         }
         catch (\Exception $_exception)
         {
@@ -230,13 +232,15 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystemHandler::writeFile()
-     * @covers \Utils\FileSystemHandler::readFile()
-     * @covers \Utils\FileSystemHandler::deleteFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
+     * @covers \Utils\FileSystem\FileSystemReader::readFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
      */
     public function testCanDetectExistingFile()
     {
         $filePath = $this->testDirectory . $this->directorySeparator . "mytest.txt";
+        $fileSystemReader = new FileSystemReader();
+
 
         $this->assertFalse(file_exists($filePath));
 
@@ -257,7 +261,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $fileContent = $this->fileSystemHandler->readFile($filePath);
+            $fileContent = $fileSystemReader->readFile($filePath);
         }
         catch (\Exception $_exception)
         {
@@ -295,7 +299,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $fileContent = $this->fileSystemHandler->readFile($filePath);
+            $fileContent = $fileSystemReader->readFile($filePath);
         }
         catch (\Exception $_exception)
         {
@@ -319,10 +323,12 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\Filesystemhandler::getFileList()
+     * @covers \Utils\FileSystem\FileSystemReader::getFileList()
      */
     public function testCanGetFileList()
     {
+        $fileSystemReader = new FileSystemReader();
+
         $fileNames = array("Hello", "myFile", "myPersonalFile", "myPersonalTest", "thisIsAFile", "ThisIsMyFile");
         sort($fileNames);
 
@@ -334,7 +340,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $files = $this->fileSystemHandler->getFileList($this->testDirectory . "/*");
+            $files = $fileSystemReader->getFileList($this->testDirectory . "/*");
         }
         catch (\Exception $_exception)
         {
@@ -362,12 +368,14 @@ class FileSystemHandlerTest extends TestCase
      *
      * @dataProvider findFileRecursiveProvider()
      *
-     * @covers \Utils\FileSystemHandler::findFileRecursive()
+     * @covers \Utils\FileSystem\FileSystemReader::findFileRecursive()
      */
     public function testCanFindFileRecursive(String $_directories, String $_filePath, String $_searchFilename, Bool $_expectsFilePath = true)
     {
         $testDirectory = __DIR__ . $this->directorySeparator . "test";
         $testFilePath = $testDirectory . $this->directorySeparator  . $_filePath;
+
+        $fileSystemReader = new FileSystemReader();
 
         mkdir($testDirectory . $this->directorySeparator . $_directories, 0777, true);
         touch($testFilePath);
@@ -375,7 +383,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $filePath = $this->fileSystemHandler->findFileRecursive($testDirectory, $_searchFilename);
+            $filePath = $fileSystemReader->findFileRecursive($testDirectory, $_searchFilename);
         }
         catch (\Exception $_exception)
         {

@@ -13,7 +13,7 @@ use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
 
 /**
  * Fills a board with fields that are loaded from a template file.
@@ -65,9 +65,9 @@ class TemplateInput extends BaseInput
         $this->templateLoader = new TemplateLoader($templatesBaseDirectory);
         $this->templatePlacer = new FieldsPlacer();
 
-        $fileSystemHandler = new FileSystemHandler();
+        $fileSystemReader = new FileSystemReader();
 
-        $defaultTemplatePaths = $fileSystemHandler->getFileList($templatesBaseDirectory . "/*.txt");
+        $defaultTemplatePaths = $fileSystemReader->getFileList($templatesBaseDirectory . "/*.txt");
         $this->defaultTemplateNames = array_map(
             function($_arrayEntry)
             {

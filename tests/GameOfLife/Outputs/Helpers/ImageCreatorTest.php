@@ -9,7 +9,7 @@
 use GameOfLife\Board;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,7 +21,7 @@ class ImageCreatorTest extends TestCase
     private $imageCreator;
     /** @var Board */
     private $board;
-    /** @var FileSystemHandler */
+    /** @var FileSystemWriter */
     private $fileSystemHandler;
     /** @var string */
     private $outputDirectory = __DIR__ . "/../../ImageCreatorTest";
@@ -35,7 +35,7 @@ class ImageCreatorTest extends TestCase
 
         $this->imageCreator = new ImageCreator($this->board->height(), $this->board->width(), 15, $colorBlack,
                                                 $colorWhite, $colorBlack);
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemHandler = new FileSystemWriter();
     }
 
     protected function tearDown()

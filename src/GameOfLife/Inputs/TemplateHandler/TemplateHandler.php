@@ -8,7 +8,8 @@
 
 namespace TemplateHandler;
 
-use Utils\FileSystemHandler;
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
 
 /**
  * Parent class for TemplateListPrinter, TemplateLoader and TemplateSaver.
@@ -16,11 +17,18 @@ use Utils\FileSystemHandler;
 class TemplateHandler
 {
     /**
-     * FileSystemHandler that reads templates
+     * FileSystemReader that reads templates
      *
-     * @var FileSystemHandler $fileSystemHandler
+     * @var FileSystemReader $fileSystemReader
      */
-    protected $fileSystemHandler;
+    protected $fileSystemReader;
+
+    /**
+     * FileSystemWriter that writes templates
+     *
+     * @var FileSystemWriter $fileSystemWriter
+     */
+    protected $fileSystemWriter;
 
     /**
      * The directory in which the default templates are stored.
@@ -44,7 +52,8 @@ class TemplateHandler
      */
     public function __construct(String $_templatesBaseDirectory)
     {
-        $this->fileSystemHandler = new FileSystemHandler();
+        $this->fileSystemReader = new FileSystemReader();
+        $this->fileSystemWriter = new FileSystemWriter();
         $this->defaultTemplatesDirectory = $_templatesBaseDirectory;
         $this->customTemplatesDirectory = $_templatesBaseDirectory . "/Custom";
     }

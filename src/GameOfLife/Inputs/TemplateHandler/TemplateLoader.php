@@ -47,7 +47,7 @@ class TemplateLoader extends TemplateHandler
         else throw new \Exception("The template file could not be found.");
 
         // Read the template
-        $lines = $this->fileSystemHandler->readFile($fileName);
+        $lines = $this->fileSystemReader->readFile($fileName);
 
         $fields = array();
         for ($y = 0; $y < count($lines); $y++)
