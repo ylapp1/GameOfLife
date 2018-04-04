@@ -41,8 +41,8 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider createDirectoryProvider()
-     * @covers \Utils\FileSystemHandler::createDirectory()
-     * @covers \Utils\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
      *
      * @param string $_directoryName    Test directory name
      * @param array $_subDirectories    Sub directories that shall be created
@@ -108,8 +108,8 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystemHandler::createDirectory()
-     * @covers \Utils\FileSystemHandler::deleteDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
      */
     public function testCanDetectExistingDirectory()
     {
@@ -156,9 +156,9 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider writeFileProvider
-     * @covers \Utils\FileSystemHandler::writeFile()
-     * @covers \Utils\FileSystemHandler::readFile()
-     * @covers \Utils\FileSystemHandler::deleteFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
+     * @covers \Utils\FileSystem\FileSystemReader::readFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
      *
      * @param string $_fileName         File name of the test file
      * @param string $_content          Content of the test file
@@ -232,9 +232,9 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystemHandler::writeFile()
-     * @covers \Utils\FileSystemHandler::readFile()
-     * @covers \Utils\FileSystemHandler::deleteFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
+     * @covers \Utils\FileSystem\FileSystemReader::readFile()
+     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
      */
     public function testCanDetectExistingFile()
     {
@@ -323,7 +323,7 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\Filesystemhandler::getFileList()
+     * @covers \Utils\FileSystem\FileSystemReader::getFileList()
      */
     public function testCanGetFileList()
     {
@@ -368,7 +368,7 @@ class FileSystemHandlerTest extends TestCase
      *
      * @dataProvider findFileRecursiveProvider()
      *
-     * @covers \Utils\FileSystemHandler::findFileRecursive()
+     * @covers \Utils\FileSystem\FileSystemReader::findFileRecursive()
      */
     public function testCanFindFileRecursive(String $_directories, String $_filePath, String $_searchFilename, Bool $_expectsFilePath = true)
     {
