@@ -10,6 +10,7 @@ namespace Output;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
+use Ulrichsg\Getopt;
 
 /**
  * Prints the BoardEditor to the console for UserInput.
@@ -29,6 +30,19 @@ class BoardEditorOutput extends ConsoleOutput
     private $highLightX;
     private $highLightY;
     private $isHighLight;
+
+    /**
+     * Initializes the output.
+     *
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
+     */
+    public function startOutput(Getopt $_options, Board $_board)
+    {
+        parent::startOutput($_options, $_board);
+
+        if (stristr(PHP_OS, "win")) $this->printTitle();
+    }
 
     /**
      * Print the board to the console and highlights the cell at ($_curX | $_curY) if both values are set.

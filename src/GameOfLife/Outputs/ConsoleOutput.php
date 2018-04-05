@@ -92,6 +92,14 @@ class ConsoleOutput extends BaseOutput
         $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
         if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
 
+        if (stristr(PHP_OS, "win"))
+        {
+            /*
+             * Printing 10000 new lines in order to move the scroll bar of cmd to the bottom end
+             * This results in a lot less flickering on the screen
+             */
+            echo str_repeat("\n", 10000);
+        }
     }
 
     /**
