@@ -10,7 +10,6 @@ use BoardEditor\BoardEditor;
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use Output\BoardEditorOutput;
-use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 use Utils\Shell\ShellInformationFetcher;
 
@@ -41,7 +40,7 @@ class BoardEditorTest extends TestCase
     public function setUp()
     {
         $this->boardEditorMock = $this->getMockBuilder(BoardEditor::class)
-                                      ->setMethods(array("readInput", "loadOptions"))
+                                      ->setMethods(array("readInput", "loadOptions", "addBoardToHistory"))
                                       ->disableOriginalConstructor()
                                       ->getMock();
         $this->testBoard = new Board(5, 5, 1, true);
@@ -122,6 +121,9 @@ class BoardEditorTest extends TestCase
         $this->boardEditorMock->expects($this->exactly(1))
             ->method("readInput")
             ->willReturn("exit");
+        $this->boardEditorMock->expects($this->exactly(1))
+            ->method("addBoardToHistory")
+            ->willReturn(null);
 
         $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
                                   ->setMethods(array("parseInput"))

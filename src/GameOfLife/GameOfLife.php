@@ -171,6 +171,8 @@ class GameOfLife
             return;
         }
 
+        if ($this->board->width() == 0 || $this->board->height() == 0) return;
+
         try
         {
             $this->output->startOutput($this->options, $this->board);

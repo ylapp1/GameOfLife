@@ -105,6 +105,95 @@ class Board
         return $string;
     }
 
+    /**
+     * Clones the board and sets the fields parent board.
+     */
+    public function __clone()
+    {
+        // Clone the fields of the cloned Board and adjust the fields parent boards
+        foreach ($this->fields as $y => $row)
+        {
+            foreach ($row as $x => $field)
+            {
+                $tmpField = clone $field;
+                $tmpField->setParentBoard($this);
+
+                $this->fields[$y][$x] = $tmpField;
+            }
+        }
+    }
+
+    /**
+     * Checks whether a board is the same like this board.
+     *
+     * @param Board $_compareBoard The board that will be compared
+     *
+     * @return Bool True: The boards are equal
+     *              False: The boards are not equal
+     */
+    public function equals(Board $_compareBoard): Bool
+    {
+        if ($this->gameStep() == $_compareBoard->gameStep() &&
+            $this->hasBorder() == $_compareBoard->hasBorder() &&
+            $this->height() == $_compareBoard->height() &&
+            $this->maxSteps() == $_compareBoard->maxSteps() &&
+            $this->width() == $_compareBoard->width()
+        )
+        {
+            $fieldsEqual = true;
+
+            foreach ($_compareBoard->fields() as $y => $row)
+            {
+                foreach ($row as $x => $field)
+                {
+                    /** @var Field $boardField */
+                    $boardField = $this->fields()[$y][$x];
+
+                    /** @var Field $field */
+                    if ($field->value() != $boardField->value() ||
+                        $field->x() != $boardField->x() ||
+                        $field->y() != $boardField->y()
+                    )
+                    {
+                        $fieldsEqual = false;
+                        break;
+                    }
+                }
+            }
+
+            if ($fieldsEqual) return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Copies a board into this board object.
+     * This function is necessary because cloning would change the pointer address of the variable since it creates a new board.
+     * Therefore the resulting board is no longer the board that you originally wanted to change.
+     *
+     * @param Board $_board The board that will be cloned
+     */
+    function copy(Board $_board)
+    {
+        $this->gameStep = $_board->gameStep;
+        $this->hasBorder = $_board->hasBorder;
+        $this->height = $_board->height;
+        $this->maxSteps = $_board->maxSteps;
+        $this->width = $_board->width;
+
+        $this->fields = array();
+
+        foreach ($_board->fields() as $y => $row)
+        {
+            foreach ($row as $x => $field)
+            {
+                $this->fields[$y][$x] = clone $field;
+                $this->fields[$y][$x]->setParentBoard($this);
+            }
+        }
+    }
+
 
     /**
      * Returns current Board.

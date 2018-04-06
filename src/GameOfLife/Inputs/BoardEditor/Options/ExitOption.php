@@ -40,6 +40,8 @@ class ExitOption extends BoardEditorOption
     public function exitBoardEditor()
     {
         $this->parentBoardEditor->board()->resetBoard();
+        $this->parentBoardEditor->board()->setHeight(0);
+        $this->parentBoardEditor->board()->setWidth(0);
         return true;
     }
 }
