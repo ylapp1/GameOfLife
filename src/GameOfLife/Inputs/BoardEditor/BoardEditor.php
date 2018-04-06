@@ -264,6 +264,11 @@ class BoardEditor
         return $this->shellOutputHelper;
     }
 
+    public function setShellInformationFetcher(ShellInformationFetcher $_shellInformationFetcher)
+    {
+        $this->shellInformationFetcher = $_shellInformationFetcher;
+    }
+
 
     /**
      * Launches the board editor session.

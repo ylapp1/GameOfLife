@@ -12,6 +12,7 @@ use GameOfLife\Board;
 use Output\BoardEditorOutput;
 use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
+use Utils\Shell\ShellInformationFetcher;
 
 /**
  * Checks whether BoardEditor\BoardEditor works as expected.
@@ -127,13 +128,24 @@ class BoardEditorTest extends TestCase
                                   ->disableOriginalConstructor()
                                   ->getMock();
 
+        $shellInformationFetcherMock = $this->getMockBuilder(ShellInformationFetcher::class)
+                                            ->getMock();
+
         if ($this->boardEditorMock instanceof BoardEditor)
         {
             if ($optionHandlerMock instanceof BoardEditorOptionHandler)
             {
                 $this->boardEditorMock->setOptionHandler($optionHandlerMock);
             }
+            if ($shellInformationFetcherMock instanceof ShellInformationFetcher)
+            {
+                $this->boardEditorMock->setShellInformationFetcher($shellInformationFetcherMock);
+            }
         }
+
+        $shellInformationFetcherMock->expects($this->exactly(1))
+                                    ->method("getNumberOfShellLines")
+                                    ->willReturn(10);
 
         $expectedOutputTitleRegex = "\n *GAME OF LIFE\n *BOARD EDITOR\n\n";
         $expectedOutputBoardRegex = " *╔═════╗\n"
@@ -142,14 +154,14 @@ class BoardEditorTest extends TestCase
                                   . " *║     ║\n"
                                   . " *║     ║\n"
                                   . " *║     ║\n"
-                                  . " *╚═════╝\n";
+                                  . " *╚═════╝\n*";
 
         $this->expectOutputRegex("/" . $expectedOutputTitleRegex . ".*" . $expectedOutputBoardRegex . "/");
 
-        $optionHandlerMock->expects($this->exactly(2))
+        $optionHandlerMock->expects($this->exactly(1))
                           ->method("parseInput")
-                          ->withConsecutive(array("help"), array("exit"))
-                          ->willReturn(false, true);
+                          ->withConsecutive(array("exit"))
+                          ->willReturn(true);
 
         if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
     }
