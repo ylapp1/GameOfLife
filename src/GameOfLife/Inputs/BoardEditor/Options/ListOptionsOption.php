@@ -10,12 +10,20 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
+use Utils\Shell\ShellTablePrinter;
 
 /**
  * Lists all available board editor options.
  */
 class ListOptionsOption extends BoardEditorOption
 {
+    /**
+     * The shell output helper
+     *
+     * @var ShellTablePrinter $shellTablePrinter
+     */
+    private $shellTablePrinter;
+
     /**
      * ListOptionsOption constructor.
      *
@@ -29,6 +37,8 @@ class ListOptionsOption extends BoardEditorOption
         $this->callback = "listOptions";
         $this->description = "Lists available options";
         $this->arguments = array();
+
+        $this->shellTablePrinter = new ShellTablePrinter();
     }
 
     /**
@@ -38,32 +48,24 @@ class ListOptionsOption extends BoardEditorOption
      */
     public function listOptions()
     {
-        $optionUsageOutputs = array();
-        $longestOptionLength = 0;
+        $outputTable = array();
 
         // Get the length of the longest option name
         foreach ($this->parentBoardEditor->optionHandler()->options() as $optionName => $option)
         {
-            $optionUsageOutput = $optionName;
+            $optionUsageOutput = " - " . $optionName;
             foreach ($option->arguments() as $argumentName => $argumentType)
             {
                 $optionUsageOutput .= " <" . $argumentName . ">";
             }
 
-            $optionUsageOutputs[$optionUsageOutput] = $option->description();
-
-            if (strlen($optionUsageOutput) > $longestOptionLength) $longestOptionLength = strlen($optionUsageOutput);
+            $outputTable[] = array($optionUsageOutput, ": " . $option->description());
         }
 
         // Output the option list
-        $output = "\n\nOptions:";
-        foreach ($optionUsageOutputs as $optionUsageOutput => $optionDescription)
-        {
-            $output .= "\n - " . str_pad($optionUsageOutput, $longestOptionLength + 1) . ": " . $optionDescription;
-        }
-        $output .= "\n\n";
-
-        echo $output;
+        echo "\n\nOptions:\n";
+        $this->shellTablePrinter->printTable($outputTable, 3, array(), true);
+        echo "\n\n";
 
         return false;
     }

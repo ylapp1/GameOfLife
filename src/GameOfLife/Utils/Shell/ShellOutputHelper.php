@@ -27,7 +27,7 @@ class ShellOutputHelper
      *
      * @var int $numberOfShellColumns
      */
-    private $numberOfShellColumns;
+    protected $numberOfShellColumns;
 
 
     /**

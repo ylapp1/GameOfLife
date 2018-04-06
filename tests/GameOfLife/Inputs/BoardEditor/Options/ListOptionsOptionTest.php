@@ -101,13 +101,13 @@ class ListOptionsOptionTest extends TestCase
                               ->method("options")
                               ->willReturn($boardEditorOptions);
 
-            $expectedOutput = "\n\nOptions:"
-                            . "\n - test                               : Tests units"
-                            . "\n - jumpVeryLongTestOption <high jump> : Makes the board jump"
-                            . "\n - flyShort                           : Makes the board fly"
+            $expectedOutputRegex = "\n\nOptions:\n"
+                            . " - test *: Tests units *\n"
+                            . " - jumpVeryLongTestOption <high jump> *: Makes the board jump *\n"
+                            . " - flyShort *: Makes the board fly *\n"
                             . "\n\n";
 
-            $this->expectOutputString($expectedOutput);
+            $this->expectOutputRegex("/" . $expectedOutputRegex . "/");
 
             $result = $listOptionsOption->listOptions();
             $this->assertFalse($result);
