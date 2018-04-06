@@ -74,7 +74,7 @@ class BoardEditorOutput extends ConsoleOutput
             $paddingLeft = str_repeat(" ", $_highLightX + $hasLeftBorder);
             $xCoordinateHighLightString = str_pad($paddingLeft . $_highLightX, $_board->width() + $this->additionalSpace);
 
-            echo "\n" . $this->shellOutputHelper->getCenteredOutputString($xCoordinateHighLightString) . "\n";
+            echo $this->shellOutputHelper->getCenteredOutputString($xCoordinateHighLightString) . "\n";
         }
         elseif ($_selectionCoordinates && $_selectionCoordinates != array())
         {
