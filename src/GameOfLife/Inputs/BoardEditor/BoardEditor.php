@@ -342,7 +342,7 @@ class BoardEditor
      *
      * @param Board $_board The board
      */
-    private function addBoardToHistory(Board $_board)
+    public function addBoardToHistory(Board $_board)
     {
         if (count($this->historyOfBoards) >= 0)
         {
