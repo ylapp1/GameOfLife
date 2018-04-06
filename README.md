@@ -92,3 +92,14 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 2. Clone this repository and navigate to the repository folder in a console
 3. Type ````composer install```` to install the dependencies for this project
 4. Download ffmpeg and extract it to ````GameOfLife/Tools/````
+
+
+# Additional ideas for future versions
+
+* HTMLOutput
+  * Creates html files for each board with a navigation bar and an index.html file
+  * Each board is represented by a table
+
+* Multiple rule worlds at once that influence each others boards
+  * Boards are calculated from top to bottom and left to right
+  * Bordering board fields will be used in the cell state calculation
