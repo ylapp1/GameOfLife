@@ -13,7 +13,9 @@ use GameOfLife\Board;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
+use Utils\Shell\ShellInformationFetcher;
 use Utils\Shell\ShellInputReader;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * Lets the user edit a board by using options or toggling cells.
@@ -47,11 +49,25 @@ class BoardEditor
     private $output;
 
     /**
+     * The shell information fetcher
+     *
+     * @var ShellInformationFetcher $shellInformationFetcher
+     */
+    private $shellInformationFetcher;
+
+    /**
      * The shell input reader
      *
      * @var ShellInputReader $shellInputReader
      */
     private $shellInputReader;
+
+    /**
+     * The shell output helper
+     *
+     * @var ShellOutputHelper $shellOutputHelper
+     */
+    private $shellOutputHelper;
 
     /**
      * Template directory which will be used in this board editor session
@@ -74,6 +90,14 @@ class BoardEditor
      * @var Field[] $copiedFields
      */
     private $copiedFields;
+
+    /**
+     * The field that is currently highlighted
+     * Array in the format array("x" => x, "y" => y)
+     *
+     * @var array $highLightField
+     */
+    private $highLightField;
 
 
     /**
@@ -102,7 +126,11 @@ class BoardEditor
         $this->selectionCoordinates = array();
         $this->copiedFields = array();
 
+        $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->shellInputReader = new ShellInputReader();
+        $this->shellOutputHelper = new ShellOutputHelper();
+
+        $this->highLightField = array();
     }
 
 
@@ -226,6 +254,21 @@ class BoardEditor
         $this->copiedFields = $_copiedFields;
     }
 
+    /**
+     * Returns the shell output helper.
+     *
+     * @return ShellOutputHelper
+     */
+    public function shellOutputHelper()
+    {
+        return $this->shellOutputHelper;
+    }
+
+    public function setShellInformationFetcher(ShellInformationFetcher $_shellInformationFetcher)
+    {
+        $this->shellInformationFetcher = $_shellInformationFetcher;
+    }
+
 
     /**
      * Launches the board editor session.
@@ -234,11 +277,10 @@ class BoardEditor
      */
     public function launch()
     {
-        $this->output->startOutput(new Getopt(), new Board(0, 0, 0, false));
-        $this->optionHandler->parseInput("help");
-        $this->output->outputBoard($this->board);
-
         $isInputFinished = false;
+        $message = "Say \"options\" to see a list of available options.";
+        $this->outputBoard($message);
+
         while (! $isInputFinished)
         {
             $line = $this->readInput("> ");
@@ -249,9 +291,73 @@ class BoardEditor
             }
             catch (\Exception $_exception)
             {
-                echo "Error while parsing the option: " . $_exception->getMessage() . "\n";
+                $this->outputBoard("Error while parsing the option: " . $_exception->getMessage());
             }
         }
+    }
+
+    /**
+     * Outputs the current board.
+     *
+     * @param String $_message The message that will be displayed below the board
+     */
+    public function outputBoard(String $_message = "")
+    {
+        $this->output->startOutput(new Getopt(), new Board(0, 0, 0, false));
+        $numberOfNewLines = $this->shellInformationFetcher->getNumberOfShellLines() - $this->getNumberOfUsedLines();
+
+        if ($this->highLightField != array())
+        {
+            $this->output->outputBoard($this->board, false, $this->highLightField["x"], $this->highLightField["y"]);
+            $this->highLightField = array();
+        }
+        else $this->output->outputBoard($this->board, false, null, null, $this->selectionCoordinates);
+
+        if ($numberOfNewLines < 0) $numberOfNewLines = 0;
+
+        if ($_message) echo $_message;
+        echo str_repeat("\n", $numberOfNewLines);
+    }
+
+    /**
+     * Returns the number of lines that are used by the output.
+     *
+     * @return int The number of lines that are used by the output
+     */
+    private function getNumberOfUsedLines(): int
+    {
+        $numberOfUsedLines = 0;
+
+        // Determine borders of highlight or selection
+        $hasTopBorder = false;
+        $hasBottomBorder = false;
+
+        if ($this->highLightField != array())
+        {
+            if ($this->highLightField["y"] > 0) $hasTopBorder = true;
+            if ($this->highLightField["y"] < $this->board->height() - 1) $hasBottomBorder = true;
+
+            /*
+             * 1x X-Coordinate number above board
+             */
+            $numberOfUsedLines += 1;
+        }
+        elseif ($this->selectionCoordinates != array())
+        {
+            if ($this->selectionCoordinates["A"]["y"] > 0) $hasTopBorder = true;
+            if ($this->selectionCoordinates["B"]["y"] < $this->board->height() - 1) $hasBottomBorder = true;
+        }
+
+        $numberOfUsedLines += $hasTopBorder + $hasBottomBorder;
+
+        /*
+         * 4x Title
+         * 2x Board border
+         * 2x Board output margin bottom
+         */
+        $numberOfUsedLines += $this->board->height() + 8;
+
+        return $numberOfUsedLines;
     }
 
     /**
@@ -362,13 +468,16 @@ class BoardEditor
     }
 
     /**
-     * Outputs the board editor board.
+     * Sets the high light field.
      *
-     * @param int $_highLightX The X-position of the highlighted field
-     * @param int $_highLightY The Y-Position of the highlighted field
+     * @param int $_x The X-position of the highlighted field
+     * @param int $_y The Y-Position of the highlighted field
      */
-    public function outputBoard(int $_highLightX = null, int $_highLightY = null)
+    public function setHighLightField(int $_x, int $_y)
     {
-        $this->output->outputBoard($this->board, false, $_highLightX, $_highLightY, $this->selectionCoordinates);
+        $this->highLightField = array(
+            "x" => $_x,
+            "y" => $_y
+        );
     }
 }

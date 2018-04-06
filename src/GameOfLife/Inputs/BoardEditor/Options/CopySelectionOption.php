@@ -61,7 +61,7 @@ class CopySelectionOption extends BoardEditorOption
         }
 
         $this->parentBoardEditor->setCopiedFields($copiedFields);
-        echo "Fields successfully copied.\n";
+        $this->parentBoardEditor->outputBoard("Fields successfully copied.");
 
         return false;
     }

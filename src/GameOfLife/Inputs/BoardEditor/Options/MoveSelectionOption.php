@@ -44,6 +44,7 @@ class MoveSelectionOption extends BoardEditorOption
         $this->parentBoardEditor->optionHandler()->parseInput("cut");
         $this->parentBoardEditor->optionHandler()->parseInput("paste");
 
+        $this->parentBoardEditor->outputBoard();
         return false;
     }
 }
