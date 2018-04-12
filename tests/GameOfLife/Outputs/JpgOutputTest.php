@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameLogic;
+use Simulator\GameLogic;
 use Output\JpgOutput;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;

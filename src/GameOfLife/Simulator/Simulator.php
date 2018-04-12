@@ -6,8 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Simulator;
 
+use GameOfLife\Board;
 use OptionHandler\OptionHandler;
 use Input\BaseInput;
 use Output\BaseOutput;
@@ -16,7 +17,7 @@ use Ulrichsg\Getopt;
 /**
  * Wrapper class for the Game Of Life simulation.
  */
-class GameOfLife
+class Simulator
 {
     /**
      * The option list
@@ -62,7 +63,7 @@ class GameOfLife
 
 
     /**
-     * GameOfLife constructor.
+     * Simulator constructor.
      */
     public function __construct()
     {

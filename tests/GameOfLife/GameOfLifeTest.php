@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameOfLife;
+use Simulator\Simulator;
 use Input\TemplateInput;
 use Input\UserInput;
 use Output\ConsoleOutput;
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Rule\Two45Rule;
 
 /**
- * Checks whether the GameOfLife class works as expected.
+ * Checks whether the Simulator class works as expected.
  */
 class GameOfLifeTest extends TestCase
 {
@@ -27,8 +27,8 @@ class GameOfLifeTest extends TestCase
      * @param bool $_expectedReturnValue The expected return value of the initialize() function
      *
      * @dataProvider canBeInitializedProvider()
-     * @covers \GameOfLife\GameOfLife::__construct()
-     * @covers \GameOfLife\GameOfLife::initialize()
+     * @covers \Simulator\Simulator::__construct()
+     * @covers \Simulator\Simulator::initialize()
      *
      * @throws ReflectionException
      */
@@ -70,12 +70,12 @@ class GameOfLifeTest extends TestCase
         // Hide output
         $this->expectOutputRegex("/.*/");
 
-        $gameOfLife = new GameOfLife();
+        $gameOfLife = new Simulator();
 
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $reflectionClass = new ReflectionClass(\GameOfLife\GameOfLife::class);
+        $reflectionClass = new ReflectionClass(\Simulator\Simulator::class);
 
         $reflectionProperty = $reflectionClass->getProperty("optionHandler");
         $reflectionProperty->setAccessible(true);
@@ -134,13 +134,13 @@ class GameOfLifeTest extends TestCase
      *
      * @dataProvider startSimulationProvider()
      *
-     * @covers \GameOfLife\GameOfLife::startSimulation()
+     * @covers \Simulator\Simulator::startSimulation()
      *
      * @throws \Exception
      */
     public function testCanStartSimulation(int $_amountLoops, String $_endLoopMethodName)
     {
-        $gameOfLife = new GameOfLife();
+        $gameOfLife = new Simulator();
 
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
@@ -155,7 +155,7 @@ class GameOfLifeTest extends TestCase
         $input = new TemplateInput();
         $output = new ConsoleOutput();
         $board = new Board(5, 5, 200, true);
-        $gameLogicMock = $this->getMockBuilder(\GameOfLife\GameLogic::class)
+        $gameLogicMock = $this->getMockBuilder(\Simulator\GameLogic::class)
                               ->disableOriginalConstructor()
                               ->getMock();
 

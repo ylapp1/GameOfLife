@@ -11,7 +11,7 @@ use GameOfLife\Field;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \GameOfLife\Field works as expected.
+ * Checks whether \Simulator\Field works as expected.
  */
 class FieldTest extends TestCase
 {

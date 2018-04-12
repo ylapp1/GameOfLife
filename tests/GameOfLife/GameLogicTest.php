@@ -7,20 +7,20 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameLogic;
+use Simulator\GameLogic;
 use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \GameOfLife\GameLogic works as expected.
+ * Checks whether \Simulator\GameLogic works as expected.
  */
 class GameLogicTest extends TestCase
 {
     /**
      * Checks whether the constructor sets the attributes as expected.
      *
-     * @covers \GameOfLife\GameLogic::__construct()
-     * @covers \GameOfLife\GameLogic::rule()
+     * @covers \Simulator\GameLogic::__construct()
+     * @covers \Simulator\GameLogic::rule()
      */
     public function testCanBeConstructed()
     {
@@ -33,12 +33,12 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether getters and setters work as expected.
      *
-     * @covers \GameOfLife\GameLogic::setCurrentBoard()
-     * @covers \GameOfLife\GameLogic::setHistoryOfBoards()
-     * @covers \GameOfLife\GameLogic::currentBoard()
-     * @covers \GameOfLife\GameLogic::historyOfBoards()
-     * @covers \GameOfLife\GameLogic::setRule()
-     * @covers \GameOfLife\GameLogic::rule()
+     * @covers \Simulator\GameLogic::setCurrentBoard()
+     * @covers \Simulator\GameLogic::setHistoryOfBoards()
+     * @covers \Simulator\GameLogic::currentBoard()
+     * @covers \Simulator\GameLogic::historyOfBoards()
+     * @covers \Simulator\GameLogic::setRule()
+     * @covers \Simulator\GameLogic::rule()
      */
     public function testCanSetAttributes()
     {
@@ -60,8 +60,8 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether the calculateNextBoard() function works as expected.
      *
-     * @covers \GameOfLife\GameLogic::addToHistory()
-     * @covers \GameOfLife\GameLogic::calculateNextBoard()
+     * @covers \Simulator\GameLogic::addToHistory()
+     * @covers \Simulator\GameLogic::calculateNextBoard()
      */
     public function testCanCalculateNextBoard()
     {
@@ -95,7 +95,7 @@ class GameLogicTest extends TestCase
      *
      * Places a 3 x 1 Blinker next to the right border of the board and checks the game step calculation results
      *
-     * @covers \GameOfLife\GameLogic::calculateNextBoard()
+     * @covers \Simulator\GameLogic::calculateNextBoard()
      *
      */
     public function testCanChangeBorderType()
@@ -143,9 +143,9 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether loops are successfully detected.
      *
-     * @covers \GameOfLife\GameLogic::addToHistory()
-     * @covers \GameOfLife\GameLogic::calculateNextBoard()
-     * @covers \GameOfLife\GameLogic::isLoopDetected()
+     * @covers \Simulator\GameLogic::addToHistory()
+     * @covers \Simulator\GameLogic::calculateNextBoard()
+     * @covers \Simulator\GameLogic::isLoopDetected()
      */
     public function testCanDetectLoops()
     {
@@ -189,7 +189,7 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether max steps reached can be successfully detected.
      *
-     * @covers \GameOfLife\GameLogic::isMaxStepsReached()
+     * @covers \Simulator\GameLogic::isMaxStepsReached()
      */
     public function testCanDetectMaxStepsReached()
     {
@@ -212,7 +212,7 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether an empty board can be detected by the game logic.
      *
-     * @covers \GameOfLife\GameLogic::isBoardEmpty()
+     * @covers \Simulator\GameLogic::isBoardEmpty()
      */
     public function testCanDetectEmptyBoard()
     {

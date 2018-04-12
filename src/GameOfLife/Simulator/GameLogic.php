@@ -6,8 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Simulator;
 
+use GameOfLife\Board;
+use GameOfLife\Field;
 use Rule\BaseRule;
 
 /**

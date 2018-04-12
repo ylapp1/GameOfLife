@@ -11,7 +11,7 @@ use GameOfLife\Field;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \GameOfLife\Board works as expected.
+ * Checks whether \Simulator\Board works as expected.
  *
  * @covers \GameOfLife\Board
  */

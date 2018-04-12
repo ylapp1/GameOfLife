@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameLogic;
+use Simulator\GameLogic;
 use Output\Helpers\FfmpegHelper;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
@@ -15,7 +15,6 @@ use Output\VideoOutput;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemWriter;
-use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
