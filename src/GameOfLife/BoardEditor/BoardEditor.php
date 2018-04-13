@@ -164,6 +164,16 @@ class BoardEditor
     }
 
     /**
+     * Returns the board history saver.
+     *
+     * @return BoardHistorySaver
+     */
+    public function boardHistorySaver(): BoardHistorySaver
+    {
+        return $this->boardHistorySaver;
+    }
+
+    /**
      * Returns the option handler.
      *
      * @return BoardEditorOptionHandler Option handler
@@ -333,32 +343,6 @@ class BoardEditor
 
         if ($_message) echo $_message;
         echo str_repeat("\n", $numberOfNewLines);
-    }
-
-    /**
-     * Restores the previous board of the history.
-     *
-     * @throws \Exception
-     */
-    public function restorePreviousBoard()
-    {
-        $previousBoard = $this->boardHistorySaver->getPreviousBoard();
-
-        if ($previousBoard == null) throw new \Exception("There is no previous board in the history.");
-        else $this->board->copy($previousBoard);
-    }
-
-    /**
-     * Restores the next board of the history.
-     *
-     * @throws \Exception
-     */
-    public function restoreNextBoard()
-    {
-        $nextBoard = $this->boardHistorySaver->getNextBoard();
-        if ($nextBoard == null) throw new \Exception("There is no next board in the history.");
-
-        $this->board->copy($nextBoard);
     }
 
     /**

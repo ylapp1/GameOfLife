@@ -38,7 +38,10 @@ class RedoOption extends BoardEditorOption
      */
     public function restoreNextBoard()
     {
-        $this->parentBoardEditor->restoreNextBoard();
+        $nextBoard = $this->parentBoardEditor->boardHistorySaver()->getNextBoard();
+        if ($nextBoard == null) throw new \Exception("There is no next board in the history.");
+
+        $this->parentBoardEditor->board()->copy($nextBoard);
         $this->parentBoardEditor->outputBoard("Next board restored.");
 
         return false;
