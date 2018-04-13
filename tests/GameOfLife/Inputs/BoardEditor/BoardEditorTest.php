@@ -118,32 +118,35 @@ class BoardEditorTest extends TestCase
     public function testCanLaunchSession()
     {
         $this->testBoard->resetBoard();
-        $this->boardEditorMock->expects($this->exactly(1))
-            ->method("readInput")
-            ->willReturn("exit");
-        $this->boardEditorMock->expects($this->exactly(1))
-            ->method("addBoardToHistory")
-            ->willReturn(null);
+
+        $boardEditor = new BoardEditor("");
+        $boardEditor->setBoard($this->testBoard);
+
+        $shellInputReaderMock = $this->getMockBuilder(Utils\Shell\ShellInputReader::class)
+                                     ->getMock();
+        $shellInputReaderMock->expects($this->exactly(1))
+                             ->method("readInput")
+                             ->willReturn("exit");
+        setPrivateAttribute($boardEditor, "shellInputReader", $shellInputReaderMock);
+
+        $boardHistorySaverMock = $this->getMockBuilder(GameOfLife\BoardHistorySaver::class)
+                                      ->disableOriginalConstructor()
+                                      ->getMock();
+        $boardHistorySaverMock->expects($this->exactly(1))
+                              ->method("addBoardToHistory")
+                              ->willReturn(null);
+        setPrivateAttribute($boardEditor, "boardHistorySaver", $boardHistorySaverMock);
 
         $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
                                   ->setMethods(array("parseInput"))
                                   ->disableOriginalConstructor()
                                   ->getMock();
+        setPrivateAttribute($boardEditor, "optionHandler", $optionHandlerMock);
 
         $shellInformationFetcherMock = $this->getMockBuilder(ShellInformationFetcher::class)
                                             ->getMock();
+        setPrivateAttribute($boardEditor, "shellInformationFetcher", $shellInformationFetcherMock);
 
-        if ($this->boardEditorMock instanceof BoardEditor)
-        {
-            if ($optionHandlerMock instanceof BoardEditorOptionHandler)
-            {
-                $this->boardEditorMock->setOptionHandler($optionHandlerMock);
-            }
-            if ($shellInformationFetcherMock instanceof ShellInformationFetcher)
-            {
-                $this->boardEditorMock->setShellInformationFetcher($shellInformationFetcherMock);
-            }
-        }
 
         $shellInformationFetcherMock->expects($this->exactly(1))
                                     ->method("getNumberOfShellLines")
@@ -165,7 +168,7 @@ class BoardEditorTest extends TestCase
                           ->withConsecutive(array("exit"))
                           ->willReturn(true);
 
-        if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
+        if ($this->boardEditorMock instanceof BoardEditor) $boardEditor->launch();
     }
 
     /**

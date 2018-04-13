@@ -9,6 +9,7 @@
 namespace Simulator;
 
 use GameOfLife\Board;
+use GameOfLife\BoardHistorySaver;
 use GameOfLife\Field;
 use Rule\BaseRule;
 
@@ -21,18 +22,11 @@ use Rule\BaseRule;
 class GameLogic
 {
     /**
-     * Stores the current fields
-     *
-     * @var String $currentBoard
-     */
-    private $currentBoard = array();
-
-    /**
      * Stores the fields of the last 15 boards of the current simulation
      *
-     * @var String[] $historyOfBoards
+     * @var BoardHistorySaver $boardHistorySaver
      */
-    private $historyOfBoards = array();
+    private $boardHistorySaver;
 
     /**
      * Birth/Death rules for this session
@@ -49,82 +43,8 @@ class GameLogic
      */
     public function __construct(BaseRule $_rule)
     {
-        $this->currentBoard = array();
-        $this->historyOfBoards = array();
+        $this->boardHistorySaver = new BoardHistorySaver(15);
         $this->rule = $_rule;
-    }
-
-
-    /**
-     * Returns the fields of the current board.
-     *
-     * @return String Fields of the current board
-     */
-    public function currentBoard(): String
-    {
-        return $this->currentBoard;
-    }
-
-    /**
-     * Sets the fields of the current board.
-     *
-     * @param String $_currentBoard Fields of the current board
-     */
-    public function setCurrentBoard(String $_currentBoard)
-    {
-        $this->currentBoard = $_currentBoard;
-    }
-
-    /**
-     * Returns the history of boards.
-     *
-     * @return String[] History of boards
-     */
-    public function historyOfBoards(): array
-    {
-        return $this->historyOfBoards;
-    }
-
-    /**
-     * Sets the history of boards.
-     *
-     * @param String[] $_historyOfBoards History of boards
-     */
-    public function setHistoryOfBoards(array $_historyOfBoards)
-    {
-        $this->historyOfBoards = $_historyOfBoards;
-    }
-
-    /**
-     * Returns the birth/death rules for this session.
-     *
-     * @return BaseRule Birth/death rules
-     */
-    public function rule(): BaseRule
-    {
-        return $this->rule;
-    }
-
-    /**
-     * Sets the birth/death rules for this session.
-     *
-     * @param BaseRule $_rule Birth/death rules
-     */
-    public function setRule(BaseRule $_rule)
-    {
-        $this->rule = $_rule;
-    }
-
-
-    /**
-     * Adds a board to the history of boards.
-     *
-     * @param String $_fields The fields that will be added to the history of boards
-     */
-    private function addToHistory(String $_fields)
-    {
-        $this->historyOfBoards[] = $_fields;
-        if (count($this->historyOfBoards) > 15) array_shift($this->historyOfBoards);
     }
 
     /**
@@ -134,7 +54,7 @@ class GameLogic
      */
     public function calculateNextBoard(Board $_board)
     {
-        $this->addToHistory($_board);
+        $this->boardHistorySaver->addBoardToHistory($_board);
 
         /** @var Field[][] $newFields */
         $newFields = $_board->initializeEmptyBoard();
@@ -153,7 +73,6 @@ class GameLogic
 
         $_board->setFields($newFields);
         $_board->setGameStep($_board->gameStep() + 1);
-        $this->currentBoard = (string)$_board;
     }
 
     /**
@@ -186,17 +105,15 @@ class GameLogic
     /**
      * Compares the newest board in the history with up to 15 previous boards.
      *
+     * @param Board $_board The current board
+     *
      * @return bool Indicates whether there's a repeating pattern
      *              True: Repeating pattern detected
      *              False: No repeating pattern detected
      */
-    public function isLoopDetected(): bool
+    public function isLoopDetected(Board $_board): bool
     {
-        foreach ($this->historyOfBoards as $board)
-        {
-            if ($this->currentBoard == $board) return true;
-        }
-
-        return false;
+        if ($this->boardHistorySaver->boardExistsInHistory($_board) !== null) return true;
+        else return false;
     }
 }

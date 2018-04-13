@@ -17,50 +17,8 @@ use PHPUnit\Framework\TestCase;
 class GameLogicTest extends TestCase
 {
     /**
-     * Checks whether the constructor sets the attributes as expected.
-     *
-     * @covers \Simulator\GameLogic::__construct()
-     * @covers \Simulator\GameLogic::rule()
-     */
-    public function testCanBeConstructed()
-    {
-        $rule = new ConwayRule();
-        $gameLogic = new GameLogic($rule);
-
-        $this->assertEquals($rule, $gameLogic->rule());
-    }
-
-    /**
-     * Checks whether getters and setters work as expected.
-     *
-     * @covers \Simulator\GameLogic::setCurrentBoard()
-     * @covers \Simulator\GameLogic::setHistoryOfBoards()
-     * @covers \Simulator\GameLogic::currentBoard()
-     * @covers \Simulator\GameLogic::historyOfBoards()
-     * @covers \Simulator\GameLogic::setRule()
-     * @covers \Simulator\GameLogic::rule()
-     */
-    public function testCanSetAttributes()
-    {
-        $gameLogic = new GameLogic(new ConwayRule());
-
-        $board = new Board(5, 5, 1, true);
-        $fields = (string)$board;
-        $historyTest = array($fields, $fields, $fields, $fields);
-
-        $gameLogic->setCurrentBoard($fields);
-        $gameLogic->setHistoryOfBoards($historyTest);
-        $gameLogic->setRule(new ConwayRule());
-
-        $this->assertEquals($fields, $gameLogic->currentBoard());
-        $this->assertEquals($historyTest, $gameLogic->historyOfBoards());
-        $this->assertEquals(new ConwayRule(), $gameLogic->rule());
-    }
-
-    /**
      * Checks whether the calculateNextBoard() function works as expected.
      *
-     * @covers \Simulator\GameLogic::addToHistory()
      * @covers \Simulator\GameLogic::calculateNextBoard()
      */
     public function testCanCalculateNextBoard()
@@ -86,8 +44,6 @@ class GameLogicTest extends TestCase
         $this->assertTrue($board->getFieldStatus(1, 1));
         $this->assertTrue($board->getFieldStatus(1, 2));
         $this->assertEquals(3, $board->getAmountCellsAlive());
-
-        $this->assertEquals(2, count($gameLogic->historyOfBoards()));
     }
 
     /**
@@ -143,7 +99,6 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether loops are successfully detected.
      *
-     * @covers \Simulator\GameLogic::addToHistory()
      * @covers \Simulator\GameLogic::calculateNextBoard()
      * @covers \Simulator\GameLogic::isLoopDetected()
      */
@@ -158,12 +113,10 @@ class GameLogicTest extends TestCase
         $board->setField(2, 2, true);
 
         $gameLogic = new GameLogic(new ConwayRule());
-        $this->assertFalse($gameLogic->isLoopDetected());
+        $this->assertFalse($gameLogic->isLoopDetected($board));
 
         $gameLogic->calculateNextBoard($board);
-
-        $this->assertTrue($gameLogic->isLoopDetected());
-        $this->assertEquals(1, count($gameLogic->historyOfBoards()));
+        $this->assertTrue($gameLogic->isLoopDetected($board));
 
 
         // Place a 1x3 blinker on the field (blinking tile with conway rules))
@@ -173,17 +126,14 @@ class GameLogicTest extends TestCase
         $board->setField(1, 2, true);
 
         $gameLogic = new GameLogic(new ConwayRule());
-        $this->assertFalse($gameLogic->isLoopDetected());
+
+        $this->assertFalse($gameLogic->isLoopDetected($board));
 
         $gameLogic->calculateNextBoard($board);
-
-        $this->assertFalse($gameLogic->isLoopDetected());
-        $this->assertEquals(1, count($gameLogic->historyOfBoards()));
+        $this->assertFalse($gameLogic->isLoopDetected($board));
 
         $gameLogic->calculateNextBoard($board);
-
-        $this->assertTrue($gameLogic->isLoopDetected());
-        $this->assertEquals(2, count($gameLogic->historyOfBoards()));
+        $this->assertTrue($gameLogic->isLoopDetected($board));
     }
 
     /**

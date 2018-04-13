@@ -10,6 +10,7 @@ namespace BoardEditor;
 
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
+use GameOfLife\BoardHistorySaver;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
@@ -100,19 +101,11 @@ class BoardEditor
     private $highLightField;
 
     /**
-     * The history of boards
-     * Stores the last 15 boards
+     * The board history saver
      *
-     * @var Board[] $historyOfBoards
+     * @var BoardHistorySaver $boardHistorySaver
      */
-    private $historyOfBoards;
-
-    /**
-     * Stores the current board index in the history of boards
-     *
-     * @var int $currentBoard
-     */
-    private $currentBoard;
+    private $boardHistorySaver;
 
 
     /**
@@ -146,8 +139,7 @@ class BoardEditor
         $this->shellOutputHelper = new ShellOutputHelper();
 
         $this->highLightField = array();
-        $this->historyOfBoards = array();
-        $this->currentBoard = -1;
+        $this->boardHistorySaver = new BoardHistorySaver(15, false);
     }
 
 
@@ -300,7 +292,13 @@ class BoardEditor
 
         while (! $isInputFinished)
         {
-            $this->addBoardToHistory($this->board);
+            if ($this->boardHistorySaver->boardExistsInHistory($this->board) === null ||
+                $this->boardHistorySaver->boardExistsInHistory($this->board) < $this->boardHistorySaver->currentBoardIndex())
+            {
+                $this->boardHistorySaver->addBoardToHistory($this->board);
+                echo "I added board to history.";
+            }
+
             $line = $this->readInput("> ");
 
             try
@@ -338,37 +336,16 @@ class BoardEditor
     }
 
     /**
-     * Adds a new board to the history.
-     *
-     * @param Board $_board The board
-     */
-    public function addBoardToHistory(Board $_board)
-    {
-        if (count($this->historyOfBoards) >= 0)
-        {
-            for ($i = 0; $i <= $this->currentBoard; $i++)
-            {
-                if ($_board->equals($this->historyOfBoards[$i])) return;
-            }
-        }
-
-        if ($this->currentBoard == 14) array_shift($this->historyOfBoards);
-        else $this->currentBoard++;
-
-        $this->historyOfBoards[$this->currentBoard] = clone $_board;
-    }
-
-    /**
      * Restores the previous board of the history.
      *
      * @throws \Exception
      */
     public function restorePreviousBoard()
     {
-        if ($this->currentBoard == 0) throw new \Exception("There is no previous board in the history.");
+        $previousBoard = $this->boardHistorySaver->getPreviousBoard();
 
-        $this->currentBoard--;
-        $this->board->copy($this->historyOfBoards[$this->currentBoard]);
+        if ($previousBoard == null) throw new \Exception("There is no previous board in the history.");
+        else $this->board->copy($previousBoard);
     }
 
     /**
@@ -378,13 +355,10 @@ class BoardEditor
      */
     public function restoreNextBoard()
     {
-        if ($this->currentBoard == count($this->historyOfBoards) - 1)
-        {
-            throw new \Exception("There is no next board in the history.");
-        }
+        $nextBoard = $this->boardHistorySaver->getNextBoard();
+        if ($nextBoard == null) throw new \Exception("There is no next board in the history.");
 
-        $this->currentBoard++;
-        $this->board->copy($this->historyOfBoards[$this->currentBoard]);
+        $this->board->copy($nextBoard);
     }
 
     /**

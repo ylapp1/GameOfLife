@@ -213,7 +213,7 @@ class Simulator
     private function getSimulationEndReason(): String
     {
         if ($this->gameLogic->isMaxStepsReached($this->board)) $simulationEndReason = "Max steps reached";
-        elseif ($this->gameLogic->isLoopDetected()) $simulationEndReason = "Loop detected";
+        elseif ($this->gameLogic->isLoopDetected($this->board)) $simulationEndReason = "Loop detected";
         elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
         else $simulationEndReason = "";
 
