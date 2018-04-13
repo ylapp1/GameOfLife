@@ -24,12 +24,14 @@ class SetHeightOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "height";
-        $this->callback = "setHeight";
-        $this->description = "Sets the board height";
-        $this->arguments = array("Height" => "int");
+        parent::__construct(
+            $_parentBoardEditor,
+            "height",
+            array(),
+            "setHeight",
+            "Sets the board height",
+            array("Height" => "int")
+        );
     }
 
     /**

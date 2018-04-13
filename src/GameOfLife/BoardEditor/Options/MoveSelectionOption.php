@@ -23,13 +23,17 @@ class MoveSelectionOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "move";
-        $this->aliases = array("moveSelection");
-        $this->callback = "moveSelection";
-        $this->description = "Moves the selection to another area on the board";
-        $this->arguments = array("X-Coordinate (left border)" => "int", "Y-Coordinate (top border)" => "int");
+        parent::__construct(
+            $_parentBoardEditor,
+            "move",
+            array("moveSelection"),
+            "moveSelection",
+            "Moves the selection to another area on the board",
+            array(
+                "X-Coordinate (left border)" => "int",
+                "Y-Coordinate (top border)" => "int"
+            )
+        );
     }
 
     /**

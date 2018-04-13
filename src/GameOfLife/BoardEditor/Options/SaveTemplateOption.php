@@ -33,12 +33,14 @@ class SaveTemplateOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "save";
-        $this->callback = "saveTemplate";
-        $this->description = "Saves the board as a template";
-        $this->arguments = array("Template name" => "String");
+        parent::__construct(
+            $_parentBoardEditor,
+            "save",
+            array(),
+            "saveTemplate",
+            "Saves the board as a template",
+            array("Template name" => "String")
+        );
 
         $this->templateSaver = new TemplateSaver($this->parentBoardEditor->templateDirectory());
     }

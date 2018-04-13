@@ -24,13 +24,13 @@ class CopySelectionOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "copy";
-        $this->aliases = array("copySelection");
-        $this->callback = "copySelection";
-        $this->description = "Copies the fields in the current selection area";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "copy",
+            array("copySelection"),
+            "copySelection",
+            "Copies the fields in the current selection area"
+        );
     }
 
     /**

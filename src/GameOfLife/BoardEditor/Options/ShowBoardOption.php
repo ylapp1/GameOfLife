@@ -23,13 +23,13 @@ class ShowBoardOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "show";
-        $this->aliases = array("showBoard", "printBoard", "outputBoard");
-        $this->callback = "showBoard";
-        $this->description = "Shows the board";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "show",
+            array("showBoard", "printBoard", "outputBoard"),
+            "showBoard",
+            "Shows the board"
+        );
     }
 
     /**

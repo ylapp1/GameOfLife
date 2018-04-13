@@ -70,10 +70,14 @@ class BoardEditorOption
      *
      * @param BoardEditor $_parentBoardEditor The parent board editor
      */
-    public function __construct(BoardEditor $_parentBoardEditor)
+    public function __construct(BoardEditor $_parentBoardEditor, String $_name, array $_aliases, String $_callback, String $_description, array $_arguments = array())
     {
-        $this->aliases = array();
         $this->parentBoardEditor = $_parentBoardEditor;
+        $this->name = $_name;
+        $this->aliases = $_aliases;
+        $this->callback = $_callback;
+        $this->arguments = $_arguments;
+        $this->description = $_description;
     }
 
 

@@ -23,12 +23,13 @@ class StartOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "start";
-        $this->callback = "startSimulation";
-        $this->description = "Starts the simulation";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "start",
+            array(),
+            "startSimulation",
+            "Starts the simulation"
+        );
     }
 
     /**

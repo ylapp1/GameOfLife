@@ -23,13 +23,13 @@ class CutSelectionOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "cut";
-        $this->aliases = array("cutSelection");
-        $this->callback = "cutSelection";
-        $this->description = "Copies the selection and deletes it from the board";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "cut",
+            array("cutSelection"),
+            "cutSelection",
+            "Copies the selection and deletes it from the board"
+        );
     }
 
     /**

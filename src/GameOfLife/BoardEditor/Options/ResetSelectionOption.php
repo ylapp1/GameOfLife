@@ -23,13 +23,13 @@ class ResetSelectionOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "resetSelection";
-        $this->aliases = array("unsetSelection", "unselect");
-        $this->callback = "resetSelection";
-        $this->description = "Resets the current selection";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "resetSelection",
+            array("unsetSelection", "unselect"),
+            "resetSelection",
+            "Resets the current selection"
+        );
     }
 
     /**

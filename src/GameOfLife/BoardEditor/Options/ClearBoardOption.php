@@ -24,13 +24,13 @@ class ClearBoardOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "clear";
-        $this->aliases = array("clearBoard", "emptyBoard", "reset", "r");
-        $this->callback = "clearBoard";
-        $this->description = "Clears the board";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "clear",
+            array("clearBoard", "emptyBoard", "reset", "r"),
+            "clearBoard",
+            "Clears the board"
+        );
     }
 
     /**

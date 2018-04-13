@@ -40,17 +40,18 @@ class LoadTemplateOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "load";
-        $this->aliases = array("loadTemplate", "placeTemplate");
-        $this->callback = "loadTemplate";
-        $this->description = "Clears the board";
-        $this->arguments = array(
-            "Template name" => "String",
-            "Adjust board dimensions" => "Bool",
-            "X-Coordinate (left border)" => "int|1=bool,1",
-            "Y-Coordinate (top border)" => "int|1=bool,1"
+        parent::__construct(
+            $_parentBoardEditor,
+            "load",
+            array("loadTemplate", "placeTemplate"),
+            "loadTemplate",
+            "Clears the board",
+            array(
+                "Template name" => "String",
+                "Adjust board dimensions" => "Bool",
+                "X-Coordinate (left border)" => "int|1=bool,1",
+                "Y-Coordinate (top border)" => "int|1=bool,1"
+            )
         );
 
         $this->templateLoader = new TemplateLoader($this->parentBoardEditor->templateDirectory());

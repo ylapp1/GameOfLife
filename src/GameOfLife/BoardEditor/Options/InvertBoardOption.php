@@ -24,13 +24,13 @@ class InvertBoardOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "invert";
-        $this->aliases = array("invertBoard");
-        $this->callback = "invert";
-        $this->description = "Inverts the current selection or the whole board";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "invert",
+            array("invertBoard"),
+            "invert",
+            "Inverts the current selection or the whole board"
+        );
     }
 
     /**

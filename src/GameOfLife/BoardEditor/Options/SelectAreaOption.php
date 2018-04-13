@@ -23,17 +23,18 @@ class SelectAreaOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "select";
-        $this->aliases = array("selectArea");
-        $this->callback = "selectArea";
-        $this->description = "Selects an area of fields";
-        $this->arguments = array(
-            "X-Coordinate (left border)" => "int",
-            "Width" => "int",
-            "Y-Coordinate (top border)" => "int",
-            "Height" => "int"
+        parent::__construct(
+            $_parentBoardEditor,
+            "select",
+            array("selectArea"),
+            "selectArea",
+            "Selects an area of fields",
+            array(
+                "X-Coordinate (left border)" => "int",
+                "Width" => "int",
+                "Y-Coordinate (top border)" => "int",
+                "Height" => "int"
+            )
         );
     }
 

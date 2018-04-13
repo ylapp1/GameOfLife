@@ -23,13 +23,13 @@ class ExitOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "exit";
-        $this->aliases = array("quit", "q");
-        $this->callback = "exitBoardEditor";
-        $this->description = "Exit the application";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "exit",
+            array("quit", "q"),
+            "exitBoardEditor",
+            "Exit the application"
+        );
     }
 
     /**

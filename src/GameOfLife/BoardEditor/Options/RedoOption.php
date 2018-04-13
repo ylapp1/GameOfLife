@@ -23,12 +23,13 @@ class RedoOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "redo";
-        $this->callback = "restoreNextBoard";
-        $this->description = "Restores the next board in the history";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "redo",
+            array(),
+            "restoreNextBoard",
+            "Restores the next board in the history"
+        );
     }
 
     /**

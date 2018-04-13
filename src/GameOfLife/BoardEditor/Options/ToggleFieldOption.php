@@ -23,12 +23,16 @@ class ToggleFieldOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "toggle";
-        $this->callback = "toggleField";
-        $this->description = "Toggles a field";
-        $this->arguments = array("X-Coordinate" => "int", "Y-Coordinate" => "int");
+        parent::__construct(
+            $_parentBoardEditor,
+            "toggle",
+            array(),
+            "toggleField",
+            "Toggles a field",
+            array(
+                "X-Coordinate" => "int",
+                "Y-Coordinate" => "int")
+        );
     }
 
     /**

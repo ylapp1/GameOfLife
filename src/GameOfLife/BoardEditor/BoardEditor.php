@@ -306,7 +306,6 @@ class BoardEditor
                 $this->boardHistorySaver->boardExistsInHistory($this->board) < $this->boardHistorySaver->currentBoardIndex())
             {
                 $this->boardHistorySaver->addBoardToHistory($this->board);
-                echo "I added board to history.";
             }
 
             $line = $this->readInput("> ");

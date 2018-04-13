@@ -23,13 +23,13 @@ class HelpOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "help";
-        $this->aliases = array("h");
-        $this->callback = "displayHelp";
-        $this->description = "Display help";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "help",
+            array("h"),
+            "displayHelp",
+            "Display help"
+        );
     }
 
     /**

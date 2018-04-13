@@ -24,12 +24,14 @@ class SetWidthOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "width";
-        $this->callback = "setWidth";
-        $this->description = "Sets the board width";
-        $this->arguments = array("Width" => "int");
+        parent::__construct(
+            $_parentBoardEditor,
+            "width",
+            array(),
+            "setWidth",
+            "Sets the board width",
+            array("Width" => "int")
+        );
     }
 
     /**

@@ -32,13 +32,17 @@ class PasteCopiedFieldsOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "paste";
-        $this->aliases = array("pastedCopiedFields");
-        $this->callback = "pasteCopiedFields";
-        $this->description = "Places the cached copied fields on the board";
-        $this->arguments = array("X-Coordinate (left border)" => "int", "Y-Coordinate (top border)" => "int");
+        parent::__construct(
+            $_parentBoardEditor,
+            "paste",
+            array("pastedCopiedFields"),
+            "pasteCopiedFields",
+            "Places the cached copied fields on the board",
+            array(
+                "X-Coordinate (left border)" => "int",
+                "Y-Coordinate (top border)" => "int"
+            )
+        );
 
         $this->fieldsPlacer = new FieldsPlacer();
     }

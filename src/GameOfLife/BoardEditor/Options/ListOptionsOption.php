@@ -31,12 +31,13 @@ class ListOptionsOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "options";
-        $this->callback = "listOptions";
-        $this->description = "Lists available options";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "options",
+            array(),
+            "listOptions",
+            "Lists available options"
+        );
 
         $this->shellTablePrinter = new ShellTablePrinter();
     }

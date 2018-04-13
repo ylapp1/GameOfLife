@@ -23,12 +23,13 @@ class UndoOption extends BoardEditorOption
      */
     public function __construct(BoardEditor $_parentBoardEditor)
     {
-        parent::__construct($_parentBoardEditor);
-
-        $this->name = "undo";
-        $this->callback = "restoreLastBoard";
-        $this->description = "Restores the previous board in the history";
-        $this->arguments = array();
+        parent::__construct(
+            $_parentBoardEditor,
+            "undo",
+            array(),
+            "restoreLastBoard",
+            "Restores the previous board in the history"
+        );
     }
 
     /**
