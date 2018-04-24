@@ -15,10 +15,10 @@ use GameOfLife\Field;
 /**
  * Inverts the current selection or the whole board.
  */
-class InvertBoardOption extends BoardEditorOption
+class InvertOption extends BoardEditorOption
 {
     /**
-     * InvertBoardOption constructor.
+     * InvertOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor Parent board editor
      */
@@ -27,7 +27,7 @@ class InvertBoardOption extends BoardEditorOption
         parent::__construct(
             $_parentBoardEditor,
             "invert",
-            array("invertBoard"),
+            array(),
             "invert",
             "Inverts the current selection or the whole board"
         );
