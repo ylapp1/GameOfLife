@@ -11,16 +11,20 @@
 
 class ConsoleInformationFetcher
 {
-	public:
-	  ConsoleInformationFetcher();
-	  ConsoleInformationFetcher(HANDLE);
-	  COORD getConsoleCursorPosition();
-	  int getNumberOfConsoleRows();
-	  int getNumberOfConsoleColumns();
-	  int getNumberOfBottomDisplayline();
+    public:
+      // Constructor
+      ConsoleInformationFetcher();
+      ConsoleInformationFetcher(HANDLE);
 
-	private:
-	  HANDLE stdOutputHandle;
+      // Methods
+      COORD getConsoleCursorPosition();
+      int getNumberOfConsoleRows();
+      int getNumberOfConsoleColumns();
+      int getNumberOfBottomDisplayRow();
+
+    private:
+      // Attributes
+      HANDLE stdOutputHandle;
 };
 
 #endif

@@ -12,15 +12,21 @@
 
 class CursorPositioner
 {
-	public:
-		CursorPositioner();
-		CursorPositioner(HANDLE, ConsoleInformationFetcher);
-		void setRelativeConsoleCursorPosition(int, int);
+    public:
+        // Constructor
+        CursorPositioner();
+        CursorPositioner(HANDLE, ConsoleInformationFetcher);
 
-	private:
-		ConsoleInformationFetcher consoleInformationFetcher;
-		HANDLE stdOutputHandle;
-		void setAbsoluteConsoleCursorPosition(int, int);
+        // Methods
+        void setRelativeConsoleCursorPosition(int, int);
+
+    private:
+        // Attributes
+        ConsoleInformationFetcher consoleInformationFetcher;
+        HANDLE stdOutputHandle;
+
+        // Methods
+        void setAbsoluteConsoleCursorPosition(int, int);
 };
 
 #endif

@@ -12,7 +12,7 @@
  */
 ConsoleInformationFetcher::ConsoleInformationFetcher()
 {
-	this->stdOutputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    this->stdOutputHandle = CreateFile("CONOUT$", GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 }
 
 /**
@@ -22,7 +22,7 @@ ConsoleInformationFetcher::ConsoleInformationFetcher()
  */
 ConsoleInformationFetcher::ConsoleInformationFetcher(HANDLE _stdOutputHandle)
 {
-	this->stdOutputHandle = _stdOutputHandle;
+    this->stdOutputHandle = _stdOutputHandle;
 }
 
 /**
@@ -32,13 +32,13 @@ ConsoleInformationFetcher::ConsoleInformationFetcher(HANDLE _stdOutputHandle)
  */
 int ConsoleInformationFetcher::getNumberOfConsoleRows()
 {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	int rows;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int numberOfRows;
 
     GetConsoleScreenBufferInfo(this->stdOutputHandle, &csbi);
-    rows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
-    
-    return rows;
+    numberOfRows = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+
+    return numberOfRows;
 }
 
 /**
@@ -48,13 +48,13 @@ int ConsoleInformationFetcher::getNumberOfConsoleRows()
  */
 int ConsoleInformationFetcher::getNumberOfConsoleColumns()
 {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
-	int columns;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    int numberOfColumns;
 
     GetConsoleScreenBufferInfo(this->stdOutputHandle, &csbi);
-    columns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
-    
-    return columns;
+    numberOfColumns = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+
+    return numberOfColumns;
 }
 
 /**
@@ -62,10 +62,10 @@ int ConsoleInformationFetcher::getNumberOfConsoleColumns()
  *
  * @return int The number of the output row at the bottom of the current window
  */
-int ConsoleInformationFetcher::getNumberOfBottomDisplayline()
+int ConsoleInformationFetcher::getNumberOfBottomDisplayRow()
 {
-	CONSOLE_SCREEN_BUFFER_INFO csbi;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(this->stdOutputHandle, &csbi);
-    
-	return csbi.srWindow.Bottom;
+
+    return csbi.srWindow.Bottom;
 }
