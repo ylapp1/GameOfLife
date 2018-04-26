@@ -39,10 +39,15 @@ class ShellInformationFetcher
     {
         // 29 lines is the default number of lines for cmd
         // 50 lines is the default number of lines for PowerShell
-        // Found no way to determine the number of lines in lines in windows
+        // Found no way to determine the number of lines in lines in windows with pure php
         $numberOfLines = 29;
 
-        if (stristr(PHP_OS, "linux"))
+        if (stristr(PHP_OS, "win"))
+        {
+            $this->shellExecutor->executeCommand(__DIR__ . "\ConsoleHelper.exe printNumberOfRows");
+            $numberOfLines = (int)$this->shellExecutor->output()[0];
+        }
+        elseif (stristr(PHP_OS, "linux"))
         {
             $this->shellExecutor->executeCommand("tput lines");
             $numberOfLines = (int)$this->shellExecutor->output()[0];
@@ -63,12 +68,12 @@ class ShellInformationFetcher
 
         if (stristr(PHP_OS, "win"))
         {
-            // This command will return a wrong number of columns in PowerShell when reducing the width of the window
-            $this->shellExecutor->executeCommand("mode con /status");
-
-            $matches = array();
-            preg_match("/\d{1,3}/", $this->shellExecutor->output()[4], $matches);
-            $numberOfColumns = (int)$matches[0];
+            /*
+             * The custom .exe file is used here instead of "mode con /status" because that command
+             * will return a wrong number of columns in PowerShell when reducing the width of the window
+             */
+            $this->shellExecutor->executeCommand(__DIR__ . "\ConsoleHelper.exe printNumberOfColumns");
+            $numberOfColumns = (int)$this->shellExecutor->output()[0];
         }
         elseif (stristr(PHP_OS, "linux"))
         {

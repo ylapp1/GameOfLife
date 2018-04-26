@@ -91,15 +91,6 @@ class ConsoleOutput extends BaseOutput
         // Subtract 4 new lines because 1x simulation finished, 2x empty lines, 1x Command prompt of shell
         $this->numberOfNewLinesFinishOutput = $this->numberOfNewLinesOutputBoard - 4;
         if ($this->numberOfNewLinesFinishOutput < 0) $this->numberOfNewLinesFinishOutput = 0;
-
-        if (stristr(PHP_OS, "win"))
-        {
-            /*
-             * Printing 10000 new lines in order to move the scroll bar of cmd to the bottom end
-             * This results in a lot less flickering on the screen
-             */
-            echo str_repeat("\n", 10000);
-        }
     }
 
     /**
@@ -119,7 +110,6 @@ class ConsoleOutput extends BaseOutput
 
         if (! $_isFinalBoard)
         {
-            echo str_repeat("\n", $this->numberOfNewLinesOutputBoard);
             usleep($this->sleepTime * 1000);
         }
     }
