@@ -14,13 +14,8 @@ namespace Utils\Shell;
 class ShellOutputHelper
 {
     /**
-     * The fake clear screen for windows (100 new lines)
-     * This means that the functions using clearScreen must also implement the logic to add new lines below the output
-     * to move it back up to the top of the console
      *
-     * @var String $fakeClearScreenForWindows
      */
-    private $fakeClearScreenForWindows;
 
     /**
      * The number of shell columns
@@ -28,6 +23,13 @@ class ShellOutputHelper
      * @var int $numberOfShellColumns
      */
     protected $numberOfShellColumns;
+
+    /**
+     * The shell executor
+     *
+     * @var ShellExecutor $shellExecutor
+     */
+    private $shellExecutor;
 
 
     /**
@@ -37,8 +39,8 @@ class ShellOutputHelper
     {
         $shellInformationFetcher = new ShellInformationFetcher();
 
-        $this->fakeClearScreenForWindows = str_repeat("\n", $shellInformationFetcher->getNumberOfShellLines());
         $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
+        $this->shellExecutor = new ShellExecutor();
 
         unset($shellInformationFetcher);
     }
