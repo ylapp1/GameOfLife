@@ -70,7 +70,7 @@ class VideoOutput extends ImageOutput
         $this->frames = array();
         $this->hasSound = false;
 
-        $this->ffmpegHelper = new FfmpegHelper(PHP_OS);
+        $this->ffmpegHelper = new FfmpegHelper();
     }
 
 

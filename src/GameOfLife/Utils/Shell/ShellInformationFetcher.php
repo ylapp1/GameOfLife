@@ -14,6 +14,27 @@ namespace Utils\Shell;
 class ShellInformationFetcher
 {
     /**
+     * Id of the operating system type "Linux"
+     *
+     * @var int osLinux
+     */
+    const osLinux = 0;
+
+    /**
+     * Id of the operating system type "Windows"
+     *
+     * @var int osWindows
+     */
+    const osWindows = 1;
+
+    /**
+     * Id of the operating system type "Unknown"
+     *
+     * @var int osUnknown
+     */
+    const osUnknown = 2;
+
+    /**
      * The shell executor
      *
      * @var ShellExecutor $shellExecutor
@@ -82,5 +103,17 @@ class ShellInformationFetcher
         }
 
         return $numberOfColumns;
+    }
+
+    /**
+     * Returns the id of the operating system that the script runs on.
+     *
+     * @return int The id of the operating system that the script runs on
+     */
+    public function getOsType(): int
+    {
+        if (stristr(PHP_OS, "linux")) return $this::osLinux;
+        elseif (stristr(PHP_OS, "win")) return $this::osWindows;
+        else return $this::osUnknown;
     }
 }
