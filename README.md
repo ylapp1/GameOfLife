@@ -47,7 +47,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 
 | Option                             | Description                                                                      | Type    | Possible values                                    |
 | ---------------------------------- | -------------------------------------------------------------------------------- | ------- | -------------------------------------------------- |
-| --consoleOutputSleepTime <arg>     | The time for which the program will sleep between each game step in milliseconds | Integer | Default: 50                                       |
+| --consoleOutputStepTime <arg>      | The time for that one game step will be displayed in the console in milliseconds | Integer | Default: 50                                        |
 | --gifOutputSize <arg>              | Size of a cell in pixels for gif outputs                                         | Integer | Default: 100                                       |
 | --gifOutputCellColor <arg>         | Color of a cell for gif outputs                                                  | String  | R,G,B or color names (e.g. "blue", "red", "green") |
 | --gifOutputBackgroundColor <arg>   | Background color for gif outputs                                                 | String  | R,G,B or color names (e.g. "blue", "red", "green") |

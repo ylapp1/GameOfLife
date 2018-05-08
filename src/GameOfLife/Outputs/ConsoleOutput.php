@@ -18,11 +18,11 @@ use Ulrichsg\Getopt;
 class ConsoleOutput extends BaseOutput
 {
     /**
-     * The time for which the program will sleep between each game step in milliseconds
+     * The time for that one game step will be displayed in the console in milliseconds
      *
-     * @var int $sleepTime
+     * @var int $stepTime
      */
-    private $sleepTime;
+    private $stepTime;
 
     /**
      * Contains the number new lines for outputBoard()
@@ -45,7 +45,7 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("CONSOLE OUTPUT");
-        $this->sleepTime = 50;
+        $this->stepTime = 50;
         $this->numberOfNewLinesOutputBoard = 0;
         $this->numberOfNewLinesFinishOutput = 0;
     }
@@ -61,9 +61,9 @@ class ConsoleOutput extends BaseOutput
         $_options->addOptions(array(
                 array(
                     null,
-                    "consoleOutputSleepTime",
+                    "consoleOutputStepTime",
                     Getopt::REQUIRED_ARGUMENT,
-                    "The time for which the program will sleep between each game step in milliseconds (Default: 0.05 seconds)\n"
+                    "The time for that one game step will be displayed in the console in milliseconds (Default: 0.05 seconds)\n"
                 )
             )
         );
@@ -79,9 +79,9 @@ class ConsoleOutput extends BaseOutput
     {
         parent::startOutput($_options, $_board);
 
-        if ($_options->getOption("consoleOutputSleepTime") !== null)
+        if ($_options->getOption("consoleOutputStepTime") !== null)
         {
-            $this->sleepTime = (int)$_options->getOption("consoleOutputSleepTime");
+            $this->stepTime = (int)$_options->getOption("consoleOutputStepTime");
         }
 
         // +8 is because: 2x border, 1x game step, 2x empty line, 3x Title
@@ -101,6 +101,7 @@ class ConsoleOutput extends BaseOutput
     public function outputBoard(Board $_board)
     {
         $startTimeStamp = microtime(true);
+
         $this->shellOutputHelper->clearScreen();
         $this->printTitle();
 
@@ -108,7 +109,11 @@ class ConsoleOutput extends BaseOutput
         echo $this->shellOutputHelper->getCenteredOutputString($gameStepString);
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
-            usleep($this->sleepTime * 1000);
+        $secondsNeeded = microtime(true) - $startTimeStamp;
+        $microsecondsNeeded = ceil(fmod($secondsNeeded, 1) * 1000000);
+        $remainingSleepTimeInMilliseconds = ($this->stepTime * 1000) - $microsecondsNeeded;
+
+        if ($remainingSleepTimeInMilliseconds > 0) usleep($remainingSleepTimeInMilliseconds);
     }
 
     /**
