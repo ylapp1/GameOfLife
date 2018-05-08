@@ -14,20 +14,18 @@ namespace Utils\Shell;
 class ShellOutputHelper
 {
     /**
-     * The fake clear screen for windows (100 new lines)
-     * This means that the functions using clearScreen must also implement the logic to add new lines below the output
-     * to move it back up to the top of the console
-     *
-     * @var String $fakeClearScreenForWindows
-     */
-    private $fakeClearScreenForWindows;
-
-    /**
      * The number of shell columns
      *
      * @var int $numberOfShellColumns
      */
     protected $numberOfShellColumns;
+
+    /**
+     * The shell executor
+     *
+     * @var ShellExecutor $shellExecutor
+     */
+    private $shellExecutor;
 
 
     /**
@@ -37,8 +35,8 @@ class ShellOutputHelper
     {
         $shellInformationFetcher = new ShellInformationFetcher();
 
-        $this->fakeClearScreenForWindows = str_repeat("\n", $shellInformationFetcher->getNumberOfShellLines());
         $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
+        $this->shellExecutor = new ShellExecutor();
 
         unset($shellInformationFetcher);
     }
@@ -50,7 +48,19 @@ class ShellOutputHelper
     public function clearScreen()
     {
         if (stristr(PHP_OS, "linux")) echo "\e[1;1H \n";
-        elseif(stristr(PHP_OS, "win")) echo $this->fakeClearScreenForWindows;
+        elseif(stristr(PHP_OS, "win"))
+        {
+            /*
+             * A pure php way to clear the screen would be to add 10000 new lines at the beginning of
+             * the simulation in order to move the scroll bar in cmd to the bottom.
+             * Then with each clear screen call one screen would be filled with empty lines in order to move the previous
+             * board away from the visible output.
+             *
+             * This variant however behaves exactly like the Linux version and does not fill the output buffer with
+             * unnecessary lines.
+             */
+            $this->shellExecutor->executeCommand(__DIR__ . "\ConsoleHelper.exe setCursor 0 2");
+        }
     }
 
     /**

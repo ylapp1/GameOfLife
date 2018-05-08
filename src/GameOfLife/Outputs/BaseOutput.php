@@ -88,7 +88,7 @@ class BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
+        echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
         $this->shellOutputHelper->clearScreen();
         $this->printTitle();
     }
