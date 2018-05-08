@@ -40,8 +40,6 @@ class BoardEditorOutput extends ConsoleOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-
-        if (stristr(PHP_OS, "win")) $this->printTitle();
     }
 
     /**
