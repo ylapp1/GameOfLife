@@ -68,7 +68,7 @@ class UserInput extends BaseInput
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
-        if ($_options->getOption("edit") !== null)
+        if ($_options->getOption("edit") !== null || $_options->getOption("template") !== null)
         {
             $templateInput = new TemplateInput($this->templatesBaseDirectory);
             $templateInput->fillBoard($_board, $_options);
