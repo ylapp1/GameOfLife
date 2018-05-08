@@ -97,10 +97,10 @@ class ConsoleOutput extends BaseOutput
      * Outputs one game step.
      *
      * @param Board $_board Current board
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard)
+    public function outputBoard(Board $_board)
     {
+        $startTimeStamp = microtime(true);
         $this->shellOutputHelper->clearScreen();
         $this->printTitle();
 
@@ -108,10 +108,7 @@ class ConsoleOutput extends BaseOutput
         echo $this->shellOutputHelper->getCenteredOutputString($gameStepString);
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 
-        if (! $_isFinalBoard)
-        {
             usleep($this->sleepTime * 1000);
-        }
     }
 
     /**

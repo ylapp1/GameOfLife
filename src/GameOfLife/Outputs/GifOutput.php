@@ -129,9 +129,8 @@ class GifOutput extends ImageOutput
      * Creates a single Gif file for the current game step.
      *
      * @param Board $_board The board which will be output
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard)
+    public function outputBoard(Board $_board)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
 

@@ -78,7 +78,7 @@ class ConsoleOutputTest extends TestCase
         $outputString = "/ *" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
-        $this->output->outputBoard($this->board, false);
+        $this->output->outputBoard($this->board);
     }
 
     /**

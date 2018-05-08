@@ -333,10 +333,10 @@ class BoardEditor
 
         if ($this->highLightField != array())
         {
-            $this->output->outputBoard($this->board, false, $this->highLightField["x"], $this->highLightField["y"]);
+            $this->output->outputBoard($this->board, $this->highLightField["x"], $this->highLightField["y"]);
             $this->highLightField = array();
         }
-        else $this->output->outputBoard($this->board, false, null, null, $this->selectionCoordinates);
+        else $this->output->outputBoard($this->board, null, null, $this->selectionCoordinates);
 
         if ($numberOfNewLines < 0) $numberOfNewLines = 0;
 

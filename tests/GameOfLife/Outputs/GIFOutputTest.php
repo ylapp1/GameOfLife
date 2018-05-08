@@ -168,7 +168,7 @@ class GIFOutputTest extends TestCase
         for ($i = 0; $i < 10; $i++)
         {
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
-            $this->output->outputBoard($this->board, false);
+            $this->output->outputBoard($this->board);
             $gameLogic->calculateNextBoard($this->board);
             $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
         }

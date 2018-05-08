@@ -97,11 +97,10 @@ class BaseOutput
      * Output one game step.
      *
      * @param Board $_board Current board
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      *
      * @codeCoverageIgnore
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard)
+    public function outputBoard(Board $_board)
     {
     }
 

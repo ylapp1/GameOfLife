@@ -188,7 +188,7 @@ class Simulator
         do
         {
             $isFinalBoard = $this->getSimulationEndReason();
-            $this->output->outputBoard($this->board, $isFinalBoard);
+            $this->output->outputBoard($this->board);
             if ($isFinalBoard) break;
 
             $this->gameLogic->calculateNextBoard($this->board);

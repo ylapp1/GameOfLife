@@ -44,9 +44,8 @@ class PngOutput extends ImageOutput
      * Outputs one game step.
      *
      * @param Board $_board Current board
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard)
+    public function outputBoard(Board $_board)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
         $image = $this->imageCreator->createImage($_board);
