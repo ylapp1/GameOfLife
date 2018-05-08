@@ -14,10 +14,6 @@ namespace Utils\Shell;
 class ShellOutputHelper
 {
     /**
-     *
-     */
-
-    /**
      * The number of shell columns
      *
      * @var int $numberOfShellColumns
