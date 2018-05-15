@@ -104,9 +104,11 @@ Additional ideas for future versions
 ------------------------------------
 
 * HTMLOutput
-  * Creates html files for each board with a navigation bar and an index.html file
-  * Each board is represented by a table
+  - Creates html files for each board with a navigation bar and an index.html file
+  - Each board is represented by a table
 
 * Multiple rule worlds at once that influence each others boards
-  * Boards are calculated from top to bottom and left to right
-  * Bordering board fields will be used in the cell state calculation
+  - Boards are calculated from top to bottom and left to right
+  - Bordering board fields will be used in the cell state calculation
+
+* Add other field shapes (Triangle, Pentagon, Hexagon, etc.)
