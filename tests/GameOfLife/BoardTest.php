@@ -23,7 +23,7 @@ class BoardTest extends TestCase
     // Called before and after each test
     protected function setUp()
     {
-        $this->board = new Board(20, 1, false);
+        $this->board = new Board(20, 17, false);
     }
 
     protected function tearDown()

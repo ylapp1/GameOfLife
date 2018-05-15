@@ -151,8 +151,6 @@ class OptionParserTest extends TestCase
                     array("width", "1"),
                     array("height", "2"),
                     array("height", "2"),
-                    array("maxSteps", "15"),
-                    array("maxSteps", "15"),
                     array("border", "solid"),
                     array("border", "solid")
                 ),
@@ -164,8 +162,6 @@ class OptionParserTest extends TestCase
                     array("width", "5"),
                     array("height", "18"),
                     array("height", "18"),
-                    array("maxSteps", "200"),
-                    array("maxSteps", "200"),
                     array("border", "passthrough"),
                     array("border", "passthrough")
                 ),
@@ -177,8 +173,6 @@ class OptionParserTest extends TestCase
                     array("width", "19"),
                     array("height", "13"),
                     array("height", "13"),
-                    array("maxSteps", "7"),
-                    array("maxSteps", "7"),
                     array("border", "glass"),
                     array("border", "glass")
                 ),
@@ -188,7 +182,6 @@ class OptionParserTest extends TestCase
                 array(
                     array("width", null),
                     array("height", null),
-                    array("maxSteps", null),
                     array("border", null)
                 ),
                 new Board(20, 10, true)

@@ -83,10 +83,10 @@ class ToggleFieldOptionTest extends TestCase
             if ($_expectedErrorMessage == null)
             {
                 $boardMock->expects($this->exactly(1))
-                          ->method("getFieldStatus")
+                          ->method("getFieldState")
                           ->willReturn(false);
                 $boardMock->expects($this->exactly(1))
-                          ->method("setField")
+                          ->method("setFieldState")
                           ->with((int)$_x, (int)$_y, true);
 
                 $boardEditorMock->expects($this->exactly(1))

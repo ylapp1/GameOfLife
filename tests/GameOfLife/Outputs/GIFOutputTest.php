@@ -32,6 +32,9 @@ class GIFOutputTest extends TestCase
     /** @var string */
     private $outputDirectory = __DIR__ . "/../GifOutputTest/";
 
+    /**
+     * @throws Exception
+     */
     protected function setUp()
     {
         $this->output = new GifOutput();
@@ -162,17 +165,17 @@ class GIFOutputTest extends TestCase
      */
     public function testCanCreateGif()
     {
-        $gameLogic = new GameLogic(new ConwayRule(), 1);
+        $gameLogic = new GameLogic(new ConwayRule(), 10);
         $this->expectOutputRegex("/.*Starting GIF Output...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
         // Create gif frames and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
-            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
+            $this->expectOutputRegex("/.*Gamestep: " . $gameLogic->gameStep() . ".*/");
             $this->output->outputBoard($this->board, $gameLogic->gameStep());
             $gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
+            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . ($gameLogic->gameStep() - 1) . ".gif"));
         }
 
         // Check whether finishOutput creates the final gif

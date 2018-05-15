@@ -216,10 +216,10 @@ class VideoOutputTest extends TestCase
         // Create video frames and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
-            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
+            $this->expectOutputRegex("/.*Gamestep: " . $this->gameLogic->gameStep() . ".*/");
             $this->output->outputBoard($this->board, $this->gameLogic->gameStep());
             $this->gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . ($this->gameLogic->gameStep() - 1) . ".png"));
         }
 
         // Check whether finishOutput creates the final gif

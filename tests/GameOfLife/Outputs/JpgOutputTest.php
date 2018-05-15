@@ -148,10 +148,10 @@ class JpgOutputTest extends TestCase
         // Create pngs and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
-            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
+            $this->expectOutputRegex("/.*Gamestep: " . $gameLogic->gameStep() . ".*/");
             $this->output->outputBoard($this->board, $gameLogic->gameStep());
             $gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1/" . $i . ".jpg"));
+            $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1/" . ($gameLogic->gameStep() - 1) . ".jpg"));
         }
     }
 

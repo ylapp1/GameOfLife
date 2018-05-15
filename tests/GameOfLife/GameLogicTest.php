@@ -150,7 +150,7 @@ class GameLogicTest extends TestCase
         $this->assertFalse($gameLogic->isMaxStepsReached());
 
         // Equal to max steps
-        $gameLogic->setGameStep(2);
+        $gameLogic->setGameStep(3);
         $this->assertTrue($gameLogic->isMaxStepsReached());
 
         // Greater than max steps

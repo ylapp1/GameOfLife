@@ -148,10 +148,10 @@ class PNGOutputTest extends TestCase
         // Create pngs and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
-            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
+            $this->expectOutputRegex("/.*Gamestep: " . $gameLogic->gameStep() . ".*/");
             $this->output->outputBoard($this->board, $gameLogic->gameStep());
             $gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1/" . ($gameLogic->gameStep() - 1) . ".png"));
         }
     }
 
