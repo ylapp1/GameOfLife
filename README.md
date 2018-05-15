@@ -1,11 +1,15 @@
-[![Build Status](https://travis-ci.org/ylapp1/GameOfLife.svg?branch=feature%2Fphase-6)](https://travis-ci.org/ylapp1/GameOfLife)
+GameOfLife
+==========
 
-# GameOfLife
+[![Build Status](https://travis-ci.org/ylapp1/GameOfLife.svg?branch=feature%2Fphase-6)](https://travis-ci.org/ylapp1/GameOfLife)
 
 Usage: gameoflife.php [options] [operands]  <br /><br />
 
 
-## Options
+Options
+-------
+
+### General ###
 
 | Option              | Description                                     | Type    | Possible values                                                  |
 | ------------------- | ----------------------------------------------- | ------- | ---------------------------------------------------------------- |
@@ -20,7 +24,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | -h, --help          | Show help                                       | -       | -                                                                |
 
 
-## Input options
+### Input options ###
 
 | Option                | Description                                       | Type    | Possible values             |
 | --------------------- | ------------------------------------------------- | ------- | --------------------------- |
@@ -43,7 +47,7 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --edit                | Edit a template selected with --template          | -       | -                           |
 
 
-## Output options
+### Output options ###
 
 | Option                             | Description                                                                      | Type    | Possible values                                    |
 | ---------------------------------- | -------------------------------------------------------------------------------- | ------- | -------------------------------------------------- |
@@ -69,7 +73,8 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --videoOutputAddSound              | Add sound to the video                                                           | -       | -                                                  |
 
 
-## Rule options
+### Rule options ###
+
 | Option                 | Description                                                            | Type   | Possible values                                                    |
 | -----------------------| ---------------------------------------------------------------------- | ------ | ------------------------------------------------------------------ |
 | --antiRules            | Converts the selected rules to anti rules                              | -      | -                                                                  |
@@ -78,23 +83,25 @@ Usage: gameoflife.php [options] [operands]  <br /><br />
 | --rulesStayAlive <arg> | The amounts of cells which will keep a living cell alive               | String | numeric string                                                     |
 
 
-# Set up a development environment
+Set up a development environment
+--------------------------------
 
-## Linux version
+### Linux version ###
 1. Download and install vagrant and virtualbox
 2. Clone this repository and navigate to the repository folder in a console
 3. Type ````vagrant up```` to initialize the vagrant box
 4. Type ````vagrant ssh```` to connect to the vagrant box and navigate to ````/vagrant````
 5. Type ````composer install```` to install the dependencies for this project
 
-## Windows version
+### Windows version ###
 1. Install php and composer
 2. Clone this repository and navigate to the repository folder in a console
 3. Type ````composer install```` to install the dependencies for this project
 4. Download ffmpeg and extract it to ````GameOfLife/Tools/````
 
 
-# Additional ideas for future versions
+Additional ideas for future versions
+------------------------------------
 
 * HTMLOutput
   * Creates html files for each board with a navigation bar and an index.html file
