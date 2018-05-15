@@ -14,6 +14,8 @@ namespace GameOfLife;
  */
 class Board
 {
+    // Attributes
+
     /**
      * Stores the fields of the current game step
      *
@@ -46,6 +48,8 @@ class Board
     private $width;
 
 
+    // Magic Methods
+
     /**
      * Board constructor.
      *
@@ -60,7 +64,6 @@ class Board
         $this->hasBorder = $_hasBorder;
         $this->height = $_height;
         $this->width = $_width;
-
         $this->fields = $this->generateFieldsList(false);
     }
 
@@ -238,6 +241,8 @@ class Board
         $this->width = $_width;
     }
 
+
+    // Class Methods
 
     // Get information about the fields
 

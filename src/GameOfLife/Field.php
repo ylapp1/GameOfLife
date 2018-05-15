@@ -13,6 +13,8 @@ namespace GameOfLife;
  */
 class Field
 {
+    // Attributes
+
     /**
      * The X-coordinate of the field
      *
@@ -45,6 +47,8 @@ class Field
     private $parentBoard;
 
 
+    // Magic Methods
+
     /**
      * Field constructor.
      *
@@ -61,6 +65,8 @@ class Field
         $this->parentBoard = $_parentBoard;
     }
 
+
+    // Getters and Setters
 
     /**
      * Returns the X-coordinate of the field.
@@ -123,7 +129,7 @@ class Field
     }
 
     /**
-     * Sets the board to which the field belongs.
+     * Returns the board to which the field belongs.
      *
      * @return Board The board to which the field belongs
      */
@@ -133,7 +139,7 @@ class Field
     }
 
     /**
-     * Returns the board to which the field belongs.
+     * Sets the board to which the field belongs.
      *
      * @param Board $_parentBoard The board to which the field belongs
      */
@@ -173,6 +179,9 @@ class Field
         $this->value = ! $this->value;
     }
 
+
+    // Class Methods
+
     /**
      * Calculates the number of living neighbor cells.
      *
@@ -180,13 +189,12 @@ class Field
      */
     public function numberOfLivingNeighbors(): int
     {
-        /** @var Field[] $neighbors */
-        $neighbors = $this->parentBoard->getNeighborsOfField($this);
+        $neighborFields = $this->parentBoard->getNeighborsOfField($this);
         $numberOfLivingNeighbors = 0;
 
-        foreach ($neighbors as $neighbor)
+        foreach ($neighborFields as $neighborField)
         {
-            if ($neighbor->isAlive()) $numberOfLivingNeighbors++;
+            if ($neighborField->isAlive()) $numberOfLivingNeighbors++;
         }
 
         return $numberOfLivingNeighbors;
@@ -199,13 +207,12 @@ class Field
      */
     public function numberOfDeadNeighbors(): int
     {
-        /** @var Field[] $neighbors */
-        $neighbors = $this->parentBoard->getNeighborsOfField($this);
+        $neighborFields = $this->parentBoard->getNeighborsOfField($this);
         $numberOfDeadNeighbors = 0;
 
-        foreach ($neighbors as $neighbor)
+        foreach ($neighborFields as $neighborField)
         {
-            if ($neighbor->isDead()) $numberOfDeadNeighbors++;
+            if ($neighborField->isDead()) $numberOfDeadNeighbors++;
         }
 
         return $numberOfDeadNeighbors;
@@ -221,10 +228,16 @@ class Field
     {
         if ($this->parentBoard->hasBorder())
         {
+            /*
+             * This calculation assumes that all of the fields are squares of equal size
+             * in a grid of rows and columns with the same number of fields per row and column.
+             */
+            $numberOfBorderingFieldsPerField = 8;
+
             $neighbors = $this->parentBoard->getNeighborsOfField($this);
             $numberOfNeighbors = count($neighbors);
 
-            return 8 - $numberOfNeighbors;
+            return $numberOfBorderingFieldsPerField - $numberOfNeighbors;
         }
         else return 0;
     }
