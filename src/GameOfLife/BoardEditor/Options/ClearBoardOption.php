@@ -43,7 +43,7 @@ class ClearBoardOption extends BoardEditorOption
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
 
         if ($selectionCoordinates != array()) $this->clearSelection($selectionCoordinates);
-        else $this->parentBoardEditor->board()->resetBoard();
+        else $this->parentBoardEditor->board()->resetFields();
 
         $this->parentBoardEditor->outputBoard();
         return false;

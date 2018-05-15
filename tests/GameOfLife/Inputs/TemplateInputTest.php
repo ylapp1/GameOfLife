@@ -35,7 +35,7 @@ class TemplateInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new TemplateInput($this->testTemplateDirectory);
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -263,7 +263,7 @@ class TemplateInputTest extends TestCase
     {
         $this->board->setWidth(10);
         $this->board->setWidth(10);
-        $this->board->resetBoard();
+        $this->board->resetFields();
 
         $expectedAmountGetOptionCalls = 8;
         if ($_expectedString) $expectedAmountGetOptionCalls = 7;
@@ -290,13 +290,13 @@ class TemplateInputTest extends TestCase
 
         if ($_expectedString === null)
         {
-            $this->assertEquals(1, $this->board->getAmountCellsAlive());
-            $this->assertTrue($this->board->getFieldStatus($_posX, $_posY));
+            $this->assertEquals(1, $this->board->getNumberOfAliveFields());
+            $this->assertTrue($this->board->getFieldState($_posX, $_posY));
             $this->assertFalse($exceptionOccurred);
         }
         else
         {
-            $this->assertEquals(0, $this->board->getAmountCellsAlive());
+            $this->assertEquals(0, $this->board->getNumberOfAliveFields());
             $this->assertTrue($exceptionOccurred);
         }
     }
@@ -336,11 +336,11 @@ class TemplateInputTest extends TestCase
             )
             ->willReturn(null, null, null, 5, 5, 5, 3, 3, null, null, null);
 
-        $board = new Board(10, 8, 5, true);
+        $board = new Board(10, 8, true);
 
         if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
 
-        $this->assertTrue($board->getFieldStatus(5, 3));
+        $this->assertTrue($board->getFieldState(5, 3));
     }
 
     /**
@@ -360,11 +360,11 @@ class TemplateInputTest extends TestCase
                     ->withConsecutive(array("template"), array("list-templates"), array("input"), array("input"), array("input"))
                     ->willReturn(null, null, "test", "test", "test");
 
-        $board = new Board(10, 8, 5, true);
+        $board = new Board(10, 8, true);
 
         if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
 
-        $this->assertGreaterThanOrEqual(0.15, $board->getFillPercentage());
-        $this->assertLessThanOrEqual(0.70, $board->getFillPercentage());
+        $this->assertGreaterThanOrEqual(0.15, $board->getPercentageOfAliveFields());
+        $this->assertLessThanOrEqual(0.70, $board->getPercentageOfAliveFields());
     }
 }

@@ -237,21 +237,22 @@ class VideoOutput extends ImageOutput
      * Creates PNG files which will later be combined to a video.
      *
      * @param Board $_board The board from which the ImageCreator will create an image
+     * @param int $_gameStep The current game step
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
+        echo "\rGamestep: " . $_gameStep;
 
         $image = $this->imageCreator->createImage($_board);
 
-        $fileName = $_board->gameStep() . ".png";
+        $fileName = $_gameStep . ".png";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);
 
         $this->frames[] = $filePath;
-        $this->fillPercentages[] = $_board->getFillpercentage();
+        $this->fillPercentages[] = $_board->getPercentageOfAliveFields();
     }
 
     /**

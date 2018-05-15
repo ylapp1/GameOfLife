@@ -8,7 +8,6 @@
 
 use GameOfLife\Board;
 use Output\ConsoleOutput;
-use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -25,7 +24,7 @@ class ConsoleOutputTest extends TestCase
     {
         $this->output = new ConsoleOutput();
 
-        $this->board = new Board(2, 2, 50, true);
+        $this->board = new Board(2, 2, true);
     }
 
     protected function tearDown()
@@ -78,7 +77,7 @@ class ConsoleOutputTest extends TestCase
         $outputString = "/ *" . $expectedPadding . $gameStepString . ".*" . $board . "/";
 
         $this->expectOutputRegex($outputString);
-        $this->output->outputBoard($this->board);
+        $this->output->outputBoard($this->board, 1);
     }
 
     /**

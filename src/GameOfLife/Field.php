@@ -166,6 +166,14 @@ class Field
     }
 
     /**
+     * Inverts the fields value.
+     */
+    public function invertValue()
+    {
+        $this->value = ! $this->value;
+    }
+
+    /**
      * Calculates the number of living neighbor cells.
      *
      * @return int The number of living neighbor cells

@@ -28,7 +28,7 @@ class ImageCreatorTest extends TestCase
 
     protected function setUp()
     {
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
 
         $colorBlack = new ImageColor(0, 0, 0);
         $colorWhite = new ImageColor(255, 255, 255);

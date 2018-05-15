@@ -97,10 +97,11 @@ class BaseOutput
      * Output one game step.
      *
      * @param Board $_board Current board
+     * @param int $_gameStep The current game step
      *
      * @codeCoverageIgnore
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
     }
 

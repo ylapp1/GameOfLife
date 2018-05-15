@@ -15,6 +15,7 @@ use Output\BaseOutput;
 use Output\ConsoleOutput;
 use Rule\BaseRule;
 use Rule\ConwayRule;
+use Simulator\GameLogic;
 use Ulrichsg\Getopt;
 
 /**
@@ -88,9 +89,6 @@ class OptionParser
         if ($_options->getOption("height") !== null) $height = (int)$_options->getOption("height");
         else $height = 10;
 
-        if ($_options->getOption("maxSteps") !== null) $maxSteps = (int)$_options->getOption("maxSteps");
-        else $maxSteps = 50;
-
         if ($_options->getOption("border") !== null)
         {
             $borderType = $_options->getOption("border");
@@ -100,7 +98,26 @@ class OptionParser
         }
         else $hasBorder = true;
 
-        return new Board($width, $height, $maxSteps, $hasBorder);
+        return new Board($width, $height, $hasBorder);
+    }
+
+    /**
+     * Parses the game logic options and returns the GameLogic object.
+     *
+     * @param Getopt $_options The option list
+     * @param BaseRule $_rule The rule
+     *
+     * @return GameLogic The game logic
+     */
+    public function parseGameLogicOptions(Getopt $_options, BaseRule $_rule): GameLogic
+    {
+        // Fetch GameLogic options
+        if ($_options->getOption("maxSteps") !== null) $maxSteps = (int)$_options->getOption("maxSteps");
+        else $maxSteps = 50;
+
+        $gameLogic = new GameLogic($_rule, $maxSteps);
+
+        return $gameLogic;
     }
 
     /**

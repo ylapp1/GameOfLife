@@ -152,7 +152,7 @@ class Simulator
             return false;
         }
 
-        $this->gameLogic = new GameLogic($rule);
+        $this->gameLogic = $this->optionHandler->optionParser()->parseGameLogicOptions($this->options, $rule);
 
         return true;
     }
@@ -188,7 +188,7 @@ class Simulator
         do
         {
             $isFinalBoard = $this->getSimulationEndReason();
-            $this->output->outputBoard($this->board);
+            $this->output->outputBoard($this->board, $this->gameLogic->gameStep());
             if ($isFinalBoard) break;
 
             $this->gameLogic->calculateNextBoard($this->board);
@@ -212,7 +212,7 @@ class Simulator
      */
     private function getSimulationEndReason(): String
     {
-        if ($this->gameLogic->isMaxStepsReached($this->board)) $simulationEndReason = "Max steps reached";
+        if ($this->gameLogic->isMaxStepsReached()) $simulationEndReason = "Max steps reached";
         elseif ($this->gameLogic->isLoopDetected($this->board)) $simulationEndReason = "Loop detected";
         elseif ($this->gameLogic->isBoardEmpty($this->board)) $simulationEndReason = "All cells are dead";
         else $simulationEndReason = "";

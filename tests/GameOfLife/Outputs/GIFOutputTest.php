@@ -39,7 +39,7 @@ class GIFOutputTest extends TestCase
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemWriter();
 
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -140,6 +140,8 @@ class GIFOutputTest extends TestCase
 
     /**
      * @covers \Output\GifOutput::startOutput()
+     *
+     * @throws \Exception
      */
     public function testCanCreateOutputDirectory()
     {
@@ -160,7 +162,7 @@ class GIFOutputTest extends TestCase
      */
     public function testCanCreateGif()
     {
-        $gameLogic = new GameLogic(new ConwayRule());
+        $gameLogic = new GameLogic(new ConwayRule(), 1);
         $this->expectOutputRegex("/.*Starting GIF Output...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
@@ -168,7 +170,7 @@ class GIFOutputTest extends TestCase
         for ($i = 0; $i < 10; $i++)
         {
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
-            $this->output->outputBoard($this->board);
+            $this->output->outputBoard($this->board, $gameLogic->gameStep());
             $gameLogic->calculateNextBoard($this->board);
             $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".gif"));
         }

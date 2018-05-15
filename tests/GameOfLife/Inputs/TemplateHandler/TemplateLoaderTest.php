@@ -6,11 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
 use GameOfLife\Field;
 use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
-use Utils\FileSystem\FileSystemReader;
 use Utils\FileSystem\FileSystemWriter;
 
 /**
@@ -60,8 +58,6 @@ class TemplateLoaderTest extends TestCase
      */
     public function testCanLoadTemplate()
     {
-        $board = new Board(5, 5, 1, true);
-
         // Official template
         /** @var Field[][] $templateFields */
         $templateFields = $this->templateLoader->loadTemplate("unittest");

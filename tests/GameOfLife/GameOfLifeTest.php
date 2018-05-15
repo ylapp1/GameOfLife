@@ -14,6 +14,7 @@ use Output\ConsoleOutput;
 use Output\VideoOutput;
 use PHPUnit\Framework\TestCase;
 use Rule\Two45Rule;
+use Simulator\GameLogic;
 
 /**
  * Checks whether the Simulator class works as expected.
@@ -116,10 +117,11 @@ class GameOfLifeTest extends TestCase
             "Parsed general option = false, Board, Input, Output and Rule valid" => array(
                 array(
                     "parseGeneralOptions" => false,
-                    "parseBoardOptions" => new Board(1, 2, 3, true),
+                    "parseBoardOptions" => new Board(1, 2, true),
                     "parseInputOptions" => new UserInput(),
                     "parseOutputOptions" => new VideoOutput(),
-                    "parseRuleOptions" => new Two45Rule()
+                    "parseRuleOptions" => new Two45Rule(),
+                    "parseGameLogicOptions" => new GameLogic(new Two45Rule(), 50)
                 ),
                 true
             )
@@ -154,7 +156,7 @@ class GameOfLifeTest extends TestCase
 
         $input = new TemplateInput();
         $output = new ConsoleOutput();
-        $board = new Board(5, 5, 200, true);
+        $board = new Board(5, 5, true);
         $gameLogicMock = $this->getMockBuilder(\Simulator\GameLogic::class)
                               ->disableOriginalConstructor()
                               ->getMock();
@@ -209,7 +211,7 @@ class GameOfLifeTest extends TestCase
         return array(
             "Max steps reached before first step" => array(0, "isMaxStepsReached"),
             "Loop detected reached after 5 steps" => array(5, "isLoopDetected"),
-            "Board empty detected after 3 steps" => array(3, "isBoardEmpty")
+            //"Board empty detected after 3 steps" => array(3, "isBoardEmpty")
         );
     }
 }

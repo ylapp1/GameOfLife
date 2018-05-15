@@ -62,7 +62,7 @@ class FieldsPlacer
                     /** @var Field $field */
                     foreach ($row as $field)
                     {
-                        $_board->setField($field->x() + $_posX, $field->y() + $_posY, $field->isAlive());
+                        $_board->setFieldState($field->x() + $_posX, $field->y() + $_posY, $field->isAlive());
                     }
                 }
             }

@@ -33,7 +33,7 @@ class TemplatePlacerTest extends TestCase
 
     public function setUp()
     {
-        $this->board = new Board(10, 10, 1, true);
+        $this->board = new Board(10, 10, true);
 
         $this->fields = array();
         $counter = 0;
@@ -87,15 +87,15 @@ class TemplatePlacerTest extends TestCase
         if ($_expectedExceptionMessage) $this->assertTrue($exceptionOccurred);
         else $this->assertFalse($exceptionOccurred);
 
-        if ($_expectedExceptionMessage) $this->assertEquals(0, $this->board->getAmountCellsAlive());
+        if ($_expectedExceptionMessage) $this->assertEquals(0, $this->board->getNumberOfAliveFields());
         else
         {
-            $this->assertEquals(5, $this->board->getAmountCellsAlive());
-            $this->assertTrue($this->board->getFieldStatus(0, 0));
-            $this->assertTrue($this->board->getFieldStatus(1, 0));
-            $this->assertTrue($this->board->getFieldStatus(2, 0));
-            $this->assertTrue($this->board->getFieldStatus(0, 1));
-            $this->assertTrue($this->board->getFieldStatus(1, 1));
+            $this->assertEquals(5, $this->board->getNumberOfAliveFields());
+            $this->assertTrue($this->board->getFieldState(0, 0));
+            $this->assertTrue($this->board->getFieldState(1, 0));
+            $this->assertTrue($this->board->getFieldState(2, 0));
+            $this->assertTrue($this->board->getFieldState(0, 1));
+            $this->assertTrue($this->board->getFieldState(1, 1));
         }
 
 
@@ -107,8 +107,8 @@ class TemplatePlacerTest extends TestCase
 
 
         // No dimensions adjustment, invalid position top left
-        $board = new Board(10, 10, 1, true);
-        $this->assertEquals(0, $board->getAmountCellsAlive());
+        $board = new Board(10, 10, true);
+        $this->assertEquals(0, $board->getNumberOfAliveFields());
     }
 
     public function placeTemplateProvider()

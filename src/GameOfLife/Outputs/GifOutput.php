@@ -129,14 +129,15 @@ class GifOutput extends ImageOutput
      * Creates a single Gif file for the current game step.
      *
      * @param Board $_board The board which will be output
+     * @param int $_gameStep The current game step
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
+        echo "\rGamestep: " . $_gameStep;
 
         $image = $this->imageCreator->createImage($_board);
 
-        $fileName = $_board->gameStep() . ".gif";
+        $fileName = $_gameStep . ".gif";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagegif($image, $filePath);

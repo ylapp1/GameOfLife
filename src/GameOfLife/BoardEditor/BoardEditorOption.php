@@ -69,6 +69,11 @@ class BoardEditorOption
      * BoardEditorOption constructor.
      *
      * @param BoardEditor $_parentBoardEditor The parent board editor
+     * @param String $_name The option name
+     * @param String[] $_aliases The alternative names for this options
+     * @param String $_callback The name of the callback method (That method must exist in the child class)
+     * @param String $_description The description that will be displayed in the help command output
+     * @param array $_arguments The list of arguments
      */
     public function __construct(BoardEditor $_parentBoardEditor, String $_name, array $_aliases, String $_callback, String $_description, array $_arguments = array())
     {

@@ -50,8 +50,8 @@ class ToggleFieldOption extends BoardEditorOption
         $this->parentBoardEditor->checkCoordinate($_x, "X",0, $this->parentBoardEditor->board()->width() - 1);
         $this->parentBoardEditor->checkCoordinate($_y, "Y", 0, $this->parentBoardEditor->board()->height() - 1);
 
-        $currentCellState = $this->parentBoardEditor->board()->getFieldStatus($_x, $_y);
-        $this->parentBoardEditor->board()->setField($_x, $_y, !$currentCellState);
+        $currentCellState = $this->parentBoardEditor->board()->getFieldState($_x, $_y);
+        $this->parentBoardEditor->board()->setFieldState($_x, $_y, !$currentCellState);
         $this->parentBoardEditor->setHighLightField($_x, $_y);
         $this->parentBoardEditor->outputBoard();
 

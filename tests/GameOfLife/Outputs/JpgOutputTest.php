@@ -39,7 +39,7 @@ class JpgOutputTest extends TestCase
         $this->output->setImageOutputDirectory($this->outputDirectory . "/JPG/Game_1/");
         $this->fileSystemHandler = new FileSystemWriter();
 
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
@@ -114,6 +114,8 @@ class JpgOutputTest extends TestCase
 
     /**
      * @covers \Output\JpgOutput::startOutput()
+     *
+     * @throws \Exception
      */
     public function testCanCreateOutputDirectory()
     {
@@ -134,10 +136,12 @@ class JpgOutputTest extends TestCase
 
     /**
      * @covers \Output\JpgOutput::outputBoard()
+     *
+     * @throws \Exception
      */
     public function testCanCreatePNG()
     {
-        $gameLogic = new GameLogic(new ConwayRule());
+        $gameLogic = new GameLogic(new ConwayRule(), 1);
         $this->expectOutputRegex("/.*Starting simulation ...\n\n.*/");
         $this->output->startOutput(new Getopt(), $this->board);
 
@@ -145,7 +149,7 @@ class JpgOutputTest extends TestCase
         for ($i = 0; $i < 10; $i++)
         {
             $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
-            $this->output->outputBoard($this->board);
+            $this->output->outputBoard($this->board, $gameLogic->gameStep());
             $gameLogic->calculateNextBoard($this->board);
             $this->assertTrue(file_exists($this->outputDirectory . "JPG/Game_1/" . $i . ".jpg"));
         }

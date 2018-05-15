@@ -43,7 +43,7 @@ class InvertOption extends BoardEditorOption
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();
 
         if ($selectionCoordinates != array()) $this->invertSelection($selectionCoordinates);
-        else $this->parentBoardEditor->board()->invertBoard();
+        else $this->parentBoardEditor->board()->invertFields();
 
         $this->parentBoardEditor->outputBoard();
 

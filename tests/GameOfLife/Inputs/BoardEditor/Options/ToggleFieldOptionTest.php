@@ -9,7 +9,6 @@
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\ToggleFieldOption;
 use GameOfLife\Board;
-use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -97,6 +96,7 @@ class ToggleFieldOptionTest extends TestCase
 
             $exceptionOccurred = false;
 
+            $result = false;
             try
             {
                 $result = $option->toggleField($_x, $_y);

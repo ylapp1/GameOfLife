@@ -207,7 +207,7 @@ class TemplateInput extends BaseInput
 
         $this->templatePlacer->placeTemplate($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
 
-        if ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+        if ($_options->getOption("invertTemplate") !== null) $_board->invertFields();
     }
 
     /**

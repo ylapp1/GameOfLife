@@ -110,6 +110,7 @@ class ImageOutputTest extends TestCase
      * @covers \Output\ImageOutput::startOutput()
      *
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function testCanInitializeImageCreator()
     {
@@ -121,7 +122,7 @@ class ImageOutputTest extends TestCase
                     ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
                     ->willReturn("10", "white", "black", "red");
 
-        $board = new Board(1,1,1,true);
+        $board = new Board(1,1,true);
 
         // Hide output
         $this->expectOutputRegex("/.*/");
@@ -141,6 +142,7 @@ class ImageOutputTest extends TestCase
      * @covers \Output\ImageOutput::startOutput()
      *
      * @throws \ReflectionException
+     * @throws \Exception
      */
     public function testCanSetDefaultValues()
     {
@@ -152,7 +154,7 @@ class ImageOutputTest extends TestCase
                     ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
                     ->willReturn(null, null, null, null);
 
-        $board = new Board(1,1,1,true);
+        $board = new Board(1,1,true);
 
         // Hide output
         $this->expectOutputRegex("/.*/");
@@ -167,6 +169,8 @@ class ImageOutputTest extends TestCase
      * Checks whether a new unique game id can be generated.
      *
      * @covers \Output\ImageOutput::getNewGameId()
+     *
+     * @throws \Exception
      */
     public function testCanGetNewGameId()
     {

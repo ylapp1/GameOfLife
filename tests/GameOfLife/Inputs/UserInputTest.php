@@ -61,7 +61,7 @@ class UserInputTest extends TestCase
      */
     protected function setUp()
     {
-        $this->board = new Board(2, 2, 50, true);
+        $this->board = new Board(2, 2, true);
         $this->boardEditorMock = $this->getMockBuilder(BoardEditor::class)
             ->setMethods(["launch"])
             ->setConstructorArgs(array("test", $this->board))
@@ -135,8 +135,8 @@ class UserInputTest extends TestCase
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
-        $this->assertEquals(1, $this->board->getAmountCellsAlive());
-        $this->assertTrue($this->board->getFieldStatus(0, 0));
+        $this->assertEquals(1, $this->board->getNumberOfAliveFields());
+        $this->assertTrue($this->board->getFieldState(0, 0));
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());
     }

@@ -20,7 +20,7 @@ class FieldTest extends TestCase
 
     public function setUp()
     {
-        $this->board = new Board(3, 3, 1, true);
+        $this->board = new Board(3, 3, true);
     }
 
     public function tearDown()
@@ -85,7 +85,7 @@ class FieldTest extends TestCase
      */
     public function setAttributesProvider()
     {
-        $board = new Board(3, 4, 5, false);
+        $board = new Board(3, 4, false);
 
         return array(
             array($board, 1, 2, true),
@@ -131,7 +131,7 @@ class FieldTest extends TestCase
 
         foreach ($_livingNeighborsCoordinates as $livingNeighborCoordinates)
         {
-            $this->board->setField($livingNeighborCoordinates["x"], $livingNeighborCoordinates["y"], true);
+            $this->board->setFieldState($livingNeighborCoordinates["x"], $livingNeighborCoordinates["y"], true);
         }
 
         $this->assertEquals($_amountLivingNeighbors, $field->numberOfLivingNeighbors());
@@ -180,7 +180,7 @@ class FieldTest extends TestCase
      */
     public function testCanGetNumberOfBorderNeighbors(int $_fieldX, int $_fieldY, bool $_hasBorder, int $_expectedResult)
     {
-        $board = new Board(10, 10, 0, $_hasBorder);
+        $board = new Board(10, 10, $_hasBorder);
 
         /** @var Field $checkField */
         $checkField = $board->fields()[$_fieldY][$_fieldX];

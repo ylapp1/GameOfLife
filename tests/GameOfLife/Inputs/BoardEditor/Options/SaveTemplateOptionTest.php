@@ -82,12 +82,14 @@ class SaveTemplateOptionTest extends TestCase
      * Checks whether the currently edited board can be saved to a file.
      *
      * @covers \BoardEditor\Options\SaveTemplateOption::saveTemplate()
+     *
+     * @throws \Exception
      */
     public function testCanSaveCustomTemplate()
     {
-        $board = new Board(2, 2, 1, true);
-        $board->setField(1, 1, true);
-        $this->assertEquals(1, $board->getAmountCellsAlive());
+        $board = new Board(2, 2, true);
+        $board->setFieldState(1, 1, true);
+        $this->assertEquals(1, $board->getNumberOfAliveFields());
 
         $templateSaverMock = $this->getMockBuilder(TemplateSaver::class)
                                   ->setMethods(array("saveCustomTemplate"))

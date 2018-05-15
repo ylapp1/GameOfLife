@@ -29,6 +29,21 @@ class GameLogic
     private $boardHistorySaver;
 
     /**
+     * The current game step
+     * This is used to check whether maxSteps is reached
+     *
+     * @var int $gameStep
+     */
+    private $gameStep;
+
+    /**
+     * The maximum number of game steps that are calculated before the simulation stops
+     *
+     * @var int $maxSteps
+     */
+    private $maxSteps;
+
+    /**
      * Birth/Death rules for this session
      *
      * @var BaseRule $rule
@@ -40,12 +55,57 @@ class GameLogic
      * GameLogic constructor.
      *
      * @param BaseRule $_rule Rule for this session
+     * @param int $_maxSteps The maximum number of game steps that are calculated before the simulation stops
      */
-    public function __construct(BaseRule $_rule)
+    public function __construct(BaseRule $_rule, int $_maxSteps)
     {
         $this->boardHistorySaver = new BoardHistorySaver(15);
+        $this->gameStep = 1;
+        $this->maxSteps = $_maxSteps;
         $this->rule = $_rule;
     }
+
+
+    /**
+     * Returns the current game step.
+     *
+     * @return int Current game step
+     */
+    public function gameStep(): int
+    {
+        return $this->gameStep;
+    }
+
+    /**
+     * Sets the current game step.
+     *
+     * @param int $_gameStep Current game step
+     */
+    public function setGameStep(int $_gameStep)
+    {
+        $this->gameStep = $_gameStep;
+    }
+
+    /**
+     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps.
+     *
+     * @return int The maximum amount of game steps
+     */
+    public function maxSteps(): int
+    {
+        return $this->maxSteps;
+    }
+
+    /**
+     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps.
+     *
+     * @param int $_maxSteps The maximum amount of game steps
+     */
+    public function setMaxSteps(int $_maxSteps)
+    {
+        $this->maxSteps = $_maxSteps;
+    }
+
 
     /**
      * Calculates one game step for the entire board.
@@ -57,7 +117,7 @@ class GameLogic
         $this->boardHistorySaver->addBoardToHistory($_board);
 
         /** @var Field[][] $newFields */
-        $newFields = $_board->initializeEmptyBoard();
+        $newFields = $_board->generateFieldsList(false);
 
         foreach ($_board->fields() as $line)
         {
@@ -72,7 +132,7 @@ class GameLogic
         }
 
         $_board->setFields($newFields);
-        $_board->setGameStep($_board->gameStep() + 1);
+        $this->gameStep++;
     }
 
     /**
@@ -84,21 +144,19 @@ class GameLogic
      */
     public function isBoardEmpty(Board $_board): bool
     {
-        if ($_board->getAmountCellsAlive() == 0) return true;
+        if ($_board->getNumberOfAliveFields() == 0) return true;
         else return false;
     }
 
     /**
      * Checks whether the max step is reached.
      *
-     * @param Board $_board The board which is checked
-     *
      * @return bool true: board is finished
      *              false: board is not finished
      */
-    public function isMaxStepsReached(Board $_board): bool
+    public function isMaxStepsReached(): bool
     {
-        if ($_board->gameStep() >= $_board->maxSteps() - 1) return true;
+        if ($this->gameStep >= $this->maxSteps) return true;
         else return false;
     }
 

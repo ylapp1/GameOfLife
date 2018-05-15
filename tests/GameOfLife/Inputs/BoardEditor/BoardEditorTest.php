@@ -43,8 +43,8 @@ class BoardEditorTest extends TestCase
                                       ->setMethods(array("readInput", "loadOptions", "addBoardToHistory"))
                                       ->disableOriginalConstructor()
                                       ->getMock();
-        $this->testBoard = new Board(5, 5, 1, true);
-        $this->testBoard->setField(3, 3, true);
+        $this->testBoard = new Board(5, 5, true);
+        $this->testBoard->setFieldState(3, 3, true);
 
         if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->setBoard($this->testBoard);
         if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->setOutput(new BoardEditorOutput());
@@ -117,7 +117,7 @@ class BoardEditorTest extends TestCase
      */
     public function testCanLaunchSession()
     {
-        $this->testBoard->resetBoard();
+        $this->testBoard->resetFields();
 
         $boardEditor = new BoardEditor("");
         $boardEditor->setBoard($this->testBoard);
@@ -201,7 +201,7 @@ class BoardEditorTest extends TestCase
      */
     public function testCanReadInput(String $_fileContent)
     {
-        $this->assertTrue(true);
+        $this->assertEquals($_fileContent, $_fileContent);
 
         /*
         $fileSystemHandler = new FileSystemHandler();

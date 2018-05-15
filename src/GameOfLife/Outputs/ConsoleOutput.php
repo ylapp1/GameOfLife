@@ -97,15 +97,16 @@ class ConsoleOutput extends BaseOutput
      * Outputs one game step.
      *
      * @param Board $_board Current board
+     * @param int $_gameStep The current game step
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
         $startTimeStamp = microtime(true);
 
         $this->shellOutputHelper->clearScreen();
         $this->printTitle();
 
-        $gameStepString = "Game step: " . ($_board->gameStep() + 1) . "\n";
+        $gameStepString = "Game step: " . $_gameStep . "\n";
         echo $this->shellOutputHelper->getCenteredOutputString($gameStepString);
         echo $this->getBoardContentString($_board, "║", "☻", " ");
 

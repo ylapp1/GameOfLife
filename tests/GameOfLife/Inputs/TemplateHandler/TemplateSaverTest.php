@@ -27,8 +27,8 @@ class TemplateSaverTest extends TestCase
             ->setMethods(array("writeFile"))
             ->getMock();
 
-        $testBoard = new Board(2, 3, 2, true);
-        $testBoard->setField(1, 1, true);
+        $testBoard = new Board(2, 3, true);
+        $testBoard->setFieldState(1, 1, true);
 
         $boardString = "..\r\n.X\r\n..";
 

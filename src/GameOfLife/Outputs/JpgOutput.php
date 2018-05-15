@@ -44,13 +44,14 @@ class JpgOutput extends ImageOutput
      * Outputs one game step.
      *
      * @param Board $_board Current board
+     * @param int $_gameStep The current game step
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
+        echo "\rGamestep: " . $_gameStep;
         $image = $this->imageCreator->createImage($_board);
 
-        $fileName = $_board->gameStep() . ".jpg";
+        $fileName = $_gameStep . ".jpg";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagejpeg($image, $filePath);

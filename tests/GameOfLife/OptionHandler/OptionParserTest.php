@@ -117,6 +117,7 @@ class OptionParserTest extends TestCase
         if ($this->optionsMock instanceof Getopt)
         {
             $exceptionOccurred = false;
+            $board = new Board(0,0,true);
             try
             {
                 $board = $this->optionParser->parseBoardOptions($this->optionsMock);
@@ -155,7 +156,7 @@ class OptionParserTest extends TestCase
                     array("border", "solid"),
                     array("border", "solid")
                 ),
-                new Board(1, 2, 15, true)
+                new Board(1, 2, true)
             ),
             "Custom values without border" => array(
                 array(
@@ -168,7 +169,7 @@ class OptionParserTest extends TestCase
                     array("border", "passthrough"),
                     array("border", "passthrough")
                 ),
-                new Board(5, 18, 200, false)
+                new Board(5, 18, false)
             ),
             "Custom values with invalid border type" => array(
                 array(
@@ -190,7 +191,7 @@ class OptionParserTest extends TestCase
                     array("maxSteps", null),
                     array("border", null)
                 ),
-                new Board(20, 10, 50, true)
+                new Board(20, 10, true)
             )
         );
     }
