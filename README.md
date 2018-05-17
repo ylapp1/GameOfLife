@@ -111,4 +111,5 @@ Additional ideas for future versions
   - Boards are calculated from top to bottom and left to right
   - Bordering board fields will be used in the cell state calculation
 
-* Add other field shapes (Triangle, Pentagon, Hexagon, etc.)
+* Add other field shapes (Triangle, Pentagon, Hexagon, etc.) and field sizes
+  - Also make different sizes/shapes usable in the same Board
