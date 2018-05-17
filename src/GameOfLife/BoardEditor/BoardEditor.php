@@ -10,7 +10,7 @@ namespace BoardEditor;
 
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
-use GameOfLife\BoardHistorySaver;
+use GameOfLife\BoardHistory;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
@@ -103,9 +103,9 @@ class BoardEditor
     /**
      * The board history saver
      *
-     * @var BoardHistorySaver $boardHistorySaver
+     * @var BoardHistory $boardHistory
      */
-    private $boardHistorySaver;
+    private $boardHistory;
 
 
     /**
@@ -139,7 +139,7 @@ class BoardEditor
         $this->shellOutputHelper = new ShellOutputHelper();
 
         $this->highLightField = array();
-        $this->boardHistorySaver = new BoardHistorySaver(15, false);
+        $this->boardHistory = new BoardHistory(15, true);
     }
 
 
@@ -164,13 +164,13 @@ class BoardEditor
     }
 
     /**
-     * Returns the board history saver.
+     * Returns the board history.
      *
-     * @return BoardHistorySaver
+     * @return BoardHistory The board history
      */
-    public function boardHistorySaver(): BoardHistorySaver
+    public function boardHistory(): BoardHistory
     {
-        return $this->boardHistorySaver;
+        return $this->boardHistory;
     }
 
     /**
@@ -302,12 +302,7 @@ class BoardEditor
 
         while (! $isInputFinished)
         {
-            if ($this->boardHistorySaver->boardExistsInHistory($this->board) === null ||
-                $this->boardHistorySaver->boardExistsInHistory($this->board) < $this->boardHistorySaver->currentBoardIndex())
-            {
-                $this->boardHistorySaver->addBoardToHistory($this->board);
-            }
-
+            if ($this->canBoardBeAddedToHistory($this->board)) $this->boardHistory->addBoardToHistory($this->board);
             $line = $this->readInput("> ");
 
             try
@@ -319,6 +314,28 @@ class BoardEditor
                 $this->outputBoard("Error while parsing the option: " . $_exception->getMessage());
             }
         }
+    }
+
+    /**
+     * Returns whether a board can be added to the history.
+     * Will return false if the current board in the history is equal to the board in question
+     *
+     * @param Board $_board The board
+     *
+     * @return Bool True: The board can be added to the history
+     *              False: The board can not be added to the history
+     */
+    private function canBoardBeAddedToHistory(Board $_board)
+    {
+        $boardCanBeAddedToHistory = true;
+
+        $currentBoard = $this->boardHistory->getCurrentBoard();
+        if (isset($currentBoard))
+        {
+            if ($currentBoard->equals($_board)) $boardCanBeAddedToHistory = false;
+        }
+
+        return $boardCanBeAddedToHistory;
     }
 
     /**

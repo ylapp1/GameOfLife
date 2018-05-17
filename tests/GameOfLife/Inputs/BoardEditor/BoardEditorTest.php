@@ -129,13 +129,13 @@ class BoardEditorTest extends TestCase
                              ->willReturn("exit");
         setPrivateAttribute($boardEditor, "shellInputReader", $shellInputReaderMock);
 
-        $boardHistorySaverMock = $this->getMockBuilder(GameOfLife\BoardHistorySaver::class)
+        $boardHistorySaverMock = $this->getMockBuilder(GameOfLife\BoardHistory::class)
                                       ->disableOriginalConstructor()
                                       ->getMock();
         $boardHistorySaverMock->expects($this->exactly(1))
                               ->method("addBoardToHistory")
                               ->willReturn(null);
-        setPrivateAttribute($boardEditor, "boardHistorySaver", $boardHistorySaverMock);
+        setPrivateAttribute($boardEditor, "boardHistory", $boardHistorySaverMock);
 
         $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
                                   ->setMethods(array("parseInput"))

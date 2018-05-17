@@ -54,7 +54,7 @@ class Field
      *
      * @param int $_x The X-coordinate of the field
      * @param int $_y The Y-coordinate of the field
-     * @param bool $_value The state of the cell in the field
+     * @param Bool $_value The state of the cell in the field
      * @param Board $_parentBoard The board to which the field belongs
      */
     public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)

@@ -39,7 +39,7 @@ class UndoOption extends BoardEditorOption
      */
     public function restoreLastBoard()
     {
-        $previousBoard = $this->parentBoardEditor->boardHistorySaver()->getPreviousBoard();
+        $previousBoard = $this->parentBoardEditor->boardHistory()->getPreviousBoard();
         if ($previousBoard == null) throw new \Exception("There is no previous board in the history.");
 
         $this->parentBoardEditor->board()->copy($previousBoard);

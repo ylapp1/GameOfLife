@@ -9,7 +9,7 @@
 namespace Simulator;
 
 use GameOfLife\Board;
-use GameOfLife\BoardHistorySaver;
+use GameOfLife\BoardHistory;
 use GameOfLife\Field;
 use Rule\BaseRule;
 
@@ -24,9 +24,9 @@ class GameLogic
     /**
      * Stores the fields of the last 15 boards of the current simulation
      *
-     * @var BoardHistorySaver $boardHistorySaver
+     * @var BoardHistory $boardHistory
      */
-    private $boardHistorySaver;
+    private $boardHistory;
 
     /**
      * The current game step
@@ -59,7 +59,7 @@ class GameLogic
      */
     public function __construct(BaseRule $_rule, int $_maxSteps)
     {
-        $this->boardHistorySaver = new BoardHistorySaver(15);
+        $this->boardHistory = new BoardHistory(15);
         $this->gameStep = 1;
         $this->maxSteps = $_maxSteps;
         $this->rule = $_rule;
@@ -114,7 +114,7 @@ class GameLogic
      */
     public function calculateNextBoard(Board $_board)
     {
-        $this->boardHistorySaver->addBoardToHistory($_board);
+        $this->boardHistory->addBoardToHistory($_board);
 
         /** @var Field[][] $newFields */
         $newFields = $_board->generateFieldsList(false);
@@ -171,7 +171,7 @@ class GameLogic
      */
     public function isLoopDetected(Board $_board): bool
     {
-        if ($this->boardHistorySaver->boardExistsInHistory($_board) !== null) return true;
+        if ($this->boardHistory->boardExistsInHistory($_board) !== null) return true;
         else return false;
     }
 }
