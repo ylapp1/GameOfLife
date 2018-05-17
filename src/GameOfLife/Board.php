@@ -68,6 +68,23 @@ class Board
     }
 
     /**
+     * Clones the fields of the original board and updates their parent board.
+     * This method is called on the new object after a shallow copy of the original object was performed.
+     */
+    public function __clone()
+    {
+        foreach ($this->fields as $y => $rowFields)
+        {
+            foreach ($rowFields as $x => $rowField)
+            {
+                $field = clone $rowField;
+                $field->setParentBoard($this);
+                $this->fields[$y][$x] = $field;
+            }
+        }
+    }
+
+    /**
      * Converts the board to a string.
      *
      * @return String The string that represents the board
@@ -97,17 +114,16 @@ class Board
      */
     function copy(Board $_board)
     {
-        $this->hasBorder = $_board->hasBorder;
-        $this->height = $_board->height;
-        $this->width = $_board->width;
+        $this->hasBorder = $_board->hasBorder();
+        $this->height = $_board->height();
+        $this->width = $_board->width();
 
-        $this->fields = array();
-        foreach ($_board->fields as $y => $rowFields)
+        $this->fields = $this->generateFieldsList(false);
+        foreach ($_board->fields() as $y => $rowFields)
         {
             foreach ($rowFields as $x => $rowField)
             {
-                $this->fields[$y][$x] = clone $rowField;
-                $this->fields[$y][$x]->setParentBoard($this);
+                $this->fields[$y][$x]->setValue($rowField->value());
             }
         }
     }
@@ -123,17 +139,28 @@ class Board
     public function equals(Board $_compareBoard): Bool
     {
         // Check board attributes
-        if ($this->hasBorder != $_compareBoard->hasBorder ||
-            $this->height != $_compareBoard->height ||
-            $this->width != $_compareBoard->width)
+        if ($this->hasBorder != $_compareBoard->hasBorder() ||
+            $this->height != $_compareBoard->height() ||
+            $this->width != $_compareBoard->width())
         {
             return false;
         }
 
         // Check fields
+
+        /*
+         * This check assumes that there is at least one row and
+         * that each row has the same number of columns
+         */
+        if (count($this->fields) != count($_compareBoard->fields()) ||
+            count($this->fields[0]) != count($_compareBoard->fields()[0]))
+        {
+            return false;
+        }
+
         $fieldsAreEqual = true;
 
-        foreach ($_compareBoard->fields as $y => $rowFields)
+        foreach ($_compareBoard->fields() as $y => $rowFields)
         {
             foreach ($rowFields as $x => $rowField)
             {
@@ -247,14 +274,14 @@ class Board
     // Get information about the fields
 
     /**
-     * Returns a fields state.
+     * Returns the state of the cell in a field.
      *
      * @param int $_x The X-Coordinate of the field
      * @param int $_y The Y-Coordinate of the field
      *
-     * @return Bool The field state
-     *              True: The field is alive
-     *              False: The field is dead
+     * @return Bool The state of the cell in the field
+     *              True: The cell in the field is alive
+     *              False: The cell in the field is dead
      */
     public function getFieldState(int $_x, int $_y): Bool
     {
@@ -318,9 +345,9 @@ class Board
     }
 
     /**
-     * Returns the number of alive fields.
+     * Returns the number of alive cells.
      *
-     * @return int The number of alive fields
+     * @return int The number of alive cells
      */
     public function getNumberOfAliveFields(): int
     {
@@ -336,9 +363,9 @@ class Board
     }
 
     /**
-     * Returns the percentage of fields whose state is alive.
+     * Returns the percentage of cells whose state is alive.
      *
-     * @return float The percentage of fields whose state is alive
+     * @return float The percentage of cells whose state is alive
      */
     public function getPercentageOfAliveFields(): float
     {
@@ -386,7 +413,7 @@ class Board
     }
 
     /**
-     * Sets all fields to the state dead.
+     * Sets all cells to the state dead.
      */
     public function resetFields()
     {
@@ -394,13 +421,13 @@ class Board
     }
 
     /**
-     * Sets a fields state.
+     * Sets the state of the cell in a field.
      *
      * @param int $_x The X-Coordinate of the field
      * @param int $_y The Y-Coordinate of the field
-     * @param Bool $_isAlive The state to which the field will be set
-     *                       True: alive
-     *                       False: dead
+     * @param Bool $_isAlive The state to which the cell in the field will be set
+     *                       True: The cell in the field is alive
+     *                       False: The cell in the field is dead
      */
     public function setFieldState(int $_x, int $_y, Bool $_isAlive)
     {
