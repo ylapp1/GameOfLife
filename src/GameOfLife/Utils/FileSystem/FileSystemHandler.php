@@ -8,22 +8,56 @@
 
 namespace Utils\FileSystem;
 
+use Utils\Shell\ShellInformationFetcher;
+
 /**
  * Parent class for FileSystemWriter and FileSystemReader.
  */
 class FileSystemHandler
 {
+    // Attributes
+
     /**
-     * Converts the slashes to backslashes (Windows) or the backslashes to slashes (Linux).
+     * The shell information fetcher
      *
-     * @param String $_path The path with mixed slashes and backslashes
-     *
-     * @return String The path with either only slashes or only backslashes
+     * @var ShellInformationFetcher $shellInformationFetcher
      */
-    protected function convertSlashes(String $_path): String
+    private $shellInformationFetcher;
+
+
+    // Magic Methods
+
+    /**
+     * FileSystemHandler constructor.
+     */
+    protected function __construct()
     {
-        if (stristr(PHP_OS, "win")) return str_replace("/", "\\", $_path);
-        elseif (stristr(PHP_OS, "linux")) return str_replace("\\", "/", $_path);
+        $this->shellInformationFetcher = new ShellInformationFetcher();
+    }
+
+
+    // Class Methods
+
+    /**
+     * Converts all file separators in a path to the os specific type.
+     *
+     * Windows: All forward slashes are converted to backslashes
+     * Linux: All backslashes are converted to forward slashes
+     *
+     * @param String $_path The path to a file or directory with multiple file separator types
+     *
+     * @return String The path with only the os specific file separator type
+     */
+    protected function normalizePathFileSeparators(String $_path): String
+    {
+        if ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osWindows)
+        {
+            return str_replace("/", "\\", $_path);
+        }
+        elseif ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osLinux)
+        {
+            return str_replace("\\", "/", $_path);
+        }
         else return $_path;
     }
 }

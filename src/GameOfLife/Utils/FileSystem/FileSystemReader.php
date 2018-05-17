@@ -14,6 +14,14 @@ namespace Utils\FileSystem;
 class FileSystemReader extends FileSystemHandler
 {
     /**
+     * FileSystemReader constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * Searches a folder for a file.
      *
      * @param String $_baseFolder The folder path
@@ -25,7 +33,7 @@ class FileSystemReader extends FileSystemHandler
      */
     public function findFileRecursive(String $_baseFolder, String $_fileName)
     {
-        $baseFolder = $this->convertSlashes($_baseFolder);
+        $baseFolder = $this->normalizePathFileSeparators($_baseFolder);
         if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
 
         $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
@@ -34,7 +42,7 @@ class FileSystemReader extends FileSystemHandler
         {
             if (strtolower(basename($file)) == strtolower($_fileName))
             {
-                return $this->convertSlashes($file);
+                return $this->normalizePathFileSeparators($file);
             }
         }
 
@@ -52,7 +60,7 @@ class FileSystemReader extends FileSystemHandler
      */
     public function getFileList(String $_directoryPath): array
     {
-        $filePath = $this->convertSlashes($_directoryPath);
+        $filePath = $this->normalizePathFileSeparators($_directoryPath);
         $directoryName = dirname($filePath);
 
         if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");
@@ -70,7 +78,7 @@ class FileSystemReader extends FileSystemHandler
      */
     public function readFile(string $_filePath): array
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->normalizePathFileSeparators($_filePath);
 
         if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
         else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);

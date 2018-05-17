@@ -26,6 +26,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function __construct()
     {
+        parent::__construct();
         $this->fileSystemReader = new FileSystemReader();
     }
 
@@ -38,7 +39,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function createDirectory(string $_directoryPath)
     {
-        $directoryPath = $this->convertSlashes($_directoryPath);
+        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
 
         if (! file_exists($directoryPath))
         {
@@ -63,7 +64,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
     {
-        $directoryPath = $this->convertSlashes($_directoryPath);
+        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
         if (! file_exists($directoryPath)) throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
 
         $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
@@ -92,7 +93,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
     {
-        $directoryPath = $this->convertSlashes($_directoryPath);
+        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
         $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
 
         foreach ($files as $file)
@@ -116,7 +117,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteFile(string $_filePath)
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->normalizePathFileSeparators($_filePath);
 
         if (file_exists($filePath)) unlink($filePath);
         else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
@@ -140,7 +141,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function writeFile(string $_filePath, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->normalizePathFileSeparators($_filePath);
         $directoryPath = dirname($filePath);
 
         // Create directory if it doesn't exist

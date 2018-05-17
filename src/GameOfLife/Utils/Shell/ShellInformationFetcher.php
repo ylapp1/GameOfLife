@@ -41,6 +41,13 @@ class ShellInformationFetcher
      */
     private $shellExecutor;
 
+    /**
+     * The cached os type (The os type will not change during run time)
+     *
+     * @var int $osType
+     */
+    private $osType;
+
 
     /**
      * ShellInformationFetcher constructor.
@@ -48,6 +55,11 @@ class ShellInformationFetcher
     public function __construct()
     {
         $this->shellExecutor = new ShellExecutor();
+
+        // Detect the os type
+        if (stristr(PHP_OS, "linux")) $this->osType = $this::osLinux;
+        elseif (stristr(PHP_OS, "win")) $this->osType = $this::osWindows;
+        else $this->osType = $this::osUnknown;
     }
 
 
@@ -112,8 +124,6 @@ class ShellInformationFetcher
      */
     public function getOsType(): int
     {
-        if (stristr(PHP_OS, "linux")) return $this::osLinux;
-        elseif (stristr(PHP_OS, "win")) return $this::osWindows;
-        else return $this::osUnknown;
+        return $this->osType;
     }
 }
