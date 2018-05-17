@@ -31,7 +31,7 @@ class TemplateListPrinter extends TemplateHandler
     {
         try
         {
-            $defaultTemplateFilePaths = $this->fileSystemReader->getFileList($this->defaultTemplatesDirectory . "/*.txt");
+            $defaultTemplateFilePaths = $this->fileSystemReader->getFileList($this->defaultTemplatesDirectory, "*.txt");
         }
         catch(\Exception $_exception)
         {
@@ -41,7 +41,7 @@ class TemplateListPrinter extends TemplateHandler
 
         try
         {
-            $customTemplateFilePaths = $this->fileSystemReader->getFileList($this->customTemplatesDirectory . "/*.txt");
+            $customTemplateFilePaths = $this->fileSystemReader->getFileList($this->customTemplatesDirectory, "*.txt");
         }
         catch(\Exception $_exception)
         {

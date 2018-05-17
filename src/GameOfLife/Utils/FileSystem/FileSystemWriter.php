@@ -67,7 +67,7 @@ class FileSystemWriter extends FileSystemHandler
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
         if (! file_exists($directoryPath)) throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
 
-        $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
+        $files = $this->fileSystemReader->getFileList($directoryPath);
 
         if (count($files) !== 0)
         {
@@ -94,7 +94,7 @@ class FileSystemWriter extends FileSystemHandler
     public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
-        $files = $this->fileSystemReader->getFileList($directoryPath . "/*");
+        $files = $this->fileSystemReader->getFileList($directoryPath);
 
         foreach ($files as $file)
         {
@@ -102,7 +102,7 @@ class FileSystemWriter extends FileSystemHandler
             else unlink($file);
         }
 
-        if ($this->fileSystemReader->getFileList($directoryPath . "/*") !== array())
+        if ($this->fileSystemReader->getFileList($directoryPath) !== array())
         {
             throw new \Exception("Unknown error while deleting the files in the directory \"" . $directoryPath . "\".");
         }

@@ -340,7 +340,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $files = $fileSystemReader->getFileList($this->testDirectory . "/*");
+            $files = $fileSystemReader->getFileList($this->testDirectory);
         }
         catch (\Exception $_exception)
         {

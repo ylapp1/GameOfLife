@@ -18,6 +18,27 @@ class FileSystemHandler
     // Attributes
 
     /**
+     * The file separator symbol in Linux
+     *
+     * @var String $fileSeparatorSymbolLinux
+     */
+    protected $fileSeparatorSymbolLinux = "/";
+
+    /**
+     * The file separator symbol in Windows
+     *
+     * @var String $fileSeparatorSymbolWindows
+     */
+    protected $fileSeparatorSymbolWindows = "\\";
+
+    /**
+     * The cached file separator symbol for this operating system.
+     *
+     * @var String $fileSeparatorSymbol
+     */
+    protected $fileSeparatorSymbol;
+
+    /**
      * The shell information fetcher
      *
      * @var ShellInformationFetcher $shellInformationFetcher
@@ -33,6 +54,12 @@ class FileSystemHandler
     protected function __construct()
     {
         $this->shellInformationFetcher = new ShellInformationFetcher();
+
+        if ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osWindows)
+        {
+            $this->fileSeparatorSymbol = $this->fileSeparatorSymbolWindows;
+        }
+        else $this->fileSeparatorSymbol = $this->fileSeparatorSymbolLinux;
     }
 
 
@@ -52,11 +79,11 @@ class FileSystemHandler
     {
         if ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osWindows)
         {
-            return str_replace("/", "\\", $_path);
+            return str_replace($this->fileSeparatorSymbolLinux, $this->fileSeparatorSymbolWindows, $_path);
         }
         elseif ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osLinux)
         {
-            return str_replace("\\", "/", $_path);
+            return str_replace($this->fileSeparatorSymbolWindows, $this->fileSeparatorSymbolLinux, $_path);
         }
         else return $_path;
     }

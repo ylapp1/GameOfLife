@@ -108,15 +108,15 @@ class OptionHandler
 
         $fileSystemReader = new FileSystemReader();
 
-        $inputClasses = $fileSystemReader->getFileList(__DIR__ . "/../Inputs/*Input.php");
+        $inputClasses = $fileSystemReader->getFileList(__DIR__ . "/../Inputs", "*Input.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $inputClasses, $this->excludeClasses, "Input");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $outputClasses = $fileSystemReader->getFileList(__DIR__ . "/../Outputs/*Output.php");
+        $outputClasses = $fileSystemReader->getFileList(__DIR__ . "/../Outputs", "*Output.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $outputClasses, $this->excludeClasses, "Output");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
 
-        $ruleClasses = $fileSystemReader->getFileList(__DIR__ . "/../Rules/*Rule.php");
+        $ruleClasses = $fileSystemReader->getFileList(__DIR__ . "/../Rules", "*Rule.php");
         $linkedOptions = $this->optionLoader->addClassOptions($_options, $ruleClasses, $this->excludeClasses, "Rule");
         $this->linkedOptions = array_merge($this->linkedOptions, $linkedOptions);
     }

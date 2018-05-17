@@ -13,6 +13,8 @@ namespace Utils\FileSystem;
  */
 class FileSystemReader extends FileSystemHandler
 {
+    // Magic Methods
+
     /**
      * FileSystemReader constructor.
      */
@@ -21,66 +23,76 @@ class FileSystemReader extends FileSystemHandler
         parent::__construct();
     }
 
+
+    // Class Methods
+
     /**
-     * Searches a folder for a file.
+     * Searches a directory and its subdirectories for a specific file name and returns the path to the file.
+     * The file name comparison is case sensitive.
      *
-     * @param String $_baseFolder The folder path
+     * @param String $_searchDirectoryPath The path to the directory that will be searched for the file name
      * @param String $_fileName The file name
      *
-     * @return String|bool The file path or false
+     * @return String|null The file path or null if the file was not found
      *
-     * @throws \Exception The exception when the target directory does not exist
+     * @throws \Exception The exception when the search directory does not exist
      */
-    public function findFileRecursive(String $_baseFolder, String $_fileName)
+    public function findFileRecursive(String $_searchDirectoryPath, String $_fileName)
     {
-        $baseFolder = $this->normalizePathFileSeparators($_baseFolder);
-        if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
+        $searchDirectory = $this->normalizePathFileSeparators($_searchDirectoryPath);
 
-        $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
-
-        foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
+        if (! file_exists($searchDirectory) || ! is_dir($searchDirectory))
         {
-            if (strtolower(basename($file)) == strtolower($_fileName))
-            {
-                return $this->normalizePathFileSeparators($file);
-            }
+            throw new \Exception("The directory \"" . $searchDirectory . "\" does not exist or can not be accessed.");
         }
 
-        return false;
+        $directoryIterator = new \RecursiveDirectoryIterator($searchDirectory);
+        foreach (new \RecursiveIteratorIterator($directoryIterator) as $filePath)
+        {
+            if (basename($filePath) == $_fileName) return $this->normalizePathFileSeparators($filePath);
+        }
+
+        return null;
     }
 
     /**
-     * Returns an array of files in a directory.
+     * Returns a list of file paths of all files in a directory with a specific pattern.
      *
-     * @param string $_directoryPath The directory of which a file list will be returned
+     * @param String $_directoryPath The directory path
+     * @param String $_searchPattern The custom search pattern
      *
-     * @return array The file list
+     * @return String[] The list of file paths
      *
      * @throws \Exception The exception when the target directory does not exist
      */
-    public function getFileList(String $_directoryPath): array
+    public function getFileList(String $_directoryPath, String $_searchPattern = "*"): array
     {
-        $filePath = $this->normalizePathFileSeparators($_directoryPath);
-        $directoryName = dirname($filePath);
+        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
 
-        if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");
-        else return glob($filePath);
+        if (! file_exists($directoryPath) || ! is_dir($directoryPath))
+        {
+            throw new \Exception("The directory \"" . $directoryPath . "\" does not exist or can not be accessed.");
+        }
+        else return glob($directoryPath . $this->fileSeparatorSymbol . $_searchPattern);
     }
 
     /**
-     * Read text from file.
+     * Reads and returns the contents of a file.
      *
-     * @param string $_filePath The path to the file that will be read
+     * @param String $_filePath The file path
      *
-     * @return String[] The lines from the file
+     * @return String[] The contents of the file as a list of lines
      *
      * @throws \Exception The exception when the target file does not exist
      */
-    public function readFile(string $_filePath): array
+    public function readFile(String $_filePath): array
     {
         $filePath = $this->normalizePathFileSeparators($_filePath);
 
-        if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
+        if (! file_exists($filePath) || ! is_file($filePath))
+        {
+            throw new \Exception("The file \"" . $filePath . "\" does not exist or can not be accessed.");
+        }
         else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
     }
 }

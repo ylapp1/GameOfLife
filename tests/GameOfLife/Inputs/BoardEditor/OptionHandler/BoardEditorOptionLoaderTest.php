@@ -104,7 +104,7 @@ class BoardEditorOptionLoaderTest extends TestCase
         $templateDirectory = "testing";
         $fileSystemHandlerMock->expects($this->exactly(1))
             ->method("getFileList")
-            ->with($templateDirectory . "/*Option.php")
+            ->with($templateDirectory, "*Option.php")
             ->willReturn(array("ExitOption", "StartOption"));
 
         $result = $optionLoader->loadOptions($templateDirectory);

@@ -99,7 +99,7 @@ class FfmpegHelper
             $searchDirectory = __DIR__ . "/../../../../Tools";
             $binaryPath = $this->fileSystemReader->findFileRecursive($searchDirectory, "ffmpeg.exe");
 
-            if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
+            if ($binaryPath === null) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
         elseif ($this->osType == ShellInformationFetcher::osLinux)
         { // If OS is Linux check whether the ffmpeg command returns true

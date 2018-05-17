@@ -255,7 +255,7 @@ class ImageOutput extends BaseOutput
     {
         try
         {
-            $fileNames = $this->fileSystemReader->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+            $fileNames = $this->fileSystemReader->getFileList($this->baseOutputDirectory . "/" . $_outputType, "Game_*");
         }
         catch (\Exception $_exception)
         {

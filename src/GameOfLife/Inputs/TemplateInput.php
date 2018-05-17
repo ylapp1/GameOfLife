@@ -67,7 +67,7 @@ class TemplateInput extends BaseInput
 
         $fileSystemReader = new FileSystemReader();
 
-        $defaultTemplatePaths = $fileSystemReader->getFileList($templatesBaseDirectory . "/*.txt");
+        $defaultTemplatePaths = $fileSystemReader->getFileList($templatesBaseDirectory, "*.txt");
         $this->defaultTemplateNames = array_map(
             function($_arrayEntry)
             {

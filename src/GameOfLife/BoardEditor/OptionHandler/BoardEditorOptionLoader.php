@@ -98,7 +98,7 @@ class BoardEditorOptionLoader
         $options = array();
 
         // Load each option from the options folder
-        $classes = $this->fileSystemReader->getFileList($_optionsDirectory . "/*Option.php");
+        $classes = $this->fileSystemReader->getFileList($_optionsDirectory, "*Option.php");
 
         foreach ($classes as $class)
         {
