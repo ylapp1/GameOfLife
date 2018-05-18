@@ -132,11 +132,12 @@ class BoardHistory
     /**
      * Returns the board at the current board index.
      *
-     * @return String|Board The board at the current board index
+     * @return String|Board|null The board at the current board index or null if the history is empty
      */
     public function getCurrentBoard()
     {
-        return $this->boards[$this->currentBoardIndex];
+        if ($this->currentBoardIndex == -1) return null;
+        else return $this->boards[$this->currentBoardIndex];
     }
 
     /**
@@ -146,7 +147,7 @@ class BoardHistory
      */
     public function getPreviousBoard()
     {
-        if ($this->currentBoardIndex == 0) return null;
+        if ($this->currentBoardIndex <= 0) return null;
         else
         {
             $this->currentBoardIndex--;
