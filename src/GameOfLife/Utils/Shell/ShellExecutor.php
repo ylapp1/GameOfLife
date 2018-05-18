@@ -81,7 +81,7 @@ class ShellExecutor
     // Class Methods
 
     /**
-     * Executes a command and optionally hides the output from the user.
+     * Executes a shell command and optionally hides the output from the user.
      *
      * @param String $_command The command
      * @param Bool $_hideOutput If set to true the output will not be displayed to the user
@@ -100,20 +100,14 @@ class ShellExecutor
     }
 
     /**
-     * Returns the path to which the output will be redirected in case of hiding it.
+     * Returns the path to which the output will be redirected in order to hide it.
      *
      * @return String The path to which the output will be redirected
      */
     private function getOutputHideRedirect(): String
     {
-        if ($this->osInformationFetcher->isWindows())
-        {
-            return $this->outputHideRedirectWindows;
-        }
-        elseif ($this->osInformationFetcher->isLinux())
-        {
-            return $this->outputHideRedirectLinux;
-        }
+        if ($this->osInformationFetcher->isWindows()) return $this->outputHideRedirectWindows;
+        elseif ($this->osInformationFetcher->isLinux()) return $this->outputHideRedirectLinux;
         else return $this->outputHideRedirectOther;
     }
 }
