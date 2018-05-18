@@ -272,14 +272,15 @@ class FileSystemHandlerTest extends TestCase
         $this->assertEquals(array("Hello World!"), $fileContent);
 
         // Check whether trying to rewrite the file fails
+        $filePath = $this->testDirectory . "/mytest.txt";
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!");
+            $this->fileSystemHandler->writeFile($filePath, "Hello universe!");
         }
         catch (\Exception $_exception)
         {
-            $this->assertEquals("The file already exists.", $_exception->getMessage());
+            $this->assertEquals("The file \"" . $filePath . "\" already exists.", $_exception->getMessage());
             $exceptionOccurred = true;
         }
         $this->assertTrue($exceptionOccurred);

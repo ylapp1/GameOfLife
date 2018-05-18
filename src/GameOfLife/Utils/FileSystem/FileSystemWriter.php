@@ -37,29 +37,59 @@ class FileSystemWriter extends FileSystemHandler
 
     // Class Methods
 
+    // Create
+
     /**
      * Creates a directory if it doesn't exist yet.
      *
      * @param String $_directoryPath The directory path
      *
-     * @throws \Exception The exception when the target directory already exists
+     * @throws \Exception The exception when the directory already exists
+     * @throws \Exception The exception when the directory was not created
      */
     public function createDirectory(String $_directoryPath)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
-
-        if (! file_exists($directoryPath))
+        if (file_exists($directoryPath))
         {
-            // Create all directories in the directory path recursively (if they don't exist)
-            mkdir($directoryPath, 0777, true);
-
-            if (! file_exists($directoryPath))
-            {
-                throw new \Exception("The directory \"" . $directoryPath . "\" could not be created.");
-            }
+            throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
         }
-        else throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
+
+        // Create all directories in the directory path recursively (if they don't exist)
+        $directoryWasCreated = mkdir($directoryPath, 0777, true);
+        if (! $directoryWasCreated)
+        {
+            throw new \Exception("The directory \"" . $directoryPath . "\" could not be created.");
+        }
     }
+
+    /**
+     * Creates a file if it doesn't exist yet.
+     *
+     * @param String $_filePath The file path
+     *
+     * @throws \Exception The exception when the file already exists
+     * @throws \Exception The exception when the directory was not created
+     * @throws \Exception The exception when the file was not created
+     */
+    public function createFile(String $_filePath)
+    {
+        $filePath = $this->normalizePathFileSeparators($_filePath);
+        if (file_exists($filePath))
+        {
+            throw new \Exception("The file \"" . $filePath . "\" already exists.");
+        }
+
+        $directoryPath = dirname($filePath);
+
+        // Create directory if it doesn't exist
+        if (! file_exists($directoryPath)) $this->createDirectory($directoryPath);
+
+        $fileWasCreated = touch($filePath);
+        if (! $fileWasCreated) throw new \Exception("The file \"" . $filePath . "\" could not be created.");
+    }
+
+    // Delete
 
     /**
      * Deletes a directory.
@@ -67,25 +97,32 @@ class FileSystemWriter extends FileSystemHandler
      * @param String $_directoryPath The directory path
      * @param Bool $_deleteWhenNotEmpty If set to true all files inside the directory will be deleted recursively
      *
-     * @throws \Exception The exception when the target directory does not exist or is not empty and shall not be deleted in that case
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when the directory is no directory
+     * @throws \Exception The exception when a file or directory inside the directory was not deleted
+     * @throws \Exception The exception when the directory is not empty and shall not be deleted in that case
+     * @throws \Exception The exception when the directory was not deleted
      */
     public function deleteDirectory(String $_directoryPath, Bool $_deleteWhenNotEmpty = false)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
-        if (! file_exists($directoryPath) || ! is_dir($directoryPath))
+        if (! file_exists($_directoryPath))
         {
-            throw new \Exception("The directory \"" . $directoryPath . "\" does not exist or can not be accessed.");
+            throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
+        }
+        elseif (! is_dir($directoryPath))
+        {
+            throw new \Exception("\"" . $directoryPath . "\" is no directory or can not be accessed.");
         }
 
         if ($this->fileSystemReader->getFileList($directoryPath) != array())
         {
-            if (! $_deleteWhenNotEmpty) throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
-            else $this->deleteFilesInDirectory($directoryPath, true);
+            if ($_deleteWhenNotEmpty) $this->deleteFilesInDirectory($directoryPath, true);
+            else throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
         }
 
-        rmdir($directoryPath);
-
-        if (file_exists($directoryPath))
+        $directoryDeleted = rmdir($directoryPath);
+        if (! $directoryDeleted)
         {
             throw new \Exception("The directory \"" . $directoryPath . "\" could not be deleted.");
         }
@@ -95,80 +132,99 @@ class FileSystemWriter extends FileSystemHandler
      * Deletes all files in a directory.
      *
      * @param String $_directoryPath The directory path
-     * @param bool $_deleteNonEmptySubDirectories Indicates whether non empty subdirectories should be deleted
+     * @param Bool $_deleteNonEmptySubDirectories If set to true non empty subdirectories will be deleted too
      *
-     * @throws \Exception The exception when the target directory does not exist
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when a sub directory is not empty and shall not be deleted in that case
+     * @throws \Exception The exception when a sub directory was not deleted
+     * @throws \Exception The exception when a file was not deleted
      */
-    public function deleteFilesInDirectory(String $_directoryPath, bool $_deleteNonEmptySubDirectories = false)
+    public function deleteFilesInDirectory(String $_directoryPath, Bool $_deleteNonEmptySubDirectories = false)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
-        $files = $this->fileSystemReader->getFileList($directoryPath);
+        $filePaths = $this->fileSystemReader->getFileList($directoryPath);
 
-        foreach ($files as $file)
+        foreach ($filePaths as $filePath)
         {
-            if (is_dir($file)) $this->deleteDirectory($file, $_deleteNonEmptySubDirectories);
-            else unlink($file);
-        }
-
-        if ($this->fileSystemReader->getFileList($directoryPath) !== array())
-        {
-            throw new \Exception("Unknown error while deleting the files in the directory \"" . $directoryPath . "\".");
+            if (is_dir($filePath)) $this->deleteDirectory($filePath, $_deleteNonEmptySubDirectories);
+            else $this->deleteFile($filePath);
         }
     }
 
     /**
      * Deletes a file.
      *
-     * @param string $_filePath The path to the file that will be deleted
+     * @param String $_filePath The file path
      *
-     * @throws \Exception The exception when the target file does not exist
+     * @throws \Exception The exception when the file does not exist
+     * @throws \Exception The exception when the file was not deleted
      */
-    public function deleteFile(string $_filePath)
+    public function deleteFile(String $_filePath)
     {
         $filePath = $this->normalizePathFileSeparators($_filePath);
-
-        if (file_exists($filePath)) unlink($filePath);
-        else throw new \Exception("The file \"" . $filePath . "\" does not exist.");
-
-        if (file_exists($filePath))
+        if (! file_exists($filePath))
         {
-            throw new \Exception("Unknown error while deleting the file \"" . $filePath . "\".");
+            throw new \Exception("The file \"" . $filePath . "\" does not exist.");
+        }
+        elseif (! is_file($filePath))
+        {
+            throw new \Exception("\"" . $filePath . "\" is no file or can not be accessed.");
+        }
+
+        $fileWasDeleted = unlink($filePath);
+        if (! $fileWasDeleted)
+        {
+            throw new \Exception("The file \"" . $filePath . "\" could not be deleted.");
         }
     }
 
+    // Edit
+
     /**
      * Writes text to a file.
-     * Will create the file if it doesn't exist
+     * Will create the file if it doesn't exist.
      *
-     * @param string $_filePath The file path
-     * @param string $_content The file content
-     * @param Bool  $_appendToFile Indicates whether the content will be appended to the file
-     * @param bool $_overwriteIfExists If set to true, an existing file will be overwritten
+     * @param String $_filePath The file path
+     * @param String $_content The file content
+     * @param Bool $_appendToFile If set to true the content will be appended to the file if it already exists
+     * @param Bool $_overwriteIfExists If set to true the file will be overwritten if it already exists
      *
+     * @throws \Exception The exception when the file is no file
      * @throws \Exception The exception when the file already exists and shall not be overwritten in that case
+     * @throws \Exception The exception when the file was not deleted
+     * @throws \Exception The exception when the directory was not created
+     * @throws \Exception The exception when the file was not created
+     * @throws \Exception The exception when the file is not writable
+     * @throws \Exception The exception when the content was not written to the file
      */
-    public function writeFile(string $_filePath, string $_content, Bool $_appendToFile = false, bool $_overwriteIfExists = false)
+    public function writeFile(String $_filePath, String $_content, Bool $_appendToFile = false, Bool $_overwriteIfExists = false)
     {
         $filePath = $this->normalizePathFileSeparators($_filePath);
-        $directoryPath = dirname($filePath);
-
-        // Create directory if it doesn't exist
-        if (! file_exists($directoryPath)) $this->createDirectory($directoryPath);
 
         $flags = 0;
-
         if (file_exists($filePath))
         {
+            if (! is_file($filePath))
+            {
+                throw new \Exception("\"" . $filePath . "\" is no file or can not be accessed.");
+            }
+
             if ($_appendToFile) $flags = FILE_APPEND;
-            elseif (! $_overwriteIfExists) throw new \Exception("The file already exists.");
-            else $this->deleteFile($filePath);
+            elseif (! $_overwriteIfExists) throw new \Exception("The file \"" . $filePath . "\" already exists.");
+            else
+            {
+                $this->deleteFile($filePath);
+                $this->createFile($filePath);
+            }
         }
+        else $this->createFile($filePath);
 
-        file_put_contents($filePath, $_content, $flags);
+        if (! is_writable($filePath)) throw new \Exception("The file \"" . $filePath . "\" is not writable.");
 
-        if (! file_exists($filePath))
+        $contentWasWrittenToFile = file_put_contents($filePath, $_content, $flags);
+        if ($contentWasWrittenToFile === false)
         {
-            throw new \Exception("Unknown error while writing the file \"" . $filePath . "\".");
+            throw new \Exception("The content could not be written to the file \"" . $filePath . "\".");
         }
     }
 }
