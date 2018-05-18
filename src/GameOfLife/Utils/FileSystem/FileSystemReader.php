@@ -35,21 +35,24 @@ class FileSystemReader extends FileSystemHandler
      *
      * @return String|null The file path or null if the file was not found
      *
-     * @throws \Exception The exception when the search directory does not exist
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when the directory is not readable
+     * @throws \Exception The exception when the directory is no directory
      */
     public function findFileRecursive(String $_searchDirectoryPath, String $_fileName)
     {
-        $searchDirectory = $this->normalizePathFileSeparators($_searchDirectoryPath);
+        $directoryPath = $this->normalizePathFileSeparators($_searchDirectoryPath);
+        $this->checkPath($directoryPath, "directory");
 
-        if (! file_exists($searchDirectory) || ! is_dir($searchDirectory))
+        $filePaths = $this->getFileList($directoryPath);
+        foreach ($filePaths as $filePath)
         {
-            throw new \Exception("The directory \"" . $searchDirectory . "\" does not exist or can not be accessed.");
-        }
-
-        $directoryIterator = new \RecursiveDirectoryIterator($searchDirectory);
-        foreach (new \RecursiveIteratorIterator($directoryIterator) as $filePath)
-        {
-            if (basename($filePath) == $_fileName) return $this->normalizePathFileSeparators($filePath);
+            if (is_dir($filePath))
+            {
+                $resultFilePath = $this->findFileRecursive($filePath, $_fileName);
+                if ($resultFilePath !== null) return $resultFilePath;
+            }
+            elseif (basename($filePath) == $_fileName) return $this->normalizePathFileSeparators($filePath);
         }
 
         return null;
@@ -63,17 +66,22 @@ class FileSystemReader extends FileSystemHandler
      *
      * @return String[] The list of file paths
      *
-     * @throws \Exception The exception when the target directory does not exist
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when the directory is not readable
+     * @throws \Exception The exception when the directory is no directory
      */
     public function getFileList(String $_directoryPath, String $_searchPattern = "*"): array
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
+        $this->checkPath($directoryPath, "directory");
 
-        if (! file_exists($directoryPath) || ! is_dir($directoryPath))
+        $fileList = glob($directoryPath . $this->fileSeparatorSymbol . $_searchPattern);
+        if ($fileList === false)
         {
-            throw new \Exception("The directory \"" . $directoryPath . "\" does not exist or can not be accessed.");
+            throw new \Exception("The directory \"" . $directoryPath . "\" could not be read.");
         }
-        else return glob($directoryPath . $this->fileSeparatorSymbol . $_searchPattern);
+
+        return $fileList;
     }
 
     /**
@@ -83,16 +91,48 @@ class FileSystemReader extends FileSystemHandler
      *
      * @return String[] The contents of the file as a list of lines
      *
-     * @throws \Exception The exception when the target file does not exist
+     * @throws \Exception The exception when the file does not exist
+     * @throws \Exception The exception when the file is not readable
+     * @throws \Exception The exception when the file is no file
      */
     public function readFile(String $_filePath): array
     {
         $filePath = $this->normalizePathFileSeparators($_filePath);
+        $this->checkPath($filePath, "file");
 
-        if (! file_exists($filePath) || ! is_file($filePath))
+        $fileContent = file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        if ($fileContent === false)
         {
-            throw new \Exception("The file \"" . $filePath . "\" does not exist or can not be accessed.");
+            throw new \Exception("The file \"" . $filePath . "\" could not be read.");
         }
-        else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+
+        return $fileContent;
+    }
+
+    /**
+     * Checks whether a path to a file or directory is valid.
+     *
+     * @param String $_path The path to the directory or file
+     * @param String $_pathType The path type (Possible values: directory, file)
+     *
+     * @throws \Exception The exception when the directory or file does not exist
+     * @throws \Exception The exception when the directory or file is not readable
+     * @throws \Exception The exception when the directory is no directory or the file is no file
+     */
+    private function checkPath(String $_path, String $_pathType)
+    {
+        if (! file_exists($_path))
+        {
+            throw new \Exception("The " . $_pathType . " \"" . $_path . "\" does not exist.");
+        }
+        elseif (! is_readable($_path))
+        {
+            throw new \Exception("The " . $_pathType . " \"" . $_path . "\" is not readable.");
+        }
+        elseif ($_pathType == "directory" && ! is_dir($_path) ||
+                $_pathType == "file" && ! is_file($_path))
+        {
+            throw new \Exception("\"" . $_path . "\" is no " . $_pathType . " or can not be accessed.");
+        }
     }
 }
