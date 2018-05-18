@@ -13,6 +13,8 @@ namespace Utils\FileSystem;
  */
 class FileSystemWriter extends FileSystemHandler
 {
+    // Attributes
+
     /**
      * The file system reader
      *
@@ -20,6 +22,8 @@ class FileSystemWriter extends FileSystemHandler
      */
     private $fileSystemReader;
 
+
+    // Magic Methods
 
     /**
      * FileSystemWriter constructor.
@@ -30,25 +34,28 @@ class FileSystemWriter extends FileSystemHandler
         $this->fileSystemReader = new FileSystemReader();
     }
 
+
+    // Class Methods
+
     /**
      * Creates a directory if it doesn't exist yet.
      *
-     * @param string $_directoryPath The directory path
+     * @param String $_directoryPath The directory path
      *
      * @throws \Exception The exception when the target directory already exists
      */
-    public function createDirectory(string $_directoryPath)
+    public function createDirectory(String $_directoryPath)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
 
         if (! file_exists($directoryPath))
         {
-            // create all directories in the directory path recursively (if they don't exist)
+            // Create all directories in the directory path recursively (if they don't exist)
             mkdir($directoryPath, 0777, true);
 
             if (! file_exists($directoryPath))
             {
-                throw new \Exception("Unknown error while creating the directory \"" . $directoryPath . "\".");
+                throw new \Exception("The directory \"" . $directoryPath . "\" could not be created.");
             }
         }
         else throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
@@ -57,19 +64,20 @@ class FileSystemWriter extends FileSystemHandler
     /**
      * Deletes a directory.
      *
-     * @param string $_directoryPath The directory path
-     * @param bool $_deleteWhenNotEmpty If set to true all files inside the directory will be deleted
+     * @param String $_directoryPath The directory path
+     * @param Bool $_deleteWhenNotEmpty If set to true all files inside the directory will be deleted recursively
      *
      * @throws \Exception The exception when the target directory does not exist or is not empty and shall not be deleted in that case
      */
-    public function deleteDirectory(string $_directoryPath, bool $_deleteWhenNotEmpty = false)
+    public function deleteDirectory(String $_directoryPath, Bool $_deleteWhenNotEmpty = false)
     {
         $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
-        if (! file_exists($directoryPath)) throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
+        if (! file_exists($directoryPath) || ! is_dir($directoryPath))
+        {
+            throw new \Exception("The directory \"" . $directoryPath . "\" does not exist or can not be accessed.");
+        }
 
-        $files = $this->fileSystemReader->getFileList($directoryPath);
-
-        if (count($files) !== 0)
+        if ($this->fileSystemReader->getFileList($directoryPath) != array())
         {
             if (! $_deleteWhenNotEmpty) throw new \Exception("The directory \"" . $_directoryPath . "\" is not empty");
             else $this->deleteFilesInDirectory($directoryPath, true);
@@ -79,14 +87,14 @@ class FileSystemWriter extends FileSystemHandler
 
         if (file_exists($directoryPath))
         {
-            throw new \Exception("Unknown error while deleting the directory \"" . $directoryPath . "\".");
+            throw new \Exception("The directory \"" . $directoryPath . "\" could not be deleted.");
         }
     }
 
     /**
-     * Deletes all files in a directory without deleting the directory.
+     * Deletes all files in a directory.
      *
-     * @param String $_directoryPath The path to the directory
+     * @param String $_directoryPath The directory path
      * @param bool $_deleteNonEmptySubDirectories Indicates whether non empty subdirectories should be deleted
      *
      * @throws \Exception The exception when the target directory does not exist
