@@ -8,7 +8,7 @@
 
 namespace Utils\FileSystem;
 
-use Utils\Shell\ShellInformationFetcher;
+use Utils\OsInformationFetcher;
 
 /**
  * Parent class for FileSystemWriter and FileSystemReader.
@@ -39,11 +39,11 @@ class FileSystemHandler
     protected $fileSeparatorSymbol;
 
     /**
-     * The shell information fetcher
+     * The os information fetcher
      *
-     * @var ShellInformationFetcher $shellInformationFetcher
+     * @var OsInformationFetcher $osInformationFetcher
      */
-    private $shellInformationFetcher;
+    private $osInformationFetcher;
 
 
     // Magic Methods
@@ -53,9 +53,9 @@ class FileSystemHandler
      */
     protected function __construct()
     {
-        $this->shellInformationFetcher = new ShellInformationFetcher();
+        $this->osInformationFetcher = new OsInformationFetcher();
 
-        if ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osWindows)
+        if ($this->osInformationFetcher->isWindows())
         {
             $this->fileSeparatorSymbol = $this->fileSeparatorSymbolWindows;
         }
@@ -77,11 +77,11 @@ class FileSystemHandler
      */
     protected function normalizePathFileSeparators(String $_path): String
     {
-        if ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osWindows)
+        if ($this->osInformationFetcher->isWindows())
         {
             return str_replace($this->fileSeparatorSymbolLinux, $this->fileSeparatorSymbolWindows, $_path);
         }
-        elseif ($this->shellInformationFetcher->getOsType() == ShellInformationFetcher::osLinux)
+        elseif ($this->osInformationFetcher->isLinux())
         {
             return str_replace($this->fileSeparatorSymbolWindows, $this->fileSeparatorSymbolLinux, $_path);
         }

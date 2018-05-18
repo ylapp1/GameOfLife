@@ -10,8 +10,8 @@ namespace Output\Helpers;
 
 use Utils\FileSystem\FileSystemReader;
 use Utils\FileSystem\FileSystemWriter;
+use Utils\OsInformationFetcher;
 use Utils\Shell\ShellExecutor;
-use Utils\Shell\ShellInformationFetcher;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -49,11 +49,11 @@ class FfmpegHelper
     private $options;
 
     /**
-     * The id of the operating system type.
+     * The os information fetcher
      *
-     * @var int $osType
+     * @var OsInformationFetcher $osInformationFetcher
      */
-    private $osType;
+    private $osInformationFetcher;
 
     /**
      * The shell executor
@@ -75,10 +75,7 @@ class FfmpegHelper
         $this->options = array();
         $this->shellExecutor = new ShellExecutor();
 
-        $shellInformationFetcher = new ShellInformationFetcher();
-        $this->osType = $shellInformationFetcher->getOsType();
-        unset($shellInformationFetcher);
-
+        $this->osInformationFetcher = new OsInformationFetcher();
         $this->binaryPath = $this->findFFmpegBinary();
     }
 
@@ -94,14 +91,14 @@ class FfmpegHelper
     {
         $binaryPath = "";
 
-        if ($this->osType == ShellInformationFetcher::osWindows)
+        if ($this->osInformationFetcher->isWindows())
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
             $searchDirectory = __DIR__ . "/../../../../Tools";
             $binaryPath = $this->fileSystemReader->findFileRecursive($searchDirectory, "ffmpeg.exe");
 
             if ($binaryPath === null) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
-        elseif ($this->osType == ShellInformationFetcher::osLinux)
+        elseif ($this->osInformationFetcher->isLinux())
         { // If OS is Linux check whether the ffmpeg command returns true
             $returnValue = $this->shellExecutor->executeCommand("ffmpeg", true);
             if ($returnValue == 1) $binaryPath = "ffmpeg";
@@ -139,9 +136,9 @@ class FfmpegHelper
     {
         $command = "";
 
-        if ($this->osType == ShellInformationFetcher::osWindows) $command .= "\"";
+        if ($this->osInformationFetcher->isWindows()) $command .= "\"";
         $command .= $this->binaryPath;
-        if ($this->osType == ShellInformationFetcher::osWindows) $command .= "\"";
+        if ($this->osInformationFetcher->isWindows()) $command .= "\"";
 
         foreach ($this->options as $option)
         {

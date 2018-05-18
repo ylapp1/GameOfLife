@@ -13,6 +13,8 @@ namespace Utils\Shell;
  */
 class ShellInputReader
 {
+    // Attributes
+
     /**
      * Stores the last line that was added to the history
      *
@@ -20,6 +22,15 @@ class ShellInputReader
      */
     private $lastHistoryLine;
 
+    /**
+     * The shell information fetcher
+     *
+     * @var
+     */
+    private $shellInformationFetcher;
+
+
+    // Magic Methods
 
     /**
      * ShellInputReader constructor.
@@ -29,6 +40,8 @@ class ShellInputReader
         $this->lastHistoryLine = "";
     }
 
+
+    // Class Methods
 
     /**
      * Reads input from the shell.
@@ -47,7 +60,7 @@ class ShellInputReader
     }
 
     /**
-     * Adds the input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
+     * Adds an input line to the history in order to be able to use ARROW UP and ARROW DOWN keys
      * to navigate to previously used commands.
      *
      * @param String $_line The line that was read

@@ -8,39 +8,52 @@
 
 namespace Utils\Shell;
 
+use Utils\OsInformationFetcher;
+
 /**
  * Handles executing of shell commands.
  */
 class ShellExecutor
 {
+    // Attributes
+
     /**
-     * Stores the path to which you can redirect standard output without saving it in Linux
+     * The path to which you can redirect standard output without saving it in Linux
      *
      * @var String $outputHideRedirectLinux
      */
     private $outputHideRedirectLinux = "/dev/null";
 
     /**
-     * Stores the path to which you can redirect standard output without saving it in Windows
+     * The path to which you can redirect standard output without saving it in Windows
      *
      * @var String $outputHideRedirectWindows
      */
     private $outputHideRedirectWindows = "NUL";
 
     /**
-     * Stores the path for output redirects for other operating systems
+     * The path for output redirects for other operating systems
      *
-     * @var String
+     * @var String $outputHideRedirectOther
      */
     private $outputHideRedirectOther = "output.txt";
 
     /**
      * The output of the last executed command
      *
-     * @var array $output
+     * @var String[] $output
      */
     private $output;
 
+    /**
+     * The os information fetcher
+     *
+     * @var OsInformationFetcher $osInformationFetcher
+     */
+    private $osInformationFetcher;
+
+
+    // Magic Methods
 
     /**
      * ShellExecutor constructor.
@@ -48,29 +61,34 @@ class ShellExecutor
     public function __construct()
     {
         $this->output = array();
+        $this->osInformationFetcher = new OsInformationFetcher();
     }
 
+
+    // Getters and Setters
 
     /**
      * Returns the output of the last executed command.
      *
      * @return String[] The output of the last executed command
      */
-    public function output()
+    public function output(): array
     {
         return $this->output;
     }
 
 
+    // Class Methods
+
     /**
      * Executes a command and optionally hides the output from the user.
      *
      * @param String $_command The command
-     * @param bool $_hideOutput Indicates whether the output will be hidden or not
+     * @param Bool $_hideOutput If set to true the output will not be displayed to the user
      *
-     * @return int The return code of the command
+     * @return int The return code of the executed command
      */
-    public function executeCommand(String $_command, Bool $_hideOutput = false)
+    public function executeCommand(String $_command, Bool $_hideOutput = false): int
     {
         $returnValue = 0;
         $this->output = array();
@@ -86,10 +104,16 @@ class ShellExecutor
      *
      * @return String The path to which the output will be redirected
      */
-    private function getOutputHideRedirect()
+    private function getOutputHideRedirect(): String
     {
-        if (stristr(PHP_OS, "win")) return $this->outputHideRedirectWindows;
-        elseif (stristr(PHP_OS, "linux")) return $this->outputHideRedirectLinux;
+        if ($this->osInformationFetcher->isWindows())
+        {
+            return $this->outputHideRedirectWindows;
+        }
+        elseif ($this->osInformationFetcher->isLinux())
+        {
+            return $this->outputHideRedirectLinux;
+        }
         else return $this->outputHideRedirectOther;
     }
 }
