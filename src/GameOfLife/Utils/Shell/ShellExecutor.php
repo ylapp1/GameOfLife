@@ -93,8 +93,16 @@ class ShellExecutor
         $returnValue = 0;
         $this->output = array();
 
-        if ($_hideOutput) $_command .= " 2>" . $this->getOutputHideRedirect();
-        exec($_command, $this->output, $returnValue);
+        $command = $_command;
+        if ($_hideOutput)
+        { // Redirect standard output
+            $command .= " >" . $this->getOutputHideRedirect();
+        }
+
+        // Redirect standard error to standard output
+        $command .= " 2>&1";
+
+        exec($command, $this->output, $returnValue);
 
         return $returnValue;
     }
