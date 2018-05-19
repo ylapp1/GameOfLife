@@ -21,7 +21,7 @@ class ImageOutputTest extends TestCase
 {
     /** @var ImageOutput */
     private $output;
-    private $testDirectory = __DIR__ . "/../ImageOutputTest/";
+    private $testDirectory = "../tests/GameOfLife/ImageOutputTest/";
     /** @var FileSystemWriter */
     private $fileSystemHandler;
 
@@ -35,7 +35,7 @@ class ImageOutputTest extends TestCase
     {
         try
         {
-            $this->fileSystemHandler->deleteDirectory($this->testDirectory, true);
+            $this->fileSystemHandler->deleteDirectory(__DIR__ . "/../../../Output/" . $this->testDirectory, true);
         }
         catch (\Exception $_exception)
         {
