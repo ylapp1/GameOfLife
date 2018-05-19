@@ -65,7 +65,7 @@ class BaseOutput
     {
         $mainTitle = "GAME OF LIFE";
 
-        echo $this->shellOutputHelper->getCenteredOutputString($mainTitle);
+        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($mainTitle);
         echo "\n" . $this->shellOutputHelper->getCenteredOutputString($this->outputTitle) . "\n\n";
     }
 

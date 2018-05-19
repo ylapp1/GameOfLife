@@ -11,8 +11,25 @@ namespace Utils\Shell;
 /**
  * Prints tables to the shell.
  */
-class ShellTablePrinter extends ShellOutputHelper
+class ShellTablePrinter
 {
+    /**
+     * The cached number of shell columns
+     *
+     * @var int $numberOfShellColumns
+     */
+    private $numberOfShellColumns;
+
+    /**
+     * ShellTablePrinter constructor.
+     */
+    public function __construct()
+    {
+        $shellInformationFetcher = new ShellInformationFetcher();
+        $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
+        unset($shellInformationFetcher);
+    }
+
     /**
      * Prints a table to the console.
      *
