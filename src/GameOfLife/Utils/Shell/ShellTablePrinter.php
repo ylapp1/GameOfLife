@@ -161,4 +161,61 @@ class ShellTablePrinter
 
         return $subRows;
     }
+
+    /**
+     * Enhanced auto line breaker.
+     *
+     * @param $_text
+     * @param $_columnWidth
+     * @return array
+     */
+    private function autoLineBreakTableCellText($_text, $_columnWidth)
+    {
+        // Easy variant
+        /*
+         * $text = addslashes($_text);
+         * $text = str_replace("\r", "", $text);
+         * $text = str_replace("\n", "", $text);
+         * $text = str_replace("\t", "    ", $text);
+         *
+         * return str_split($text, $_columnWidth);
+         */
+
+        // Replace all tabs with 4 empty spaces because otherwise the table will be broken
+        $text = str_replace("\t", "    ", $_text);
+
+        // Same as above, remove all carriage returns
+        $text = str_replace("\r", "", $text);
+
+
+        // Split the string into the rows in the text file
+        $rows = explode("\n", $text);
+
+        // Split the rows that are too long into sub rows
+        $outputRows = array();
+
+        foreach ($rows as $row)
+        {
+            while (mb_strlen($row) > $_columnWidth - 1)
+            {
+                $characterPosition = $_columnWidth - 1;
+                while (substr($row, $characterPosition, 1) != " ")
+                {
+                    if ($characterPosition == 0) break;
+                    $characterPosition--;
+                }
+
+                if ($characterPosition == 0) $characterPosition = $_columnWidth - 1;
+
+                $outputRows[] = rtrim(mb_substr($row, 0, $characterPosition));
+                $row = ltrim(mb_substr($row, $characterPosition));
+
+                if ($row) $row = "    " . $row;
+            }
+
+            if ($row) $outputRows[] = $row;
+        }
+
+        return $outputRows;
+    }
 }
