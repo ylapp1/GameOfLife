@@ -167,50 +167,40 @@ class ShellTablePrinter
      *
      * @param $_text
      * @param $_columnWidth
+     * @param int $_minTextWidth
+     *
      * @return array
      */
-    private function autoLineBreakTableCellText($_text, $_columnWidth)
+    private function autoLineBreakTableCellText($_text, $_columnWidth, $_minTextWidth = 0)
     {
-        // Easy variant
-        /*
-         * $text = addslashes($_text);
-         * $text = str_replace("\r", "", $text);
-         * $text = str_replace("\n", "", $text);
-         * $text = str_replace("\t", "    ", $text);
-         *
-         * return str_split($text, $_columnWidth);
-         */
-
-        // Replace all tabs with 4 empty spaces because otherwise the table will be broken
+        // Remove special characters that would break the table
         $text = str_replace("\t", "    ", $_text);
-
-        // Same as above, remove all carriage returns
         $text = str_replace("\r", "", $text);
 
-
-        // Split the string into the rows in the text file
+        // Split the string into rows
         $rows = explode("\n", $text);
 
         // Split the rows that are too long into sub rows
         $outputRows = array();
-
         foreach ($rows as $row)
         {
+            $emptySpaceSearchOffset = 0;
             while (mb_strlen($row) > $_columnWidth - 1)
             {
-                $characterPosition = $_columnWidth - 1;
-                while (substr($row, $characterPosition, 1) != " ")
+                $subRow = mb_substr($row, 0, $_columnWidth - 1);
+
+                $emptySpacePosition = strrpos($subRow, " ", $emptySpaceSearchOffset);
+                if ($emptySpacePosition === false) $emptySpacePosition = $_columnWidth - 1;
+                elseif ($emptySpacePosition < $_minTextWidth) $emptySpacePosition = $_minTextWidth;
+
+                $outputRows[] = mb_substr($subRow, 0, $emptySpacePosition);
+                $row = mb_substr($row, $emptySpacePosition);
+
+                if ($row)
                 {
-                    if ($characterPosition == 0) break;
-                    $characterPosition--;
+                    $row = ">    " . $row;
+                    if ($emptySpaceSearchOffset == 0) $emptySpaceSearchOffset = 5;
                 }
-
-                if ($characterPosition == 0) $characterPosition = $_columnWidth - 1;
-
-                $outputRows[] = rtrim(mb_substr($row, 0, $characterPosition));
-                $row = ltrim(mb_substr($row, $characterPosition));
-
-                if ($row) $row = "    " . $row;
             }
 
             if ($row) $outputRows[] = $row;
