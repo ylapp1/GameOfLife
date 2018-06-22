@@ -51,9 +51,11 @@ class OsInformationFetcher
      */
     public function __construct()
     {
+        $operatingSystemName = php_uname("s");
+
         // Detect the os type
-        if (stristr(PHP_OS, "linux")) $this->osType = $this->osLinux;
-        elseif (stristr(PHP_OS, "win")) $this->osType = $this->osWindows;
+        if (stristr($operatingSystemName, "linux")) $this->osType = $this->osLinux;
+        elseif (stristr($operatingSystemName, "win")) $this->osType = $this->osWindows;
         else $this->osType = $this->osUnknown;
     }
 
