@@ -11,33 +11,37 @@ namespace TemplateHandler;
 use GameOfLife\Field;
 
 /**
- * Loads templates from files.
+ * Loads template fields from a file.
  */
 class TemplateLoader extends TemplateHandler
 {
+    // Magic Methods
+
     /**
      * TemplateLoader constructor.
      *
-     * @param String $_templatesBaseDirectory The base directory for default and custom templates
+     * @param String $_defaultTemplatesDirectory The directory in which the default templates are stored
      */
-    public function __construct(String $_templatesBaseDirectory)
+    public function __construct(String $_defaultTemplatesDirectory)
     {
-        parent::__construct($_templatesBaseDirectory);
+        parent::__construct($_defaultTemplatesDirectory);
     }
 
+
+    // Class Methods
+
     /**
-     * Loads a template from a file.
+     * Loads template fields from a file.
      *
      * @param String $_templateName The name of the template
      *
-     * @return array The loaded template
+     * @return Field[][] The loaded template fields
      *
-     * @throws \Exception The exception when the template file was not found or the file could not be read
+     * @throws \Exception The exception when the template file was not found or could not be read
      */
     public function loadTemplate(String $_templateName)
     {
         $fileName = $_templateName . ".txt";
-
         $defaultTemplatePath = $this->defaultTemplatesDirectory . "/" . $fileName;
         $customTemplatePath = $this->customTemplatesDirectory . "/" . $fileName;
 
@@ -50,17 +54,17 @@ class TemplateLoader extends TemplateHandler
         $lines = $this->fileSystemReader->readFile($fileName);
 
         $fields = array();
-        for ($y = 0; $y < count($lines); $y++)
+        foreach ($lines as $y => $line)
         {
-            $fields[] = array();
-            $row = str_split($lines[$y]);
+            $fields[$y] = array();
+            $lineCharacters = str_split($line);
 
-            for ($x = 0; $x < count($row); $x++)
+            foreach ($lineCharacters as $x => $lineCharacter)
             {
-                if ($row[$x] == "X") $cellState = true;
+                if ($lineCharacter == "X") $cellState = true;
                 else $cellState = false;
 
-                $fields[$y][] = new Field($x, $y, $cellState);
+                $fields[$y][$x] = new Field($x, $y, $cellState);
             }
         }
 
