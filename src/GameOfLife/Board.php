@@ -391,7 +391,7 @@ class Board
             $fields[$y] = array();
             for ($x = 0; $x < $this->width; $x++)
             {
-                $fields[$y][] = new Field($x, $y, $_fieldsState, $this);
+                $fields[$y][$x] = new Field($x, $y, $_fieldsState, $this);
             }
         }
 

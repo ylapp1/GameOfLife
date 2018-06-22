@@ -47,7 +47,6 @@ class BoardTest extends TestCase
         $this->assertEquals($_hasBorder, $testBoard->hasBorder());
         $this->assertEquals($_height, $testBoard->height());
         $this->assertEquals($_width, $testBoard->width());
-        $this->assertEquals($testBoard->generateFieldsList(false), $testBoard->fields());
     }
 
     public function constructionProvider()

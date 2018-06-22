@@ -16,11 +16,13 @@ use Rule\BaseRule;
 /**
  * Handles the game logic.
  *
- * Call calculateNextBoard($_board) to calculate a game step for the entire board
- * Call isLoopDetected() to check whether there's a repeating pattern
+ * Call calculateNextBoard($_board) to calculate one game step for the entire board
+ * Call isLoopDetected() to check whether a repeating board was detected
  */
 class GameLogic
 {
+    // Attributes
+
     /**
      * Stores the fields of the last 15 boards of the current simulation
      *
@@ -44,17 +46,19 @@ class GameLogic
     private $maxSteps;
 
     /**
-     * Birth/Death rules for this session
+     * The birth/stay alive rules for this simulation
      *
      * @var BaseRule $rule
      */
     private $rule;
 
 
+    // Magic Methods
+
     /**
      * GameLogic constructor.
      *
-     * @param BaseRule $_rule Rule for this session
+     * @param BaseRule $_rule The birth/stay alive rules for this simulation
      * @param int $_maxSteps The maximum number of game steps that are calculated before the simulation stops
      */
     public function __construct(BaseRule $_rule, int $_maxSteps)
@@ -66,10 +70,12 @@ class GameLogic
     }
 
 
+    // Getters and Setters
+
     /**
      * Returns the current game step.
      *
-     * @return int Current game step
+     * @return int The current game step
      */
     public function gameStep(): int
     {
@@ -79,7 +85,7 @@ class GameLogic
     /**
      * Sets the current game step.
      *
-     * @param int $_gameStep Current game step
+     * @param int $_gameStep The current game step
      */
     public function setGameStep(int $_gameStep)
     {
@@ -87,9 +93,9 @@ class GameLogic
     }
 
     /**
-     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps.
+     * Returns the maximum number of game steps that are calculated before the simulation stops.
      *
-     * @return int The maximum amount of game steps
+     * @return int The maximum number of game steps that are calculated before the simulation stops
      */
     public function maxSteps(): int
     {
@@ -97,9 +103,9 @@ class GameLogic
     }
 
     /**
-     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps.
+     * Sets the maximum number of game steps that are calculated before the simulation stops.
      *
-     * @param int $_maxSteps The maximum amount of game steps
+     * @param int $_maxSteps The maximum number of game steps that are calculated before the simulation stops
      */
     public function setMaxSteps(int $_maxSteps)
     {
@@ -107,31 +113,32 @@ class GameLogic
     }
 
 
+    // Class methods
+
     /**
-     * Calculates one game step for the entire board.
+     * Calculates one game step for the entire board and updates the fields of the board.
      *
      * @param Board $_board The board
      */
     public function calculateNextBoard(Board $_board)
     {
         $this->boardHistory->addBoardToHistory($_board);
+        $updatedFields = array();
 
-        /** @var Field[][] $newFields */
-        $newFields = $_board->generateFieldsList(false);
-
-        foreach ($_board->fields() as $line)
+        foreach ($_board->fields() as $y => $rowFields)
         {
-            foreach ($line as $field)
+            foreach ($rowFields as $x => $rowField)
             {
-                if ($field instanceof Field)
-                {
-                    $newState = $this->rule->calculateNewState($field);
-                    $newFields[$field->y()][$field->x()]->setValue($newState);
-                }
+                /** @var Field $updatedField */
+                $updatedField = clone $rowField;
+                $newState = $this->rule->calculateNewState($rowField);
+                $updatedField->setValue($newState);
+
+                $updatedFields[$y][$x] = $updatedField;
             }
         }
 
-        $_board->setFields($newFields);
+        $_board->setFields($updatedFields);
         $this->gameStep++;
     }
 
@@ -140,9 +147,9 @@ class GameLogic
      *
      * @param Board $_board The board
      *
-     * @return bool Indicates whether the board is empty
+     * @return Bool True if the board is empty, false otherwise
      */
-    public function isBoardEmpty(Board $_board): bool
+    public function isBoardEmpty(Board $_board): Bool
     {
         if ($_board->getNumberOfAliveFields() == 0) return true;
         else return false;
@@ -151,25 +158,22 @@ class GameLogic
     /**
      * Checks whether the max step is reached.
      *
-     * @return bool true: board is finished
-     *              false: board is not finished
+     * @return Bool True if the max step is reached, false otherwise
      */
-    public function isMaxStepsReached(): bool
+    public function isMaxStepReached(): Bool
     {
         if ($this->gameStep >= $this->maxSteps) return true;
         else return false;
     }
 
     /**
-     * Compares the newest board in the history with up to 15 previous boards.
+     * Compares the newest board in the history with up to 15 previous boards for reoccurring board fields.
      *
-     * @param Board $_board The current board
+     * @param Board $_board The board
      *
-     * @return bool Indicates whether there's a repeating pattern
-     *              True: Repeating pattern detected
-     *              False: No repeating pattern detected
+     * @return Bool True if a repeating pattern was detected, false otherwise
      */
-    public function isLoopDetected(Board $_board): bool
+    public function isLoopDetected(Board $_board): Bool
     {
         if ($this->boardHistory->boardExistsInHistory($_board) !== null) return true;
         else return false;

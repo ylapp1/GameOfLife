@@ -163,7 +163,7 @@ class GameOfLifeTest extends TestCase
 
         $counter = 0;
         $loopCounter = 0;
-        $endLoopMethodNames = array("isMaxStepsReached", "isLoopDetected", "isBoardEmpty");
+        $endLoopMethodNames = array("isMaxStepReached", "isLoopDetected", "isBoardEmpty");
 
         while ($loopCounter < $_amountLoops)
         {
@@ -209,7 +209,7 @@ class GameOfLifeTest extends TestCase
     public function startSimulationProvider()
     {
         return array(
-            "Max steps reached before first step" => array(0, "isMaxStepsReached"),
+            "Max steps reached before first step" => array(0, "isMaxStepReached"),
             "Loop detected reached after 5 steps" => array(5, "isLoopDetected"),
             //"Board empty detected after 3 steps" => array(3, "isBoardEmpty")
         );

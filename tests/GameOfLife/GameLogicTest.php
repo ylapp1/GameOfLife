@@ -139,7 +139,7 @@ class GameLogicTest extends TestCase
     /**
      * Checks whether max steps reached can be successfully detected.
      *
-     * @covers \Simulator\GameLogic::isMaxStepsReached()
+     * @covers \Simulator\GameLogic::isMaxStepReached()
      */
     public function testCanDetectMaxStepsReached()
     {
@@ -147,15 +147,15 @@ class GameLogicTest extends TestCase
 
         // Less than max steps
         $gameLogic->setGameStep(1);
-        $this->assertFalse($gameLogic->isMaxStepsReached());
+        $this->assertFalse($gameLogic->isMaxStepReached());
 
         // Equal to max steps
         $gameLogic->setGameStep(3);
-        $this->assertTrue($gameLogic->isMaxStepsReached());
+        $this->assertTrue($gameLogic->isMaxStepReached());
 
         // Greater than max steps
         $gameLogic->setGameStep(14);
-        $this->assertTrue($gameLogic->isMaxStepsReached());
+        $this->assertTrue($gameLogic->isMaxStepReached());
     }
 
     /**
