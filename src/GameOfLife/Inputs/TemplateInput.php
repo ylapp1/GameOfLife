@@ -127,6 +127,8 @@ class TemplateInput extends BaseInput
         elseif ($_options->getOption("list-templates") !== null)
         {
             $this->templateListPrinter->printTemplateLists();
+            $_board->setWidth(0);
+            $_board->setHeight(0);
         }
         else
         {
