@@ -13,12 +13,17 @@ namespace Utils\Shell;
  */
 class ShellTablePrinter
 {
+    // Attributes
+
     /**
      * The cached number of shell columns
      *
      * @var int $numberOfShellColumns
      */
     private $numberOfShellColumns;
+
+
+    // Magic Methods
 
     /**
      * ShellTablePrinter constructor.
@@ -29,6 +34,9 @@ class ShellTablePrinter
         $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
         unset($shellInformationFetcher);
     }
+
+
+    // Class Methods
 
     /**
      * Prints a table to the console.
@@ -171,14 +179,20 @@ class ShellTablePrinter
      *
      * @return array
      */
-    private function autoLineBreakTableCellText($_text, $_columnWidth, $_minTextWidth = 0)
+    /**
+     * Auto line breaks the content of a table cell and returns an array of cell sub rows.
+     *
+     * @param String $_text The content of the table cell
+     * @param int $_columnWidth The maximum text width in number of characters
+     * @param int $_minTextWidth The minimum text width per row in number of characters
+     * @param int $_paddingOnAutoLineBreak
+     *
+     * @return String[] The cell sub rows
+     */
+    private function autoLineBreakTableCellText($_text, $_columnWidth, $_minTextWidth = 0, $_paddingOnAutoLineBreak = 0)
     {
-        // Remove special characters that would break the table
-        $text = str_replace("\t", "    ", $_text);
-        $text = str_replace("\r", "", $text);
-
         // Split the string into rows
-        $rows = explode("\n", $text);
+        $rows = explode("\n", $_text);
 
         // Split the rows that are too long into sub rows
         $outputRows = array();
@@ -189,17 +203,17 @@ class ShellTablePrinter
             {
                 $subRow = mb_substr($row, 0, $_columnWidth - 1);
 
-                $emptySpacePosition = strrpos($subRow, " ", $emptySpaceSearchOffset);
-                if ($emptySpacePosition === false) $emptySpacePosition = $_columnWidth - 1;
-                elseif ($emptySpacePosition < $_minTextWidth) $emptySpacePosition = $_minTextWidth;
+                $autoLineBreakPosition = mb_strrpos($subRow, " ", $emptySpaceSearchOffset);
+                if ($autoLineBreakPosition === false) $autoLineBreakPosition = $_columnWidth - 1;
+                elseif ($autoLineBreakPosition < $_minTextWidth) $autoLineBreakPosition = $_minTextWidth;
 
-                $outputRows[] = mb_substr($subRow, 0, $emptySpacePosition);
-                $row = mb_substr($row, $emptySpacePosition);
+                $outputRows[] = mb_substr($subRow, 0, $autoLineBreakPosition);
+                $row = mb_substr($row, $autoLineBreakPosition);
 
-                if ($row)
+                if ($row && $_paddingOnAutoLineBreak)
                 {
-                    $row = ">    " . $row;
-                    if ($emptySpaceSearchOffset == 0) $emptySpaceSearchOffset = 5;
+                    $row = str_repeat(" ", $_paddingOnAutoLineBreak) . $row;
+                    $emptySpaceSearchOffset = $_paddingOnAutoLineBreak;
                 }
             }
 
