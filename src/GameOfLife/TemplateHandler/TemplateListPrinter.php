@@ -8,11 +8,23 @@
 
 namespace TemplateHandler;
 
+use Utils\FileSystem\FileSystemReader;
+
 /**
  * Prints a list of default and custom template names.
  */
 class TemplateListPrinter extends TemplateHandler
 {
+    // Attributes
+
+    /**
+     * The file system reader
+     *
+     * @var FileSystemReader $fileSystemReader
+     */
+    private $fileSystemReader;
+
+
     // Magic Methods
 
     /**
@@ -23,6 +35,7 @@ class TemplateListPrinter extends TemplateHandler
     public function __construct(String $_defaultTemplatesDirectory)
     {
         parent::__construct($_defaultTemplatesDirectory);
+        $this->fileSystemReader = new FileSystemReader();
     }
 
 

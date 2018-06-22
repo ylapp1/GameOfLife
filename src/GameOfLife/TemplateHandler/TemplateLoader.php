@@ -9,12 +9,23 @@
 namespace TemplateHandler;
 
 use GameOfLife\Field;
+use Utils\FileSystem\FileSystemReader;
 
 /**
  * Loads template fields from a file.
  */
 class TemplateLoader extends TemplateHandler
 {
+    // Attributes
+
+    /**
+     * The file system reader
+     *
+     * @var FileSystemReader $fileSystemReader
+     */
+    private $fileSystemReader;
+
+
     // Magic Methods
 
     /**
@@ -25,6 +36,7 @@ class TemplateLoader extends TemplateHandler
     public function __construct(String $_defaultTemplatesDirectory)
     {
         parent::__construct($_defaultTemplatesDirectory);
+        $this->fileSystemReader = new FileSystemReader();
     }
 
 

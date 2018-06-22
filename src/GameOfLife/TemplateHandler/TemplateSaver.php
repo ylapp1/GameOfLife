@@ -9,12 +9,25 @@
 namespace TemplateHandler;
 
 use GameOfLife\Board;
+use Utils\FileSystem\FileSystemWriter;
 
 /**
  * Saves a custom template to the custom templates directory.
  */
 class TemplateSaver extends TemplateHandler
 {
+    // Attributes
+
+    /**
+     * The file system writer
+     *
+     * @var FileSystemWriter $fileSystemWriter
+     */
+    private $fileSystemWriter;
+
+
+    // Magic Methods
+
     /**
      * TemplateSaver constructor.
      *
@@ -23,7 +36,11 @@ class TemplateSaver extends TemplateHandler
     public function __construct(String $_defaultTemplatesDirectory)
     {
         parent::__construct($_defaultTemplatesDirectory);
+        $this->fileSystemWriter = new FileSystemWriter();
     }
+
+
+    // Class Methods
 
     /**
      * Saves a custom template to the custom templates directory.
