@@ -16,6 +16,8 @@ use GameOfLife\Field;
  */
 class FieldsPlacer
 {
+    // Class Methods
+
     /**
      * Places template fields on a board.
      *

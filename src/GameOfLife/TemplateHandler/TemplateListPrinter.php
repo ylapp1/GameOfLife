@@ -9,10 +9,12 @@
 namespace TemplateHandler;
 
 /**
- * Prints a list of default and custom templates.
+ * Prints a list of default and custom template names.
  */
 class TemplateListPrinter extends TemplateHandler
 {
+    // Magic Methods
+
     /**
      * TemplateListPrinter constructor.
      *
@@ -24,8 +26,10 @@ class TemplateListPrinter extends TemplateHandler
     }
 
 
+    // Class Methods
+
     /**
-     * Prints a list of default and custom templates.
+     * Prints a list of default and custom template names.
      */
     public function printTemplateLists()
     {
@@ -47,12 +51,11 @@ class TemplateListPrinter extends TemplateHandler
         {
             $customTemplateFilePaths = array();
         }
-
         $this->printTemplateList("Custom templates", $customTemplateFilePaths);
     }
 
     /**
-     * Generates an output string from a list of templates.
+     * Prints a list of templates.
      *
      * @param String $_title The title of the list
      * @param String[] $_templateFilePaths The list of template file paths
@@ -60,14 +63,14 @@ class TemplateListPrinter extends TemplateHandler
     private function printTemplateList(String $_title, array $_templateFilePaths)
     {
         $outputString = "\n" . $_title . ":\n";
-        if (count($_templateFilePaths) == 0) $outputString .= "  None\n";
-        else
+        if ($_templateFilePaths)
         {
             foreach ($_templateFilePaths as $index => $templateFilePath)
             {
                 $outputString .= "  " . ($index + 1) . ") " . basename($templateFilePath, ".txt") . "\n";
             }
         }
+        else $outputString .= "  None\n";
 
         echo $outputString;
     }
