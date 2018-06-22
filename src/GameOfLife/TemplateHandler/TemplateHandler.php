@@ -14,47 +14,52 @@ use Utils\FileSystem\FileSystemWriter;
 /**
  * Parent class for TemplateListPrinter, TemplateLoader and TemplateSaver.
  */
-class TemplateHandler
+abstract class TemplateHandler
 {
+    // Attributes
+
     /**
-     * FileSystemReader that reads templates
+     * The file system reader
      *
      * @var FileSystemReader $fileSystemReader
      */
     protected $fileSystemReader;
 
     /**
-     * FileSystemWriter that writes templates
+     * The file system writer
      *
      * @var FileSystemWriter $fileSystemWriter
      */
     protected $fileSystemWriter;
 
     /**
-     * The directory in which the default templates are stored.
+     * The directory in which the default templates are stored
      *
      * @var String $defaultTemplatesDirectory
      */
     protected $defaultTemplatesDirectory;
 
     /**
-     * The directory in which the custom templates are stored.
+     * The directory in which the custom templates are stored
+     * This is always the sub directory "Custom" of the default templates directory
      *
      * @var String $customTemplatesDirectory
      */
     protected $customTemplatesDirectory;
 
 
+    // Magic Methods
+
     /**
-     * TemplateLoader constructor.
+     * TemplateHandler constructor.
      *
-     * @param String $_templatesBaseDirectory The base directory for default and custom templates
+     * @param String $_defaultTemplatesDirectory The directory in which the default templates are stored
      */
-    public function __construct(String $_templatesBaseDirectory)
+    protected function __construct(String $_defaultTemplatesDirectory)
     {
         $this->fileSystemReader = new FileSystemReader();
         $this->fileSystemWriter = new FileSystemWriter();
-        $this->defaultTemplatesDirectory = $_templatesBaseDirectory;
-        $this->customTemplatesDirectory = $_templatesBaseDirectory . "/Custom";
+        $this->defaultTemplatesDirectory = $_defaultTemplatesDirectory;
+        $this->customTemplatesDirectory = $_defaultTemplatesDirectory . "/Custom";
     }
 }
