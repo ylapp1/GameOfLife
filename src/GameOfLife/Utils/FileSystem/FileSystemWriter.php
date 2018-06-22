@@ -49,7 +49,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function createDirectory(String $_directoryPath)
     {
-        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_directoryPath);
         if (file_exists($directoryPath))
         {
             throw new \Exception("The directory \"" . $directoryPath . "\" already exists.");
@@ -74,7 +74,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function createFile(String $_filePath)
     {
-        $filePath = $this->normalizePathFileSeparators($_filePath);
+        $filePath = $this->normalizePathDirectorySeparators($_filePath);
         if (file_exists($filePath))
         {
             throw new \Exception("The file \"" . $filePath . "\" already exists.");
@@ -105,7 +105,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteDirectory(String $_directoryPath, Bool $_deleteWhenNotEmpty = false)
     {
-        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_directoryPath);
         if (! file_exists($_directoryPath))
         {
             throw new \Exception("The directory \"" . $directoryPath . "\" does not exist.");
@@ -141,7 +141,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteFilesInDirectory(String $_directoryPath, Bool $_deleteNonEmptySubDirectories = false)
     {
-        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_directoryPath);
         $filePaths = $this->fileSystemReader->getFileList($directoryPath);
 
         foreach ($filePaths as $filePath)
@@ -161,7 +161,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function deleteFile(String $_filePath)
     {
-        $filePath = $this->normalizePathFileSeparators($_filePath);
+        $filePath = $this->normalizePathDirectorySeparators($_filePath);
         if (! file_exists($filePath))
         {
             throw new \Exception("The file \"" . $filePath . "\" does not exist.");
@@ -199,7 +199,7 @@ class FileSystemWriter extends FileSystemHandler
      */
     public function writeFile(String $_filePath, String $_content, Bool $_appendToFile = false, Bool $_overwriteIfExists = false)
     {
-        $filePath = $this->normalizePathFileSeparators($_filePath);
+        $filePath = $this->normalizePathDirectorySeparators($_filePath);
 
         $flags = 0;
         if (file_exists($filePath))

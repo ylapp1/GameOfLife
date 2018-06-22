@@ -41,7 +41,7 @@ class FileSystemReader extends FileSystemHandler
      */
     public function findFileRecursive(String $_searchDirectoryPath, String $_fileName)
     {
-        $directoryPath = $this->normalizePathFileSeparators($_searchDirectoryPath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_searchDirectoryPath);
         $this->checkPath($directoryPath, "directory");
 
         $filePaths = $this->getFileList($directoryPath);
@@ -52,7 +52,7 @@ class FileSystemReader extends FileSystemHandler
                 $resultFilePath = $this->findFileRecursive($filePath, $_fileName);
                 if ($resultFilePath !== null) return $resultFilePath;
             }
-            elseif (basename($filePath) == $_fileName) return $this->normalizePathFileSeparators($filePath);
+            elseif (basename($filePath) == $_fileName) return $this->normalizePathDirectorySeparators($filePath);
         }
 
         return null;
@@ -72,10 +72,10 @@ class FileSystemReader extends FileSystemHandler
      */
     public function getFileList(String $_directoryPath, String $_searchPattern = "*"): array
     {
-        $directoryPath = $this->normalizePathFileSeparators($_directoryPath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_directoryPath);
         $this->checkPath($directoryPath, "directory");
 
-        $fileList = glob($directoryPath . $this->fileSeparatorSymbol . $_searchPattern);
+        $fileList = glob($directoryPath . $this->directorySeparatorSymbol . $_searchPattern);
         if ($fileList === false)
         {
             throw new \Exception("The directory \"" . $directoryPath . "\" could not be read.");
@@ -97,7 +97,7 @@ class FileSystemReader extends FileSystemHandler
      */
     public function readFile(String $_filePath): array
     {
-        $filePath = $this->normalizePathFileSeparators($_filePath);
+        $filePath = $this->normalizePathDirectorySeparators($_filePath);
         $this->checkPath($filePath, "file");
 
         $fileContent = file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
