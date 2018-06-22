@@ -66,7 +66,7 @@ class PasteCopiedFieldsOption extends BoardEditorOption
         $this->parentBoardEditor->checkCoordinate($_posX, "X", 0, $this->parentBoardEditor->board()->width());
         $this->parentBoardEditor->checkCoordinate($_posY, "Y", 0, $this->parentBoardEditor->board()->height());
 
-        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, false);
+        $this->fieldsPlacer->placeTemplateFields($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, false);
 
         // Update selection
         $selectionCoordinates = $this->parentBoardEditor->selectionCoordinates();

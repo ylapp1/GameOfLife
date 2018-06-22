@@ -12,22 +12,22 @@ use GameOfLife\Board;
 use GameOfLife\Field;
 
 /**
- * Places a template on a board.
+ * Places template fields on a board.
  */
 class FieldsPlacer
 {
     /**
-     * Places a template on a board.
+     * Places template fields on a board.
      *
-     * @param array $_templateFields The template that will be placed on the board
-     * @param Board $_board The board on which the template will be placed
-     * @param int $_posX The X-coordinate of the top left corner of the template on the board
-     * @param int $_posY The Y-coordinate of the top left corner of the template on the board
-     * @param Bool $_adjustDimensions Indicates whether the board shall be adjusted to match the template width and height
+     * @param Field[][] $_templateFields The template fields
+     * @param Board $_board The board
+     * @param int $_posX The X-coordinate of the top left corner of the template fields on the board
+     * @param int $_posY The Y-coordinate of the top left corner of the template fields on the board
+     * @param Bool $_adjustDimensions Indicates whether the board shall be adjusted to contain only the template fields
      *
-     * @throws \Exception The exception when the template exceeds a border of the board
+     * @throws \Exception The exception when the template fields exceed a border of the board
      */
-    public function placeTemplate(array $_templateFields, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions)
+    public function placeTemplateFields(array $_templateFields, Board $_board, int $_posX, int $_posY, Bool $_adjustDimensions)
     {
         $templateHeight = count($_templateFields);
         $templateWidth = count($_templateFields[0]);
@@ -36,17 +36,20 @@ class FieldsPlacer
         {
             $_board->setWidth($templateWidth);
             $_board->setHeight($templateHeight);
+            $fields = array();
 
-            foreach ($_templateFields as $row)
+            foreach ($_templateFields as $y => $rowFields)
             {
-                /** @var Field $field */
-                foreach ($row as $field)
+                $fields[$y] = array();
+                foreach ($rowFields as $x => $rowField)
                 {
+                    $field = clone $rowField;
                     $field->setParentBoard($_board);
+                    $fields[$y][$x] = $field;
                 }
             }
 
-            $_board->setFields($_templateFields);
+            $_board->setFields($fields);
         }
         else
         {
@@ -57,12 +60,11 @@ class FieldsPlacer
             }
             else
             {
-                foreach ($_templateFields as $row)
+                foreach ($_templateFields as $rowFields)
                 {
-                    /** @var Field $field */
-                    foreach ($row as $field)
+                    foreach ($rowFields as $rowField)
                     {
-                        $_board->setFieldState($field->x() + $_posX, $field->y() + $_posY, $field->isAlive());
+                        $_board->setFieldState($rowField->x() + $_posX, $rowField->y() + $_posY, $rowField->isAlive());
                     }
                 }
             }
@@ -70,15 +72,15 @@ class FieldsPlacer
     }
 
     /**
-     * Checks whether a template is out of bounds.
+     * Checks whether template fields exceed a border of the target board.
      *
-     * @param Board $_board The board on which the template will be placed
-     * @param int $_templateWidth The template width
-     * @param int $_templateHeight The template height
-     * @param int $_posX The X-coordinate of the top left border of the template
-     * @param int $_posY The Y-coordinate of the top left border of the template
+     * @param Board $_board The board on which the template fields will be placed
+     * @param int $_templateWidth The number of fields per row
+     * @param int $_templateHeight The number of rows
+     * @param int $_posX The X-coordinate of the top left corner of the template fields on the board
+     * @param int $_posY The Y-coordinate of the top left corner of the template fields on the board
      *
-     * @return String|Bool The name of the border that is exceeded or false if the template is not out of bounds
+     * @return String|null The name of the border that is exceeded or null if the template fields exceed no border
      */
     public function isTemplateOutOfBounds(Board $_board, int $_templateWidth, int $_templateHeight, int $_posX, int $_posY)
     {
@@ -86,6 +88,6 @@ class FieldsPlacer
         if ($_posY < 0) return "top";
         if ($_posX + $_templateWidth > $_board->width()) return "right";
         if ($_posY + $_templateHeight > $_board->height()) return "bottom";
-        else return false;
+        else return null;
     }
 }

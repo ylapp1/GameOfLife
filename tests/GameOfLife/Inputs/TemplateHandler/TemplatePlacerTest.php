@@ -63,7 +63,7 @@ class TemplatePlacerTest extends TestCase
      *
      * @throws \Exception
      *
-     * @covers \TemplateHandler\FieldsPlacer::placeTemplate()
+     * @covers \TemplateHandler\FieldsPlacer::placeTemplateFields()
      * @covers \TemplateHandler\FieldsPlacer::isTemplateOutOfBounds()
      *
      *
@@ -76,7 +76,7 @@ class TemplatePlacerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $templatePlacer->placeTemplate($this->fields, $this->board, $_templatePosX, $_templatePosY, $_adjustDimensions);
+            $templatePlacer->placeTemplateFields($this->fields, $this->board, $_templatePosX, $_templatePosY, $_adjustDimensions);
         }
         catch (\Exception $_exception)
         {

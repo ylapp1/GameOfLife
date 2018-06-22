@@ -81,7 +81,7 @@ class LoadTemplateOption extends BoardEditorOption
             $this->parentBoardEditor->checkCoordinate($_posY, "Y", 0, $this->parentBoardEditor->board()->height());
         }
 
-        $this->fieldsPlacer->placeTemplate($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, $_adjustDimensions);
+        $this->fieldsPlacer->placeTemplateFields($templateFields, $this->parentBoardEditor->board(), $_posX, $_posY, $_adjustDimensions);
         $this->parentBoardEditor->outputBoard();
         return false;
     }
