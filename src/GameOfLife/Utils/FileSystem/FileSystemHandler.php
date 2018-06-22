@@ -13,7 +13,7 @@ use Utils\OsInformationFetcher;
 /**
  * Parent class for FileSystemWriter and FileSystemReader.
  */
-class FileSystemHandler
+abstract class FileSystemHandler
 {
     // Attributes
 
