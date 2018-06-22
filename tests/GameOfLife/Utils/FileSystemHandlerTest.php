@@ -173,7 +173,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred  = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory . "/" . $_fileName, $_content);
+            $this->fileSystemHandler->writeFile($this->testDirectory . $this->directorySeparator . $_fileName, $_content);
         }
         catch (\Exception $_exception)
         {
@@ -248,7 +248,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello World!");
+            $this->fileSystemHandler->writeFile($this->testDirectory . $this->directorySeparator . "mytest.txt", "Hello World!");
         }
         catch (\Exception $_exception)
         {
@@ -272,7 +272,7 @@ class FileSystemHandlerTest extends TestCase
         $this->assertEquals(array("Hello World!"), $fileContent);
 
         // Check whether trying to rewrite the file fails
-        $filePath = $this->testDirectory . "/mytest.txt";
+        $filePath = $this->testDirectory . $this->directorySeparator . "mytest.txt";
         $exceptionOccurred = false;
         try
         {
@@ -289,7 +289,7 @@ class FileSystemHandlerTest extends TestCase
         $exceptionOccurred = false;
         try
         {
-            $this->fileSystemHandler->writeFile($this->testDirectory . "/mytest.txt", "Hello universe!", false, true);
+            $this->fileSystemHandler->writeFile($this->testDirectory . $this->directorySeparator . "mytest.txt", "Hello universe!", false, true);
         }
         catch (\Exception $_exception)
         {
@@ -430,7 +430,7 @@ class FileSystemHandlerTest extends TestCase
 
         return array(
             "Existing file in second sub folder" => array(
-                "testing"  . $directorySeparator . "directory" . $directorySeparator . "mytest",
+                "testing" . $directorySeparator . "directory" . $directorySeparator . "mytest",
                 "testing" . $directorySeparator . "directory" . $directorySeparator . "test.txt",
                 "test.txt"
             ),
