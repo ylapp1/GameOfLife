@@ -18,11 +18,11 @@ class TemplateListPrinter extends TemplateHandler
     /**
      * TemplateListPrinter constructor.
      *
-     * @param String $_templatesBaseDirectory The base directory for default and custom templates
+     * @param String $_defaultTemplatesDirectory The directory in which the default templates are stored
      */
-    public function __construct(String $_templatesBaseDirectory)
+    public function __construct(String $_defaultTemplatesDirectory)
     {
-        parent::__construct($_templatesBaseDirectory);
+        parent::__construct($_defaultTemplatesDirectory);
     }
 
 

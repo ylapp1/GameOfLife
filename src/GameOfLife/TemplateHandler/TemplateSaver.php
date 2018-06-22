@@ -11,25 +11,25 @@ namespace TemplateHandler;
 use GameOfLife\Board;
 
 /**
- * Saves templates in a template directory.
+ * Saves a custom template to the custom templates directory.
  */
 class TemplateSaver extends TemplateHandler
 {
     /**
      * TemplateSaver constructor.
      *
-     * @param String $_templatesBaseDirectory The base directory for default and custom templates
+     * @param String $_defaultTemplatesDirectory
      */
-    public function __construct(String $_templatesBaseDirectory)
+    public function __construct(String $_defaultTemplatesDirectory)
     {
-        parent::__construct($_templatesBaseDirectory);
+        parent::__construct($_defaultTemplatesDirectory);
     }
 
     /**
      * Saves a custom template to the custom templates directory.
      *
      * @param String $_templateName The template name
-     * @param Board $_board The board whose fields will be saved to the template
+     * @param Board $_board The board whose fields will be saved to the template file
      * @param Bool $_overwriteIfExists Indicates whether an existing template file with that name should be overwritten
      *
      * @throws \Exception The exception when the file could not be written
