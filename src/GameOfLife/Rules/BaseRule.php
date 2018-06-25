@@ -13,47 +13,54 @@ use Ulrichsg\Getopt;
 
 /**
  * Parent class from which other rules must inherit.
- *
  * Handles the birth/death logic of the game of life
  */
-class BaseRule
+abstract class BaseRule
 {
+    // Attributes
+
     /**
-     * Stores the amount of living neighbor cells which will rebirth a dead cell
+     * The numbers of living neighbor cells which will rebirth a dead cell
      *
-     * @var int[] $rulesBirth Amount of living neighbor cells which rebirths a dead cell
+     * @var int[] $rulesBirth
      */
     protected $rulesBirth;
 
     /**
-     * Stores the amount of living neighbors which will keep a living cell alive
+     * The numbers of living neighbor cells which will keep a living cell alive
      *
-     * @var int[] Amount of living neighbors which keeps a living cell alive
+     * @var int[] $rulesStayAlive
      */
     protected $rulesStayAlive;
 
     /**
      * Indicates whether the rule is an anti rule
+     * Anti rule means that cells that would be dead normally are alive and the cells that are alive normally are dead
      *
      * @var Bool $isAntiRule
      */
     protected $isAntiRule;
 
 
+    // Magic Methods
+
     /**
      * BaseRule constructor.
      */
-    public function __construct()
+    protected function __construct()
     {
+        $this->isAntiRule = false;
         $this->rulesBirth = array();
         $this->rulesStayAlive = array();
     }
 
 
+    // Getters and Setters
+
     /**
-     * Returns the birth rules
+     * Returns the numbers of living neighbor cells which will rebirth a dead cell.
      *
-     * @return int[] Birth rules
+     * @return int[] The numbers of living neighbor cells which will rebirth a dead cell
      */
     public function rulesBirth(): array
     {
@@ -61,9 +68,9 @@ class BaseRule
     }
 
     /**
-     * Sets the birth rules
+     * Sets the numbers of living neighbor cells which will rebirth a dead cell.
      *
-     * @param int[] $_rulesBirth Birth rules
+     * @param int[] $_rulesBirth The numbers of living neighbor cells which will rebirth a dead cell
      */
     public function setRulesBirth(array $_rulesBirth)
     {
@@ -71,9 +78,9 @@ class BaseRule
     }
 
     /**
-     * Returns the stay alive rules
+     * Returns the numbers of living neighbor cells which will keep a living cell alive.
      *
-     * @return int[] Stay alive rules
+     * @return int[] The numbers of living neighbor cells which will keep a living cell alive
      */
     public function rulesStayAlive(): array
     {
@@ -81,9 +88,9 @@ class BaseRule
     }
 
     /**
-     * Sets the stay alive rules
+     * Sets the numbers of living neighbor cells which will keep a living cell alive.
      *
-     * @param int[] $_rulesStayAlive Stay alive rules
+     * @param int[] $_rulesStayAlive The numbers of living neighbor cells which will keep a living cell alive
      */
     public function setRulesStayAlive(array $_rulesStayAlive)
     {
@@ -91,19 +98,17 @@ class BaseRule
     }
 
 
+    // Class Methods
+
     /**
-     * Add rule specific options to the option list.
-     *
-     * @codeCoverageIgnore
+     * Adds rule specific options to a option list.
      *
      * @param Getopt $_options The option list
      */
-    public function addOptions(Getopt $_options)
-    {
-    }
+    abstract public function addOptions(Getopt $_options);
 
     /**
-     * Intialize the rule.
+     * Initializes the rule.
      *
      * @param Getopt $_options The option list
      */
@@ -117,20 +122,22 @@ class BaseRule
     }
 
     /**
-     * Converts the rule to its anti rule.
+     * Converts this rule to its anti rule.
+     * This is done by rotating the rules by 180° which is reached by switching the birth and stay alive rules
+     * and mirroring them.
      */
     private function convertToAntiRule()
     {
         $rulesStayAlive = range(0, 8);
-        foreach ($this->rulesBirth as $amountNeighborsBirth)
+        foreach ($this->rulesBirth as $numberOfNeighborsBirth)
         {
-            unset($rulesStayAlive[8 - $amountNeighborsBirth]);
+            unset($rulesStayAlive[8 - $numberOfNeighborsBirth]);
         }
 
         $rulesBirth = range(0, 8);
-        foreach ($this->rulesStayAlive as $amountNeighborsStayAlive)
+        foreach ($this->rulesStayAlive as $numberOfNeighborsStayAlive)
         {
-            unset($rulesBirth[8 - $amountNeighborsStayAlive]);
+            unset($rulesBirth[8 - $numberOfNeighborsStayAlive]);
         }
 
         $this->rulesStayAlive = array_values($rulesStayAlive);
@@ -138,35 +145,32 @@ class BaseRule
     }
 
     /**
-     * Calculate the new cell state of $_field.
+     * Calculates and returns the new state of a cell in a field.
      *
-     * @param Field $_field Field for which the new cell state will be calculated
+     * @param Field $_field The field
      *
-     * @return bool New cell state
+     * @return Bool The new state of the cell in the field
      */
-    public function calculateNewState(Field $_field): bool
+    public function calculateNewState(Field $_field): Bool
     {
-        $amountLivingNeighbors = $_field->numberOfLivingNeighbors();
-        if ($this->isAntiRule) $amountLivingNeighbors += $_field->numberOfNeighborBorderFields();
+        $numberOfLivingNeighbors = $_field->numberOfLivingNeighbors();
+        if ($this->isAntiRule)
+        {
+            // When the rule is an anti rule the normally dead border fields must be treated as living fields too
+            $numberOfLivingNeighbors += $_field->numberOfNeighborBorderFields();
+        }
 
         if ($_field->isAlive())
-        {
-            foreach ($this->rulesStayAlive as $amountStayAlive)
-            {
-                if ($amountLivingNeighbors == $amountStayAlive) return true;
-            }
-
-            return false;
+        { // The cell is alive
+            if (in_array($numberOfLivingNeighbors, $this->rulesStayAlive)) $newCellState = true;
+            else $newCellState = false;
         }
         else
-        {
-            foreach ($this->rulesBirth as $amountBirth)
-            {
-                if ($amountLivingNeighbors == $amountBirth) return true;
-            }
+        { // The cell is dead
+            if (in_array($numberOfLivingNeighbors, $this->rulesBirth)) $newCellState = true;
+            else $newCellState = $_field->value();
         }
 
-        // Return same field value if the cell neither dies nor rebirths
-        return $_field->value();
+        return $newCellState;
     }
 }

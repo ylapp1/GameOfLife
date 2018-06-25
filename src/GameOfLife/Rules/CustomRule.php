@@ -16,6 +16,14 @@ use Ulrichsg\Getopt;
 class CustomRule extends BaseRule
 {
     /**
+     * CustomRule constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * Adds the rule options to a Getopt object.
      *
      * @param Getopt $_options The option list

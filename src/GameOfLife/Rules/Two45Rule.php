@@ -8,6 +8,8 @@
 
 namespace Rule;
 
+use Ulrichsg\Getopt;
+
 /**
  * Rules for 2/45.
  */
@@ -21,5 +23,14 @@ class Two45Rule extends BaseRule
         parent::__construct();
         $this->rulesBirth = array(4, 5);
         $this->rulesStayAlive = array(2);
+    }
+
+    /**
+     * Adds rule specific options to a option list.
+     *
+     * @param Getopt $_options The option list
+     */
+    public function addOptions(Getopt $_options)
+    {
     }
 }

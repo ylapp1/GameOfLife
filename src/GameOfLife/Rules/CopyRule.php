@@ -8,6 +8,8 @@
 
 namespace Rule;
 
+use Ulrichsg\Getopt;
+
 /**
  * Rules for a copy world (Rules for 1357/1357).
  */
@@ -21,5 +23,14 @@ class CopyRule extends BaseRule
         parent::__construct();
         $this->rulesBirth = array(1, 3, 5, 7);
         $this->rulesStayAlive = array(1, 3, 5, 7);
+    }
+
+    /**
+     * Adds rule specific options to a option list.
+     *
+     * @param Getopt $_options The option list
+     */
+    public function addOptions(Getopt $_options)
+    {
     }
 }

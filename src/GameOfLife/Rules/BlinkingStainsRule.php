@@ -8,6 +8,8 @@
 
 namespace Rule;
 
+use Ulrichsg\Getopt;
+
 /**
  * Rules for a world with blinking stains (Rules for 0123/01234).
  */
@@ -21,5 +23,14 @@ class BlinkingStainsRule extends BaseRule
         parent::__construct();
         $this->rulesBirth = array(0, 1, 2, 3, 4);
         $this->rulesStayAlive = array(0, 1, 2, 3);
+    }
+
+    /**
+     * Adds rule specific options to a option list.
+     *
+     * @param Getopt $_options The option list
+     */
+    public function addOptions(Getopt $_options)
+    {
     }
 }
