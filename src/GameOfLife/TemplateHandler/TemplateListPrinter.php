@@ -68,7 +68,7 @@ class TemplateListPrinter extends TemplateHandler
     }
 
     /**
-     * Prints a list of templates.
+     * Prints a list of template names.
      *
      * @param String $_title The title of the list
      * @param String[] $_templateFilePaths The list of template file paths
