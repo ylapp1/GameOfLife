@@ -111,9 +111,16 @@ abstract class BaseRule
      * Initializes the rule.
      *
      * @param Getopt $_options The option list
+     *
+     * @throws \Exception The exception when the rule contains neither birth rules nor stay alive rules
      */
     public function initialize(Getopt $_options)
     {
+        if (! $this->rulesBirth && ! $this->rulesStayAlive)
+        {
+            throw new \Exception("The rule must contain at least either birth or stay alive rules.");
+        }
+
         if ($_options->getOption("antiRules") !== null)
         {
             $this->isAntiRule = true;
