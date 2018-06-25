@@ -8,36 +8,41 @@
 
 namespace Rule;
 
+use Rule\RuleFormat\BaseRuleFormat;
 use Ulrichsg\Getopt;
+use Utils\ClassLoader;
 
 /**
  * Parses and uses a user inputted rule set.
- *
- * The rules enable three cell state events to happen:
- * 1. Dead cells can be reborn (dead -> alive)
- * 2. Alive cells can die (alive -> dead)
- * 3. Cell states can remain unchanged (dead -> dead, alive -> alive)
- *
- * The possible rule combinations are:
- * - Birth rules set and stay alive rules set: Enables all events
- * - Birth rules set and stay alive rules not set: Enables all events except for cell stay alive
- * - Birth rules not set and stay alive rules set: Enables all events except for cell birth
- * - Birth rules and stay alive rules not set: Enables all events except for cell birth and stay alive
- *
- * All of the above combinations are allowed except for birth rules and stay alive rules not set.
- * The reason is, that every simulation would end after 1 game step because all cells die (stay alive conditions can not
- * be met) and no cells are born (birth conditions can not be met).
  */
 class CustomRule extends BaseRule
 {
+    // Attributes
+
+    /**
+     * The class loader
+     *
+     * @var ClassLoader $classLoader
+     */
+    private $classLoader;
+
+    /**
+     * The list of rule formats.
+     *
+     * @var BaseRuleFormat[] $ruleFormats
+     */
+    private $ruleFormats;
+
+
     // Magic Methods
 
     /**
-     * CustomRule constructor.
+     * RuleFormat constructor.
      */
     public function __construct()
     {
         parent::__construct();
+        $this->classLoader = new ClassLoader();
     }
 
 
@@ -69,169 +74,67 @@ class CustomRule extends BaseRule
      */
     public function initialize(Getopt $_options)
     {
+        $this->ruleFormats = $this->classLoader->loadClasses(__DIR__ . "/RuleFormat", "*RuleFormat.php", array("BaseRuleFormat"), "Rule\\RuleFormat\\");
+
         $rulesString = $_options->getOption("rulesString");
-        if ($rulesString !== null) $this->parseRulesString($rulesString);
+        if ($rulesString !== null)
+        {
+            $ruleFormat = $this->getRuleFormat($rulesString);
+            if ($ruleFormat === null) throw new \Exception("Unknown rules format.");
+
+            $ruleStrings = $ruleFormat->getRuleParts($rulesString);
+            $rulesBirthString = $ruleStrings->rulesBirth;
+            $rulesStayAliveString = $ruleStrings->rulesStayAlive;
+        }
         else
         {
-            $rulesBirth = $_options->getOption("rulesBirth");
-            $rulesStayAlive = $_options->getOption("rulesStayAlive");
-            if ($rulesBirth !== null || $rulesStayAlive !== null)
-            {
-                $this->parseBirthStayAliveRules($rulesBirth, $rulesStayAlive);
-            }
-            else throw new \Exception("The rules string is not set.");
+            $rulesBirthString = $_options->getOption("rulesBirth");
+            $rulesStayAliveString = $_options->getOption("rulesStayAlive");
         }
+
+        if ($rulesBirthString !== null || $rulesStayAliveString !== null)
+        {
+            $this->parseRules($rulesBirthString, $rulesStayAliveString);
+        }
+        else throw new \Exception("No rules specified.");
 
         parent::initialize($_options);
     }
 
-
-    // Check the rules strings
-
     /**
-     * Checks and returns whether a string is a <stayAlive>/<birth> string.
+     * Returns the rule format that matches a rules string.
      *
      * @param String $_rules The rules string
      *
-     * @return Bool True if the string is a <stayAlive>/<birth> string, false otherwise
-     *
-     * @throws \Exception The exception when the rules string is in an invalid format
+     * @return BaseRuleFormat|null The rule format or null if no rule format was found
      */
-    private function isStayAliveSlashBirthString(String $_rules): Bool
+    private function getRuleFormat(String $_rules)
     {
-        if (strstr($_rules, "/"))
+        foreach ($this->ruleFormats as $ruleFormat)
         {
-            $this->validateRulesString($_rules, "/", 2, 1);
-            return true;
+            if ($ruleFormat->matches($_rules)) return $ruleFormat;
         }
-        else return false;
+
+        return null;
     }
 
     /**
-     * Checks and returns whether a string is a <stayAlive>G<stayAlive/birth> string.
+     * Parses birth and stay alive rules and sets the birth and stay alive rules of this rule.
      *
-     * @param String $_rules The rules string
-     *
-     * @return Bool True if the string is a <stayAlive>G<stayAlive/birth> string, false otherwise
-     *
-     * @throws \Exception The exception when the rules string is in an invalid format
-     */
-    private function isAlternateNotationString(String $_rules): Bool
-    {
-        if (strstr($_rules, "G"))
-        {
-            $this->validateRulesString($_rules, "G", 2, 1);
-            return true;
-        }
-        else return false;
-    }
-
-    /**
-     * Checks whether a rules string has the correct number of rule parts and contains only numeric rule parts.
-     *
-     * @param String $_rules The rules string
-     * @param String $_delimiter The delimiter at which the rules string will be split into rule parts
-     * @param int $_maxNumberOfRuleParts The maximum allowed number of rule parts
-     * @param int $_minNumberOfRuleParts The minimum required number of rule parts
-     *
-     * @throws \Exception The exception when the rules string is in an invalid format
-     */
-    private function validateRulesString(String $_rules, String $_delimiter, int $_maxNumberOfRuleParts, int $_minNumberOfRuleParts)
-    {
-        $ruleParts = explode($_delimiter, $_rules);
-
-        $numberOfSetRuleParts = 0;
-        foreach ($ruleParts as $rulePart)
-        {
-            if ($rulePart != "")
-            {
-                if (! is_numeric($rulePart)) throw new \Exception("The custom rule parts may contain only numbers.");
-                $numberOfSetRuleParts++;
-            }
-        }
-
-        if ($numberOfSetRuleParts < $_minNumberOfRuleParts)
-        {
-            $exceptionMessageFormat = "The rules string must contain at least %d set rule part%s.";
-            if ($_minNumberOfRuleParts == 1) $exceptionMessage = sprintf($exceptionMessageFormat, $_minNumberOfRuleParts, "");
-            else $exceptionMessage = sprintf($exceptionMessageFormat, $_minNumberOfRuleParts, "s");
-
-            throw new \Exception($exceptionMessage);
-        }
-        elseif ($numberOfSetRuleParts > $_maxNumberOfRuleParts)
-        {
-            $exceptionMessageFormat = "The rules string may contain at most %d set rule part%s.";
-            if ($_maxNumberOfRuleParts == 1) $exceptionMessage = sprintf($exceptionMessageFormat, $_maxNumberOfRuleParts, "");
-            else $exceptionMessage = sprintf($exceptionMessageFormat, $_maxNumberOfRuleParts, "s");
-
-            throw new \Exception($exceptionMessage);
-        }
-    }
-
-
-    // Parse rules strings
-
-    /**
-     * Parses birth and stay alive rules that are strings of digits and sets the birth and stay alive rules of this rule.
-     *
-     * @param String $_rulesBirth The birth rules string
-     * @param String $_rulesStayAlive The stay alive rules string
+     * @param String $_rulesBirth The birth rules string as a string of digits
+     * @param String $_rulesStayAlive The stay alive rules string as a string of digits
      *
      * @throws \Exception The exception when one of the strings contains something other than digits
      */
-    private function parseBirthStayAliveRules(String $_rulesBirth, String $_rulesStayAlive)
+    private function parseRules(String $_rulesBirth, String $_rulesStayAlive)
     {
-        if (! is_numeric($_rulesBirth)) throw new \Exception("The birth rules string may contain only numbers.");
-        elseif (! is_numeric($_rulesStayAlive)) throw new \Exception("The stay alive rules string may contain only numbers.");
+        if ($_rulesBirth != "" && ! is_numeric($_rulesBirth)) throw new \Exception("The birth rules string may contain only numbers.");
+        elseif ($_rulesStayAlive != "" && ! is_numeric($_rulesStayAlive)) throw new \Exception("The stay alive rules string may contain only numbers.");
         else
         {
             $this->rulesBirth = $this->getRulesFromNumericString($_rulesBirth);
             $this->rulesStayAlive = $this->getRulesFromNumericString($_rulesStayAlive);
         }
-    }
-
-    /**
-     * Parses a rules string in the format <stayAlive>/<birth> or <stayAlive>G<stayAlive/birth> and sets the birth and
-     * stay alive rules of this rule.
-     *
-     * @param String $_rules The rules string
-     *
-     * @throws \Exception The exception when the rules string is in an invalid format
-     */
-    private function parseRulesString(String $_rules)
-    {
-        if ($this->isStayAliveSlashBirthString($_rules)) $this->parseStayAliveSlashBirthString($_rules);
-        elseif ($this->isAlternateNotationString($_rules)) $this->parseAlternateNotationString($_rules);
-        else throw new \Exception("Unknown rules notation.");
-    }
-
-    /**
-     * Parses a <stayAlive>/<birth> string and sets the birth and stay alive rules of this rule.
-     *
-     * @param String $_rules The rules string
-     */
-    private function parseStayAliveSlashBirthString(String $_rules)
-    {
-        $ruleParts = explode("/", $_rules);
-
-        $this->rulesBirth = $this->getRulesFromNumericString($ruleParts[1]);
-        $this->rulesStayAlive = $this->getRulesFromNumericString($ruleParts[0]);
-    }
-
-    /**
-     * Parses a <stayAlive>G<stayAlive/birth> string and sets the birth and stay alive rules of this rule.
-     *
-     * @param String $_rules The rules string
-     */
-    private function parseAlternateNotationString(String $_rules)
-    {
-        $ruleParts = explode("G", $_rules);
-
-        $this->rulesBirth = $this->getRulesFromNumericString($ruleParts[1]);
-        $this->rulesStayAlive = $this->getRulesFromNumericString($ruleParts[1]);
-
-        $this->rulesStayAlive = array_merge($this->rulesStayAlive, $this->getRulesFromNumericString($ruleParts[0]));
-        sort($this->rulesStayAlive);
     }
 
     /**
@@ -251,6 +154,8 @@ class CustomRule extends BaseRule
             {
                 $numericList[] = (int)$digit;
             }
+
+            $numericList = array_unique($numericList);
             sort($numericList);
         }
 

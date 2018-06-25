@@ -14,6 +14,21 @@ use Ulrichsg\Getopt;
 /**
  * Parent class from which other rules must inherit.
  * Handles the birth/death logic of the game of life
+ *
+ * The rules enable three cell state events to happen:
+ * 1. Dead cells can be reborn (dead -> alive)
+ * 2. Alive cells can die (alive -> dead)
+ * 3. Cell states can remain unchanged (dead -> dead, alive -> alive)
+ *
+ * The possible rule combinations are:
+ * - Birth rules set and stay alive rules set: Enables all events
+ * - Birth rules set and stay alive rules not set: Enables all events except for cell stay alive
+ * - Birth rules not set and stay alive rules set: Enables all events except for cell birth
+ * - Birth rules and stay alive rules not set: Enables all events except for cell birth and stay alive
+ *
+ * All of the above combinations are allowed except for birth rules and stay alive rules not set.
+ * The reason is, that every simulation would end after 1 game step because all cells die (stay alive conditions can not
+ * be met) and no cells are born (birth conditions can not be met).
  */
 abstract class BaseRule
 {

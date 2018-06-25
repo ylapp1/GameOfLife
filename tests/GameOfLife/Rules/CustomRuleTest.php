@@ -51,10 +51,6 @@ class CustomRuleTest extends TestCase
      * @dataProvider parseRuleStringsProvider()
      *
      * @covers \Rule\CustomRule::initialize()
-     * @covers \Rule\CustomRule::isStayAliveSlashBirthString()
-     * @covers \Rule\CustomRule::parseStayAliveSlashBirthString()
-     * @covers \Rule\CustomRule::isAlternateNotationString()
-     * @covers \Rule\CustomRule::parseAlternateNotationString()
      * @covers \Rule\CustomRule::getRulesFromNumericString()
      */
     public function testCanParseRuleStrings($_rulesString = "", array $_expectedRulesBirth, array $_expectedRulesStayAlive, String $_expectedErrorMessage = "")
@@ -139,19 +135,19 @@ class CustomRuleTest extends TestCase
             "Valid birth/stay-alive: Missing first number" => array("/3", array(3), array()),
             "Valid birth/stay-alive: Missing second number" => array("23/", array(), array(2, 3)),
             "Invalid birth/stay-alive: Missing both numbers" => array("/", array(), array(), "The rules string must contain at least 1 set rule part."),
-            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "The rules string may contain at most 2 set rule parts."),
-            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "The custom rule parts may contain only numbers."),
+            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "Unknown rules format."),
+            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "Unknown rules format."),
 
             // stay-alive<G>birth/stay-alive
             "Valid stay-alive<G>birth/stay-alive: Both rule parts set" => array("2G4", array(4), array(2, 4)),
             "Valid stay-alive<G>birth/stay-alive: Missing first number" => array("G45", array(4, 5), array(4, 5)),
             "Valid stay-alive<G>birth/stay-alive: Missing second number" => array("35G", array(), array(3, 5)),
-            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "The custom rule parts may contain only numbers."),
+            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "Unknown rules format."),
             "Invalid stay--alive<G>birth/stay-alive: Missing both numbers" => array("G", array(), array(), "The rules string must contain at least 1 set rule part."),
-            "Invalid stay-alive<G>birth/stay-alive: Having 3 numbers" => array("1G2G3", array(), array(), "The rules string may contain at most 2 set rule parts."),
+            "Invalid stay-alive<G>birth/stay-alive: Having 3 numbers" => array("1G2G3", array(), array(), "Unknown rules format."),
 
             // empty rules string
-            "Empty rules string" => array("", array(), array(), "The rules string is not set.")
+            "Empty rules string" => array("", array(), array(), "No rules specified.")
         );
     }
 
