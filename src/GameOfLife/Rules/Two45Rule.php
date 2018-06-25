@@ -15,6 +15,8 @@ use Ulrichsg\Getopt;
  */
 class Two45Rule extends BaseRule
 {
+    // Magic Methods
+
     /**
      * Sets the birth/stay alive rules for this rule.
      */
@@ -24,6 +26,9 @@ class Two45Rule extends BaseRule
         $this->rulesBirth = array(4, 5);
         $this->rulesStayAlive = array(2);
     }
+
+
+    // Class Methods
 
     /**
      * Adds rule specific options to a option list.

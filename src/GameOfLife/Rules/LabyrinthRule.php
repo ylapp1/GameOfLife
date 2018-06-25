@@ -15,6 +15,8 @@ use Ulrichsg\Getopt;
  */
 class LabyrinthRule extends BaseRule
 {
+    // Magic Methods
+
     /**
      * Sets the birth/stay alive rules for this rule.
      */
@@ -24,6 +26,9 @@ class LabyrinthRule extends BaseRule
         $this->rulesBirth = array(3);
         $this->rulesStayAlive = array(1, 2, 3, 4, 5);
     }
+
+
+    // Class Methods
 
     /**
      * Adds rule specific options to a option list.

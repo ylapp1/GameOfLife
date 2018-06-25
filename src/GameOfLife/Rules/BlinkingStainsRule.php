@@ -15,6 +15,8 @@ use Ulrichsg\Getopt;
  */
 class BlinkingStainsRule extends BaseRule
 {
+    // Magic Methods
+
     /**
      * Sets the birth/stay alive rules for this rule.
      */
@@ -24,6 +26,9 @@ class BlinkingStainsRule extends BaseRule
         $this->rulesBirth = array(0, 1, 2, 3, 4);
         $this->rulesStayAlive = array(0, 1, 2, 3);
     }
+
+
+    // Class Methods
 
     /**
      * Adds rule specific options to a option list.

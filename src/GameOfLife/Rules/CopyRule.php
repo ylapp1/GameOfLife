@@ -15,6 +15,8 @@ use Ulrichsg\Getopt;
  */
 class CopyRule extends BaseRule
 {
+    // Magic Methods
+
     /**
      * Sets the birth/stay alive rules for this rule.
      */
@@ -24,6 +26,9 @@ class CopyRule extends BaseRule
         $this->rulesBirth = array(1, 3, 5, 7);
         $this->rulesStayAlive = array(1, 3, 5, 7);
     }
+
+
+    // Class Methods
 
     /**
      * Adds rule specific options to a option list.

@@ -11,10 +11,12 @@ namespace Rule;
 use Ulrichsg\Getopt;
 
 /**
- * Standard rules for Comway's Game of Life (Rules for 23/3).
+ * Default rules for Conway's Game of Life (Rules for 23/3).
  */
 class ConwayRule extends BaseRule
 {
+    // Magic Methods
+
     /**
      * Sets the birth/stay alive rules for this rule.
      */
@@ -24,6 +26,9 @@ class ConwayRule extends BaseRule
         $this->rulesBirth = array(3);
         $this->rulesStayAlive = array(2, 3);
     }
+
+
+    // Class Methods
 
     /**
      * Adds rule specific options to a option list.
