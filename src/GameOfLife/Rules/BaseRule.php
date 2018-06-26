@@ -29,6 +29,13 @@ use Ulrichsg\Getopt;
  * All of the above combinations are allowed except for birth rules and stay alive rules not set.
  * The reason is, that every simulation would end after 1 game step because all cells die (stay alive conditions can not
  * be met) and no cells are born (birth conditions can not be met).
+ *
+ * Usage:
+ * Extend this class and set the rulesBirth and rulesStayAlive arrays.
+ *
+ * addOptions() adds the rule specific options to a Getopt option list
+ * initialize() initializes the rule based on the set options
+ * calculateNewState() calculates the new state of one field
  */
 abstract class BaseRule
 {
