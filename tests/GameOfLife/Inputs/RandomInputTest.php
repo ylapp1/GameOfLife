@@ -26,7 +26,7 @@ class RandomInputTest extends TestCase
     protected function setUp()
     {
         $this->input = new RandomInput();
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
     }
@@ -66,7 +66,7 @@ class RandomInputTest extends TestCase
 
         $this->input->fillBoard($this->board, new Getopt());
 
-        $amountCellsAlive = $this->board->getAmountCellsAlive();
+        $amountCellsAlive = $this->board->getNumberOfAliveFields();
         $this->assertGreaterThanOrEqual($minAmountCellsAlive, $amountCellsAlive);
         $this->assertLessThanOrEqual($maxAmountCellsAlive, $amountCellsAlive);
     }
@@ -107,12 +107,12 @@ class RandomInputTest extends TestCase
         if (! $_expectsError)
         {
             $expectedAmountCellsAlive = ceil($this->board->width() * $this->board->height() * $_fillPercentage / 100);
-            $this->assertEquals($expectedAmountCellsAlive, $this->board->getAmountCellsAlive());
+            $this->assertEquals($expectedAmountCellsAlive, $this->board->getNumberOfAliveFields());
             $this->assertFalse($exceptionOccurred);
         }
         else
         {
-            $this->assertEquals(0, $this->board->getAmountCellsAlive());
+            $this->assertEquals(0, $this->board->getNumberOfAliveFields());
             $this->assertTrue($exceptionOccurred);
         }
     }

@@ -9,10 +9,13 @@
 namespace GameOfLife;
 
 /**
- * Stores the fields of a game of life simulation.
+ * Stores the board configuration and the fields for one game step.
+ * It also provides methods to get information about and to manipulate the fields.
  */
 class Board
 {
+    // Attributes
+
     /**
      * Stores the fields of the current game step
      *
@@ -21,71 +24,70 @@ class Board
     private $fields;
 
     /**
-     * Stores the current game step
-     * Used to check whether maxSteps is reached
-     *
-     * @var int $gameStep
-     */
-    private $gameStep;
-
-    /**
      * Defines whether the board has a border
      *
-     * False: Borders are dead cells
-     * True: Borders link to the opposite side of the field
+     * True: The borders are treated like dead cells
+     * False: The borders link to the opposite side of the field
      *
-     * @var bool $hasBorder
+     * @var Bool $hasBorder
      */
     private $hasBorder;
 
     /**
-     * Defines the board height
+     * The board height
      *
      * @var int $height
      */
     private $height;
 
     /**
-     * Defines the maximum amount of steps that are calculated before the simulation stops
-     *
-     * @var int $maxSteps
-     */
-    private $maxSteps;
-
-    /**
-     * Defines the board width
+     * The board width
      *
      * @var int $width
      */
     private $width;
 
 
+    // Magic Methods
+
     /**
      * Board constructor.
      *
-     * @param int $_width Board width
-     * @param int $_height Board height
-     * @param int $_maxSteps Maximum amount of game steps that will be calculated before the simulation stops
-     * @param bool $_hasBorder Defines the field border type
-     *                         false: borders are dead cells
-     *                         true: borders link to the opposite side of the field
+     * @param int $_width The board width
+     * @param int $_height The board height
+     * @param Bool $_hasBorder The border type
+     *                         True: The borders are treated like dead cells
+     *                         False: The borders link to the opposite side of the field
      */
-    public function __construct(int $_width, int $_height, int $_maxSteps, bool $_hasBorder)
+    public function __construct(int $_width, int $_height, Bool $_hasBorder)
     {
-        $this->gameStep = 0;
         $this->hasBorder = $_hasBorder;
         $this->height = $_height;
-        $this->maxSteps = $_maxSteps;
         $this->width = $_width;
-
-        // must be called after board height is set
-        $this->fields = $this->initializeEmptyBoard();
+        $this->fields = $this->generateFieldsList(false);
     }
 
     /**
-     * Converts the board to string.
+     * Clones the fields of the original board and updates their parent board.
+     * This method is called on the new object after a shallow copy of the original object was performed.
+     */
+    public function __clone()
+    {
+        foreach ($this->fields as $y => $rowFields)
+        {
+            foreach ($rowFields as $x => $rowField)
+            {
+                $field = clone $rowField;
+                $field->setParentBoard($this);
+                $this->fields[$y][$x] = $field;
+            }
+        }
+    }
+
+    /**
+     * Converts the board to a string.
      *
-     * @return String A string representing the board
+     * @return String The string that represents the board
      */
     public function __toString(): String
     {
@@ -95,7 +97,7 @@ class Board
         {
             for ($x = 0; $x < $this->width; $x++)
             {
-                if ($this->getFieldStatus($x, $y)) $string .= "X";
+                if ($this->getFieldState($x, $y)) $string .= "X";
                 else $string .= ".";
             }
 
@@ -106,19 +108,22 @@ class Board
     }
 
     /**
-     * Clones the board and sets the fields parent board.
+     * Copies a board into this object.
+     *
+     * @param Board $_board The board that will be copied
      */
-    public function __clone()
+    function copy(Board $_board)
     {
-        // Clone the fields of the cloned Board and adjust the fields parent boards
-        foreach ($this->fields as $y => $row)
-        {
-            foreach ($row as $x => $field)
-            {
-                $tmpField = clone $field;
-                $tmpField->setParentBoard($this);
+        $this->hasBorder = $_board->hasBorder();
+        $this->height = $_board->height();
+        $this->width = $_board->width();
 
-                $this->fields[$y][$x] = $tmpField;
+        $this->fields = $this->generateFieldsList(false);
+        foreach ($_board->fields() as $y => $rowFields)
+        {
+            foreach ($rowFields as $x => $rowField)
+            {
+                $this->fields[$y][$x]->setValue($rowField->value());
             }
         }
     }
@@ -133,72 +138,56 @@ class Board
      */
     public function equals(Board $_compareBoard): Bool
     {
-        if ($this->gameStep() == $_compareBoard->gameStep() &&
-            $this->hasBorder() == $_compareBoard->hasBorder() &&
-            $this->height() == $_compareBoard->height() &&
-            $this->maxSteps() == $_compareBoard->maxSteps() &&
-            $this->width() == $_compareBoard->width()
-        )
+        // Check board attributes
+        if ($this->hasBorder != $_compareBoard->hasBorder() ||
+            $this->height != $_compareBoard->height() ||
+            $this->width != $_compareBoard->width())
         {
-            $fieldsEqual = true;
+            return false;
+        }
 
-            foreach ($_compareBoard->fields() as $y => $row)
+        // Check fields
+
+        /*
+         * This check assumes that there is at least one row and
+         * that each row has the same number of columns
+         */
+        if (count($this->fields) != count($_compareBoard->fields()) ||
+            count($this->fields[0]) != count($_compareBoard->fields()[0]))
+        {
+            return false;
+        }
+
+        $fieldsAreEqual = true;
+
+        foreach ($_compareBoard->fields() as $y => $rowFields)
+        {
+            foreach ($rowFields as $x => $rowField)
             {
-                foreach ($row as $x => $field)
-                {
-                    /** @var Field $boardField */
-                    $boardField = $this->fields()[$y][$x];
+                $boardField = $this->fields[$y][$x];
 
-                    /** @var Field $field */
-                    if ($field->value() != $boardField->value() ||
-                        $field->x() != $boardField->x() ||
-                        $field->y() != $boardField->y()
-                    )
-                    {
-                        $fieldsEqual = false;
-                        break;
-                    }
+                if ($rowField->value() != $boardField->value() ||
+                    $rowField->x() != $boardField->x() ||
+                    $rowField->y() != $boardField->y())
+                {
+                    $fieldsAreEqual = false;
+                    break;
                 }
             }
 
-            if ($fieldsEqual) return true;
+            if (! $fieldsAreEqual) break;
         }
 
-        return false;
-    }
-
-    /**
-     * Copies a board into this board object.
-     * This function is necessary because cloning would change the pointer address of the variable since it creates a new board.
-     * Therefore the resulting board is no longer the board that you originally wanted to change.
-     *
-     * @param Board $_board The board that will be cloned
-     */
-    function copy(Board $_board)
-    {
-        $this->gameStep = $_board->gameStep;
-        $this->hasBorder = $_board->hasBorder;
-        $this->height = $_board->height;
-        $this->maxSteps = $_board->maxSteps;
-        $this->width = $_board->width;
-
-        $this->fields = array();
-
-        foreach ($_board->fields() as $y => $row)
-        {
-            foreach ($row as $x => $field)
-            {
-                $this->fields[$y][$x] = clone $field;
-                $this->fields[$y][$x]->setParentBoard($this);
-            }
-        }
+        return $fieldsAreEqual;
     }
 
 
+    // Getters and Setters
+
     /**
-     * Returns current Board.
+     * Returns the fields of the current game step.
      *
-     * @return Field[][] Current board
+     * @return Field[][] The fields of the current game step
      */
     public function fields(): array
     {
@@ -206,9 +195,9 @@ class Board
     }
 
     /**
-     * Sets current board.
+     * Sets the fields of the current game step.
      *
-     * @param Field[][] $_fields Current board
+     * @param Field[][] $_fields The fields of the current game step
      */
     public function setFields(array $_fields)
     {
@@ -216,33 +205,13 @@ class Board
     }
 
     /**
-     * Returns the current game step.
-     *
-     * @return int Current game step
-     */
-    public function gameStep(): int
-    {
-        return $this->gameStep;
-    }
-
-    /**
-     * Sets the current game step.
-     *
-     * @param int $_gameStep Current game step
-     */
-    public function setGameStep(int $_gameStep)
-    {
-        $this->gameStep = $_gameStep;
-    }
-
-    /**
      * Returns the border type.
      *
-     * @return bool Border type
-     *              true: The border is made of cells that are constantly dead
-     *              false: Each border links to the opposite site of the board
+     * @return Bool The border type
+     *              True: The borders are treated like dead cells
+     *              False: The borders link to the opposite side of the field
      */
-    public function hasBorder(): bool
+    public function hasBorder(): Bool
     {
         return $this->hasBorder;
     }
@@ -250,11 +219,11 @@ class Board
     /**
      * Sets the border type.
      *
-     * @param bool $_hasBorder Border type
-     *                         true: The border is made of cells that are constantly dead
-     *                         false: Each border links to the opposite site of the board
+     * @param Bool $_hasBorder The border type
+     *                         True: The borders are treated like dead cells
+     *                         False: The borders link to the opposite side of the field
      */
-    public function setHasBorder(bool $_hasBorder)
+    public function setHasBorder(Bool $_hasBorder)
     {
         $this->hasBorder = $_hasBorder;
     }
@@ -262,7 +231,7 @@ class Board
     /**
      * Returns the board height.
      *
-     * @return int Board height
+     * @return int The board height
      */
     public function height(): int
     {
@@ -272,7 +241,7 @@ class Board
     /**
      * Sets the board height.
      *
-     * @param int $_height Board height
+     * @param int $_height The board height
      */
     public function setHeight(int $_height)
     {
@@ -280,29 +249,9 @@ class Board
     }
 
     /**
-     * Returns the maximum amount of steps which are calculated before the board stops calculating more steps.
-     *
-     * @return int Maximum amount of game steps
-     */
-    public function maxSteps(): int
-    {
-        return $this->maxSteps;
-    }
-
-    /**
-     * Sets the maximum amount of steps which are calculated before the board stops calculating more steps.
-     *
-     * @param int $_maxSteps Maximum amount of game steps
-     */
-    public function setMaxSteps(int $_maxSteps)
-    {
-        $this->maxSteps = $_maxSteps;
-    }
-
-    /**
      * Returns the board width.
      *
-     * @return int Board width
+     * @return int The board width
      */
     public function width(): int
     {
@@ -312,7 +261,7 @@ class Board
     /**
      * Sets the board width.
      *
-     * @param int $_width Board width
+     * @param int $_width The board width
      */
     public function setWidth(int $_width)
     {
@@ -320,111 +269,31 @@ class Board
     }
 
 
-    /**
-     * Returns the total amount of living cells on the board.
-     *
-     * @return int Amount of living cells
-     */
-    public function getAmountCellsAlive(): int
-    {
-        $amountCellsAlive = 0;
-        foreach ($this->fields as $line)
-        {
-            foreach ($line as $field)
-            {
-                if ($field->isAlive()) $amountCellsAlive++;
-            }
-        }
-        return $amountCellsAlive;
-    }
+    // Class Methods
+
+    // Get information about the fields
 
     /**
-     * Returns the status of a specific field.
+     * Returns the state of the cell in a field.
      *
-     * @param int $_x X-Coordinate of the field
-     * @param int $_y Y-Coordinate of the field
+     * @param int $_x The X-Coordinate of the field
+     * @param int $_y The Y-Coordinate of the field
      *
-     * @return bool Returns whether the cell is alive (true) or dead (false)
+     * @return Bool The state of the cell in the field
+     *              True: The cell in the field is alive
+     *              False: The cell in the field is dead
      */
-    public function getFieldStatus (int $_x, int $_y): bool
+    public function getFieldState(int $_x, int $_y): Bool
     {
         return $this->fields[$_y][$_x]->isAlive();
     }
 
     /**
-     * Returns the percentage of cells that are alive.
+     * Returns the neighbor fields of a field.
      *
-     * @return float Fill percentage
-     */
-    public function getFillPercentage(): float
-    {
-        return (float)($this->getAmountCellsAlive()/($this->width * $this->height));
-    }
-
-    /**
-     * Returns an empty board.
+     * @param Field $_field The field
      *
-     * Uses the height attribute of this board to determine the amount of nested arrays
-     *
-     * @return Field[][] Empty board
-     */
-    public function initializeEmptyBoard(): array
-    {
-        $board = array();
-
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            $board[$y] = array();
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                $board[$y][] = new Field($x, $y, false, $this);
-            }
-        }
-
-        return $board;
-    }
-
-    /**
-     * Resets the current board to an empty board.
-     */
-    public function resetBoard()
-    {
-        $this->fields = $this->initializeEmptyBoard();
-    }
-
-    /**
-     * Inverts the board.
-     */
-    public function invertBoard()
-    {
-        foreach ($this->fields as $row)
-        {
-            foreach ($row as $field)
-            {
-                $field->setValue(! $field->value());
-            }
-        }
-    }
-
-    /**
-     * Sets a field on the board.
-     *
-     * @param int $_x   X-Coordinate of the cell which shall be set
-     * @param int $_y   Y-Coordinate of the cell which shall be set
-     * @param boolean $_isAlive State which the cell will be set to
-     *                          true: alive
-     *                          false: dead
-     */
-    public function setField(int $_x, int $_y, bool $_isAlive)
-    {
-        $this->fields[$_y][$_x]->setValue($_isAlive);
-    }
-
-    /**
-     * Returns the neighbor fields of $_field.
-     *
-     * @param Field $_field The field whose the neighbors will be returned
-     * @return Field[] Neighbor fields of $_field
+     * @return Field[] The neighbor fields of the field
      */
     public function getNeighborsOfField(Field $_field): array
     {
@@ -434,45 +303,134 @@ class Board
         $columns = array($x);
         $rows = array($y);
 
-        // column to the left
+        // Column to the left
         if ($x == 0)
         {
-            if (!$this->hasBorder) $columns[] = $this->width - 1;
+            if (! $this->hasBorder) $columns[] = $this->width - 1;
         }
         else $columns[] = $x - 1;
 
-        // column to the right
+        // Column to the right
         if ($x + 1 == $this->width)
         {
-            if (!$this->hasBorder) $columns[] = 0;
+            if (! $this->hasBorder) $columns[] = 0;
         }
         else $columns[] = $x + 1;
 
-        // row above
+        // Row above
         if ($y == 0)
         {
-            if (!$this->hasBorder) $rows[] = $this->height - 1;
+            if (! $this->hasBorder) $rows[] = $this->height - 1;
         }
         else $rows[] = $y - 1;
 
-        // row below
+        // Row below
         if ($y + 1 == $this->height)
         {
-            if (!$this->hasBorder) $rows[] = 0;
+            if (! $this->hasBorder) $rows[] = 0;
         }
         else $rows[] = $y + 1;
 
 
-        $neighbors = array();
-
+        $neighborFields = array();
         foreach ($rows as $y)
         {
             foreach ($columns as $x)
             {
-                if ($y != $_field->y() || $x != $_field->x()) $neighbors[] = $this->fields[$y][$x];
+                if ($y != $_field->y() || $x != $_field->x()) $neighborFields[] = $this->fields[$y][$x];
             }
         }
 
-        return $neighbors;
+        return $neighborFields;
+    }
+
+    /**
+     * Returns the number of alive cells.
+     *
+     * @return int The number of alive cells
+     */
+    public function getNumberOfAliveFields(): int
+    {
+        $numberOfAliveFields = 0;
+        foreach ($this->fields as $rowFields)
+        {
+            foreach ($rowFields as $rowField)
+            {
+                $numberOfAliveFields += $rowField->isAlive();
+            }
+        }
+        return $numberOfAliveFields;
+    }
+
+    /**
+     * Returns the percentage of cells whose state is alive.
+     *
+     * @return float The percentage of cells whose state is alive
+     */
+    public function getPercentageOfAliveFields(): float
+    {
+        return (float)($this->getNumberOfAliveFields() / ($this->width * $this->height));
+    }
+
+
+    // Manipulate fields
+
+    /**
+     * Generates an array of fields from the board width and height.
+     *
+     * @param Bool $_fieldsState The state to which all of the fields will be set
+     *
+     * @return Field[][] The list of fields
+     */
+    public function generateFieldsList(Bool $_fieldsState): array
+    {
+        $fields = array();
+
+        for ($y = 0; $y < $this->height; $y++)
+        {
+            $fields[$y] = array();
+            for ($x = 0; $x < $this->width; $x++)
+            {
+                $fields[$y][$x] = new Field($x, $y, $_fieldsState, $this);
+            }
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Inverts all fields of the board.
+     */
+    public function invertFields()
+    {
+        foreach ($this->fields as $rowFields)
+        {
+            foreach ($rowFields as $rowField)
+            {
+                $rowField->invertValue();
+            }
+        }
+    }
+
+    /**
+     * Sets all cells to the state dead.
+     */
+    public function resetFields()
+    {
+        $this->fields = $this->generateFieldsList(false);
+    }
+
+    /**
+     * Sets the state of the cell in a field.
+     *
+     * @param int $_x The X-Coordinate of the field
+     * @param int $_y The Y-Coordinate of the field
+     * @param Bool $_isAlive The state to which the cell in the field will be set
+     *                       True: The cell in the field is alive
+     *                       False: The cell in the field is dead
+     */
+    public function setFieldState(int $_x, int $_y, Bool $_isAlive)
+    {
+        $this->fields[$_y][$_x]->setValue($_isAlive);
     }
 }

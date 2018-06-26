@@ -24,12 +24,12 @@ class BoardEditorOutputTest extends TestCase
      */
     public function testCanOutputBoard()
     {
-        $testBoard = new Board(5, 5, 3, 1);
-        $testBoard->setField(1, 2, true);
-        $testBoard->setField(2, 1, true);
-        $testBoard->setField(2, 2, true);
-        $testBoard->setField(2, 3, true);
-        $testBoard->setField(3, 2, true);
+        $testBoard = new Board(5, 5, 1);
+        $testBoard->setFieldState(1, 2, true);
+        $testBoard->setFieldState(2, 1, true);
+        $testBoard->setFieldState(2, 2, true);
+        $testBoard->setFieldState(2, 3, true);
+        $testBoard->setFieldState(3, 2, true);
 
         $output = new BoardEditorOutput;
 
@@ -43,7 +43,7 @@ class BoardEditorOutputTest extends TestCase
                         . " *╚═════╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
-        $output->outputBoard($testBoard);
+        $output->outputBoard($testBoard, 1);
 
         // With x/y highlighting
         $expectedOutput = " *    2   \n"
@@ -58,6 +58,6 @@ class BoardEditorOutputTest extends TestCase
                         . " *╚══╧═╧══╝\n";
 
         $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
-        $output->outputBoard($testBoard, false, 2, 3);
+        $output->outputBoard($testBoard,1,2, 3);
     }
 }

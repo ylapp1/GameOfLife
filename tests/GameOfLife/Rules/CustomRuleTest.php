@@ -27,9 +27,9 @@ class CustomRuleTest extends TestCase
 
         $expectedOptionList = array
         (
-            array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "CustomRule - Rule string in the format <stayAlive>/<birth> or <stayAlive>G<stayAlive/birth>"),
-            array(null, "rulesBirth", Getopt::REQUIRED_ARGUMENT, "CustomRule - The amounts of cells which will rebirth a dead cell as a single string"),
-            array(null, "rulesStayAlive", Getopt::REQUIRED_ARGUMENT, "CustomRule - The amounts of cells which will keep a living cell alive")
+            array(null, "rulesString", Getopt::REQUIRED_ARGUMENT, "CustomRule - A rules string in the format <stayAlive>/<birth> or <stayAlive>G<stayAlive/birth>"),
+            array(null, "rulesBirth", Getopt::REQUIRED_ARGUMENT, "CustomRule - The numbers of living neighbor cells which will rebirth a dead cell as one string of digits"),
+            array(null, "rulesStayAlive", Getopt::REQUIRED_ARGUMENT, "CustomRule - The numbers of living neighbor cells which will keep a living cell alive as one string of digits")
         );
 
         $optionsMock->expects($this->exactly(1))
@@ -51,10 +51,6 @@ class CustomRuleTest extends TestCase
      * @dataProvider parseRuleStringsProvider()
      *
      * @covers \Rule\CustomRule::initialize()
-     * @covers \Rule\CustomRule::isStayAliveSlashBirthString()
-     * @covers \Rule\CustomRule::parseStayAliveSlashBirthString()
-     * @covers \Rule\CustomRule::isAlternateNotationString()
-     * @covers \Rule\CustomRule::parseAlternateNotationString()
      * @covers \Rule\CustomRule::getRulesFromNumericString()
      */
     public function testCanParseRuleStrings($_rulesString = "", array $_expectedRulesBirth, array $_expectedRulesStayAlive, String $_expectedErrorMessage = "")
@@ -62,26 +58,39 @@ class CustomRuleTest extends TestCase
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
 
-        if ($_rulesString === "")
+        if (! $_rulesString)
         {
-            $optionsMock->expects($this->exactly(2))
-                        ->method("getOption")
-                        ->withConsecutive(array("rulesString"), array("rulesBirth"))
-                        ->willReturn(null, null);
-        }
-        elseif ($_expectedErrorMessage)
-        {
-            $optionsMock->expects($this->exactly(2))
-                        ->method("getOption")
-                        ->withConsecutive(array("rulesString"), array("rulesString"))
-                        ->willReturn($_rulesString, $_rulesString);
+            if ($_expectedErrorMessage)
+            {
+                $optionsMock->expects($this->exactly(3))
+                            ->method("getOption")
+                            ->withConsecutive(array("rulesString"), array("rulesBirth"), array("rulesStayAlive"))
+                            ->willReturn(null, null, null);
+            }
+            else
+            {
+                $optionsMock->expects($this->exactly(3))
+                            ->method("getOption")
+                            ->withConsecutive(array("rulesString"), array("rulesBirth"), array("antiRules"))
+                            ->willReturn(null, null, null);
+            }
         }
         else
         {
-            $optionsMock->expects($this->exactly(3))
-                ->method("getOption")
-                ->withConsecutive(array("rulesString"), array("rulesString"), array("antiRules"))
-                ->willReturn($_rulesString, $_rulesString, null);
+            if ($_expectedErrorMessage)
+            {
+                $optionsMock->expects($this->exactly(1))
+                            ->method("getOption")
+                            ->withConsecutive(array("rulesString"))
+                            ->willReturn($_rulesString);
+            }
+            else
+            {
+                $optionsMock->expects($this->exactly(2))
+                            ->method("getOption")
+                            ->withConsecutive(array("rulesString"), array("antiRules"))
+                            ->willReturn($_rulesString, null);
+            }
         }
 
         $rule = new CustomRule();
@@ -122,19 +131,23 @@ class CustomRuleTest extends TestCase
         return array(
 
             // birth/stay-alive
-            "Valid birth/stay-alive" => array("32/3", array(3), array(2, 3)),
-            "Invalid birth/stay-alive: Missing second number" => array("23/", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
-            "Invalid birth/stay-alive: Missing first number" => array("/3", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
-            "Invalid birth/stay-alive: Missing both numbers" => array("/", array(), array(), "The custom rule must have at least 1 birth condition and 1 stay alive condition."),
-            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "The custom rule parts may not contain more than two number strings."),
-            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "The custom rule parts may only contain \"/\" and numbers."),
+            "Valid birth/stay-alive: Both rule parts set" => array("32/3", array(3), array(2, 3)),
+            "Valid birth/stay-alive: Missing first number" => array("/3", array(3), array()),
+            "Valid birth/stay-alive: Missing second number" => array("23/", array(), array(2, 3)),
+            "Invalid birth/stay-alive: Missing both numbers" => array("/", array(), array(), "The rules string must contain at least 1 set rule part."),
+            "Invalid birth/stay-alive: Having 3 numbers" => array("23/3/3", array(), array(), "Unknown rules format."),
+            "Invalid birth/stay-alive: Numbers contain characters" => array("Hello3/4", array(), array(), "Unknown rules format."),
 
             // stay-alive<G>birth/stay-alive
-            "Valid stay-alive<G>birth/stay-alive" => array("2G4", array(4), array(2, 4)),
-            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "The custom rule parts may only contain \"G\" and numbers."),
+            "Valid stay-alive<G>birth/stay-alive: Both rule parts set" => array("2G4", array(4), array(2, 4)),
+            "Valid stay-alive<G>birth/stay-alive: Missing first number" => array("G45", array(4, 5), array(4, 5)),
+            "Valid stay-alive<G>birth/stay-alive: Missing second number" => array("35G", array(), array(3, 5)),
+            "Invalid stay-alive<G>birth/stay-alive: Numbers contain characters" => array("2HelloG57", array(), array(), "Unknown rules format."),
+            "Invalid stay--alive<G>birth/stay-alive: Missing both numbers" => array("G", array(), array(), "The rules string must contain at least 1 set rule part."),
+            "Invalid stay-alive<G>birth/stay-alive: Having 3 numbers" => array("1G2G3", array(), array(), "Unknown rules format."),
 
             // empty rules string
-            "Empty rules string" => array("", array(), array(), "The rules string is not set.")
+            "Empty rules string" => array("", array(), array(), "No rules specified.")
         );
     }
 
@@ -185,8 +198,6 @@ class CustomRuleTest extends TestCase
                 array(
                     array("ruleString", null),
                     array("rulesBirth", "1234"),
-                    array("rulesBirth", "1234"),
-                    array("rulesStayAlive", "4567"),
                     array("rulesStayAlive", "4567"),
                     array("antiRules", null)
                 ),
@@ -197,8 +208,6 @@ class CustomRuleTest extends TestCase
                 array(
                     array("ruleString", null),
                     array("rulesBirth", "2745"),
-                    array("rulesBirth", "2745"),
-                    array("rulesStayAlive", "3425"),
                     array("rulesStayAlive", "3425"),
                     array("antiRules", null)
                 ),

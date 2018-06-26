@@ -7,7 +7,7 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameLogic;
+use Simulator\GameLogic;
 use Output\Helpers\FfmpegHelper;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
@@ -15,7 +15,6 @@ use Output\VideoOutput;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemWriter;
-use Utils\FileSystemHandler;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,12 +45,12 @@ class VideoOutputTest extends TestCase
         $this->output->setImageOutputDirectory($this->outputDirectory . "/tmp/Frames");
         $this->fileSystemHandler = new FileSystemWriter();
 
-        $this->board = new Board(10, 10, 50, true);
+        $this->board = new Board(10, 10, true);
 
         $this->optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                                   ->getMock();
 
-        $this->gameLogic = new GameLogic(new ConwayRule());
+        $this->gameLogic = new GameLogic(new ConwayRule(), 1);
     }
 
     protected function tearDown()
@@ -115,7 +114,7 @@ class VideoOutputTest extends TestCase
         $fileSystemHandler = new FileSystemWriter();
         $colorBlack = new ImageColor(0, 0, 0);
         $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
-        $ffmpegHelper = new FfmpegHelper("Mein lustiger test");
+        $ffmpegHelper = new FfmpegHelper();
 
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setFillPercentages($_fillPercentages);
@@ -217,10 +216,10 @@ class VideoOutputTest extends TestCase
         // Create video frames and check whether the files are created
         for ($i = 0; $i < 10; $i++)
         {
-            $this->expectOutputRegex("/.*Gamestep: " . ($i + 1) . ".*/");
-            $this->output->outputBoard($this->board, false);
+            $this->expectOutputRegex("/.*Gamestep: " . $this->gameLogic->gameStep() . ".*/");
+            $this->output->outputBoard($this->board, $this->gameLogic->gameStep());
             $this->gameLogic->calculateNextBoard($this->board);
-            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . $i . ".png"));
+            $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames/" . ($this->gameLogic->gameStep() - 1) . ".png"));
         }
 
         // Check whether finishOutput creates the final gif

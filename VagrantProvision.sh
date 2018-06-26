@@ -46,7 +46,7 @@ chmod a+x composer
 cd
 
 
-# Fixing the timezone
+# Fix the timezone
 
 # Change the system timezone
 timedatectl set-timezone Europe/Berlin

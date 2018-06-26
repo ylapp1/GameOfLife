@@ -10,6 +10,7 @@ namespace Output\Helpers;
 
 use Utils\FileSystem\FileSystemReader;
 use Utils\FileSystem\FileSystemWriter;
+use Utils\OsInformationFetcher;
 use Utils\Shell\ShellExecutor;
 
 /**
@@ -19,90 +20,63 @@ use Utils\Shell\ShellExecutor;
  */
 class FfmpegHelper
 {
+    /**
+     * The path to the ffmpeg binary file
+     *
+     * @var String $binaryPath
+     */
     private $binaryPath;
+
+    /**
+     * The file system reader
+     *
+     * @var FileSystemReader $fileSystemReader
+     */
     private $fileSystemReader;
+
+    /**
+     * The file system writer
+     *
+     * @var FileSystemWriter $fileSystemWriter
+     */
     private $fileSystemWriter;
-    private $options = array();
-    private $osName;
+
+    /**
+     * The list of ffmpeg options
+     *
+     * @var String[] $options
+     */
+    private $options;
+
+    /**
+     * The os information fetcher
+     *
+     * @var OsInformationFetcher $osInformationFetcher
+     */
+    private $osInformationFetcher;
+
+    /**
+     * The shell executor
+     *
+     * @var ShellExecutor $shellExecutor
+     */
     private $shellExecutor;
 
 
     /**
      * FfmpegHelper constructor.
      *
-     * @param String $_osName The name of the operating system
-     *
      * @throws \Exception The exception when the ffmpeg binary could not be found
      */
-    public function __construct(String $_osName)
+    public function __construct()
     {
-        $this->osName = strtolower($_osName);
         $this->fileSystemReader = new FileSystemReader();
         $this->fileSystemWriter = new FileSystemWriter();
+        $this->options = array();
         $this->shellExecutor = new ShellExecutor();
 
+        $this->osInformationFetcher = new OsInformationFetcher();
         $this->binaryPath = $this->findFFmpegBinary();
-    }
-
-
-    /**
-     * Returns the ffmpeg binary path.
-     *
-     * @return string   Path to the ffmpeg binary file
-     */
-    public function binaryPath(): string
-    {
-        return $this->binaryPath;
-    }
-
-    /**
-     * Sets the ffmpeg binary path.
-     *
-     * @param string $_binaryPath   Path to the ffmpeg binary file
-     */
-    public function setBinaryPath(string $_binaryPath)
-    {
-        $this->binaryPath = $_binaryPath;
-    }
-
-    public function fileSystemHandler(): FileSystemReader
-    {
-        return $this->fileSystemReader;
-    }
-
-    public function setFileSystemHandler(FileSystemReader $_fileSystemReader)
-    {
-        $this->fileSystemReader = $_fileSystemReader;
-    }
-
-    /**
-     * Returns the ffmpeg option list.
-     *
-     * @return array    Ffmpeg option list
-     */
-    public function options(): array
-    {
-        return $this->options;
-    }
-
-    /**
-     * Sets the ffmpeg option list.
-     *
-     * @param array $_options   Ffmpeg option list
-     */
-    public function setOptions(array $_options)
-    {
-        $this->options = $_options;
-    }
-
-    public function shellExecutor()
-    {
-        return $this->shellExecutor;
-    }
-
-    public function setShellExecutor(ShellExecutor $_shellExecutor)
-    {
-        $this->shellExecutor = $_shellExecutor;
     }
 
 
@@ -115,16 +89,16 @@ class FfmpegHelper
      */
     private function findFFmpegBinary()
     {
-        $binaryPath = false;
+        $binaryPath = "";
 
-        if (stristr($this->osName, "win"))
+        if ($this->osInformationFetcher->isWindows())
         { // If OS is Windows search the Tools directory for the ffmpeg.exe file
             $searchDirectory = __DIR__ . "/../../../../Tools";
             $binaryPath = $this->fileSystemReader->findFileRecursive($searchDirectory, "ffmpeg.exe");
 
-            if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
+            if ($binaryPath === null) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
         }
-        elseif (stristr($this->osName, "linux"))
+        elseif ($this->osInformationFetcher->isLinux())
         { // If OS is Linux check whether the ffmpeg command returns true
             $returnValue = $this->shellExecutor->executeCommand("ffmpeg", true);
             if ($returnValue == 1) $binaryPath = "ffmpeg";
@@ -162,9 +136,9 @@ class FfmpegHelper
     {
         $command = "";
 
-        if (stristr($this->osName, "win")) $command .= "\"";
+        if ($this->osInformationFetcher->isWindows()) $command .= "\"";
         $command .= $this->binaryPath;
-        if (stristr($this->osName, "win")) $command .= "\"";
+        if ($this->osInformationFetcher->isWindows()) $command .= "\"";
 
         foreach ($this->options as $option)
         {

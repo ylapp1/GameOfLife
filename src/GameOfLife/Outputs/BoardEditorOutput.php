@@ -40,20 +40,18 @@ class BoardEditorOutput extends ConsoleOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-
-        if (stristr(PHP_OS, "win")) $this->printTitle();
     }
 
     /**
      * Print the board to the console and highlights the cell at ($_curX | $_curY) if both values are set.
      *
      * @param Board $_board Current board
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
+     * @param int $_gameStep The current game step
      * @param Integer $_highLightX X-Coordinate of the cell that shall be highlighted
      * @param Integer $_highLightY Y-Coordinate of the cell that shall be highlighted
      * @param array $_selectionCoordinates The selection coordinates
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard = false, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = null)
+    public function outputBoard(Board $_board, int $_gameStep, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = null)
     {
         $this->additionalSpace = 0;
 

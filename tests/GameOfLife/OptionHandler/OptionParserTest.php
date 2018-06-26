@@ -117,6 +117,7 @@ class OptionParserTest extends TestCase
         if ($this->optionsMock instanceof Getopt)
         {
             $exceptionOccurred = false;
+            $board = new Board(0,0,true);
             try
             {
                 $board = $this->optionParser->parseBoardOptions($this->optionsMock);
@@ -150,12 +151,10 @@ class OptionParserTest extends TestCase
                     array("width", "1"),
                     array("height", "2"),
                     array("height", "2"),
-                    array("maxSteps", "15"),
-                    array("maxSteps", "15"),
                     array("border", "solid"),
                     array("border", "solid")
                 ),
-                new Board(1, 2, 15, true)
+                new Board(1, 2, true)
             ),
             "Custom values without border" => array(
                 array(
@@ -163,12 +162,10 @@ class OptionParserTest extends TestCase
                     array("width", "5"),
                     array("height", "18"),
                     array("height", "18"),
-                    array("maxSteps", "200"),
-                    array("maxSteps", "200"),
                     array("border", "passthrough"),
                     array("border", "passthrough")
                 ),
-                new Board(5, 18, 200, false)
+                new Board(5, 18, false)
             ),
             "Custom values with invalid border type" => array(
                 array(
@@ -176,8 +173,6 @@ class OptionParserTest extends TestCase
                     array("width", "19"),
                     array("height", "13"),
                     array("height", "13"),
-                    array("maxSteps", "7"),
-                    array("maxSteps", "7"),
                     array("border", "glass"),
                     array("border", "glass")
                 ),
@@ -187,10 +182,9 @@ class OptionParserTest extends TestCase
                 array(
                     array("width", null),
                     array("height", null),
-                    array("maxSteps", null),
                     array("border", null)
                 ),
-                new Board(20, 10, 50, true)
+                new Board(20, 10, true)
             )
         );
     }

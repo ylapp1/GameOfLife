@@ -11,7 +11,7 @@ use GameOfLife\Field;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \GameOfLife\Board works as expected.
+ * Checks whether \Simulator\Board works as expected.
  *
  * @covers \GameOfLife\Board
  */
@@ -23,7 +23,7 @@ class BoardTest extends TestCase
     // Called before and after each test
     protected function setUp()
     {
-        $this->board = new Board(20, 17, 250, false);
+        $this->board = new Board(20, 17, false);
     }
 
     protected function tearDown()
@@ -38,28 +38,24 @@ class BoardTest extends TestCase
      *
      * @param int $_width       Board width
      * @param int $_height      Board height
-     * @param int $_maxSteps    Maximum amount of steps
      * @param bool $_hasBorder  Defines whether board has a border
      */
-    public function testCanBeConstructed(int $_width, int $_height, int $_maxSteps, bool $_hasBorder)
+    public function testCanBeConstructed(int $_width, int $_height, bool $_hasBorder)
     {
-        $testBoard = new Board($_width, $_height, $_maxSteps, $_hasBorder);
+        $testBoard = new Board($_width, $_height, $_hasBorder);
 
-        $this->assertEquals(0, $testBoard->gameStep());
         $this->assertEquals($_hasBorder, $testBoard->hasBorder());
         $this->assertEquals($_height, $testBoard->height());
-        $this->assertEquals($_maxSteps, $testBoard->maxSteps());
         $this->assertEquals($_width, $testBoard->width());
-        $this->assertEquals($testBoard->initializeEmptyBoard(), $testBoard->fields());
     }
 
     public function constructionProvider()
     {
         return [
-            [0, 1, 200, true],
-            [2, 3, 100, true],
-            [4, 5, 57, false],
-            [6, 7, 34, false]
+            [0, 1, true],
+            [2, 3, true],
+            [4, 5, false],
+            [6, 7, false]
         ];
     }
 
@@ -67,18 +63,14 @@ class BoardTest extends TestCase
      * @covers \GameOfLife\Board::fields()
      * @covers \GameOfLife\Board::hasBorder()
      * @covers \GameOfLife\Board::height()
-     * @covers \GameOfLife\Board::maxSteps()
      * @covers \GameOfLife\Board::width()
-     * @covers \GameOfLife\Board::gameStep()
      */
     public function testCanGetAttributes()
     {
         $this->assertEquals(17, count($this->board->fields()));
         $this->assertFalse($this->board->hasBorder());
         $this->assertEquals(17, $this->board->height());
-        $this->assertEquals(250, $this->board->maxSteps());
         $this->assertEquals(20, $this->board->width());
-        $this->assertEquals(0, $this->board->gameStep());
     }
 
 
@@ -87,33 +79,24 @@ class BoardTest extends TestCase
      * @covers \GameOfLife\Board::setFields()
      * @covers \GameOfLife\Board::setHasBorder()
      * @covers \GameOfLife\Board::setHeight()
-     * @covers \GameOfLife\Board::setMaxSteps()
      * @covers \GameOfLife\Board::setWidth()
-     * @covers \GameOfLife\Board::setGameStep()
      *
      * @param array $_board             Current board
      * @param bool $_hasBorder          Border type
      * @param int $_height              Board height
-     * @param int $_maxSteps            Maximum amount of steps that are calculated
      * @param int $_width               Board width
-     * @param int $_gameStep            Current game step
      */
-    public function testCanSetAttributes(array $_board, bool $_hasBorder, int $_height,
-                                         int $_maxSteps, int $_width, int $_gameStep)
+    public function testCanSetAttributes(array $_board, bool $_hasBorder, int $_height, int $_width)
     {
         $this->board->setFields($_board);
         $this->board->setHasBorder($_hasBorder);
         $this->board->setHeight($_height);
-        $this->board->setMaxSteps($_maxSteps);
         $this->board->setWidth($_width);
-        $this->board->setGameStep($_gameStep);
 
         $this->assertEquals($_board, $this->board->fields());
         $this->assertEquals($_hasBorder, $this->board->hasBorder());
         $this->assertEquals($_height, $this->board->height());
-        $this->assertEquals($_maxSteps, $this->board->maxSteps());
         $this->assertEquals($_width, $this->board->width());
-        $this->assertEquals($_gameStep, $this->board->gameStep());
     }
 
     public function setAttributesProvider()
@@ -121,15 +104,15 @@ class BoardTest extends TestCase
         $emptyBoard = array(array());
 
         return [
-            [$emptyBoard, true, 20, 10, 30, 200],
-            [$emptyBoard, false, 67, 13, 45, 384],
-            [$emptyBoard, true, 256, 124, 6, 1789]
+            [$emptyBoard, true, 20, 30],
+            [$emptyBoard, false, 67, 45],
+            [$emptyBoard, true, 256, 6]
         ];
     }
 
     /**
      * @dataProvider setFieldsProvider
-     * @covers \GameOfLife\Board::setField()
+     * @covers \GameOfLife\Board::setFieldState()
      *
      * @param int $_x           X-Coordinate of test field
      * @param int $_y           Y-Coordinate of test field
@@ -138,9 +121,9 @@ class BoardTest extends TestCase
      */
     public function testCanSetField(int $_x, int $_y, bool $_value = null, bool $_expected = null)
     {
-        $this->board->setField($_x, $_y, $_value);
+        $this->board->setFieldState($_x, $_y, $_value);
 
-        $this->assertEquals($_expected, $this->board->getFieldStatus($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getFieldState($_x, $_y));
     }
 
     public function setFieldsProvider()
@@ -154,7 +137,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider readFieldsProvider
-     * @covers \GameOfLife\Board::getFieldStatus()
+     * @covers \GameOfLife\Board::getFieldState()
      *
      * @param int $_x           X-Coordinate of test field
      * @param int $_y           Y-Coordinate of test field
@@ -163,14 +146,14 @@ class BoardTest extends TestCase
      */
     public function testCanReadField(int $_x, int $_y, bool $_value = null, bool $_expected)
     {
-        $testBoard = $this->board->initializeEmptyBoard();
+        $testBoard = $this->board->generateFieldsList(false);
         $field = $testBoard[$_y][$_x];
 
         if ($field instanceof Field) $field->setValue($_value);
 
         $this->board->setFields($testBoard);
 
-        $this->assertEquals($_expected, $this->board->getFieldStatus($_x, $_y));
+        $this->assertEquals($_expected, $this->board->getFieldState($_x, $_y));
     }
 
     public function readFieldsProvider()
@@ -183,11 +166,11 @@ class BoardTest extends TestCase
 
 
     /**
-     * @covers \GameOfLife\Board::initializeEmptyBoard()
+     * @covers \GameOfLife\Board::generateFieldsList()
      */
     public function testCanInitializeEmptyBoard()
     {
-        $emptyBoard = $this->board->initializeEmptyBoard();
+        $emptyBoard = $this->board->generateFieldsList(false);
 
         $amountCellsAlive = 0;
 
@@ -208,7 +191,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider amountCellsAliveProvider
-     * @covers \GameOfLife\Board::getAmountCellsAlive()
+     * @covers \GameOfLife\Board::getNumberOfAliveFields()
      *
      * @param array(array) $_cells      Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_expected            Amount of set cells that are expected
@@ -217,19 +200,38 @@ class BoardTest extends TestCase
     {
         foreach ($_cells as $cell)
         {
-            $this->board->setField($cell[0], $cell[1], true);
+            $this->board->setFieldState($cell[0], $cell[1], true);
         }
 
-        $this->assertEquals($_expected, $this->board->getAmountCellsAlive());
+        $this->assertEquals($_expected, $this->board->getNumberOfAliveFields());
     }
 
     public function amountCellsAliveProvider()
     {
-        return [
-            [[[0, 0], [0, 1]], 2],
-            [[[0, 0]], 1],
-            [[[1, 2,], [2, 4], [4, 5]], 3]
-        ];
+        return array(
+
+            array(
+                array(
+                    array(0, 0),
+                    array(0, 1)
+                ),
+                2
+            ),
+            array(
+                array(
+                    array(0, 0)
+                ),
+                1
+            ),
+            array(
+                array(
+                    array(1, 2),
+                    array(2, 4),
+                    array(4, 5)
+                ),
+                3
+            )
+        );
     }
 
 
@@ -255,10 +257,10 @@ class BoardTest extends TestCase
 
         foreach ($_cells as $cell)
         {
-            $this->board->setField($cell[0],$cell[1], true);
+            $this->board->setFieldState($cell[0],$cell[1], true);
         }
 
-        $this->assertEquals($_expected, $this->board->getFillPercentage());
+        $this->assertEquals($_expected, $this->board->getPercentageOfAliveFields());
     }
 
     public function calculateFillPercentProvider()
@@ -271,17 +273,17 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\Board::resetBoard()
+     * @covers \GameOfLife\Board::resetFields()
      */
     public function testCanResetCurrentBoard()
     {
-        $this->board->setField(1, 1, true);
-        $this->board->setField(0, 1, true);
+        $this->board->setFieldState(1, 1, true);
+        $this->board->setFieldState(0, 1, true);
 
-        $this->assertEquals(2, $this->board->getAmountCellsAlive());
+        $this->assertEquals(2, $this->board->getNumberOfAliveFields());
 
-        $this->board->resetBoard();
-        $this->assertEquals(0, $this->board->getAmountCellsAlive());
+        $this->board->resetFields();
+        $this->assertEquals(0, $this->board->getNumberOfAliveFields());
     }
 
     /**
@@ -298,7 +300,7 @@ class BoardTest extends TestCase
      */
     public function testCanGetNeighborsOfField($_targetField, $_hasBorder, $_neighborsX, $_neighborsY, $_amountNeighbors)
     {
-        $board = new Board(10, 10, 1, $_hasBorder);
+        $board = new Board(10, 10, $_hasBorder);
         $field = $board->fields()[$_targetField["y"]][$_targetField["x"]];
 
         $neighbors = $board->getNeighborsOfField($field);
@@ -376,12 +378,12 @@ class BoardTest extends TestCase
     /**
      * Checks whether the board can be inverted.
      *
-     * @covers \GameOfLife\Board::invertBoard()
+     * @covers \GameOfLife\Board::invertFields()
      */
     public function testCanInvertBoard()
     {
-        $board = new Board(2, 2, 1, true);
-        $board->setField(1, 1, true);
+        $board = new Board(2, 2, true);
+        $board->setFieldState(1, 1, true);
 
         $fieldZeroZero = new Field(0, 0, true, $board);
         $fieldOneZero = new Field(1, 0, true, $board);
@@ -393,7 +395,7 @@ class BoardTest extends TestCase
             array($fieldZeroOne, $fieldOneOne)
         );
 
-        $board->invertBoard();
+        $board->invertFields();
 
         $this->assertEquals($expectedFields, $board->fields());
     }

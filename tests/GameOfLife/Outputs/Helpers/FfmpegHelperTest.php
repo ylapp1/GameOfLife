@@ -7,9 +7,10 @@
  */
 
 use Output\Helpers\FfmpegHelper;
-use Utils\FileSystem\FileSystemReader;
-use Utils\Shell\ShellExecutor;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Utils\OsInformationFetcher;
+use Utils\Shell\ShellInformationFetcher;
 
 /**
  * Checks whether \Output\Helpers\FfmpegHelper works as expected.
@@ -20,11 +21,20 @@ class FfmpegHelperTest extends TestCase
     private $ffmpegHelper;
 
     /**
+     * @var MockObject $osInformationFetcherMock
+     */
+    private $osInformationFetcherMock;
+
+    /**
      * @throws Exception
      */
     protected function setUp()
     {
-        $this->ffmpegHelper = new FfmpegHelper("Other");
+        // Create a new ffmpeg helper and set its os type to linux
+        $this->ffmpegHelper = new FfmpegHelper();
+        $this->osInformationFetcherMock = $this->getMockBuilder(OsInformationFetcher::class)
+                                               ->getMock();
+        setPrivateAttribute($this->ffmpegHelper, "osInformationFetcher", $this->osInformationFetcherMock);
     }
 
     protected function tearDown()
@@ -32,20 +42,6 @@ class FfmpegHelperTest extends TestCase
         unset($this->ffmpegHelper);
     }
 
-
-    /**
-     * Checks whether the constructor works as expected.
-     *
-     * @throws \Exception
-     *
-     * @covers \Output\Helpers\FfmpegHelper::__construct()
-     * @covers \Output\Helpers\FfmpegHelper::findFFmpegBinary()
-     */
-    public function testCanBeConstructed()
-    {
-        $ffmpegHelper = new FfmpegHelper("Other");
-        $this->assertEquals("", $ffmpegHelper->binaryPath());
-    }
 
     /**
      * Checks whether the ffmpeg helper can find the ffmpeg binary for windows.
@@ -56,23 +52,22 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanFindFfmpegBinaryForWindows()
     {
-        $ffmpegHelper = new FfmpegHelper("test");
-
-
         $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystem\FileSystemReader::class)
                                       ->getMock();
-
         $fileSystemHandlerMock->expects($this->exactly(1))
                               ->method("findFileRecursive")
                               ->willReturn("ffmpeg.exe");
 
-        setPrivateAttribute($ffmpegHelper, "fileSystemReader", $fileSystemHandlerMock);
-        setPrivateAttribute($ffmpegHelper, "osName", "Windows");
+        setPrivateAttribute($this->ffmpegHelper, "fileSystemReader", $fileSystemHandlerMock);
+
+        $this->osInformationFetcherMock->expects($this->exactly(1))
+                                       ->method("isWindows")
+                                       ->willReturn(true);
 
         $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
         $reflectionMethod = $reflectionClass->getMethod("findFfmpegBinary");
         $reflectionMethod->setAccessible(true);
-        $result = $reflectionMethod->invoke($ffmpegHelper);
+        $result = $reflectionMethod->invoke($this->ffmpegHelper);
 
         $this->assertEquals("ffmpeg.exe", $result);
     }
@@ -86,109 +81,78 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanFindFfmpegBinaryForLinux()
     {
-        $ffmpegHelper = new FfmpegHelper("test");
-
-        $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
-
         $shellExecutorMock = $this->getMockBuilder(\Utils\Shell\ShellExecutor::class)
-                                  ->setConstructorArgs(array(PHP_OS))
                                   ->getMock();
-
         $shellExecutorMock->expects($this->exactly(1))
                           ->method("executeCommand")
                           ->willReturn(1);
 
-        $reflectionProperty = $reflectionClass->getProperty("shellExecutor");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($ffmpegHelper, $shellExecutorMock);
+        $this->osInformationFetcherMock->expects($this->once())
+                                       ->method("isWIndows")
+                                       ->willReturn(false);
 
-        $reflectionProperty = $reflectionClass->getProperty("osName");
-        $reflectionProperty->setAccessible(true);
-        $reflectionProperty->setValue($ffmpegHelper, "Linux");
+        $this->osInformationFetcherMock->expects($this->exactly(1))
+                                       ->method("isLinux")
+                                       ->willReturn(true);
 
+        setPrivateAttribute($this->ffmpegHelper, "shellExecutor", $shellExecutorMock);
+
+        $reflectionClass = new ReflectionClass(\Output\Helpers\FfmpegHelper::class);
         $reflectionMethod = $reflectionClass->getMethod("findFfmpegBinary");
         $reflectionMethod->setAccessible(true);
-        $result = $reflectionMethod->invoke($ffmpegHelper);
+        $result = $reflectionMethod->invoke($this->ffmpegHelper);
 
         $this->assertEquals("ffmpeg", $result);
     }
 
     /**
-     * Checks whether the getters and setters work as expected.
-     *
-     * @dataProvider setAttributesProvider
-     *
-     * @covers \Output\Helpers\FfmpegHelper::setBinaryPath()
-     * @covers \Output\Helpers\FfmpegHelper::binaryPath()
-     * @covers \Output\Helpers\FfmpegHelper::setOptions()
-     * @covers \Output\Helpers\FfmpegHelper::options()
-     * @covers \Output\Helpers\FfmpegHelper::shellExecutor()
-     * @covers \Output\Helpers\FfmpegHelper::setShellExecutor()
-     * @covers \Output\Helpers\FfmpegHelper::fileSystemHandler()
-     * @covers \Output\Helpers\FfmpegHelper::setFileSystemHandler()
-     *
-     * @param string $_binaryPath The binary path
-     * @param array $_options The option list
-     */
-    public function testCanSetAttributes(string $_binaryPath, array $_options)
-    {
-        $shellExecutor = new ShellExecutor();
-        $fileSystemHandler = new FileSystemReader();
-
-        $this->ffmpegHelper->setBinaryPath($_binaryPath);
-        $this->ffmpegHelper->setOptions($_options);
-        $this->ffmpegHelper->setShellExecutor($shellExecutor);
-        $this->ffmpegHelper->setFileSystemHandler($fileSystemHandler);
-
-        $this->assertEquals($_binaryPath, $this->ffmpegHelper->binaryPath());
-        $this->assertEquals($_options, $this->ffmpegHelper->options());
-        $this->assertEquals($shellExecutor, $this->ffmpegHelper->shellExecutor());
-        $this->assertEquals($fileSystemHandler, $this->ffmpegHelper->fileSystemHandler());
-    }
-
-    public function setAttributesProvider()
-    {
-        return [
-            ["sdfsdf", [0, 1, 2, 3]],
-            ["dflgkjsdlfgs", [1, 2, 3]],
-            ["dfskjgsdklfgsdfgsd", ["he", "ll", "ow", "or", "ld"]]
-        ];
-    }
-
-    /**
      * @covers \Output\Helpers\FfmpegHelper::addOption()
      * @covers \Output\Helpers\FfmpegHelper::resetOptions()
+     *
+     * @throws ReflectionException
      */
     public function testCanAddOption()
     {
-        $this->assertEquals(0, count($this->ffmpegHelper->options()));
+        $ffmpegOptions = getPrivateAttribute($this->ffmpegHelper, "options");
+        $this->assertEquals(0, count($ffmpegOptions));
 
         $this->ffmpegHelper->addOption("myTest");
         $this->ffmpegHelper->addOption("mySecondTest");
         $this->ffmpegHelper->addOption("myThirdTest");
 
-        $this->assertEquals(3, count($this->ffmpegHelper->options()));
-        $this->assertEquals("myTest", $this->ffmpegHelper->options()[0]);
-        $this->assertEquals("mySecondTest", $this->ffmpegHelper->options()[1]);
-        $this->assertEquals("myThirdTest", $this->ffmpegHelper->options()[2]);
+        $ffmpegOptions = getPrivateAttribute($this->ffmpegHelper, "options");
+        $this->assertEquals(3, count($ffmpegOptions));
+        $this->assertEquals("myTest", $ffmpegOptions[0]);
+        $this->assertEquals("mySecondTest", $ffmpegOptions[1]);
+        $this->assertEquals("myThirdTest", $ffmpegOptions[2]);
 
         $this->ffmpegHelper->resetOptions();
 
-        $this->assertEquals(0, count($this->ffmpegHelper->options()));
+        $ffmpegOptions = getPrivateAttribute($this->ffmpegHelper, "options");
+        $this->assertEquals(0, count($ffmpegOptions));
     }
 
     /**
      * @covers \Output\Helpers\FfmpegHelper::generateCommand()
+     *
+     * @throws \Exception
      */
     public function testCanGenerateCommand()
     {
+
+        setPrivateAttribute($this->ffmpegHelper, "binaryPath", "ffmpeg");
+
+        $this->osInformationFetcherMock->expects($this->exactly(2))
+                                       ->method("isWindows")
+                                       ->willReturn(false);
+
         $this->ffmpegHelper->addOption("myTest");
         $this->ffmpegHelper->addOption("thisIsATest");
         $this->ffmpegHelper->addOption("testing");
 
+        // Hide output
         $this->expectOutputRegex("/.*/");
-
-        $this->assertEquals(' myTest thisIsATest testing "Output"', $this->ffmpegHelper->generateCommand("Output"));
+        $this->assertEquals('ffmpeg myTest thisIsATest testing "Output"', $this->ffmpegHelper->generateCommand("Output"));
     }
 
     /**
@@ -214,7 +178,7 @@ class FfmpegHelperTest extends TestCase
 
         if ($shellExecutorMock instanceof \Utils\Shell\ShellExecutor)
         {
-            $this->ffmpegHelper->setShellExecutor($shellExecutorMock);
+            setPrivateAttribute($this->ffmpegHelper, "shellExecutor", $shellExecutorMock);
 
             $exceptionOccurred = false;
             try

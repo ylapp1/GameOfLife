@@ -70,7 +70,7 @@ class VideoOutput extends ImageOutput
         $this->frames = array();
         $this->hasSound = false;
 
-        $this->ffmpegHelper = new FfmpegHelper(PHP_OS);
+        $this->ffmpegHelper = new FfmpegHelper();
     }
 
 
@@ -237,22 +237,22 @@ class VideoOutput extends ImageOutput
      * Creates PNG files which will later be combined to a video.
      *
      * @param Board $_board The board from which the ImageCreator will create an image
-     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
+     * @param int $_gameStep The current game step
      */
-    public function outputBoard(Board $_board, Bool $_isFinalBoard)
+    public function outputBoard(Board $_board, int $_gameStep)
     {
-        echo "\rGamestep: " . ($_board->gameStep() + 1);
+        echo "\rGamestep: " . $_gameStep;
 
         $image = $this->imageCreator->createImage($_board);
 
-        $fileName = $_board->gameStep() . ".png";
+        $fileName = $_gameStep . ".png";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagepng($image, $filePath);
         unset($image);
 
         $this->frames[] = $filePath;
-        $this->fillPercentages[] = $_board->getFillpercentage();
+        $this->fillPercentages[] = $_board->getPercentageOfAliveFields();
     }
 
     /**

@@ -15,6 +15,7 @@ use Output\BaseOutput;
 use Output\ConsoleOutput;
 use Rule\BaseRule;
 use Rule\ConwayRule;
+use Simulator\GameLogic;
 use Ulrichsg\Getopt;
 
 /**
@@ -88,9 +89,6 @@ class OptionParser
         if ($_options->getOption("height") !== null) $height = (int)$_options->getOption("height");
         else $height = 10;
 
-        if ($_options->getOption("maxSteps") !== null) $maxSteps = (int)$_options->getOption("maxSteps");
-        else $maxSteps = 50;
-
         if ($_options->getOption("border") !== null)
         {
             $borderType = $_options->getOption("border");
@@ -100,7 +98,26 @@ class OptionParser
         }
         else $hasBorder = true;
 
-        return new Board($width, $height, $maxSteps, $hasBorder);
+        return new Board($width, $height, $hasBorder);
+    }
+
+    /**
+     * Parses the game logic options and returns the GameLogic object.
+     *
+     * @param Getopt $_options The option list
+     * @param BaseRule $_rule The rule
+     *
+     * @return GameLogic The game logic
+     */
+    public function parseGameLogicOptions(Getopt $_options, BaseRule $_rule): GameLogic
+    {
+        // Fetch GameLogic options
+        if ($_options->getOption("maxSteps") !== null) $maxSteps = (int)$_options->getOption("maxSteps");
+        else $maxSteps = 50;
+
+        $gameLogic = new GameLogic($_rule, $maxSteps);
+
+        return $gameLogic;
     }
 
     /**
@@ -114,7 +131,7 @@ class OptionParser
      */
     public function parseInputOptions(Getopt $_options): BaseInput
     {
-        $input = $this->parseClassOptions($_options, "input", "Input", "Input");
+        $input = $this->parseClassOptions($_options, "input", "Input", "Input", array("Input\\TemplateInput"));
         if ($input) return $input;
         else return new TemplateInput();
     }
@@ -158,12 +175,13 @@ class OptionParser
      * @param String $_optionName The option name (input, output or rule)
      * @param String $_classNameSpace The class name space
      * @param String $_classSuffix The class suffix
+     * @param String[] $_lowPriorityClasses The class paths of classes with lower priority than other classes
      *
      * @return BaseInput|BaseOutput|BaseRule|Bool The class instance or false if no class was found from the options
      *
      * @throws \Exception The exceptions of the Input, Output or Rule constructors
      */
-    private function parseClassOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix)
+    private function parseClassOptions(Getopt $_options, String $_optionName, String $_classNameSpace, String $_classSuffix, array $_lowPriorityClasses = array())
     {
         if ($_options->getOption($_optionName) !== null)
         {
@@ -178,14 +196,24 @@ class OptionParser
         }
 
         // check whether any linked option (input/output/rule specific option) is set
+        $linkedClassName = "";
+
         foreach ($this->parentOptionHandler->linkedOptions() as $option => $className)
         {
             // if input/output/rule specific option is set return new instance of the class which the input refers to
             if (stristr($className, $_classSuffix) && $_options->getOption($option) !== null)
             {
-                return new $className;
+                $linkedClassName = $className;
+
+                /*
+                 * If class is one of the low priority classes continue searching for a non low priority class
+                 * If none was found the low priority class will be instantiated
+                 */
+                if (! in_array($className, $_lowPriorityClasses)) break;
             }
         }
+
+        if ($linkedClassName) return new $linkedClassName;
 
         return false;
     }

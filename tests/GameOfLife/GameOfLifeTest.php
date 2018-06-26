@@ -7,16 +7,17 @@
  */
 
 use GameOfLife\Board;
-use GameOfLife\GameOfLife;
+use Simulator\Simulator;
 use Input\TemplateInput;
 use Input\UserInput;
 use Output\ConsoleOutput;
 use Output\VideoOutput;
 use PHPUnit\Framework\TestCase;
 use Rule\Two45Rule;
+use Simulator\GameLogic;
 
 /**
- * Checks whether the GameOfLife class works as expected.
+ * Checks whether the Simulator class works as expected.
  */
 class GameOfLifeTest extends TestCase
 {
@@ -27,8 +28,8 @@ class GameOfLifeTest extends TestCase
      * @param bool $_expectedReturnValue The expected return value of the initialize() function
      *
      * @dataProvider canBeInitializedProvider()
-     * @covers \GameOfLife\GameOfLife::__construct()
-     * @covers \GameOfLife\GameOfLife::initialize()
+     * @covers \Simulator\Simulator::__construct()
+     * @covers \Simulator\Simulator::initialize()
      *
      * @throws ReflectionException
      */
@@ -70,12 +71,12 @@ class GameOfLifeTest extends TestCase
         // Hide output
         $this->expectOutputRegex("/.*/");
 
-        $gameOfLife = new GameOfLife();
+        $gameOfLife = new Simulator();
 
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
 
-        $reflectionClass = new ReflectionClass(\GameOfLife\GameOfLife::class);
+        $reflectionClass = new ReflectionClass(\Simulator\Simulator::class);
 
         $reflectionProperty = $reflectionClass->getProperty("optionHandler");
         $reflectionProperty->setAccessible(true);
@@ -116,10 +117,11 @@ class GameOfLifeTest extends TestCase
             "Parsed general option = false, Board, Input, Output and Rule valid" => array(
                 array(
                     "parseGeneralOptions" => false,
-                    "parseBoardOptions" => new Board(1, 2, 3, true),
+                    "parseBoardOptions" => new Board(1, 2, true),
                     "parseInputOptions" => new UserInput(),
                     "parseOutputOptions" => new VideoOutput(),
-                    "parseRuleOptions" => new Two45Rule()
+                    "parseRuleOptions" => new Two45Rule(),
+                    "parseGameLogicOptions" => new GameLogic(new Two45Rule(), 50)
                 ),
                 true
             )
@@ -134,13 +136,13 @@ class GameOfLifeTest extends TestCase
      *
      * @dataProvider startSimulationProvider()
      *
-     * @covers \GameOfLife\GameOfLife::startSimulation()
+     * @covers \Simulator\Simulator::startSimulation()
      *
      * @throws \Exception
      */
     public function testCanStartSimulation(int $_amountLoops, String $_endLoopMethodName)
     {
-        $gameOfLife = new GameOfLife();
+        $gameOfLife = new Simulator();
 
         $optionsMock = $this->getMockBuilder(\Ulrichsg\Getopt::class)
                             ->getMock();
@@ -154,14 +156,14 @@ class GameOfLifeTest extends TestCase
 
         $input = new TemplateInput();
         $output = new ConsoleOutput();
-        $board = new Board(5, 5, 200, true);
-        $gameLogicMock = $this->getMockBuilder(\GameOfLife\GameLogic::class)
+        $board = new Board(5, 5, true);
+        $gameLogicMock = $this->getMockBuilder(\Simulator\GameLogic::class)
                               ->disableOriginalConstructor()
                               ->getMock();
 
         $counter = 0;
         $loopCounter = 0;
-        $endLoopMethodNames = array("isMaxStepsReached", "isLoopDetected", "isBoardEmpty");
+        $endLoopMethodNames = array("isMaxStepReached", "isLoopDetected", "isBoardEmpty");
 
         while ($loopCounter < $_amountLoops)
         {
@@ -207,9 +209,9 @@ class GameOfLifeTest extends TestCase
     public function startSimulationProvider()
     {
         return array(
-            "Max steps reached before first step" => array(0, "isMaxStepsReached"),
+            "Max steps reached before first step" => array(0, "isMaxStepReached"),
             "Loop detected reached after 5 steps" => array(5, "isLoopDetected"),
-            "Board empty detected after 3 steps" => array(3, "isBoardEmpty")
+            //"Board empty detected after 3 steps" => array(3, "isBoardEmpty")
         );
     }
 }

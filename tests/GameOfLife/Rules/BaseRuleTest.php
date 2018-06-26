@@ -7,7 +7,6 @@
  */
 
 use GameOfLife\Field;
-use Rule\BaseRule;
 use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
@@ -17,19 +16,6 @@ use PHPUnit\Framework\TestCase;
 class BaseRuleTest extends TestCase
 {
     /**
-     * Checks whether the constructor works as expected.
-     *
-     * @covers \Rule\BaseRule::__construct()
-     */
-    public function testCanBeConstructed()
-    {
-        $rule = new BaseRule();
-
-        $this->assertEquals(array(), $rule->rulesBirth());
-        $this->assertEquals(array(), $rule->rulesStayAlive());
-    }
-
-    /**
      * Checks whether getters and setters work as expected.
      *
      * @dataProvider setAttributesProvider
@@ -37,13 +23,14 @@ class BaseRuleTest extends TestCase
      * @covers \Rule\BaseRule::setRulesBirth()
      * @covers \Rule\BaseRule::rulesStayAlive
      * @covers \Rule\BaseRule::setRulesStayAlive()
+     * @covers \Rule\BaseRule::__construct()
      *
      * @param int[] $_rulesBirth Birth rules
      * @param int[] $_rulesStayAlive Stay alive rules
      */
     public function testCanSetAttributes(array $_rulesBirth, array $_rulesStayAlive)
     {
-        $rule = new BaseRule();
+        $rule = new ConwayRule();
 
         $rule->setRulesBirth($_rulesBirth);
         $rule->setRulesStayAlive($_rulesStayAlive);

@@ -44,15 +44,15 @@ class ExitOptionTest extends TestCase
      */
     public function testCanExitBoardEditor()
     {
-        $testBoard = new Board(4, 4, 4, true);
-        $testBoard->setField(1, 1, true);
-        $this->assertEquals(1, $testBoard->getAmountCellsAlive());
+        $testBoard = new Board(4, 4, true);
+        $testBoard->setFieldState(1, 1, true);
+        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
 
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new ExitOption($boardEditor);
 
         $result = $option->exitBoardEditor();
         $this->assertTrue($result);
-        $this->assertEquals(0, $testBoard->getAmountCellsAlive());
+        $this->assertEquals(0, $testBoard->getNumberOfAliveFields());
     }
 }

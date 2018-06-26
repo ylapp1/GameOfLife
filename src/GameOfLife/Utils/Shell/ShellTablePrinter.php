@@ -11,8 +11,33 @@ namespace Utils\Shell;
 /**
  * Prints tables to the shell.
  */
-class ShellTablePrinter extends ShellOutputHelper
+class ShellTablePrinter
 {
+    // Attributes
+
+    /**
+     * The cached number of shell columns
+     *
+     * @var int $numberOfShellColumns
+     */
+    private $numberOfShellColumns;
+
+
+    // Magic Methods
+
+    /**
+     * ShellTablePrinter constructor.
+     */
+    public function __construct()
+    {
+        $shellInformationFetcher = new ShellInformationFetcher();
+        $this->numberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
+        unset($shellInformationFetcher);
+    }
+
+
+    // Class Methods
+
     /**
      * Prints a table to the console.
      *
@@ -143,5 +168,58 @@ class ShellTablePrinter extends ShellOutputHelper
         $subRows[$currentRow] = $_field;
 
         return $subRows;
+    }
+
+    /**
+     * Enhanced auto line breaker.
+     *
+     * @param $_text
+     * @param $_columnWidth
+     * @param int $_minTextWidth
+     *
+     * @return array
+     */
+    /**
+     * Auto line breaks the content of a table cell and returns an array of cell sub rows.
+     *
+     * @param String $_text The content of the table cell
+     * @param int $_columnWidth The maximum text width in number of characters
+     * @param int $_minTextWidth The minimum text width per row in number of characters
+     * @param int $_paddingOnAutoLineBreak
+     *
+     * @return String[] The cell sub rows
+     */
+    private function autoLineBreakTableCellText($_text, $_columnWidth, $_minTextWidth = 0, $_paddingOnAutoLineBreak = 0)
+    {
+        // Split the string into rows
+        $rows = explode("\n", $_text);
+
+        // Split the rows that are too long into sub rows
+        $outputRows = array();
+        foreach ($rows as $row)
+        {
+            $emptySpaceSearchOffset = 0;
+            while (mb_strlen($row) > $_columnWidth - 1)
+            {
+                $subRow = mb_substr($row, 0, $_columnWidth - 1);
+
+                $autoLineBreakPosition = mb_strrpos($subRow, " ", $emptySpaceSearchOffset);
+                if ($autoLineBreakPosition === false) $autoLineBreakPosition = $_columnWidth - 1;
+                elseif ($autoLineBreakPosition < $_minTextWidth) $autoLineBreakPosition = $_minTextWidth;
+
+                $outputRows[] = mb_substr($subRow, 0, $autoLineBreakPosition);
+                $row = mb_substr($row, $autoLineBreakPosition);
+
+                if ($row && $_paddingOnAutoLineBreak)
+                {
+                    $row = str_repeat(" ", $_paddingOnAutoLineBreak) . $row;
+                    $emptySpaceSearchOffset = $_paddingOnAutoLineBreak;
+                }
+            }
+
+            if ($row) $outputRows[] = $row;
+        }
+
+        return $outputRows;
     }
 }

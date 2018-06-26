@@ -67,7 +67,7 @@ class TemplateInput extends BaseInput
 
         $fileSystemReader = new FileSystemReader();
 
-        $defaultTemplatePaths = $fileSystemReader->getFileList($templatesBaseDirectory . "/*.txt");
+        $defaultTemplatePaths = $fileSystemReader->getFileList($templatesBaseDirectory, "*.txt");
         $this->defaultTemplateNames = array_map(
             function($_arrayEntry)
             {
@@ -127,6 +127,8 @@ class TemplateInput extends BaseInput
         elseif ($_options->getOption("list-templates") !== null)
         {
             $this->templateListPrinter->printTemplateLists();
+            $_board->setWidth(0);
+            $_board->setHeight(0);
         }
         else
         {
@@ -205,9 +207,9 @@ class TemplateInput extends BaseInput
 
         $isDimensionsAdjustment = $this->isDimensionsAdjustment($_options, $_board, $templateFields, $posOptionPrefix);
 
-        $this->templatePlacer->placeTemplate($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
+        $this->templatePlacer->placeTemplateFields($templateFields, $_board, $templatePosX, $templatePosY, $isDimensionsAdjustment);
 
-        if ($_options->getOption("invertTemplate") !== null) $_board->invertBoard();
+        if ($_options->getOption("invertTemplate") !== null) $_board->invertFields();
     }
 
     /**

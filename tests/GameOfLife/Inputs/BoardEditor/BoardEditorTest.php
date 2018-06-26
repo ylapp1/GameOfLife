@@ -43,8 +43,8 @@ class BoardEditorTest extends TestCase
                                       ->setMethods(array("readInput", "loadOptions", "addBoardToHistory"))
                                       ->disableOriginalConstructor()
                                       ->getMock();
-        $this->testBoard = new Board(5, 5, 1, true);
-        $this->testBoard->setField(3, 3, true);
+        $this->testBoard = new Board(5, 5, true);
+        $this->testBoard->setFieldState(3, 3, true);
 
         if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->setBoard($this->testBoard);
         if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->setOutput(new BoardEditorOutput());
@@ -117,33 +117,36 @@ class BoardEditorTest extends TestCase
      */
     public function testCanLaunchSession()
     {
-        $this->testBoard->resetBoard();
-        $this->boardEditorMock->expects($this->exactly(1))
-            ->method("readInput")
-            ->willReturn("exit");
-        $this->boardEditorMock->expects($this->exactly(1))
-            ->method("addBoardToHistory")
-            ->willReturn(null);
+        $this->testBoard->resetFields();
+
+        $boardEditor = new BoardEditor("");
+        $boardEditor->setBoard($this->testBoard);
+
+        $shellInputReaderMock = $this->getMockBuilder(Utils\Shell\ShellInputReader::class)
+                                     ->getMock();
+        $shellInputReaderMock->expects($this->exactly(1))
+                             ->method("readInput")
+                             ->willReturn("exit");
+        setPrivateAttribute($boardEditor, "shellInputReader", $shellInputReaderMock);
+
+        $boardHistorySaverMock = $this->getMockBuilder(GameOfLife\BoardHistory::class)
+                                      ->disableOriginalConstructor()
+                                      ->getMock();
+        $boardHistorySaverMock->expects($this->exactly(1))
+                              ->method("addBoardToHistory")
+                              ->willReturn(null);
+        setPrivateAttribute($boardEditor, "boardHistory", $boardHistorySaverMock);
 
         $optionHandlerMock = $this->getMockBuilder(BoardEditorOptionHandler::class)
                                   ->setMethods(array("parseInput"))
                                   ->disableOriginalConstructor()
                                   ->getMock();
+        setPrivateAttribute($boardEditor, "optionHandler", $optionHandlerMock);
 
         $shellInformationFetcherMock = $this->getMockBuilder(ShellInformationFetcher::class)
                                             ->getMock();
+        setPrivateAttribute($boardEditor, "shellInformationFetcher", $shellInformationFetcherMock);
 
-        if ($this->boardEditorMock instanceof BoardEditor)
-        {
-            if ($optionHandlerMock instanceof BoardEditorOptionHandler)
-            {
-                $this->boardEditorMock->setOptionHandler($optionHandlerMock);
-            }
-            if ($shellInformationFetcherMock instanceof ShellInformationFetcher)
-            {
-                $this->boardEditorMock->setShellInformationFetcher($shellInformationFetcherMock);
-            }
-        }
 
         $shellInformationFetcherMock->expects($this->exactly(1))
                                     ->method("getNumberOfShellLines")
@@ -165,7 +168,7 @@ class BoardEditorTest extends TestCase
                           ->withConsecutive(array("exit"))
                           ->willReturn(true);
 
-        if ($this->boardEditorMock instanceof BoardEditor) $this->boardEditorMock->launch();
+        if ($this->boardEditorMock instanceof BoardEditor) $boardEditor->launch();
     }
 
     /**
@@ -198,7 +201,7 @@ class BoardEditorTest extends TestCase
      */
     public function testCanReadInput(String $_fileContent)
     {
-        $this->assertTrue(true);
+        $this->assertEquals($_fileContent, $_fileContent);
 
         /*
         $fileSystemHandler = new FileSystemHandler();

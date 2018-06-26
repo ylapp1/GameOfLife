@@ -25,10 +25,10 @@ class BoardEditorOptionTest extends TestCase
     public function testCanBeConstructed()
     {
         $boardEditor = new BoardEditor("test");
-        $option = new BoardEditorOption($boardEditor);
+        $option = new BoardEditorOption($boardEditor, "test", array("unittest"), "testme", "tests me");
 
         $this->assertEquals($boardEditor, $option->parentBoardEditor());
-        $this->assertEquals(array(), $option->aliases());
+        $this->assertEquals(array("unittest"), $option->aliases());
     }
 
     /**
@@ -57,7 +57,7 @@ class BoardEditorOptionTest extends TestCase
     public function testCanSetAttributes(String $_name, array $_aliases, String $_callback, String $_description, String $_templateDirectory)
     {
         $boardEditor = new BoardEditor("the test");
-        $option = new BoardEditorOption($boardEditor);
+        $option = new BoardEditorOption($boardEditor, "this is test", array("hellotest"), "testthis", "Tests this very good");
 
         $testBoardEditor = new BoardEditor($_templateDirectory);
 
@@ -100,9 +100,7 @@ class BoardEditorOptionTest extends TestCase
         $aliases = array("one", "two", "three");
 
         $boardEditor =new BoardEditor("hello");
-        $option = new BoardEditorOption($boardEditor);
-
-        $option->setAliases($aliases);
+        $option = new BoardEditorOption($boardEditor, "hallo", $aliases, "hallo!2", "hallo3");
 
         $this->assertTrue($option->hasAlias("one"));
         $this->assertTrue($option->hasAlias("two"));

@@ -13,6 +13,8 @@ namespace GameOfLife;
  */
 class Field
 {
+    // Attributes
+
     /**
      * The X-coordinate of the field
      *
@@ -45,12 +47,14 @@ class Field
     private $parentBoard;
 
 
+    // Magic Methods
+
     /**
      * Field constructor.
      *
      * @param int $_x The X-coordinate of the field
      * @param int $_y The Y-coordinate of the field
-     * @param bool $_value The state of the cell in the field
+     * @param Bool $_value The state of the cell in the field
      * @param Board $_parentBoard The board to which the field belongs
      */
     public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
@@ -61,6 +65,8 @@ class Field
         $this->parentBoard = $_parentBoard;
     }
 
+
+    // Getters and Setters
 
     /**
      * Returns the X-coordinate of the field.
@@ -123,7 +129,7 @@ class Field
     }
 
     /**
-     * Sets the board to which the field belongs.
+     * Returns the board to which the field belongs.
      *
      * @return Board The board to which the field belongs
      */
@@ -133,7 +139,7 @@ class Field
     }
 
     /**
-     * Returns the board to which the field belongs.
+     * Sets the board to which the field belongs.
      *
      * @param Board $_parentBoard The board to which the field belongs
      */
@@ -166,19 +172,29 @@ class Field
     }
 
     /**
+     * Inverts the fields value.
+     */
+    public function invertValue()
+    {
+        $this->value = ! $this->value;
+    }
+
+
+    // Class Methods
+
+    /**
      * Calculates the number of living neighbor cells.
      *
      * @return int The number of living neighbor cells
      */
     public function numberOfLivingNeighbors(): int
     {
-        /** @var Field[] $neighbors */
-        $neighbors = $this->parentBoard->getNeighborsOfField($this);
+        $neighborFields = $this->parentBoard->getNeighborsOfField($this);
         $numberOfLivingNeighbors = 0;
 
-        foreach ($neighbors as $neighbor)
+        foreach ($neighborFields as $neighborField)
         {
-            if ($neighbor->isAlive()) $numberOfLivingNeighbors++;
+            if ($neighborField->isAlive()) $numberOfLivingNeighbors++;
         }
 
         return $numberOfLivingNeighbors;
@@ -191,13 +207,12 @@ class Field
      */
     public function numberOfDeadNeighbors(): int
     {
-        /** @var Field[] $neighbors */
-        $neighbors = $this->parentBoard->getNeighborsOfField($this);
+        $neighborFields = $this->parentBoard->getNeighborsOfField($this);
         $numberOfDeadNeighbors = 0;
 
-        foreach ($neighbors as $neighbor)
+        foreach ($neighborFields as $neighborField)
         {
-            if ($neighbor->isDead()) $numberOfDeadNeighbors++;
+            if ($neighborField->isDead()) $numberOfDeadNeighbors++;
         }
 
         return $numberOfDeadNeighbors;
@@ -213,10 +228,16 @@ class Field
     {
         if ($this->parentBoard->hasBorder())
         {
+            /*
+             * This calculation assumes that all of the fields are squares of equal size
+             * in a grid of rows and columns with the same number of fields per row and column.
+             */
+            $numberOfBorderingFieldsPerField = 8;
+
             $neighbors = $this->parentBoard->getNeighborsOfField($this);
             $numberOfNeighbors = count($neighbors);
 
-            return 8 - $numberOfNeighbors;
+            return $numberOfBorderingFieldsPerField - $numberOfNeighbors;
         }
         else return 0;
     }

@@ -13,66 +13,126 @@ namespace Utils\FileSystem;
  */
 class FileSystemReader extends FileSystemHandler
 {
+    // Magic Methods
+
     /**
-     * Searches a folder for a file.
+     * FileSystemReader constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    // Class Methods
+
+    /**
+     * Searches a directory and its subdirectories for a specific file name and returns the path to the file.
+     * The file name comparison is case sensitive.
      *
-     * @param String $_baseFolder The folder path
+     * @param String $_searchDirectoryPath The path to the directory that will be searched for the file name
      * @param String $_fileName The file name
      *
-     * @return String|bool The file path or false
+     * @return String|null The file path or null if the file was not found
      *
-     * @throws \Exception The exception when the target directory does not exist
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when the directory is not readable
+     * @throws \Exception The exception when the directory is no directory
      */
-    public function findFileRecursive(String $_baseFolder, String $_fileName)
+    public function findFileRecursive(String $_searchDirectoryPath, String $_fileName)
     {
-        $baseFolder = $this->convertSlashes($_baseFolder);
-        if (! is_dir(dirname($baseFolder))) throw new \Exception("The directory \"" . $baseFolder . "\" does not exist.");
+        $directoryPath = $this->normalizePathDirectorySeparators($_searchDirectoryPath);
+        $this->checkPath($directoryPath, "directory");
 
-        $directoryIterator = new \RecursiveDirectoryIterator($baseFolder);
-
-        foreach (new \RecursiveIteratorIterator($directoryIterator) as $file)
+        $filePaths = $this->getFileList($directoryPath);
+        foreach ($filePaths as $filePath)
         {
-            if (strtolower(basename($file)) == strtolower($_fileName))
+            if (is_dir($filePath))
             {
-                return $this->convertSlashes($file);
+                $resultFilePath = $this->findFileRecursive($filePath, $_fileName);
+                if ($resultFilePath !== null) return $resultFilePath;
             }
+            elseif (basename($filePath) == $_fileName) return $this->normalizePathDirectorySeparators($filePath);
         }
 
-        return false;
+        return null;
     }
 
     /**
-     * Returns an array of files in a directory.
+     * Returns a list of file paths of all files in a directory with a specific pattern.
      *
-     * @param string $_directoryPath The directory of which a file list will be returned
+     * @param String $_directoryPath The directory path
+     * @param String $_searchPattern The custom search pattern
      *
-     * @return array The file list
+     * @return String[] The list of file paths
      *
-     * @throws \Exception The exception when the target directory does not exist
+     * @throws \Exception The exception when the directory does not exist
+     * @throws \Exception The exception when the directory is not readable
+     * @throws \Exception The exception when the directory is no directory
      */
-    public function getFileList(String $_directoryPath): array
+    public function getFileList(String $_directoryPath, String $_searchPattern = "*"): array
     {
-        $filePath = $this->convertSlashes($_directoryPath);
-        $directoryName = dirname($filePath);
+        $directoryPath = $this->normalizePathDirectorySeparators($_directoryPath);
+        $this->checkPath($directoryPath, "directory");
 
-        if (! file_exists($directoryName)) throw new \Exception("The directory \"" . $directoryName . "\" does not exist.");
-        else return glob($filePath);
+        $fileList = glob($directoryPath . $this->directorySeparatorSymbol . $_searchPattern);
+        if ($fileList === false)
+        {
+            throw new \Exception("The directory \"" . $directoryPath . "\" could not be read.");
+        }
+
+        return $fileList;
     }
 
     /**
-     * Read text from file.
+     * Reads and returns the contents of a file.
      *
-     * @param string $_filePath The path to the file that will be read
+     * @param String $_filePath The file path
      *
-     * @return String[] The lines from the file
+     * @return String[] The contents of the file as a list of lines
      *
-     * @throws \Exception The exception when the target file does not exist
+     * @throws \Exception The exception when the file does not exist
+     * @throws \Exception The exception when the file is not readable
+     * @throws \Exception The exception when the file is no file
      */
-    public function readFile(string $_filePath): array
+    public function readFile(String $_filePath): array
     {
-        $filePath = $this->convertSlashes($_filePath);
+        $filePath = $this->normalizePathDirectorySeparators($_filePath);
+        $this->checkPath($filePath, "file");
 
-        if (! file_exists($filePath)) throw new \Exception("The file \"" . $filePath . "\" does not exist.");
-        else return file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        $fileContent = file($filePath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
+        if ($fileContent === false)
+        {
+            throw new \Exception("The file \"" . $filePath . "\" could not be read.");
+        }
+
+        return $fileContent;
+    }
+
+    /**
+     * Checks whether a path to a file or directory is valid.
+     *
+     * @param String $_path The path to the directory or file
+     * @param String $_pathType The path type (Possible values: directory, file)
+     *
+     * @throws \Exception The exception when the directory or file does not exist
+     * @throws \Exception The exception when the directory or file is not readable
+     * @throws \Exception The exception when the directory is no directory or the file is no file
+     */
+    private function checkPath(String $_path, String $_pathType)
+    {
+        if (! file_exists($_path))
+        {
+            throw new \Exception("The " . $_pathType . " \"" . $_path . "\" does not exist.");
+        }
+        elseif (! is_readable($_path))
+        {
+            throw new \Exception("The " . $_pathType . " \"" . $_path . "\" is not readable.");
+        }
+        elseif ($_pathType == "directory" && ! is_dir($_path) ||
+                $_pathType == "file" && ! is_file($_path))
+        {
+            throw new \Exception("\"" . $_path . "\" is no " . $_pathType . " or can not be accessed.");
+        }
     }
 }

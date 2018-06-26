@@ -18,7 +18,7 @@ use Utils\FileSystem\FileSystemWriter;
 /**
  * Parent class for all classes that output images or process temporary output images.
  */
-class ImageOutput extends BaseOutput
+abstract class ImageOutput extends BaseOutput
 {
     /**
      * Output directory for file outputs.
@@ -255,7 +255,7 @@ class ImageOutput extends BaseOutput
     {
         try
         {
-            $fileNames = $this->fileSystemReader->getFileList($this->baseOutputDirectory . "/" . $_outputType . "/Game_*");
+            $fileNames = $this->fileSystemReader->getFileList($this->baseOutputDirectory . "/" . $_outputType, "Game_*");
         }
         catch (\Exception $_exception)
         {

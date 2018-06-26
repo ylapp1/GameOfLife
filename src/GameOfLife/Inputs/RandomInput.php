@@ -61,9 +61,9 @@ class RandomInput extends BaseInput
             $x = rand(0, $_board->width() - 1);
             $y = rand(0, $_board->height() - 1);
 
-            if ($_board->getFieldStatus($x, $y) == false)
+            if ($_board->getFieldState($x, $y) == false)
             {
-                $_board->setField($x, $y, true);
+                $_board->setFieldState($x, $y, true);
                 $numberOfSetCells++;
             }
         }

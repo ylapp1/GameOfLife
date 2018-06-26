@@ -5,3 +5,5 @@ Input/Templates/Custom
 Output
 Tools
 vendor
+src/ConsoleHelper/*.o
+src/ConsoleHelper/ConsoleHelper.layout

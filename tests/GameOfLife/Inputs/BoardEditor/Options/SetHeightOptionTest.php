@@ -44,9 +44,9 @@ class SetHeightOptionTest extends TestCase
      */
     public function testCanSetWidth()
     {
-        $testBoard = new Board(4, 4, 4, true);
-        $testBoard->setField(1, 1, true);
-        $this->assertEquals(1, $testBoard->getAmountCellsAlive());
+        $testBoard = new Board(4, 4, true);
+        $testBoard->setFieldState(1, 1, true);
+        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
 
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new SetHeightOption($boardEditor);
@@ -69,13 +69,13 @@ class SetHeightOptionTest extends TestCase
 
         // Valid width, living cells still inside board
         $result = $option->setHeight(2);
-        $this->assertEquals(1, $testBoard->getAmountCellsAlive());
+        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
         $this->assertEquals(2, $testBoard->height());
         $this->assertFalse($result);
 
         // Valid width, living cells outside new board dimensions
         $result = $option->setHeight(1);
-        $this->assertEquals(0, $testBoard->getAmountCellsAlive());
+        $this->assertEquals(0, $testBoard->getNumberOfAliveFields());
         $this->assertEquals(1, $testBoard->height());
         $this->assertFalse($result);
     }
