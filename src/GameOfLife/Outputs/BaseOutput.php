@@ -61,15 +61,15 @@ abstract class BaseOutput
     protected function printTitle()
     {
         $mainTitle = "GAME OF LIFE";
+        $titleString = "\n" . $mainTitle . "\n" . $this->outputTitle . "\n\n";
 
-        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($mainTitle);
-        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($this->outputTitle) . "\n\n";
+        $this->shellOutputHelper->printCenteredOutputString($titleString);
     }
 
     /**
      * Adds output specific options to the option list.
      *
-     * @param Getopt $_options Current option list
+     * @param Getopt $_options The option list
      */
     abstract public function addOptions(Getopt $_options);
 

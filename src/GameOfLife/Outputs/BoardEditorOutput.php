@@ -18,6 +18,14 @@ use Ulrichsg\Getopt;
 class BoardEditorOutput extends ConsoleOutput
 {
     /**
+     * The symbol that is used to print a living cell
+     *
+     * @var String $cellAliveSymbol
+     */
+    protected $cellAliveSymbol = "o";
+
+
+    /**
      * BoardEditorOutput constructor.
      */
     public function __construct()
@@ -30,6 +38,7 @@ class BoardEditorOutput extends ConsoleOutput
     private $highLightX;
     private $highLightY;
     private $isHighLight;
+    private $selectionCoordinates;
 
     /**
      * Initializes the output.
@@ -53,6 +62,7 @@ class BoardEditorOutput extends ConsoleOutput
      */
     public function outputBoard(Board $_board, int $_gameStep, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = null)
     {
+        $this->selectionCoordinates = $_selectionCoordinates;
         $this->additionalSpace = 0;
 
         if (isset($_highLightX) && isset($_highLightY))
@@ -72,7 +82,7 @@ class BoardEditorOutput extends ConsoleOutput
             $paddingLeft = str_repeat(" ", $_highLightX + $hasLeftBorder);
             $xCoordinateHighLightString = str_pad($paddingLeft . $_highLightX, $_board->width() + $this->additionalSpace);
 
-            echo $this->shellOutputHelper->getCenteredOutputString($xCoordinateHighLightString) . "\n";
+            $this->shellOutputHelper->printCenteredOutputString($xCoordinateHighLightString . "\n");
         }
         elseif ($_selectionCoordinates && $_selectionCoordinates != array())
         {
@@ -82,78 +92,131 @@ class BoardEditorOutput extends ConsoleOutput
             if ($_selectionCoordinates["B"]["x"] == $_board->width() - 1) $this->additionalSpace -= 1;
         }
 
-        echo $this->getBoardContentString($_board, "║", "o", " ", $_selectionCoordinates);
+        echo $this->getBoardContentString($_board);
 
         $this->isHighLight = false;
     }
 
-    /**
-     * Returns the board output string.
-     *
-     * @param Board $_board The board
-     * @param String $_sideBorderSymbol Symbol for left and right border
-     * @param String $_cellAliveSymbol Symbol for a living cell
-     * @param String $_cellDeadSymbol Symbol for a dead cell
-     * @param array $_selectionCoordinates The selection coordinates
-     *
-     * @return String Board output string
-     */
-    protected function getBoardContentString(Board $_board, String $_sideBorderSymbol, String $_cellAliveSymbol, String $_cellDeadSymbol, array $_selectionCoordinates = null): String
+	/**
+	 * Returns the string for the top border.
+	 *
+	 * @param Board $_board The board
+	 *
+	 * @return String The string for the top border
+	 */
+    protected function getBorderTopString($_board): String
     {
-        $specialSymbolsTop = $this->getSpecialSymbols("╤", "╤", $_board->width(), $_board->height(), $_selectionCoordinates);
-        $specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width(), $_board->height(), $_selectionCoordinates);
-        $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $_selectionCoordinates, true);
+    	$topBorderString = parent::getBorderTopString($_board);
 
-        $topBorderString = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╔", "╗", "═", $specialSymbolsTop);
-        $output = $this->shellOutputHelper->getCenteredOutputString($topBorderString) . "\n";
+    	// Add additional space
+	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $this->additionalSpace);
+	    $topBorderString = substr_replace($topBorderString, $additionalBorderString, 1, 0);
 
-        for ($y = 0; $y < $_board->height(); $y++)
+        $specialSymbolsTop = $this->getSpecialSymbols("╤", "╤", $_board->width(), $_board->height(), $this->selectionCoordinates);
+        foreach ($specialSymbolsTop as $index => $specialSymbol)
         {
-            $row = "";
-
-            if ($this->isHighLight)
-            {
-                if ($y == $this->highLightY && $y > 0 ||
-                    $y == $this->highLightY + 1 && $y < $_board->height())
-                { // Output lines below and above highlighted cell row
-
-                    $row = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╟", "╢", "─", $specialSymbolsAboveBelow);
-                }
-            }
-            elseif ($_selectionCoordinates)
-            {
-                $borderRowString = $this->getSelectionBorderRowString($y, $_selectionCoordinates, $_board, $_sideBorderSymbol);
-                if ($borderRowString) $row = $borderRowString;
-            }
-
-            if ($row) $output .= $this->shellOutputHelper->getCenteredOutputString($row) . "\n";
-
-            $row = $_sideBorderSymbol . $this->getRowOutputString($_board->fields()[$y], $_cellAliveSymbol, $_cellDeadSymbol, $_board->height(), $_selectionCoordinates) . $_sideBorderSymbol;
-            $output .= $this->shellOutputHelper->getCenteredOutputString($row);
-
-            if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
-            $output .= "\n";
+        	$topBorderString = substr_replace($topBorderString, $specialSymbol, $index, 1);
         }
 
-        $bottomBorderString = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╚", "╝", "═", $specialSymbolsBottom);
-        $output .= $this->shellOutputHelper->getCenteredOutputString($bottomBorderString) . "\n\n";
-
-        return $output;
+        return $topBorderString;
     }
 
-    /**
+	/**
+	 * Returns the string for the bottom border.
+	 *
+	 * @param Board $_board The board
+	 *
+	 * @return String The string for the bottom border
+	 */
+    protected function getBorderBottomString($_board): String
+    {
+	    $bottomBorderString = parent::getBorderTopString($_board);
+
+	    // Add additional space
+	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $this->additionalSpace);
+	    $bottomBorderString = substr_replace($bottomBorderString, $additionalBorderString, 1, 0);
+
+	    $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $this->selectionCoordinates, true);
+	    foreach ($specialSymbolsBottom as $index => $specialSymbol)
+	    {
+		    $bottomBorderString = substr_replace($bottomBorderString, $specialSymbol, $index, 1);
+	    }
+
+	    return $bottomBorderString;
+    }
+
+	/**
+	 * Returns the output string for the cells of a single row.
+	 *
+	 * @param Field[] $_fields The fields of the row
+	 *
+	 * @return String Row output String
+	 */
+	protected function getRowOutputString (array $_fields): String
+	{
+		$row = "";
+		$specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width(), $_board->height(), $this->selectionCoordinates);
+		$_selectionCoordinates = array();
+
+		if ($this->isHighLight)
+		{
+			if ($y == $this->highLightY && $y > 0 ||
+				$y == $this->highLightY + 1 && $y < $_board->height())
+			{ // Output lines below and above highlighted cell row
+
+				//$row = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╟", "╢", "─", $specialSymbolsAboveBelow);
+			}
+		}
+		elseif ($_selectionCoordinates)
+		{
+			$borderRowString = $this->getSelectionBorderRowString($y, $_selectionCoordinates, $_board, $_sideBorderSymbol);
+			if ($borderRowString) $row = $borderRowString;
+		}
+
+		if ($row) $output .= $row . "\n";
+
+		$row = $_sideBorderSymbol . $this->getRowOutputString($_board->fields()[$y], $_board->height(), $_selectionCoordinates) . $_sideBorderSymbol;
+		$output .= $row;
+
+		if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
+		$output .= "\n";
+	}
+
+	protected function getCellSymbol(Field $_field): String
+	{
+		$cellSymbol = parent::getCellSymbol($_field);
+		$boardWidth = "TODO: Get board width";
+
+		if ($this->isHighLight)
+		{
+			if ($_field->x() == $this->highLightX && $_field->y() == $this->highLightY)
+			{
+				if ($_field->isAlive()) $cellSymbol = "X";
+			}
+
+			if ($_field->x() == $this->highLightX - 1  && $_field->x() >= 0 ||
+				$_field->x() == $this->highLightX && $_field->x() < $boardWidth - 1)
+			{ // Output lines left and right from highlighted cell X-Coordinate
+				$cellSymbol .= "│";
+			}
+		}
+
+		return $cellSymbol;
+	}
+
+	/**
      * Returns the output string for the cells of a single row.
      *
      * @param Field[] $_fields The fields of the row
-     * @param String $_cellAliveSymbol The symbol for living cells
-     * @param String $_cellDeadSymbol The symbol for dead cells
      * @param int $_boardHeight The board height. This value is not optional, but its default value is null to not break the compatibility to the parent method
      * @param array $_selectionCoordinates The selection coordinates
      *
      * @return String Row output String
      */
-    protected function getRowOutputString (array $_fields, String $_cellAliveSymbol, String $_cellDeadSymbol, int $_boardHeight = null, array $_selectionCoordinates = null): String
+    protected function getRowOutputString (array $_fields, int $_boardHeight = null, array $_selectionCoordinates = null): String
     {
+        $_cellAliveSymbol = "";
+        $_cellDeadSymbol = "";
         $output = "";
 
         $boardWidth = count($_fields);
@@ -161,26 +224,11 @@ class BoardEditorOutput extends ConsoleOutput
         foreach ($_fields as $field)
         {
             // Print cell
-            if ($field->isAlive())
-            {
-                if ($this->isHighLight)
-                {
-                    if ($field->x() == $this->highLightX && $field->y() == $this->highLightY) $output .= "X";
-                    else $output .= $_cellAliveSymbol;
-                }
-                else $output .= $_cellAliveSymbol;
-            }
-            else $output .= $_cellDeadSymbol;
-
 
             // Print highlight border
             if ($this->isHighLight)
             {
-                if ($field->x() == $this->highLightX - 1  && $field->x() >= 0 ||
-                    $field->x() == $this->highLightX && $field->x() < $boardWidth - 1)
-                { // Output lines left and right from highlighted cell X-Coordinate
-                    $output .= "│";
-                }
+
             }
             elseif ($_selectionCoordinates)
             {
@@ -248,6 +296,7 @@ class BoardEditorOutput extends ConsoleOutput
                 $specialSymbols[$x] = "╍";
             }
 
+            /*
             return $this->getHorizontalLineString(
                 $_board->width() + $hasLeftBorder + $hasRightBorder,
                     $leftBorderSymbol,
@@ -255,6 +304,7 @@ class BoardEditorOutput extends ConsoleOutput
                 " ",
                 $specialSymbols
                 );
+            */
         }
         else return false;
     }

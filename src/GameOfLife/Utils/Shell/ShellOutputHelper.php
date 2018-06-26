@@ -11,7 +11,7 @@ namespace Utils\Shell;
 use Utils\OsInformationFetcher;
 
 /**
- * Provides methods to format shell outputs.
+ * Provides methods to format shell outputs and to move the console cursor.
  */
 class ShellOutputHelper
 {
@@ -69,41 +69,42 @@ class ShellOutputHelper
     }
 
 
-    // Getters and Setters
-
-    /**
-     * Returns the cached number of shell columns.
-     *
-     * @return int The cached number of shell columns
-     */
-    public function cachedNumberOfShellColumns()
-    {
-        return $this->cachedNumberOfShellColumns;
-    }
-
-    /**
-     * Returns the cached number of shell lines.
-     *
-     * @return int The cached number of shell lines
-     */
-    public function cachedNumberOfShellLines()
-    {
-        return $this->cachedNumberOfShellLines;
-    }
-
-
     // Class Methods
+
+    // Cursor movement
+
+    /**
+     * Sets the cursor to a specific position relative to the current window dimensions.
+     *
+     * @param int $_x The new X-Position of the cursor
+     * @param int $_y The new Y-Position of the cursor
+     */
+    private function setCursor(int $_x, int $_y)
+    {
+        if ($this->osInformationFetcher->isLinux()) echo "\e[" . $_y . ";" . $_x . "H";
+        elseif ($this->osInformationFetcher->isWindows())
+        {
+            $this->shellExecutor->executeCommand(__DIR__ . "\\ConsoleHelper.exe setCursor " . $_x . " " . $_y);
+        }
+    }
 
     /**
      * Moves the cursor back to the top left corner of the shell window.
      */
-    public function resetCursor()
+    public function moveCursorToTopLeftCorner()
     {
-        if ($this->osInformationFetcher->isLinux()) echo "\e[1;0H";
-        elseif($this->osInformationFetcher->isWindows())
-        {
-            $this->shellExecutor->executeCommand(__DIR__ . "\ConsoleHelper.exe setCursor 0 1");
-        }
+        $this->setCursor(0, 1);
+    }
+
+    /**
+     * Moves the cursor to the bottom left corner of the shell window.
+     */
+    public function moveCursorToBottomLeftCorner()
+    {
+        $bottomLineNumber = $this->cachedNumberOfShellLines;
+        if ($this->osInformationFetcher->isWindows()) $bottomLineNumber -= 1;
+
+        $this->setCursor(0, $bottomLineNumber);
     }
 
     /**
@@ -113,7 +114,7 @@ class ShellOutputHelper
     public function clearScreen()
     {
         echo str_repeat("\n", $this->cachedNumberOfShellLines);
-        $this->resetCursor();
+        $this->moveCursorToTopLeftCorner();
 
         /*
          * A pure php way to clear the screen in Windows would be to add 10000 new lines at the beginning of
@@ -126,6 +127,9 @@ class ShellOutputHelper
          */
     }
 
+
+    // Centered output strings
+
     /**
      * Returns a centered output string relative to the number of shell columns.
      *
@@ -133,14 +137,29 @@ class ShellOutputHelper
      *
      * @return String The centered output string
      */
-    public function getCenteredOutputString(String $_outputString): String
+    private function getCenteredOutputString(String $_outputString): String
     {
-        $stringLength = mb_strlen($_outputString);
-        $paddingLeft = ceil(($this->cachedNumberOfShellColumns - $stringLength) / 2) + 1;
+        $paddingLeft = floor(($this->cachedNumberOfShellColumns - mb_strlen($_outputString)) / 2) + 1;
 
         $outputString = $_outputString;
         if ($paddingLeft > 0) $outputString = str_repeat(" ", $paddingLeft) . $outputString;
 
         return $outputString;
+    }
+
+    /**
+     * Prints a centered output string.
+     *
+     * @param String $_outputString The output string
+     */
+    public function printCenteredOutputString(String $_outputString)
+    {
+        $lines = explode("\n", $_outputString);
+
+        foreach ($lines as $line)
+        {
+            if ($line) echo $this->getCenteredOutputString($line) . "\n";
+            else echo "\n";
+        }
     }
 }
