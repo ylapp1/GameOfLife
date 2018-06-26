@@ -9,7 +9,7 @@
 use GameOfLife\Board;
 use Output\Helpers\ImageColor;
 use Output\Helpers\ImageCreator;
-use Output\ImageOutput;
+use Output\JpgOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemWriter;
@@ -19,7 +19,7 @@ use Utils\FileSystem\FileSystemWriter;
  */
 class ImageOutputTest extends TestCase
 {
-    /** @var ImageOutput */
+    /** @var JpgOutput */
     private $output;
     private $testDirectory = "../tests/GameOfLife/ImageOutputTest/";
     /** @var FileSystemWriter */
@@ -28,7 +28,7 @@ class ImageOutputTest extends TestCase
     protected function setUp()
     {
         $this->fileSystemHandler = new FileSystemWriter();
-        $this->output = new ImageOutput("TEST IMAGE OUTPUT", "test", $this->testDirectory);
+        $this->output = new JpgOutput();
     }
 
     protected function tearDown()
@@ -43,21 +43,6 @@ class ImageOutputTest extends TestCase
         }
         unset($this->fileSystemHandler);
         unset($this->output);
-    }
-
-    /**
-     * @dataProvider constructionProvider()
-     * @covers \Output\ImageOutput::__construct()
-     *
-     * @param string $_optionPrefix              Prefix of the image output
-     * @param string $_imageOutputDirectory      Output directory of the image output
-     */
-    public function testCanBeConstructed(string $_optionPrefix, string $_imageOutputDirectory)
-    {
-        $output = new ImageOutput("TEST IMAGE OUTPUT", $_optionPrefix, $_imageOutputDirectory);
-
-        $this->assertEquals($_optionPrefix, $output->optionPrefix());
-        $this->assertNotEmpty(stristr($output->imageOutputDirectory(), $_imageOutputDirectory));
     }
 
     public function constructionProvider()
@@ -119,7 +104,7 @@ class ImageOutputTest extends TestCase
 
         $optionsMock->expects($this->exactly(4))
                     ->method("getOption")
-                    ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
+                    ->withConsecutive(["jpgOutputSize"], ["jpgOutputCellColor"], ["jpgOutputBackgroundColor"], ["jpgOutputGridColor"])
                     ->willReturn("10", "white", "black", "red");
 
         $board = new Board(1,1,true);
@@ -151,7 +136,7 @@ class ImageOutputTest extends TestCase
 
         $optionsMock->expects($this->exactly(4))
                     ->method("getOption")
-                    ->withConsecutive(["testOutputSize"], ["testOutputCellColor"], ["testOutputBackgroundColor"], ["testOutputGridColor"])
+                    ->withConsecutive(["jpgOutputSize"], ["jpgOutputCellColor"], ["jpgOutputBackgroundColor"], ["jpgOutputGridColor"])
                     ->willReturn(null, null, null, null);
 
         $board = new Board(1,1,true);

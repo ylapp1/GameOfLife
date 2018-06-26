@@ -85,7 +85,7 @@ class ConsoleOutput extends BaseOutput
         }
 
         // +8 is because: 2x border, 1x game step, 2x empty line, 3x Title
-        $this->numberOfNewLinesOutputBoard = $this->shellInformationFetcher->getNumberOfShellLines() - ($_board->height() + 8);
+        $this->numberOfNewLinesOutputBoard = $this->shellOutputHelper->cachedNumberOfShellLines() - ($_board->height() + 8);
         if ($this->numberOfNewLinesOutputBoard < 0) $this->numberOfNewLinesOutputBoard = 0;
 
         // Subtract 4 new lines because 1x simulation finished, 2x empty lines, 1x Command prompt of shell
@@ -103,7 +103,7 @@ class ConsoleOutput extends BaseOutput
     {
         $startTimeStamp = microtime(true);
 
-        $this->shellOutputHelper->clearScreen();
+        $this->shellOutputHelper->resetCursor();
         $this->printTitle();
 
         $gameStepString = "Game step: " . $_gameStep . "\n";

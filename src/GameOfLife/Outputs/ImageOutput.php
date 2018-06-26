@@ -18,7 +18,7 @@ use Utils\FileSystem\FileSystemWriter;
 /**
  * Parent class for all classes that output images or process temporary output images.
  */
-class ImageOutput extends BaseOutput
+abstract class ImageOutput extends BaseOutput
 {
     /**
      * Output directory for file outputs.

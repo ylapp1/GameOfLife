@@ -10,7 +10,6 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
-use Utils\Shell\ShellInformationFetcher;
 use Utils\Shell\ShellOutputHelper;
 
 /**
@@ -19,23 +18,18 @@ use Utils\Shell\ShellOutputHelper;
  * addOptions() adds options to a Getopt object
  * startOutput() initializes variables that are necessary for the output
  * outputBoard() outputs a single board
- * finishOutput() processes the output boards to create the final file
+ * finishOutput() finishes the output (processes created images, deletes temporary files, etc.)
  */
-class BaseOutput
+abstract class BaseOutput
 {
+    // Attributes
+
     /**
      * The title of the output that will be printed when the output is started
      *
      * @var String $outputTitle
      */
     protected $outputTitle;
-
-    /**
-     * The shell information fetcher
-     *
-     * @var ShellInformationFetcher $shellInformationFetcher
-     */
-    protected $shellInformationFetcher;
 
     /**
      * The shell output helper
@@ -45,6 +39,8 @@ class BaseOutput
     protected $shellOutputHelper;
 
 
+    // Magic Methods
+
     /**
      * BaseOutput constructor.
      *
@@ -53,10 +49,11 @@ class BaseOutput
     protected function __construct(String $_outputTitle)
     {
         $this->outputTitle = $_outputTitle;
-        $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->shellOutputHelper = new ShellOutputHelper();
     }
 
+
+    // Class Methods
 
     /**
      * Prints the title of the output to the screen.
@@ -73,40 +70,32 @@ class BaseOutput
      * Adds output specific options to the option list.
      *
      * @param Getopt $_options Current option list
-     *
-     * @codeCoverageIgnore
      */
-    public function addOptions(Getopt $_options)
-    {
-    }
+    abstract public function addOptions(Getopt $_options);
 
     /**
-     * Start output.
+     * Initializes the output.
      *
-     * @param Getopt $_options User inputted option list
-     * @param Board $_board Initial board
+     * @param Getopt $_options The option list
+     * @param Board $_board The initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
         $this->shellOutputHelper->clearScreen();
         $this->printTitle();
     }
 
     /**
-     * Output one game step.
+     * Outputs one board.
      *
-     * @param Board $_board Current board
+     * @param Board $_board The current board
      * @param int $_gameStep The current game step
-     *
-     * @codeCoverageIgnore
      */
-    public function outputBoard(Board $_board, int $_gameStep)
-    {
-    }
+    abstract public function outputBoard(Board $_board, int $_gameStep);
 
     /**
-     * Finish output (Display that simulation is finished, write files and delete temporary files).
+     * Finishes the output.
+     * This method displays that the simulation is finished, writes files and deletes temporary files (if necessary).
      *
      * @param String $_simulationEndReason The reason why the simulation ended
      */
