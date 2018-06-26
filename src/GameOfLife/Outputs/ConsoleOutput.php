@@ -69,6 +69,8 @@ class ConsoleOutput extends BaseOutput
 
     // Class Methods
 
+	// Inherited methods
+
     /**
      * Adds output specific options to the option list.
      *
@@ -129,6 +131,8 @@ class ConsoleOutput extends BaseOutput
         $this->shellOutputHelper->moveCursorToBottomLeftCorner();
     }
 
+    // Board printing methods
+
     /**
      * Returns the board output string for one board.
      *
@@ -151,6 +155,30 @@ class ConsoleOutput extends BaseOutput
 
         return $boardContentString;
     }
+
+	/**
+	 * Returns an output string for either the upper or bottom border of the board.
+	 *
+	 * @param int $_length The length of the line (not including left and right edge symbol)
+	 * @param String $_leftEdgeSymbol The symbol for the left edge of the line
+	 * @param String $_rightEdgeSymbol The symbol for the right edge of the line
+	 * @param String $_lineSymbol The symbol for the line itself
+	 *
+	 * @return String The line output string
+	 */
+	protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
+	{
+		$output = $_leftEdgeSymbol;
+		for ($x = 0; $x < $_length; $x++)
+		{
+			$output .= $_lineSymbol;
+		}
+		$output .= $_rightEdgeSymbol;
+
+		return $output;
+	}
+
+    // Hooks that can be overridden in child classes
 
     /**
      * Returns the string for the top border.
@@ -180,24 +208,24 @@ class ConsoleOutput extends BaseOutput
         );
     }
 
-    /**
-     * Returns the output string for the cells of a single row.
-     *
-     * @param Field[] $_fields The fields of the row
-     *
-     * @return String Row output String
-     */
-    protected function getRowOutputString (array $_fields): String
-    {
-        $rowString = $this->borderSymbols["left-right"];
-        foreach ($_fields as $field)
-        {
-        	$rowString .= $this->getCellSymbol($field);
-        }
-        $rowString .= $this->borderSymbols["left-right"];
+	/**
+	 * Returns the output string for the cells of a single row.
+	 *
+	 * @param Field[] $_fields The fields of the row
+	 *
+	 * @return String Row output String
+	 */
+	protected function getRowOutputString (array $_fields): String
+	{
+		$rowString = $this->borderSymbols["left-right"];
+		foreach ($_fields as $field)
+		{
+			$rowString .= $this->getCellSymbol($field);
+		}
+		$rowString .= $this->borderSymbols["left-right"];
 
-        return $rowString;
-    }
+		return $rowString;
+	}
 
 	/**
 	 * Returns the symbol for a cell.
@@ -210,27 +238,5 @@ class ConsoleOutput extends BaseOutput
     {
 	    if ($_field->isAlive()) return $this->cellAliveSymbol;
 	    else return $this->cellDeadSymbol;
-    }
-
-    /**
-     * Returns an output string for either the upper or bottom border of the board.
-     *
-     * @param int $_length The length of the line (not including left and right edge symbol)
-     * @param String $_leftEdgeSymbol The symbol for the left edge of the line
-     * @param String $_rightEdgeSymbol The symbol for the right edge of the line
-     * @param String $_lineSymbol The symbol for the line itself
-     *
-     * @return String The line output string
-     */
-    protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
-    {
-        $output = $_leftEdgeSymbol;
-        for ($x = 0; $x < $_length; $x++)
-        {
-            $output .= $_lineSymbol;
-        }
-        $output .= $_rightEdgeSymbol;
-
-        return $output;
     }
 }

@@ -14,20 +14,12 @@ namespace GameOfLife;
 class Field
 {
     // Attributes
-
-    /**
-     * The X-coordinate of the field
-     *
-     * @var int $x
-     */
-    private $x;
-
-    /**
-     * The Y-coordinate of the field
-     *
-     * @var int $y
-     */
-    private $y;
+	/**
+	 * The X/Y position of this field on the board
+	 *
+	 * @var Coordinate $coordinate
+	 */
+	private $coordinate;
 
     /**
      * The state of the cell in the field
@@ -59,8 +51,7 @@ class Field
      */
     public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
     {
-        $this->x = $_x;
-        $this->y = $_y;
+        $this->coordinate = new Coordinate($_x, $_y);
         $this->value = $_value;
         $this->parentBoard = $_parentBoard;
     }
@@ -68,45 +59,25 @@ class Field
 
     // Getters and Setters
 
-    /**
-     * Returns the X-coordinate of the field.
-     *
-     * @return int The X-coordinate of the field
-     */
-    public function x(): int
-    {
-        return $this->x;
-    }
+	/**
+	 * Returns the X/Y position of this field on the board.
+	 *
+	 * @return Coordinate The X/Y position of this field on the board
+	 */
+	public function coordinate(): Coordinate
+	{
+		return $this->coordinate();
+	}
 
-    /**
-     * Sets the X-coordinate of the field.
-     *
-     * @param int $_x The X-coordinate of the field
-     */
-    public function setX(int $_x)
-    {
-        $this->x = $_x;
-    }
-
-    /**
-     * Returns the Y-coordinate of the field.
-     *
-     * @return int The Y-coordinate of the field
-     */
-    public function y(): int
-    {
-        return $this->y;
-    }
-
-    /**
-     * Sets the Y-coordinate of the field.
-     *
-     * @param int $_y The Y-coordinate of the field
-     */
-    public function setY(int $_y)
-    {
-        $this->y = $_y;
-    }
+	/**
+	 * Sets the X/Y position of this field on the board.
+	 *
+	 * @param Coordinate $_coordinate The X/Y position of this field on the board
+	 */
+	public function setCoordinate(Coordinate $_coordinate)
+	{
+		$this->coordinate = $_coordinate;
+	}
 
     /**
      * Returns the state of the cell in the field.

@@ -24,6 +24,47 @@ class BoardEditorOutput extends ConsoleOutput
      */
     protected $cellAliveSymbol = "o";
 
+	/**
+	 * The symbols that are used to print highlight field borders
+	 *
+	 * @var String[] $highLightBorderSymbols
+	 */
+    private $highLightBorderSymbols = array(
+
+    	// Inner borders
+    	"corner-inner-border" => "┼",
+    	"top-bottom-inner-border" => "─",
+    	"left-right-inner-border" => "│",
+
+    	// Outer borders intersections
+	    "top-outer-border" => "╤",
+	    "bottom-outer-border" => "╧",
+	    "left-outer-border" => "╟",
+	    "right-outer-border" => "╢"
+    );
+
+	/**
+	 * The symbols that are used to print the selection area border
+	 *
+	 * @var String[] $selectionBorderSymbols
+	 */
+    private $selectionBorderSymbols = array(
+
+	    // Inner borders
+	    "top-left-inner-border" => "┏",
+	    "top-right-inner-border" => "┓",
+	    "bottom-right-inner-border" => "┛",
+	    "bottom-left-inner-border" => "┗",
+	    "top-bottom-inner-border" => "╍",
+	    "left-right-inner-border" => "┋",
+
+	    // Outer borders intersections
+	    "top-outer-border" => "╤",
+	    "bottom-outer-border" => "╧",
+	    "left-outer-border" => "╟",
+	    "right-outer-border" => "╢"
+    );
+
 
     /**
      * BoardEditorOutput constructor.
@@ -60,7 +101,7 @@ class BoardEditorOutput extends ConsoleOutput
      * @param Integer $_highLightY Y-Coordinate of the cell that shall be highlighted
      * @param array $_selectionCoordinates The selection coordinates
      */
-    public function outputBoard(Board $_board, int $_gameStep, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = null)
+    public function outputBoard(Board $_board, int $_gameStep, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = array())
     {
         $this->selectionCoordinates = $_selectionCoordinates;
         $this->additionalSpace = 0;
@@ -106,19 +147,11 @@ class BoardEditorOutput extends ConsoleOutput
 	 */
     protected function getBorderTopString($_board): String
     {
-    	$topBorderString = parent::getBorderTopString($_board);
+	    $topBorderString = parent::getBorderTopString($_board);
+	    $specialSymbolsTop = $this->getSpecialSymbols(, $_board->width(), $_board->height(), $this->selectionCoordinates);
+	    $topBorderString = $this->addSpecialSymbolsToBorderString($topBorderString, $specialSymbolsTop, $this->additionalSpace);
 
-    	// Add additional space
-	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $this->additionalSpace);
-	    $topBorderString = substr_replace($topBorderString, $additionalBorderString, 1, 0);
-
-        $specialSymbolsTop = $this->getSpecialSymbols("╤", "╤", $_board->width(), $_board->height(), $this->selectionCoordinates);
-        foreach ($specialSymbolsTop as $index => $specialSymbol)
-        {
-        	$topBorderString = substr_replace($topBorderString, $specialSymbol, $index, 1);
-        }
-
-        return $topBorderString;
+	    return $topBorderString;
     }
 
 	/**
@@ -128,22 +161,71 @@ class BoardEditorOutput extends ConsoleOutput
 	 *
 	 * @return String The string for the bottom border
 	 */
-    protected function getBorderBottomString($_board): String
+	protected function getBorderBottomString($_board): String
+	{
+		$bottomBorderString = parent::getBorderTopString($_board);
+		$specialSymbolsBottom = $this->getSpecialSymbols(, $_board->width(), $_board->height(), $this->selectionCoordinates, true);
+		$bottomBorderString = $this->addSpecialSymbolsToBorderString($bottomBorderString, $specialSymbolsBottom, $this->additionalSpace);
+
+		return $bottomBorderString;
+	}
+
+    private function addSpecialSymbolsToBorderString($_borderString, $_specialSymbols, $_additionalBorderWidth)
     {
-	    $bottomBorderString = parent::getBorderTopString($_board);
-
 	    // Add additional space
-	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $this->additionalSpace);
-	    $bottomBorderString = substr_replace($bottomBorderString, $additionalBorderString, 1, 0);
+	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $_additionalBorderWidth);
+	    $borderString = substr_replace($_borderString, $additionalBorderString, 1, 0);
 
-	    $specialSymbolsBottom = $this->getSpecialSymbols("╧", "╧", $_board->width(), $_board->height(), $this->selectionCoordinates, true);
-	    foreach ($specialSymbolsBottom as $index => $specialSymbol)
+	    foreach ($_specialSymbols as $index => $specialSymbol)
 	    {
-		    $bottomBorderString = substr_replace($bottomBorderString, $specialSymbol, $index, 1);
+		    $borderString = substr_replace($borderString, $specialSymbol, $index, 1);
 	    }
 
-	    return $bottomBorderString;
+	    return $borderString;
     }
+
+	protected function getCellSymbol(Field $_field): String
+	{
+		$cellSymbol = parent::getCellSymbol($_field);
+		$boardWidth = $_field->parentBoard()->width();
+
+		if ($this->isHighLight)
+		{
+			if ($_field->y() == $this->highLightY && $_field->x() == $this->highLightX)
+			{
+				if ($_field->isAlive()) $cellSymbol = "X";
+				$cellSymbol = $this->addHighLightLinesToCellString($_field, $cellSymbol, );
+			}
+		}
+		elseif ($this->selectionCoordinates)
+		{
+			if (($_field->y() >= $this->selectionCoordinates["A"]["y"] || $_field->y() < $this->selectionCoordinates["B"]["y"] + 1))
+			{
+				$this->addHighLightLinesToCellString($_field, $cellSymbol, );
+			}
+		}
+
+		return $cellSymbol;
+	}
+
+	/**
+	 * @param Field $_field
+	 * @param $_cellSymbol
+	 *
+	 * @return String The updated cell string
+	 */
+	private function addHighLightLinesToCellString($_field, $_cellSymbol, $_highLightLineSymbol)
+	{
+		$cellSymbol = $_cellSymbol;
+
+		if ($_field->x() == $this->highLightX)
+		{
+			if ($_field->x() >= 0) $cellSymbol = $_highLightLineSymbol . $cellSymbol;
+			if ($_field->x() < $_field->parentBoard()->width() - 1) $cellSymbol .= $_highLightLineSymbol;
+		}
+
+		return $cellSymbol;
+	}
 
 	/**
 	 * Returns the output string for the cells of a single row.
@@ -154,23 +236,30 @@ class BoardEditorOutput extends ConsoleOutput
 	 */
 	protected function getRowOutputString (array $_fields): String
 	{
-		$row = "";
-		$specialSymbolsAboveBelow = $this->getSpecialSymbols("┼", "┼", $_board->width(), $_board->height(), $this->selectionCoordinates);
-		$_selectionCoordinates = array();
+		if (! $_fields) return "";
+
+		$rowOutputString = parent::getRowOutputString($_fields);
+
+		// Get rows above and below the row
+		$board = $_fields[0]->parentBoard();
+		$y = $_fields[0]->y();
 
 		if ($this->isHighLight)
 		{
-			if ($y == $this->highLightY && $y > 0 ||
-				$y == $this->highLightY + 1 && $y < $_board->height())
-			{ // Output lines below and above highlighted cell row
+			if ($y == $this->highLightY && ($y > 0 || $y == $this->highLightY + 1))
+			{
+				$specialSymbolsAboveBelow = $this->getSpecialSymbols( $board->width(), $board->height(), $this->selectionCoordinates);
 
-				//$row = $this->getHorizontalLineString($_board->width() + $this->additionalSpace, "╟", "╢", "─", $specialSymbolsAboveBelow);
+				$highLightRowString = $this->getHorizontalLineString($board->width(),  );
+				$highLightRowString = $this->addSpecialSymbolsToBorderString($highLightRowString, $specialSymbolsAboveBelow, $this->additionalSpace);
 			}
 		}
+
 		elseif ($_selectionCoordinates)
 		{
 			$borderRowString = $this->getSelectionBorderRowString($y, $_selectionCoordinates, $_board, $_sideBorderSymbol);
 			if ($borderRowString) $row = $borderRowString;
+
 		}
 
 		if ($row) $output .= $row . "\n";
@@ -181,73 +270,6 @@ class BoardEditorOutput extends ConsoleOutput
 		if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
 		$output .= "\n";
 	}
-
-	protected function getCellSymbol(Field $_field): String
-	{
-		$cellSymbol = parent::getCellSymbol($_field);
-		$boardWidth = "TODO: Get board width";
-
-		if ($this->isHighLight)
-		{
-			if ($_field->x() == $this->highLightX && $_field->y() == $this->highLightY)
-			{
-				if ($_field->isAlive()) $cellSymbol = "X";
-			}
-
-			if ($_field->x() == $this->highLightX - 1  && $_field->x() >= 0 ||
-				$_field->x() == $this->highLightX && $_field->x() < $boardWidth - 1)
-			{ // Output lines left and right from highlighted cell X-Coordinate
-				$cellSymbol .= "│";
-			}
-		}
-
-		return $cellSymbol;
-	}
-
-	/**
-     * Returns the output string for the cells of a single row.
-     *
-     * @param Field[] $_fields The fields of the row
-     * @param int $_boardHeight The board height. This value is not optional, but its default value is null to not break the compatibility to the parent method
-     * @param array $_selectionCoordinates The selection coordinates
-     *
-     * @return String Row output String
-     */
-    protected function getRowOutputString (array $_fields, int $_boardHeight = null, array $_selectionCoordinates = null): String
-    {
-        $_cellAliveSymbol = "";
-        $_cellDeadSymbol = "";
-        $output = "";
-
-        $boardWidth = count($_fields);
-
-        foreach ($_fields as $field)
-        {
-            // Print cell
-
-            // Print highlight border
-            if ($this->isHighLight)
-            {
-
-            }
-            elseif ($_selectionCoordinates)
-            {
-                if ($field->x() == $_selectionCoordinates["A"]["x"] - 1 && $field->x() + 1 > 0 ||
-                    $field->x() == $_selectionCoordinates["B"]["x"] && $field->x() + 1 < $boardWidth)
-                { // If x value is the same like one of the selection coordinates
-
-                    if ($field->y() >= $_selectionCoordinates["A"]["y"] && $field->y() >= 0 &&
-                        $field->y() < $_selectionCoordinates["B"]["y"] + 1 && $field->y() < $_boardHeight)
-                    {
-                        $output .= "┋";
-                    }
-                    else $output .= " ";
-                }
-            }
-        }
-
-        return $output;
-    }
 
     /**
      * Returns the top or bottom border of the selection area or null.
@@ -274,26 +296,26 @@ class BoardEditorOutput extends ConsoleOutput
             {
                 $hasLeftBorder = true;
 
-                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["A"]["x"]] = "┏";
-                else $specialSymbols[$_selectionCoordinates["A"]["x"]] = "┗";
+                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["A"]["x"]] = "";
+                else $specialSymbols[$_selectionCoordinates["A"]["x"]] = ;
             }
-            else $leftBorderSymbol = "╟";
+            else $leftBorderSymbol = "";
 
             $hasRightBorder = false;
             if ($_selectionCoordinates["B"]["x"] + 1 < $_board->width())
             {
                 $hasRightBorder = true;
 
-                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "┓";
-                else $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "┛";
+                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "";
+                else $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "";
             }
-            else $rightBorderSymbol = "╢";
+            else $rightBorderSymbol = "";
 
             $startX = $_selectionCoordinates["A"]["x"] + $hasLeftBorder;
             $endX = $_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1;
             for ($x = $startX; $x <= $endX - $hasRightBorder; $x++)
             {
-                $specialSymbols[$x] = "╍";
+                $specialSymbols[$x] = "";
             }
 
             /*
