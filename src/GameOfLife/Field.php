@@ -66,7 +66,7 @@ class Field
 	 */
 	public function coordinate(): Coordinate
 	{
-		return $this->coordinate();
+		return $this->coordinate;
 	}
 
 	/**
@@ -165,7 +165,7 @@ class Field
 
         foreach ($neighborFields as $neighborField)
         {
-            if ($neighborField->isAlive()) $numberOfLivingNeighbors++;
+            $numberOfLivingNeighbors += (int)$neighborField->isAlive();
         }
 
         return $numberOfLivingNeighbors;
@@ -183,7 +183,7 @@ class Field
 
         foreach ($neighborFields as $neighborField)
         {
-            if ($neighborField->isDead()) $numberOfDeadNeighbors++;
+            $numberOfDeadNeighbors += (int)$neighborField->isDead();
         }
 
         return $numberOfDeadNeighbors;
