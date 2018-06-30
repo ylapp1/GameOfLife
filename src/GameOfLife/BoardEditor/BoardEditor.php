@@ -11,6 +11,7 @@ namespace BoardEditor;
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use GameOfLife\BoardHistory;
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
@@ -350,10 +351,21 @@ class BoardEditor
 
         if ($this->highLightField != array())
         {
-            $this->output->outputBoard($this->board, 1, $this->highLightField["x"], $this->highLightField["y"]);
+            $highLightFieldCoordinate = new Coordinate(
+                $this->highLightField["x"], $this->highLightField["y"]
+            );
+            $this->output->outputBoard($this->board, 1, $highLightFieldCoordinate);
             $this->highLightField = array();
         }
-        else $this->output->outputBoard($this->board,1, null, null, $this->selectionCoordinates);
+        else
+        {
+            $selectionCoordinates = $this->selectionCoordinates;
+            $selectionCoordinateTopLeft = new Coordinate($selectionCoordinates["A"]["x"], $selectionCoordinates["A"]["y"]);
+            $selectionCoordinateBottomRight = new Coordinate($selectionCoordinates["B"]["x"], $selectionCoordinates["B"]["y"]);
+            $selectionArea = new SelectionArea($selectionCoordinateTopLeft, $selectionCoordinateBottomRight);
+
+            $this->output->outputBoard($this->board,1, null, $selectionArea);
+        }
 
         if ($numberOfNewLines < 0) $numberOfNewLines = 0;
 

@@ -12,6 +12,8 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
+use Output\BorderPrinter\HighLightFieldBorderPrinter;
+use Output\BorderPrinter\SelectionAreaBorderPrinter;
 use Ulrichsg\Getopt;
 
 /**
@@ -29,47 +31,6 @@ class BoardEditorOutput extends ConsoleOutput
     protected $cellAliveSymbol = "o";
 
 	/**
-	 * The symbols that are used to print the highlight field borders
-	 *
-	 * @var String[] $highLightBorderSymbols
-	 */
-    private $highLightFieldBorderSymbols = array(
-
-    	// Inner borders
-    	"corner-inner-border" => "┼",
-    	"top-bottom-inner-border" => "─",
-    	"left-right-inner-border" => "│",
-
-    	// Outer borders intersections
-	    "top-outer-border" => "╤",
-	    "bottom-outer-border" => "╧",
-	    "left-outer-border" => "╟",
-	    "right-outer-border" => "╢"
-    );
-
-	/**
-	 * The symbols that are used to print the selection area border
-	 *
-	 * @var String[] $selectionBorderSymbols
-	 */
-    private $selectionAreaBorderSymbols = array(
-
-	    // Inner borders
-	    "top-left-inner-border" => "┏",
-	    "top-right-inner-border" => "┓",
-	    "bottom-right-inner-border" => "┛",
-	    "bottom-left-inner-border" => "┗",
-	    "top-bottom-inner-border" => "╍",
-	    "left-right-inner-border" => "┋",
-
-	    // Outer borders intersections
-	    "top-outer-border" => "╤",
-	    "bottom-outer-border" => "╧",
-	    "left-outer-border" => "╟",
-	    "right-outer-border" => "╢"
-    );
-
-	/**
 	 * The coordinate of the currently highlighted field
 	 *
 	 * @var Coordinate $highLightFieldCoordinate
@@ -83,15 +44,30 @@ class BoardEditorOutput extends ConsoleOutput
 	 */
 	private $selectionArea;
 
-	/**
-	 * The additional width per row because of inner borders (high light field or selection area)
-	 *
-	 * @var int $additionalWidthPerRow
-	 */
-	private $additionalWidthPerRow;
+    /**
+     * The high light field border printer
+     *
+     * @var HighLightFieldBorderPrinter $highLightFieldBorderPrinter
+     */
+    private $highLightFieldBorderPrinter;
+
+    /**
+     * The selection area border printer
+     *
+     * @var SelectionAreaBorderPrinter $selectionAreaBorderPrinter
+     */
+    private $selectionAreaBorderPrinter;
+
+    /**
+     * The reference to the currently active border printer
+     *
+     * @var HighLightFieldBorderPrinter|SelectionAreaBorderPrinter $activeBorderPrinter
+     */
+    private $activeBorderPrinter;
 
 
-	// Magic Methods
+
+    // Magic Methods
 
 	/**
      * BoardEditorOutput constructor.
@@ -100,6 +76,8 @@ class BoardEditorOutput extends ConsoleOutput
     {
         parent::__construct();
         $this->outputTitle = "BOARD EDITOR";
+        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPrinter();
+        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPrinter();
     }
 
 
@@ -121,71 +99,33 @@ class BoardEditorOutput extends ConsoleOutput
      *
      * @param Board $_board Current board
      * @param int $_gameStep The current game step
-     * @param Integer $_highLightX X-Coordinate of the cell that shall be highlighted
-     * @param Integer $_highLightY Y-Coordinate of the cell that shall be highlighted
-     * @param array $_selectionCoordinates The selection coordinates
+     * @param Coordinate $_highLightFieldCoordinate The coordinate of the cell that will be highglighted
+     * @param SelectionArea $_selectionArea The selection area
      */
-    public function outputBoard(Board $_board, int $_gameStep, int $_highLightX = null, int $_highLightY = null, array $_selectionCoordinates = array())
+    public function outputBoard(Board $_board, int $_gameStep, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null)
     {
-    	if ($_selectionCoordinates)
+        $this->activeBorderPrinter = null;
+        $this->highLightFieldCoordinate = null;
+        $this->selectionArea = null;
+
+        if ($_highLightFieldCoordinate)
+        {
+            $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
+            $this->highLightFieldBorderPrinter->initialize($_board, $this->highLightFieldCoordinate);
+            $this->activeBorderPrinter = $this->highLightFieldBorderPrinter;
+        }
+    	elseif ($_selectionArea)
 	    {
-		    $selectionCoordinateTopLeft = new Coordinate($_selectionCoordinates["A"]["x"], $_selectionCoordinates["A"]["y"]);
-		    $selectionCoordinateBottomRight = new Coordinate($_selectionCoordinates["B"]["x"], $_selectionCoordinates["B"]["y"]);
-		    $this->selectionArea = new SelectionArea($selectionCoordinateTopLeft, $selectionCoordinateBottomRight);
+		    $this->selectionArea = $_selectionArea;
+		    $this->selectionAreaBorderPrinter->initialize($_board, $this->selectionArea);
+		    $this->activeBorderPrinter = $this->selectionAreaBorderPrinter;
 	    }
-	    else $this->selectionArea = null;
 
-    	if ($_highLightX && $_highLightY)
-	    {
-	    	$this->highLightFieldCoordinate = new Coordinate($_highLightX, $_highLightY);
-	    }
-	    else $this->highLightFieldCoordinate = null;
-
-	    $hasInnerLeftBorder = $this->hasInnerLeftBorder();
-	    $hasInnerRightBorder = $this->hasInnerRightBorder($_board);
-
-        $this->additionalWidthPerRow = (int)$hasInnerLeftBorder + (int)$hasInnerRightBorder;;
-
-	    // Output the X-Coordinate of the highlighted cell above the board
-	    $paddingLeft = str_repeat(" ", $_highLightX + $hasInnerLeftBorder);
-	    $xCoordinateHighLightString = str_pad($paddingLeft . $_highLightX, $_board->width() + $this->additionalWidthPerRow);
-
-	    $this->shellOutputHelper->printCenteredOutputString($xCoordinateHighLightString . "\n");
-
-        echo $this->getBoardContentString($_board);
+        $this->shellOutputHelper->printCenteredOutputString($this->getBoardContentString($_board));
     }
 
-	/**
-	 * @return bool
-	 */
-    private function hasInnerLeftBorder(): Bool
-    {
-	    $hasInnerLeftBorder = false;
-	    if ($this->highLightFieldCoordinate && $this->highLightFieldCoordinate->x() > 0 ||
-	        $this->selectionArea && $this->selectionArea->topLeftCornerCoordinate()->x() > 0)
-	    {
-	    	$hasInnerLeftBorder = true;
-	    }
 
-	    return $hasInnerLeftBorder;
-    }
-
-	/**
-	 * @param Board $_board
-	 * @return bool
-	 */
-    private function hasInnerRightBorder(Board $_board): Bool
-    {
-	    $hasInnerRightBorder = false;
-
-	    if ($this->highLightFieldCoordinate && $this->highLightFieldCoordinate->x() < $_board->width() - 1 ||
-		    $this->selectionArea && $this->selectionArea->bottomRightCornerCoordinate()->x() < $_board->width() - 1)
-	    {
-		    $hasInnerRightBorder = true;
-	    }
-
-	    return $hasInnerRightBorder;
-    }
+    // Overridden hooks
 
 	/**
 	 * Returns the string for the top border.
@@ -196,23 +136,10 @@ class BoardEditorOutput extends ConsoleOutput
 	 */
     protected function getBorderTopString($_board): String
     {
-	    $topBorderString = parent::getBorderTopString($_board);
-
-	    if ($this->highLightFieldCoordinate || $this->selectionArea)
-	    {
-		    if ($this->highLightFieldCoordinate)
-		    {
-			    $specialSymbolLeft = $this->highLightFieldBorderSymbols["top-outer-border"];
-			    $specialSymbolRight = $this->highLightFieldBorderSymbols["top-outer-border"];
-		    }
-		    else
-		    {
-		    	$specialSymbolLeft = $this->selectionAreaBorderSymbols["top-outer-border"];
-		    	$specialSymbolRight = $this->selectionAreaBorderSymbols["top-outer-border"];
-		    }
-
-		    $specialSymbolsTop = $this->getSpecialSymbols($specialSymbolLeft, $specialSymbolRight, $_board);
-		    $topBorderString = $this->addSpecialSymbolsToBorderString($topBorderString, $specialSymbolsTop, $this->additionalWidthPerRow);
+        $topBorderString = parent::getBorderTopString($_board);
+	    if ($this->activeBorderPrinter)
+        {
+            $this->activeBorderPrinter->addCollisionBorderToTopOuterBorder($topBorderString);
 	    }
 
 	    return $topBorderString;
@@ -228,218 +155,59 @@ class BoardEditorOutput extends ConsoleOutput
 	protected function getBorderBottomString($_board): String
 	{
 		$bottomBorderString = parent::getBorderTopString($_board);
-
-		if ($this->highLightFieldCoordinate || $this->selectionArea)
+		if ($this->activeBorderPrinter)
 		{
-			if ($this->highLightFieldCoordinate)
-			{
-				$specialSymbolLeft = $this->highLightFieldBorderSymbols["bottom-outer-border"];
-				$specialSymbolRight = $this->highLightFieldBorderSymbols["bottom-outer-border"];
-			}
-			else
-			{
-				$specialSymbolLeft = $this->selectionAreaBorderSymbols["bottom-outer-border"];
-				$specialSymbolRight = $this->selectionAreaBorderSymbols["bottom-outer-border"];
-			}
-
-			$specialSymbolsBottom = $this->getSpecialSymbols($specialSymbolLeft, $specialSymbolRight, $_board);
-			$bottomBorderString = $this->addSpecialSymbolsToBorderString($bottomBorderString, $specialSymbolsBottom, $this->additionalWidthPerRow);
+		    $this->activeBorderPrinter->addCollisionBorderToBottomOuterBorder($bottomBorderString);
 		}
 
 		return $bottomBorderString;
 	}
 
 	/**
-	 * Returns the array of special symbols for the line output string.
-	 *
-	 * @param String $_symbolLeft The symbol for the left side of the highlighted column
-	 * @param String $_symbolRight The symbol for the right side of the highlighted column
-	 * @param Board $_board The board
-	 *
-	 * @return array The special symbols array
-	 */
-	private function getSpecialSymbols(String $_symbolLeft, String $_symbolRight, Board $_board): array
-	{
-		$specialSymbols = array();
-
-		if ($this->hasInnerLeftBorder())
-		{ // Left border exists
-			if ($this->highLightFieldCoordinate) $xPosition = $this->highLightFieldCoordinate->x();
-			else $xPosition = $this->selectionArea->topLeftCornerCoordinate()->x();
-
-			$specialSymbols[$xPosition] = $_symbolLeft;
-		}
-
-		if ($this->hasInnerRightBorder($_board))
-		{ // Right border exists
-			if ($this->highLightFieldCoordinate) $xPosition = $this->highLightFieldCoordinate->x();
-			else $xPosition = $this->selectionArea->bottomRightCornerCoordinate()->x();
-
-			$symbolRightPosition = $xPosition + 1 + count($specialSymbols);
-			$specialSymbols[$symbolRightPosition] = $_symbolRight;
-		}
-
-		return $specialSymbols;
-	}
-
-    private function addSpecialSymbolsToBorderString($_borderString, $_specialSymbols, $_additionalBorderWidth)
-    {
-	    // Add additional space
-	    $additionalBorderString = str_repeat($this->borderSymbols["top-bottom"], $_additionalBorderWidth);
-	    $borderString = substr_replace($_borderString, $additionalBorderString, 1, 0);
-
-	    foreach ($_specialSymbols as $index => $specialSymbol)
-	    {
-		    $borderString = substr_replace($borderString, $specialSymbol, $index, 1);
-	    }
-
-	    return $borderString;
-    }
-
-	protected function getCellSymbol(Field $_field): String
-	{
-		$cellSymbol = parent::getCellSymbol($_field);
-		$boardWidth = $_field->parentBoard()->width();
-
-		if ($this->highLightFieldCoordinate)
-		{
-			if ($_field->coordinate()->y() == $this->highLightY && $_field->x() == $this->highLightX)
-			{
-				if ($_field->isAlive()) $cellSymbol = "X";
-				$cellSymbol = $this->addHighLightLinesToCellString($_field, $cellSymbol, );
-			}
-		}
-		elseif ($this->selectionCoordinates)
-		{
-			if (($_field->y() >= $this->selectionCoordinates["A"]["y"] || $_field->y() < $this->selectionCoordinates["B"]["y"] + 1))
-			{
-				$this->addHighLightLinesToCellString($_field, $cellSymbol, );
-			}
-		}
-
-		return $cellSymbol;
-	}
-
-	/**
-	 * @param Field $_field
-	 * @param $_cellSymbol
-	 *
-	 * @return String The updated cell string
-	 */
-	private function addHighLightLinesToCellString($_field, $_cellSymbol, $_highLightLineSymbol)
-	{
-		$cellSymbol = $_cellSymbol;
-
-		if ($_field->x() == $this->highLightX)
-		{
-			if ($_field->x() >= 0) $cellSymbol = $_highLightLineSymbol . $cellSymbol;
-			if ($_field->x() < $_field->parentBoard()->width() - 1) $cellSymbol .= $_highLightLineSymbol;
-		}
-
-		return $cellSymbol;
-	}
-
-	/**
 	 * Returns the output string for the cells of a single row.
 	 *
 	 * @param Field[] $_fields The fields of the row
-	 *
+     * @param int $_y The Y-Coordinate of the row
+     *
 	 * @return String Row output String
 	 */
-	protected function getRowOutputString (array $_fields): String
+	protected function getRowOutputString (array $_fields, int $_y): String
 	{
-		if (! $_fields) return "";
+		$rowOutputString = parent::getRowOutputString($_fields, $_y);
+        if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
+        {
+            $rowOutputString .= " " . $_y;
+        }
+        $rowOutputString .= "\n";
 
-		$rowOutputString = parent::getRowOutputString($_fields);
-
-		// Get rows above and below the row
-		$board = $_fields[0]->parentBoard();
-		$y = $_fields[0]->y();
-
-		if ($this->isHighLight)
+        if ($this->activeBorderPrinter)
 		{
-			if ($y == $this->highLightY && ($y > 0 || $y == $this->highLightY + 1))
-			{
-				$specialSymbolsAboveBelow = $this->getSpecialSymbols( $board->width(), $board->height(), $this->selectionCoordinates);
-
-				$highLightRowString = $this->getHorizontalLineString($board->width(),  );
-				$highLightRowString = $this->addSpecialSymbolsToBorderString($highLightRowString, $specialSymbolsAboveBelow, $this->additionalWidthPerRow);
-			}
+		    $rowOutputString = $this->activeBorderPrinter->addBordersToRowString($rowOutputString, $_y);
 		}
 
-		elseif ($_selectionCoordinates)
-		{
-			$borderRowString = $this->getSelectionBorderRowString($y, $_selectionCoordinates, $_board, $_sideBorderSymbol);
-			if ($borderRowString) $row = $borderRowString;
-
-		}
-
-		if ($row) $output .= $row . "\n";
-
-		$row = $_sideBorderSymbol . $this->getRowOutputString($_board->fields()[$y], $_board->height(), $_selectionCoordinates) . $_sideBorderSymbol;
-		$output .= $row;
-
-		if ($this->isHighLight && $y == $this->highLightY) $output .= " " . $y;
-		$output .= "\n";
+		return $rowOutputString;
 	}
 
     /**
-     * Returns the top or bottom border of the selection area or null.
+     * Returns the symbol for a cell.
      *
-     * @param int $_y
-     * @param array $_selectionCoordinates
-     * @param Board $_board
-     * @param String $_sideBorderSymbol
+     * @param Field $_field
      *
-     * @return String|Bool The border row string or false
+     * @return String The symbol for the cell
      */
-    private function getSelectionBorderRowString(int $_y, array $_selectionCoordinates, Board $_board, String $_sideBorderSymbol)
+    protected function getCellSymbol(Field $_field): String
     {
-        if ($_y == $_selectionCoordinates["A"]["y"] && $_y > 0 ||
-            $_y == $_selectionCoordinates["B"]["y"] + 1 && $_y < $_board->height())
+        $cellSymbol = parent::getCellSymbol($_field);
+
+        if ($this->highLightFieldCoordinate)
         {
-            $specialSymbols = array();
-
-            $leftBorderSymbol = $_sideBorderSymbol;
-            $rightBorderSymbol = $_sideBorderSymbol;
-
-            $hasLeftBorder = false;
-            if ($_selectionCoordinates["A"]["x"] > 0)
+            if ($_field->coordinate()->y() == $this->highLightFieldCoordinate->y() &&
+                $_field->coordinate()->x() == $this->highLightFieldCoordinate->x())
             {
-                $hasLeftBorder = true;
-
-                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["A"]["x"]] = "";
-                else $specialSymbols[$_selectionCoordinates["A"]["x"]] = ;
+                if ($_field->isAlive()) $cellSymbol = "X";
             }
-            else $leftBorderSymbol = "";
-
-            $hasRightBorder = false;
-            if ($_selectionCoordinates["B"]["x"] + 1 < $_board->width())
-            {
-                $hasRightBorder = true;
-
-                if ($_y == $_selectionCoordinates["A"]["y"]) $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "";
-                else $specialSymbols[$_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1] = "";
-            }
-            else $rightBorderSymbol = "";
-
-            $startX = $_selectionCoordinates["A"]["x"] + $hasLeftBorder;
-            $endX = $_selectionCoordinates["B"]["x"] + $hasLeftBorder + 1;
-            for ($x = $startX; $x <= $endX - $hasRightBorder; $x++)
-            {
-                $specialSymbols[$x] = "";
-            }
-
-            /*
-            return $this->getHorizontalLineString(
-                $_board->width() + $hasLeftBorder + $hasRightBorder,
-                    $leftBorderSymbol,
-                    $rightBorderSymbol,
-                " ",
-                $specialSymbols
-                );
-            */
         }
-        else return false;
+
+        return $cellSymbol;
     }
 }

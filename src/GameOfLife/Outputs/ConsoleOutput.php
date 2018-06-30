@@ -10,6 +10,7 @@ namespace Output;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
+use Output\BorderPrinter\BoardBorderPrinter;
 use Ulrichsg\Getopt;
 
 /**
@@ -19,19 +20,7 @@ class ConsoleOutput extends BaseOutput
 {
     // Attributes
 
-    /**
-     * The list of border symbols that are used to print the borders of the board
-     *
-     * @var String[] $borderSymbols
-     */
-    protected $borderSymbols = array(
-        "top-left" => "╔",
-        "top-right" => "╗",
-        "bottom-right" => "╝",
-        "bottom-left" => "╚",
-        "top-bottom" => "═",
-        "left-right" => "║"
-    );
+    private $borderPrinter;
 
     /**
      * The symbol that is used to print a living cell
@@ -63,6 +52,7 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("CONSOLE OUTPUT");
+        $this->borderPrinter = new BoardBorderPrinter();
         $this->stepDisplayTimeInMicroseconds = 50 * 1000;
     }
 
@@ -148,7 +138,7 @@ class ConsoleOutput extends BaseOutput
         $boardContentString = $borderTopString . "\n";
         for ($y = 0; $y < $_board->height(); $y++)
         {
-            $rowString = $this->getRowOutputString($_board->fields()[$y]);
+            $rowString = $this->getRowOutputString($_board->fields()[$y], $y);
             $boardContentString .= $rowString . "\n";
         }
         $boardContentString .= $borderBottomString . "\n";
@@ -156,29 +146,7 @@ class ConsoleOutput extends BaseOutput
         return $boardContentString;
     }
 
-	/**
-	 * Returns an output string for either the upper or bottom border of the board.
-	 *
-	 * @param int $_length The length of the line (not including left and right edge symbol)
-	 * @param String $_leftEdgeSymbol The symbol for the left edge of the line
-	 * @param String $_rightEdgeSymbol The symbol for the right edge of the line
-	 * @param String $_lineSymbol The symbol for the line itself
-	 *
-	 * @return String The line output string
-	 */
-	protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
-	{
-		$output = $_leftEdgeSymbol;
-		for ($x = 0; $x < $_length; $x++)
-		{
-			$output .= $_lineSymbol;
-		}
-		$output .= $_rightEdgeSymbol;
-
-		return $output;
-	}
-
-    // Hooks that can be overridden in child classes
+    // Hooks that child classes can overwrite
 
     /**
      * Returns the string for the top border.
@@ -189,9 +157,7 @@ class ConsoleOutput extends BaseOutput
      */
     protected function getBorderTopString($_board): String
     {
-        return $this->getHorizontalLineString(
-            $_board->width(), $this->borderSymbols["top-left"], $this->borderSymbols["top-right"], $this->borderSymbols["top-bottom"]
-        );
+        return $this->borderPrinter->getBorderTopString($_board);
     }
 
     /**
@@ -203,29 +169,28 @@ class ConsoleOutput extends BaseOutput
      */
     protected function getBorderBottomString($_board): String
     {
-        return $this->getHorizontalLineString(
-            $_board->width(), $this->borderSymbols["bottom-left"], $this->borderSymbols["bottom-right"], $this->borderSymbols["top-bottom"]
-        );
+        return $this->borderPrinter->getBorderBottomString($_board);
     }
 
-	/**
-	 * Returns the output string for the cells of a single row.
-	 *
-	 * @param Field[] $_fields The fields of the row
-	 *
-	 * @return String Row output String
-	 */
-	protected function getRowOutputString (array $_fields): String
-	{
-		$rowString = $this->borderSymbols["left-right"];
-		foreach ($_fields as $field)
-		{
-			$rowString .= $this->getCellSymbol($field);
-		}
-		$rowString .= $this->borderSymbols["left-right"];
+    /**
+     * Returns the output string for the cells of a single row.
+     *
+     * @param Field[] $_fields The fields of the row
+     * @param int $_y The Y-Coordinate of the row
+     *
+     * @return String Row output String
+     */
+    protected function getRowOutputString (array $_fields, int $_y): String
+    {
+        $rowString = "";
+        foreach ($_fields as $field)
+        {
+            $rowString .= $this->getCellSymbol($field);
+        }
+        $rowString = $this->borderPrinter->addBordersToRowString($rowString, $_y);
 
-		return $rowString;
-	}
+        return $rowString;
+    }
 
 	/**
 	 * Returns the symbol for a cell.
