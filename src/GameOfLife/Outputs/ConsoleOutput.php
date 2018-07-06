@@ -9,8 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use GameOfLife\Field;
-use Output\BorderPrinter\BoardBorderPrinter;
+use Output\BoardPrinter\ConsoleOutputBoardPrinter;
 use Ulrichsg\Getopt;
 
 /**
@@ -20,21 +19,12 @@ class ConsoleOutput extends BaseOutput
 {
     // Attributes
 
-    private $borderPrinter;
-
     /**
-     * The symbol that is used to print a living cell
+     * The board printer
      *
-     * @var String $cellAliveSymbol
+     * @var ConsoleOutputBoardPrinter $boardPrinter
      */
-    protected $cellAliveSymbol = "☻";
-
-    /**
-     * The symbol that is used to print a dead cell
-     *
-     * @var String $cellDeadSymbol
-     */
-    protected $cellDeadSymbol = " ";
+    private $boardPrinter;
 
     /**
      * The time for that one game step will be displayed in the console in microseconds
@@ -52,14 +42,12 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("CONSOLE OUTPUT");
-        $this->borderPrinter = new BoardBorderPrinter();
+        $this->boardPrinter = new ConsoleOutputBoardPrinter();
         $this->stepDisplayTimeInMicroseconds = 50 * 1000;
     }
 
 
     // Class Methods
-
-	// Inherited methods
 
     /**
      * Adds output specific options to the option list.
@@ -103,8 +91,9 @@ class ConsoleOutput extends BaseOutput
         $this->printTitle();
 
         $gameStepString = "Game step: " . $_gameStep . "\n";
+        $boardContentString = $this->boardPrinter->getBoardContentString($_board);
         $this->shellOutputHelper->printCenteredOutputString($gameStepString);
-        $this->shellOutputHelper->printCenteredOutputString($this->getBoardContentString($_board));
+        $this->shellOutputHelper->printCenteredOutputString($boardContentString);
 
         if ($this->stepDisplayTimeInMicroseconds > 0) usleep($this->stepDisplayTimeInMicroseconds);
     }
@@ -119,89 +108,5 @@ class ConsoleOutput extends BaseOutput
     {
         parent::finishOutput($_simulationEndReason);
         $this->shellOutputHelper->moveCursorToBottomLeftCorner();
-    }
-
-    // Board printing methods
-
-    /**
-     * Returns the board output string for one board.
-     *
-     * @param Board $_board The board
-     *
-     * @return String The board output string
-     */
-    protected function getBoardContentString(Board $_board): String
-    {
-        $borderTopString = $this->getBorderTopString($_board);
-        $borderBottomString = $this->getBorderBottomString($_board);
-
-        $boardContentString = $borderTopString . "\n";
-        for ($y = 0; $y < $_board->height(); $y++)
-        {
-            $rowString = $this->getRowOutputString($_board->fields()[$y], $y);
-            $boardContentString .= $rowString . "\n";
-        }
-        $boardContentString .= $borderBottomString . "\n";
-
-        return $boardContentString;
-    }
-
-    // Hooks that child classes can overwrite
-
-    /**
-     * Returns the string for the top border.
-     *
-     * @param Board $_board The board
-     *
-     * @return String The string for the top border
-     */
-    protected function getBorderTopString($_board): String
-    {
-        return $this->borderPrinter->getBorderTopString($_board);
-    }
-
-    /**
-     * Returns the string for the bottom border.
-     *
-     * @param Board $_board The board
-     *
-     * @return String The string for the bottom border
-     */
-    protected function getBorderBottomString($_board): String
-    {
-        return $this->borderPrinter->getBorderBottomString($_board);
-    }
-
-    /**
-     * Returns the output string for the cells of a single row.
-     *
-     * @param Field[] $_fields The fields of the row
-     * @param int $_y The Y-Coordinate of the row
-     *
-     * @return String Row output String
-     */
-    protected function getRowOutputString (array $_fields, int $_y): String
-    {
-        $rowString = "";
-        foreach ($_fields as $field)
-        {
-            $rowString .= $this->getCellSymbol($field);
-        }
-        $rowString = $this->borderPrinter->addBordersToRowString($rowString, $_y);
-
-        return $rowString;
-    }
-
-	/**
-	 * Returns the symbol for a cell.
-	 *
-	 * @param Field $_field
-	 *
-	 * @return String The symbol for the cell
-	 */
-    protected function getCellSymbol(Field $_field): String
-    {
-	    if ($_field->isAlive()) return $this->cellAliveSymbol;
-	    else return $this->cellDeadSymbol;
     }
 }

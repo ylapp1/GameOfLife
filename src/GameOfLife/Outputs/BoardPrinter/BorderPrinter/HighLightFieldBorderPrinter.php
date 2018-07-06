@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BorderPrinter;
+namespace Output\BoardPrinter\BorderPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
@@ -71,7 +71,7 @@ class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
 
     private function getXCoordinateHighLightString(Board $_board)
     {
-        // TODO: Need to save border positions for each border indivdiually
+        // TODO: Need to save border positions for each border individually
         $hasInnerLeftBorder = $this->hasLeftBorder();
         $hasInnerRightBorder = $this->hasRightBorder();
 

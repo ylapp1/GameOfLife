@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BorderPrinter;
+namespace Output\BoardPrinter\BorderPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
@@ -26,8 +26,15 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
     protected $distanceToLeftOuterBorder;
     protected $distanceToRightOuterBorder;
 
-    protected $topLeftCorner;
-    protected $bottomRightCorner;
+    /**
+     * @var Coordinate $topLeftCornerCoordinate
+     */
+    protected $topLeftCornerCoordinate;
+
+    /**
+     * @var Coordinate $bottomRightCornerCoordinate
+     */
+    protected $bottomRightCornerCoordinate;
 
     protected $borderSymbolPositionsTopBottom;
     protected $borderSymbolPositionsLeftRight;
@@ -50,6 +57,10 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         $this->distanceToLeftOuterBorder = $_topLeftCornerCoordinate->x();
         $this->distanceToRightOuterBorder = ($_board->width() - 1) - $_bottomRightCornerCoordinate->x();
 
+        $this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
+        $this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
+
+        /*
         $this->borderSymbolPositionsTopBottom = array();
         if ($this->distanceToTopOuterBorder == 0) $this->borderSymbolPositionsTopBottom[] = $_topLeftCornerCoordinate->y();
         if ($this->distanceToBottomOuterBorder == 0)
@@ -63,6 +74,7 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         {
             $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
         }
+        */
     }
 
 
@@ -135,10 +147,14 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         $rowString = $this->addCollisionBorderToLeftOuterBorder($_rowString);
         $rowString = $this->addCollisionBorderToRightOuterBorder($rowString);
 
-        if (in_array($_y, $this->borderSymbolPositionsTopBottom))
-        {
-            // If is upper then add upper border above
-            // Else add bottom border above
+        if ($this->hasTopBorder() && $_y == $this->topLeftCornerCoordinate->y())
+        { // Inner top border
+            //$rowString = $this->getBorderTopString
+
+        }
+        if ($this->hasBottomBorder() && $_y == $this->bottomRightCornerCoordinate->y() + (int)$this->hasTopBorder() + 1)
+        { // Inner border bottom
+
         }
 
         return $rowString;

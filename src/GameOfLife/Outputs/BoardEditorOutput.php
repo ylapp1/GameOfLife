@@ -11,60 +11,22 @@ namespace Output;
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use GameOfLife\Field;
-use Output\BorderPrinter\HighLightFieldBorderPrinter;
-use Output\BorderPrinter\SelectionAreaBorderPrinter;
+use Output\BoardPrinter\BoardEditorOutputBoardPrinter;
 use Ulrichsg\Getopt;
 
 /**
  * Prints the BoardEditor to the console for UserInput.
  */
-class BoardEditorOutput extends ConsoleOutput
+class BoardEditorOutput extends BaseOutput
 {
 	// Attributes
 
     /**
-     * The symbol that is used to print a living cell
+     * The board printer
      *
-     * @var String $cellAliveSymbol
+     * @var BoardEditorOutputBoardPrinter $boardPrinter
      */
-    protected $cellAliveSymbol = "o";
-
-	/**
-	 * The coordinate of the currently highlighted field
-	 *
-	 * @var Coordinate $highLightFieldCoordinate
-	 */
-	private $highLightFieldCoordinate;
-
-	/**
-	 * The currently selected area
-	 *
-	 * @var SelectionArea $selectionArea
-	 */
-	private $selectionArea;
-
-    /**
-     * The high light field border printer
-     *
-     * @var HighLightFieldBorderPrinter $highLightFieldBorderPrinter
-     */
-    private $highLightFieldBorderPrinter;
-
-    /**
-     * The selection area border printer
-     *
-     * @var SelectionAreaBorderPrinter $selectionAreaBorderPrinter
-     */
-    private $selectionAreaBorderPrinter;
-
-    /**
-     * The reference to the currently active border printer
-     *
-     * @var HighLightFieldBorderPrinter|SelectionAreaBorderPrinter $activeBorderPrinter
-     */
-    private $activeBorderPrinter;
-
+    private $boardPrinter;
 
 
     // Magic Methods
@@ -74,14 +36,21 @@ class BoardEditorOutput extends ConsoleOutput
      */
     public function __construct()
     {
-        parent::__construct();
-        $this->outputTitle = "BOARD EDITOR";
-        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPrinter();
-        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPrinter();
+        parent::__construct("BOARD EDITOR");
+        $this->boardPrinter = new BoardEditorOutputBoardPrinter();
     }
 
 
     // Class Methods
+
+    /**
+     * Adds output specific options to the option list.
+     *
+     * @param Getopt $_options The option list
+     */
+    public function addOptions(Getopt $_options)
+    {
+    }
 
     /**
      * Initializes the output.
@@ -104,110 +73,7 @@ class BoardEditorOutput extends ConsoleOutput
      */
     public function outputBoard(Board $_board, int $_gameStep, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null)
     {
-        $this->activeBorderPrinter = null;
-        $this->highLightFieldCoordinate = null;
-        $this->selectionArea = null;
-
-        if ($_highLightFieldCoordinate)
-        {
-            $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
-            $this->highLightFieldBorderPrinter->initialize($_board, $this->highLightFieldCoordinate);
-            $this->activeBorderPrinter = $this->highLightFieldBorderPrinter;
-        }
-    	elseif ($_selectionArea)
-	    {
-		    $this->selectionArea = $_selectionArea;
-		    $this->selectionAreaBorderPrinter->initialize($_board, $this->selectionArea);
-		    $this->activeBorderPrinter = $this->selectionAreaBorderPrinter;
-	    }
-
-        $this->shellOutputHelper->printCenteredOutputString($this->getBoardContentString($_board));
-    }
-
-
-    // Overridden hooks
-
-	/**
-	 * Returns the string for the top border.
-	 *
-	 * @param Board $_board The board
-	 *
-	 * @return String The string for the top border
-	 */
-    protected function getBorderTopString($_board): String
-    {
-        $topBorderString = parent::getBorderTopString($_board);
-	    if ($this->activeBorderPrinter)
-        {
-            $this->activeBorderPrinter->addCollisionBorderToTopOuterBorder($topBorderString);
-	    }
-
-	    return $topBorderString;
-    }
-
-	/**
-	 * Returns the string for the bottom border.
-	 *
-	 * @param Board $_board The board
-	 *
-	 * @return String The string for the bottom border
-	 */
-	protected function getBorderBottomString($_board): String
-	{
-		$bottomBorderString = parent::getBorderTopString($_board);
-		if ($this->activeBorderPrinter)
-		{
-		    $this->activeBorderPrinter->addCollisionBorderToBottomOuterBorder($bottomBorderString);
-		}
-
-		return $bottomBorderString;
-	}
-
-	/**
-	 * Returns the output string for the cells of a single row.
-	 *
-	 * @param Field[] $_fields The fields of the row
-     * @param int $_y The Y-Coordinate of the row
-     *
-	 * @return String Row output String
-	 */
-	protected function getRowOutputString (array $_fields, int $_y): String
-	{
-		$rowOutputString = parent::getRowOutputString($_fields, $_y);
-        if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
-        {
-            $rowOutputString .= " " . $_y;
-        }
-        $rowOutputString .= "\n";
-
-        if ($this->activeBorderPrinter)
-		{
-		    $rowOutputString = $this->activeBorderPrinter->addBordersToRowString($rowOutputString, $_y);
-		}
-
-		return $rowOutputString;
-	}
-
-    /**
-     * Returns the symbol for a cell.
-     *
-     * @param Field $_field
-     *
-     * @return String The symbol for the cell
-     */
-    protected function getCellSymbol(Field $_field): String
-    {
-        $cellSymbol = parent::getCellSymbol($_field);
-
-        if ($this->highLightFieldCoordinate)
-        {
-            if ($_field->coordinate()->y() == $this->highLightFieldCoordinate->y() &&
-                $_field->coordinate()->x() == $this->highLightFieldCoordinate->x())
-            {
-                if ($_field->isAlive()) $cellSymbol = "X";
-            }
-        }
-
-        return $cellSymbol;
+        $boardContentString = $this->boardPrinter->getBoardContentString($_board, $_highLightFieldCoordinate, $_selectionArea);
+        $this->shellOutputHelper->printCenteredOutputString($boardContentString);
     }
 }

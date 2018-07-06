@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BorderPrinter;
+namespace Output\BoardPrinter\BorderPrinter;
 
 use GameOfLife\Board;
 
