@@ -17,6 +17,8 @@ use Output\BoardPrinter\BorderPrinter\BaseBorderPrinter;
  */
 abstract class BaseBoardPrinter
 {
+	// Attributes
+
     /**
      * The symbol that is used to print a living cell
      *
@@ -39,20 +41,24 @@ abstract class BaseBoardPrinter
     protected $borderPrinter;
 
 
+    // Magic Methods
+
     /**
      * BaseBoardPrinter constructor.
      *
-     * @param String $_cellAliveSymbol
-     * @param String $_cellDeadSymbol
-     * @param $_borderPrinter
+     * @param String $_cellAliveSymbol The symbol that is used to print a living cell
+     * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
+     * @param BaseBorderPrinter $_borderPrinter The border printer
      */
-    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol, $_borderPrinter)
+    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol, BaseBorderPrinter $_borderPrinter)
     {
         $this->cellAliveSymbol = $_cellAliveSymbol;
         $this->cellDeadSymbol = $_cellDeadSymbol;
         $this->borderPrinter = $_borderPrinter;
     }
 
+
+    // Class Methods
 
     /**
      * Returns the board output string for one board.
@@ -84,7 +90,7 @@ abstract class BaseBoardPrinter
      *
      * @return String The string for the top border
      */
-    abstract protected function getBorderTopString($_board): String;
+    abstract protected function getBorderTopString(Board $_board): String;
 
     /**
      * Returns the string for the bottom border.
@@ -93,7 +99,7 @@ abstract class BaseBoardPrinter
      *
      * @return String The string for the bottom border
      */
-    abstract protected function getBorderBottomString($_board): String;
+    abstract protected function getBorderBottomString(Board $_board): String;
 
     /**
      * Returns the output string for the cells of a single row.
@@ -101,7 +107,7 @@ abstract class BaseBoardPrinter
      * @param Field[] $_fields The fields of the row
      * @param int $_y The Y-Coordinate of the row
      *
-     * @return String Row output String
+     * @return String The output string for the cells of the row
      */
     abstract protected function getRowOutputString(array $_fields, int $_y): String;
 }
