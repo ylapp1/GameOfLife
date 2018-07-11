@@ -61,7 +61,6 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         $this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
         $this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
 
-        /*
         $this->borderSymbolPositionsTopBottom = array();
         if ($this->distanceToTopOuterBorder == 0) $this->borderSymbolPositionsTopBottom[] = $_topLeftCornerCoordinate->y();
         if ($this->distanceToBottomOuterBorder == 0)
@@ -75,7 +74,6 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         {
             $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
         }
-        */
     }
 
 
@@ -162,12 +160,10 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
 
     public function addCollisionBorderToTopOuterBorder(String $_topOuterBorderString): String
     {
-        if (! $this->hasTopBorder())
-        {
-            $borderSymbol = $this->borderSymbolTopOuterBorder;
-            return $this->addCollisionBorderToOuterBorder($_topOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
-        }
-        else $borderSymbol = "X"; // TODO: Get outer border string symbol (somehow........)
+        if ($this->hasTopBorder()) $borderSymbol = "X"; // TODO: Get outer border string symbol (somehow........)
+        else $borderSymbol = $this->borderSymbolTopOuterBorder;
+
+        return $this->addCollisionBorderToOuterBorder($_topOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
     }
 
     public function addCollisionBorderToBottomOuterBorder(String $_bottomOuterBorderString): String

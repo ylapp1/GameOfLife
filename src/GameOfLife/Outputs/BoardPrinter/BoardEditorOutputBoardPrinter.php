@@ -164,7 +164,6 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
             {
                 $rowOutputString .= " " . $_y;
             }
-            $rowOutputString .= "\n";
 
             $rowOutputString = $this->activeInnerBorderPrinter->addBordersToRowString($rowOutputString, $_y);
         }
