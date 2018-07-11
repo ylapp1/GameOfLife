@@ -13,6 +13,7 @@ use GameOfLife\Coordinate;
 
 /**
  * Parent class for inner border printers.
+ * Inner Borders are the same as normal borders with the addition that they may touch an outer border with which they will merge
  */
 abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
 {
@@ -122,7 +123,6 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         if ($this->hasLeftBorder()) $borderLeftSymbol = $_borderLeftSymbol;
         else
         {
-
             $borderLeftSymbol = $this->borderSymbolTopBottom;
         }
 

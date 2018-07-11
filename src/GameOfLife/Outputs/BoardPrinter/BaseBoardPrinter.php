@@ -14,6 +14,8 @@ use Output\BoardPrinter\BorderPrinter\BaseBorderPrinter;
 
 /**
  * Parent class for board printers.
+ *
+ * call getBoardContentString() to get a board string
  */
 abstract class BaseBoardPrinter
 {

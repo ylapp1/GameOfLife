@@ -137,7 +137,7 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	 */
 	protected function getBorderBottomString(Board $_board): String
     {
-        $bottomBorderString = parent::getBorderTopString($_board);
+        $bottomBorderString = parent::getBorderBottomString($_board);
         if ($this->activeInnerBorderPrinter)
         {
             $this->activeInnerBorderPrinter->addCollisionBorderToBottomOuterBorder($bottomBorderString);

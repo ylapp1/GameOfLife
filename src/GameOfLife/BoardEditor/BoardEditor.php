@@ -349,7 +349,7 @@ class BoardEditor
         $this->output->startOutput(new Getopt(), new Board(0, 0, true));
         $numberOfNewLines = $this->shellInformationFetcher->getNumberOfShellLines() - $this->getNumberOfUsedLines();
 
-        if ($this->highLightField != array())
+        if ($this->highLightField)
         {
             $highLightFieldCoordinate = new Coordinate(
                 $this->highLightField["x"], $this->highLightField["y"]
@@ -357,7 +357,7 @@ class BoardEditor
             $this->output->outputBoard($this->board, 1, $highLightFieldCoordinate);
             $this->highLightField = array();
         }
-        else
+        elseif ($this->selectionCoordinates)
         {
             $selectionCoordinates = $this->selectionCoordinates;
             $selectionCoordinateTopLeft = new Coordinate($selectionCoordinates["A"]["x"], $selectionCoordinates["A"]["y"]);
@@ -366,6 +366,7 @@ class BoardEditor
 
             $this->output->outputBoard($this->board,1, null, $selectionArea);
         }
+        else $this->output->outputBoard($this->board, 1);
 
         if ($numberOfNewLines < 0) $numberOfNewLines = 0;
 

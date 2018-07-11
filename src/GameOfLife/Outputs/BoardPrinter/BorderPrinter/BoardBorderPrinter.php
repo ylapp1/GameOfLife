@@ -15,23 +15,6 @@ use GameOfLife\Board;
  */
 class BoardBorderPrinter extends BaseBorderPrinter
 {
-    // Attributes
-
-    /**
-     * The cached top border
-     *
-     * @var String $cachedTopBorder
-     */
-    private $cachedTopBorder;
-
-    /**
-     * The cached bottom border
-     *
-     * @var String $cachedBottomBorder
-     */
-    private $cachedBottomBorder;
-
-
     // Magic Methods
 
     /**
@@ -61,14 +44,9 @@ class BoardBorderPrinter extends BaseBorderPrinter
      */
     public function getBorderTopString(Board $_board): String
     {
-        if (! $this->cachedTopBorder)
-        {
-            $this->cachedTopBorder = $this->getHorizontalLineString(
-                $_board->width(), $this->borderSymbolTopLeft, $this->borderSymbolTopRight, $this->borderSymbolTopBottom
-            );
-        }
-
-        return $this->cachedTopBorder;
+        return $this->getHorizontalLineString(
+        	$_board->width(), $this->borderSymbolTopLeft, $this->borderSymbolTopRight, $this->borderSymbolTopBottom
+        );
     }
 
     /**
@@ -80,14 +58,9 @@ class BoardBorderPrinter extends BaseBorderPrinter
      */
     public function getBorderBottomString(Board $_board): String
     {
-        if (! $this->cachedBottomBorder)
-        {
-            $this->cachedBottomBorder = $this->getHorizontalLineString(
-                $_board->width(), $this->borderSymbolBottomLeft, $this->borderSymbolBottomRight, $this->borderSymbolTopBottom
-            );
-        }
-
-        return $this->cachedBottomBorder;
+        return $this->getHorizontalLineString(
+        	$_board->width(), $this->borderSymbolBottomLeft, $this->borderSymbolBottomRight, $this->borderSymbolTopBottom
+        );
     }
 
     /**
