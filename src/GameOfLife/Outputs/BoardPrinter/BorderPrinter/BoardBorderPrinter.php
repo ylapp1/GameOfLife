@@ -65,13 +65,13 @@ class BoardBorderPrinter extends BaseBorderPrinter
     /**
      * Adds borders to a row string.
      *
-     * @param String $_rowString The row string
+     * @param String $_rowOutputString The row string
      * @param int $_y The Y-Coordinate of the row string
      *
      * @return String The row string with added borders
      */
-    public function addBordersToRowString(String $_rowString, int $_y): String
+    public function addBordersToRowString(String $_rowOutputString, int $_y): String
     {
-        return $this->borderSymbolLeftRight . $_rowString . $this->borderSymbolLeftRight;
+        return $this->borderSymbolLeftRight . $_rowOutputString . $this->borderSymbolLeftRight;
     }
 }

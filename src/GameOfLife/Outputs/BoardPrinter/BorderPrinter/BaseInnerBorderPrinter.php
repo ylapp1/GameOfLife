@@ -151,23 +151,42 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
     }
 
 
+	/**
+	 * Returns the string for the top border.
+	 *
+	 * @return String The string for the top border
+	 */
     public function getBorderTopString(): String
     {
         return $this->getBorderTopBottomString($this->borderSymbolTopLeft, $this->borderSymbolTopRight);
     }
 
+	/**
+	 * Returns the string for the bottom border.
+	 *
+	 * @return String The string for the bottom border
+	 */
     public function getBorderBottomString(): String
     {
         return $this->getBorderTopBottomString($this->borderSymbolBottomLeft, $this->borderSymbolBottomRight);
     }
 
-    private function getBorderTopBottomString(String $_borderLeftSymbol, String $_borderRightSymbol)
+	/**
+	 * Returns a string for either the top or bottom border of this inner border.
+	 * The bottom and top borders only differ in the left and right edge symbols.
+	 *
+	 * @param String $_borderLeftSymbol The symbol for the left edge of the inner border when the border does not collide with the outer border
+	 * @param String $_borderRightSymbol The symbol for the right edge of the inner border when the border does not collide with the outer border
+	 *
+	 * @return String The top or bottom border string of this inner border
+	 */
+    private function getBorderTopBottomString(String $_borderLeftSymbol, String $_borderRightSymbol): String
     {
         if ($this->hasLeftBorder()) $borderLeftSymbol = $_borderLeftSymbol;
-        else $borderLeftSymbol = $this->borderSymbolCollisionLeftOuterBorder;
+        else $borderLeftSymbol = $this->borderSymbolTopBottom;
 
         if ($this->hasRightBorder()) $borderRightSymbol = $_borderRightSymbol;
-        else $borderRightSymbol = $this->borderSymbolCollisionRightOuterBorder;
+        else $borderRightSymbol = $this->borderSymbolTopBottom;
 
         $borderTopBottomString = $this->getHorizontalLineString(
             $this->borderTopBottomWidth, $borderLeftSymbol, $borderRightSymbol, $this->borderSymbolTopBottom
@@ -178,10 +197,17 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         return $borderTopBottomString;
     }
 
-
-    public function addBordersToRowString(String $_rowString, int $_y): String
+	/**
+	 * Adds borders to a row string.
+	 *
+	 * @param String $_rowOutputString The row string
+	 * @param int $_y The Y-Coordinate of the row string
+	 *
+	 * @return String The row string with added borders
+	 */
+    public function addBordersToRowString(String $_rowOutputString, int $_y): String
     {
-        $rowString = $_rowString;
+        $rowString = $_rowOutputString;
 
         if ($this->hasTopBorder() && $_y == $this->topLeftCornerCoordinate->y())
         { // Inner top border
@@ -192,8 +218,12 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         	$rowString .= "\n" . $this->getBorderBottomString();
         }
 
+        // TODO: Left right border
+
         return $rowString;
     }
+
+
 
     public function addCollisionBorderToTopOuterBorder(String $_topOuterBorderString): String
     {
@@ -211,21 +241,6 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         return $this->addCollisionBorderToOuterBorder($_bottomOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
     }
 
-    private function addCollisionBordersToRowString(String $_rowString): String
-    {
-    	$rowString = $_rowString;
-    	if (! $this->hasLeftBorder())
-	    {
-	    	$rowString = substr_replace($rowString, $this->borderSymbolCollisionLeftOuterBorder, 0, 1);
-	    }
-    	if (! $this->hasRightBorder())
-	    {
-	    	$rowString = substr_replace($rowString, $this->borderSymbolCollisionRightOuterBorder, -1, 1);
-	    }
-
-	    return $rowString;
-    }
-
     private function addCollisionBorderToOuterBorder(String $_outerBorderString, String $_borderSymbol, array $_borderSymbolPositions): String
     {
         $outerBorderString = $_outerBorderString;
@@ -238,4 +253,19 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
 
         return $outerBorderString;
     }
+
+	private function addCollisionBordersToRowString(String $_rowString): String
+	{
+		$rowString = $_rowString;
+		if (! $this->hasLeftBorder())
+		{
+			$rowString = substr_replace($rowString, $this->borderSymbolCollisionLeftOuterBorder, 0, 1);
+		}
+		if (! $this->hasRightBorder())
+		{
+			$rowString = substr_replace($rowString, $this->borderSymbolCollisionRightOuterBorder, -1, 1);
+		}
+
+		return $rowString;
+	}
 }

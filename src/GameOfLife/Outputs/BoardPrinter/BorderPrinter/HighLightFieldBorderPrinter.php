@@ -20,10 +20,13 @@ class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
 
     /**
      * HighLightFieldBorderPrinter constructor.
+     *
+     * @param Board $_board The board to which this border printer belongs
      */
-    public function __construct()
+    public function __construct(Board $_board)
     {
         parent::__construct(
+	        $_board,
             "┼",
             "┼",
             "┼",
@@ -62,11 +65,13 @@ class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
      */
     public function addCollisionBorderToTopOuterBorder(String $_topOuterBorderString): String
     {
+    	/*
         $topOuterBorderString = parent::addCollisionBorderToLeftOuterBorder($_topOuterBorderString);
 
         // TODO: Need board as parameter for this ...
         $xCoordinateHighLightString = $this->getXCoordinateHighLightString($_board);
         return $xCoordinateHighLightString . "\n" . $topOuterBorderString;
+    	*/
     }
 
     private function getXCoordinateHighLightString(Board $_board)
@@ -88,9 +93,9 @@ class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
         return $xCoordinateHighLightString . "\n";
     }
 
-    public function addBordersToRowString(String $_rowString, int $_y): String
+    public function addBordersToRowString(String $_rowOutputString, int $_y): String
     {
-    	$rowOutputString = $_rowString;
+    	$rowOutputString = $_rowOutputString;
 
 	    if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
 	    {

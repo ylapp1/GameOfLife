@@ -346,7 +346,7 @@ class BoardEditor
      */
     public function outputBoard(String $_message = "")
     {
-        $this->output->startOutput(new Getopt(), new Board(0, 0, true));
+        $this->output->startOutput(new Getopt(), $this->board);
         $numberOfNewLines = $this->shellInformationFetcher->getNumberOfShellLines() - $this->getNumberOfUsedLines();
 
         if ($this->highLightField)

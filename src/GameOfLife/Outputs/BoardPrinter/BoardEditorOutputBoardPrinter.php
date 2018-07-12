@@ -72,8 +72,8 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
     public function __construct(Board $_board)
     {
         parent::__construct($_board);
-        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPrinter();
-        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPrinter();
+        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPrinter($_board);
+        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPrinter($_board);
         $this->cellAliveSymbol = "o";
     }
 

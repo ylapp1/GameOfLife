@@ -20,14 +20,17 @@ class SelectionAreaBorderPrinter extends BaseInnerBorderPrinter
 
     /**
      * SelectionAreaBorderPrinter constructor.
+     *
+     * @param Board $_board The board to which this border printer belongs
      */
-    public function __construct()
+    public function __construct(Board $_board)
     {
         parent::__construct(
+	        $_board,
             "┏",
             "┓",
-            "┛",
             "┗",
+	        "┛",
             "╍",
             "┋",
             "╤",
