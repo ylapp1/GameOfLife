@@ -90,22 +90,19 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
     public function getBoardContentString(Board $_board, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null): String
     {
         $this->activeInnerBorderPrinter = null;
-        $this->highLightFieldCoordinate = null;
-        $this->selectionArea = null;
+        $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
+        $this->selectionArea = $_selectionArea;
 
         if ($_highLightFieldCoordinate)
         {
-            $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
             $this->highLightFieldBorderPrinter->initialize($_board, $this->highLightFieldCoordinate);
             $this->activeInnerBorderPrinter = $this->highLightFieldBorderPrinter;
         }
         elseif ($_selectionArea)
         {
-            $this->selectionArea = $_selectionArea;
             $this->selectionAreaBorderPrinter->initialize($_board, $this->selectionArea);
             $this->activeInnerBorderPrinter = $this->selectionAreaBorderPrinter;
         }
-
 
         return parent::getBoardContentString($_board);
     }
@@ -119,13 +116,13 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	 */
 	protected function getBorderTopString(Board $_board): String
     {
-        $topBorderString = parent::getBorderTopString($_board);
+        $borderTopString = parent::getBorderTopString($_board);
         if ($this->activeInnerBorderPrinter)
         {
-            $this->activeInnerBorderPrinter->addCollisionBorderToTopOuterBorder($topBorderString);
+        	$borderTopString = $this->activeInnerBorderPrinter->addCollisionBorderToTopOuterBorder($borderTopString);
         }
 
-        return $topBorderString;
+        return $borderTopString;
     }
 
 	/**
@@ -137,13 +134,13 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	 */
 	protected function getBorderBottomString(Board $_board): String
     {
-        $bottomBorderString = parent::getBorderBottomString($_board);
+        $borderBottomString = parent::getBorderBottomString($_board);
         if ($this->activeInnerBorderPrinter)
         {
-            $this->activeInnerBorderPrinter->addCollisionBorderToBottomOuterBorder($bottomBorderString);
+        	$borderBottomString = $this->activeInnerBorderPrinter->addCollisionBorderToBottomOuterBorder($borderBottomString);
         }
 
-        return $bottomBorderString;
+        return $borderBottomString;
     }
 
 	/**
@@ -157,14 +154,8 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
     protected function getRowOutputString (array $_fields, int $_y): String
     {
         $rowOutputString = parent::getRowOutputString($_fields, $_y);
-
         if ($this->activeInnerBorderPrinter)
         {
-            if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
-            {
-                $rowOutputString .= " " . $_y;
-            }
-
             $rowOutputString = $this->activeInnerBorderPrinter->addBordersToRowString($rowOutputString, $_y);
         }
 

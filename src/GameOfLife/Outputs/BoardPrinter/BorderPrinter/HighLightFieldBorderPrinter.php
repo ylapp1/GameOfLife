@@ -87,4 +87,16 @@ class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
 
         return $xCoordinateHighLightString . "\n";
     }
+
+    public function addBordersToRowString(String $_rowString, int $_y): String
+    {
+    	$rowOutputString = $_rowString;
+
+	    if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
+	    {
+		    $rowOutputString .= " " . $_y;
+	    }
+
+	    return parent::addBordersToRowString($rowOutputString, $_y);
+    }
 }
