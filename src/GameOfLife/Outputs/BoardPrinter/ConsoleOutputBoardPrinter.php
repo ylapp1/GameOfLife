@@ -21,10 +21,12 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
 
     /**
      * ConsoleOutputBoardPrinter constructor.
+     *
+     * @param Board $_board The board to which this board printer belongs
      */
-    public function __construct()
+    public function __construct(Board $_board)
     {
-        parent::__construct("☻", " ", new BoardBorderPrinter());
+        parent::__construct("☻", " ", new BoardBorderPrinter($_board));
     }
 
 
@@ -33,25 +35,21 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
 	/**
 	 * Returns the string for the top border.
 	 *
-	 * @param Board $_board The board
-	 *
 	 * @return String The string for the top border
 	 */
-	protected function getBorderTopString(Board $_board): String
+	protected function getBorderTopString(): String
     {
-        return $this->borderPrinter->getBorderTopString($_board);
+        return $this->borderPrinter->getBorderTopString();
     }
 
 	/**
 	 * Returns the string for the bottom border.
 	 *
-	 * @param Board $_board The board
-	 *
 	 * @return String The string for the bottom border
 	 */
-	protected function getBorderBottomString(Board $_board): String
+	protected function getBorderBottomString(): String
     {
-        return $this->borderPrinter->getBorderBottomString($_board);
+        return $this->borderPrinter->getBorderBottomString();
     }
 
 	/**

@@ -42,7 +42,6 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("CONSOLE OUTPUT");
-        $this->boardPrinter = new ConsoleOutputBoardPrinter();
         $this->stepDisplayTimeInMicroseconds = 50 * 1000;
     }
 
@@ -72,8 +71,9 @@ class ConsoleOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
+	    $this->boardPrinter = new ConsoleOutputBoardPrinter($_board);
 
-        if ($_options->getOption("consoleOutputStepTime") !== null)
+	    if ($_options->getOption("consoleOutputStepTime") !== null)
         {
             $this->stepDisplayTimeInMicroseconds = (int)$_options->getOption("consoleOutputStepTime") * 1000;
         }

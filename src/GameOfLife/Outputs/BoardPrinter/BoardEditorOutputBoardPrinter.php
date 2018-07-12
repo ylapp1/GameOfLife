@@ -66,10 +66,12 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 
     /**
      * BoardEditorOutputBoardPrinter constructor.
+     *
+     * @param Board $_board The board to which this board printer belongs
      */
-    public function __construct()
+    public function __construct(Board $_board)
     {
-        parent::__construct();
+        parent::__construct($_board);
         $this->highLightFieldBorderPrinter = new HighLightFieldBorderPrinter();
         $this->selectionAreaBorderPrinter = new SelectionAreaBorderPrinter();
         $this->cellAliveSymbol = "o";
@@ -110,13 +112,11 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	/**
 	 * Returns the string for the top border.
 	 *
-	 * @param Board $_board The board
-	 *
 	 * @return String The string for the top border
 	 */
-	protected function getBorderTopString(Board $_board): String
+	protected function getBorderTopString(): String
     {
-        $borderTopString = parent::getBorderTopString($_board);
+        $borderTopString = parent::getBorderTopString();
         if ($this->activeInnerBorderPrinter)
         {
         	$borderTopString = $this->activeInnerBorderPrinter->addCollisionBorderToTopOuterBorder($borderTopString);
@@ -128,13 +128,11 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	/**
 	 * Returns the string for the bottom border.
 	 *
-	 * @param Board $_board The board
-	 *
 	 * @return String The string for the bottom border
 	 */
-	protected function getBorderBottomString(Board $_board): String
+	protected function getBorderBottomString(): String
     {
-        $borderBottomString = parent::getBorderBottomString($_board);
+        $borderBottomString = parent::getBorderBottomString();
         if ($this->activeInnerBorderPrinter)
         {
         	$borderBottomString = $this->activeInnerBorderPrinter->addCollisionBorderToBottomOuterBorder($borderBottomString);

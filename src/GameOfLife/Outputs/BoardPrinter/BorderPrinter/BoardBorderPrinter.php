@@ -19,10 +19,13 @@ class BoardBorderPrinter extends BaseBorderPrinter
 
     /**
      * BoardBorderPrinter constructor.
+     *
+     * @param Board $_board The board to which the border printer belongs
      */
-    public function __construct()
+    public function __construct(Board $_board)
     {
         parent::__construct(
+        	$_board,
             "╔",
             "╗",
             "╚",
@@ -38,28 +41,24 @@ class BoardBorderPrinter extends BaseBorderPrinter
     /**
      * Returns the string for the top border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the top border
      */
-    public function getBorderTopString(Board $_board): String
+    public function getBorderTopString(): String
     {
         return $this->getHorizontalLineString(
-        	$_board->width(), $this->borderSymbolTopLeft, $this->borderSymbolTopRight, $this->borderSymbolTopBottom
+        	$this->borderTopBottomWidth, $this->borderSymbolTopLeft, $this->borderSymbolTopRight, $this->borderSymbolTopBottom
         );
     }
 
     /**
      * Returns the string for the bottom border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the bottom border
      */
-    public function getBorderBottomString(Board $_board): String
+    public function getBorderBottomString(): String
     {
         return $this->getHorizontalLineString(
-        	$_board->width(), $this->borderSymbolBottomLeft, $this->borderSymbolBottomRight, $this->borderSymbolTopBottom
+        	$this->borderTopBottomWidth, $this->borderSymbolBottomLeft, $this->borderSymbolBottomRight, $this->borderSymbolTopBottom
         );
     }
 

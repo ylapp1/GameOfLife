@@ -71,8 +71,8 @@ abstract class BaseBoardPrinter
      */
     public function getBoardContentString(Board $_board): String
     {
-        $borderTopString = $this->getBorderTopString($_board);
-        $borderBottomString = $this->getBorderBottomString($_board);
+        $borderTopString = $this->getBorderTopString();
+        $borderBottomString = $this->getBorderBottomString();
 
         $boardContentString = $borderTopString . "\n";
         for ($y = 0; $y < $_board->height(); $y++)
@@ -88,20 +88,16 @@ abstract class BaseBoardPrinter
     /**
      * Returns the string for the top border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the top border
      */
-    abstract protected function getBorderTopString(Board $_board): String;
+    abstract protected function getBorderTopString(): String;
 
     /**
      * Returns the string for the bottom border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the bottom border
      */
-    abstract protected function getBorderBottomString(Board $_board): String;
+    abstract protected function getBorderBottomString(): String;
 
     /**
      * Returns the output string for the cells of a single row.

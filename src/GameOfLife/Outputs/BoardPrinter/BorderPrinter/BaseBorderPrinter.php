@@ -62,20 +62,28 @@ abstract class BaseBorderPrinter
      */
     protected $borderSymbolLeftRight;
 
+	/**
+	 * The width of the bottom and top border
+	 *
+	 * @var int $borderTopBottomWidth
+	 */
+	protected $borderTopBottomWidth;
 
-    // Magic Methods
+
+	// Magic Methods
 
     /**
      * BaseBorderPrinter constructor.
      *
+     * @param Board $_board The board to which this border printer belongs
      * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
-     * @param String $_borderSymbolTopRight
-     * @param String $_borderSymbolBottomLeft
-     * @param String $_borderSymbolBottomRight
-     * @param String $_borderSymbolTopBottom
-     * @param String $_borderSymbolLeftRight
+     * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
+     * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
+     * @param String $_borderSymbolBottomRight The symbol for the bottom right corner of the border
+     * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
+     * @param String $_borderSymbolLeftRight The symbol for the left an right border
      */
-    protected function __construct(String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+    protected function __construct(Board $_board, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
     {
         $this->borderSymbolTopLeft = $_borderSymbolTopLeft;
         $this->borderSymbolTopRight = $_borderSymbolTopRight;
@@ -83,6 +91,8 @@ abstract class BaseBorderPrinter
         $this->borderSymbolBottomRight = $_borderSymbolBottomRight;
         $this->borderSymbolTopBottom = $_borderSymbolTopBottom;
         $this->borderSymbolLeftRight = $_borderSymbolLeftRight;
+
+	    $this->borderTopBottomWidth = $_board->width();
     }
 
 
@@ -91,20 +101,16 @@ abstract class BaseBorderPrinter
     /**
      * Returns the string for the top border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the top border
      */
-    abstract public function getBorderTopString(Board $_board): String;
+    abstract public function getBorderTopString(): String;
 
     /**
      * Returns the string for the bottom border.
      *
-     * @param Board $_board The board
-     *
      * @return String The string for the bottom border
      */
-    abstract public function getBorderBottomString(Board $_board): String;
+    abstract public function getBorderBottomString(): String;
 
     /**
      * Adds borders to a row string.

@@ -37,7 +37,6 @@ class BoardEditorOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("BOARD EDITOR");
-        $this->boardPrinter = new BoardEditorOutputBoardPrinter();
     }
 
 
@@ -61,6 +60,7 @@ class BoardEditorOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
+	    $this->boardPrinter = new BoardEditorOutputBoardPrinter($_board);
     }
 
     /**
