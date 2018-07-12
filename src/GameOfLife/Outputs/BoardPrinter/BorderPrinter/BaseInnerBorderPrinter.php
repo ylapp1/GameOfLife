@@ -122,7 +122,7 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
             $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
         }
 
-        $this->borderTopBottomWidth = $_board->width() + (int)$this->hasLeftBorder() + (int)$this->hasRightBorder();
+        $this->borderTopBottomWidth = ($_board->width() - $this->distanceToBottomOuterBorder - $this->distanceToRightOuterBorder) - (int)$this->hasLeftBorder() - (int)$this->hasRightBorder();
     }
 
 
@@ -192,6 +192,10 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
             $this->borderTopBottomWidth, $borderLeftSymbol, $borderRightSymbol, $this->borderSymbolTopBottom
         );
 
+        $paddingLeftString = str_repeat(" ", $this->distanceToLeftOuterBorder);
+        $paddingRightString = str_repeat(" ", $this->distanceToRightOuterBorder);
+	    $borderTopBottomString = $paddingLeftString . $borderTopBottomString . $paddingRightString;
+
         $borderTopBottomString = $this->addCollisionBordersToRowString($borderTopBottomString);
 
         return $borderTopBottomString;
@@ -257,14 +261,16 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
 	private function addCollisionBordersToRowString(String $_rowString): String
 	{
 		$rowString = $_rowString;
-		if (! $this->hasLeftBorder())
-		{
-			$rowString = substr_replace($rowString, $this->borderSymbolCollisionLeftOuterBorder, 0, 1);
-		}
-		if (! $this->hasRightBorder())
-		{
-			$rowString = substr_replace($rowString, $this->borderSymbolCollisionRightOuterBorder, -1, 1);
-		}
+
+		// Left border
+		if ($this->hasLeftBorder()) $leftBorderSymbol = "X";
+		else $leftBorderSymbol = $this->borderSymbolCollisionLeftOuterBorder;
+		$rowString = substr_replace($rowString, $leftBorderSymbol, 0, 1);
+
+		// Right border
+		if ($this->hasRightBorder()) $rightBorderSymbol = "X";
+		else $rightBorderSymbol = "X";
+		$rowString = substr_replace($rowString, $rightBorderSymbol, -1, 1);
 
 		return $rowString;
 	}
