@@ -6,19 +6,19 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPrinter;
+namespace Output\BoardPrinter\Border\OuterBorder;
 
 use GameOfLife\Board;
 
 /**
  * Generates border strings for boards.
  */
-class BoardBorderPrinter extends BaseBorderPrinter
+class BoardBorder extends BaseOuterBorder
 {
     // Magic Methods
 
     /**
-     * BoardBorderPrinter constructor.
+     * BoardBorder constructor.
      *
      * @param Board $_board The board to which the border printer belongs
      */

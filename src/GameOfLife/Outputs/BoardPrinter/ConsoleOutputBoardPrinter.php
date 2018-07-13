@@ -10,7 +10,7 @@ namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Output\BoardPrinter\BorderPrinter\BoardBorderPrinter;
+use Output\BoardPrinter\Border\OuterBorder\BoardBorder;
 
 /**
  * The BoardPrinter for the ConsoleOutput.
@@ -26,7 +26,7 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("☻", " ", new BoardBorderPrinter($_board));
+        parent::__construct("☻", " ", new BoardBorder($_board));
     }
 
 
@@ -39,7 +39,7 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
 	 */
 	protected function getBorderTopString(): String
     {
-        return $this->borderPrinter->getBorderTopString();
+        return $this->border->getBorderTopString();
     }
 
 	/**
@@ -49,7 +49,7 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
 	 */
 	protected function getBorderBottomString(): String
     {
-        return $this->borderPrinter->getBorderBottomString();
+        return $this->border->getBorderBottomString();
     }
 
 	/**
@@ -67,7 +67,7 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
         {
             $rowString .= $this->getCellSymbol($field);
         }
-        $rowString = $this->borderPrinter->addBordersToRowString($rowString, $_y);
+        $rowString = $this->border->addBordersToRowString($rowString, $_y);
 
         return $rowString;
     }

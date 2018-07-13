@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPrinter;
+namespace Output\BoardPrinter\Border\InnerBorder;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
@@ -14,12 +14,12 @@ use GameOfLife\Board;
 /**
  * Prints the borders for selection areas inside boards.
  */
-class SelectionAreaBorderPrinter extends BaseInnerBorderPrinter
+class SelectionAreaBorder extends BaseInnerBorder
 {
     // Magic Methods
 
     /**
-     * SelectionAreaBorderPrinter constructor.
+     * SelectionAreaBorder constructor.
      *
      * @param Board $_board The board to which this border printer belongs
      */

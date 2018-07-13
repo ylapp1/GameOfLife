@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPrinter;
+namespace Output\BoardPrinter\Border\InnerBorder;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
@@ -14,12 +14,12 @@ use GameOfLife\Coordinate;
 /**
  * Prints the borders for a high light field.
  */
-class HighLightFieldBorderPrinter extends BaseInnerBorderPrinter
+class HighLightFieldBorder extends BaseInnerBorder
 {
     // Magic Methods
 
     /**
-     * HighLightFieldBorderPrinter constructor.
+     * HighLightFieldBorder constructor.
      *
      * @param Board $_board The board to which this border printer belongs
      */

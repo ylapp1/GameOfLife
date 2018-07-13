@@ -6,16 +6,17 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPrinter;
+namespace Output\BoardPrinter\Border\InnerBorder;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
+use Output\BoardPrinter\Border\BaseBorder;
 
 /**
  * Parent class for inner border printers.
  * Inner Borders are the same as normal borders with the addition that they may touch an outer border with which they will merge
  */
-abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
+abstract class BaseInnerBorder extends BaseBorder
 {
 	// Attributes
 
@@ -65,6 +66,13 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
      * @var Coordinate $bottomRightCornerCoordinate
      */
     protected $bottomRightCornerCoordinate;
+
+	/**
+	 * The parent border printer of this border printer
+	 *
+	 * @var
+	 */
+    private $parentBorderPrinter;
 
 
 
@@ -122,32 +130,28 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
             $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
         }
 
-        $this->borderTopBottomWidth = ($_board->width() - $this->distanceToBottomOuterBorder - $this->distanceToRightOuterBorder) - (int)$this->hasLeftBorder() - (int)$this->hasRightBorder();
+        $this->borderTopBottomWidth = $_board->width() - ($this->distanceToBottomOuterBorder + 1) - ($this->distanceToRightOuterBorder + 1);
     }
 
 
     public function hasTopBorder()
     {
-        if ($this->distanceToTopOuterBorder == 0) return false;
-        else return true;
+    	return $this->distanceToTopOuterBorder;
     }
 
     public function hasBottomBorder()
     {
-        if ($this->distanceToBottomOuterBorder == 0) return false;
-        else return true;
+    	return $this->distanceToBottomOuterBorder;
     }
 
     public function hasLeftBorder()
     {
-        if ($this->distanceToLeftOuterBorder == 0) return false;
-        else return true;
+    	return $this->distanceToLeftOuterBorder;
     }
 
     public function hasRightBorder()
     {
-        if ($this->distanceToRightOuterBorder == 0) return false;
-        else return true;
+    	return $this->distanceToRightOuterBorder;
     }
 
 
@@ -183,10 +187,10 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
     private function getBorderTopBottomString(String $_borderLeftSymbol, String $_borderRightSymbol): String
     {
         if ($this->hasLeftBorder()) $borderLeftSymbol = $_borderLeftSymbol;
-        else $borderLeftSymbol = $this->borderSymbolTopBottom;
+        else $borderLeftSymbol = "";
 
         if ($this->hasRightBorder()) $borderRightSymbol = $_borderRightSymbol;
-        else $borderRightSymbol = $this->borderSymbolTopBottom;
+        else $borderRightSymbol = "";
 
         $borderTopBottomString = $this->getHorizontalLineString(
             $this->borderTopBottomWidth, $borderLeftSymbol, $borderRightSymbol, $this->borderSymbolTopBottom
@@ -196,9 +200,9 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         $paddingRightString = str_repeat(" ", $this->distanceToRightOuterBorder);
 	    $borderTopBottomString = $paddingLeftString . $borderTopBottomString . $paddingRightString;
 
-        $borderTopBottomString = $this->addCollisionBordersToRowString($borderTopBottomString);
+	    // TODO: Add outer border symbols to left and right edge
 
-        return $borderTopBottomString;
+        return "# " . $borderTopBottomString . " #";
     }
 
 	/**
@@ -213,6 +217,15 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
     {
         $rowString = $_rowOutputString;
 
+	    // TODO: Left right border
+	    if ($_y >= $this->topLeftCornerCoordinate->y() && $_y < $this->bottomRightCornerCoordinate->y())
+	    {
+		    $borderSymbolLeftRight = $this->borderSymbolLeftRight;
+	    }
+	    else $borderSymbolLeftRight = " ";
+
+	    $rowString = $this->addCollisionBordersToRowString($rowString, $borderSymbolLeftRight);
+
         if ($this->hasTopBorder() && $_y == $this->topLeftCornerCoordinate->y())
         { // Inner top border
             $rowString = $this->getBorderTopString() . "\n" . $rowString;
@@ -222,8 +235,6 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         	$rowString .= "\n" . $this->getBorderBottomString();
         }
 
-        // TODO: Left right border
-
         return $rowString;
     }
 
@@ -231,7 +242,7 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
 
     public function addCollisionBorderToTopOuterBorder(String $_topOuterBorderString): String
     {
-        if ($this->hasTopBorder()) $borderSymbol = "X"; // TODO: Get outer border string symbol (somehow........)
+        if ($this->hasTopBorder()) $borderSymbol = "X"; // TODO: This method cannot know the outer border symbol
         else $borderSymbol = $this->borderSymbolCollisionTopOuterBorder;
 
         return $this->addCollisionBorderToOuterBorder($_topOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
@@ -240,7 +251,7 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
     public function addCollisionBorderToBottomOuterBorder(String $_bottomOuterBorderString): String
     {
         if (! $this->hasBottomBorder()) $borderSymbol = $this->borderSymbolCollisionBottomOuterBorder;
-        else $borderSymbol = "X"; // TODO: Get outer border string symbol (somehow...........)
+        else $borderSymbol = "X"; // TODO: This method cannot know the outer border symbol
 
         return $this->addCollisionBorderToOuterBorder($_bottomOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
     }
@@ -258,19 +269,21 @@ abstract class BaseInnerBorderPrinter extends BaseBorderPrinter
         return $outerBorderString;
     }
 
-	private function addCollisionBordersToRowString(String $_rowString): String
+	private function addCollisionBordersToRowString(String $_rowString, String $_borderSymbolLeftRight): String
 	{
+		// TODO: This method cannot know the number of outer borders in the string ...
 		$rowString = $_rowString;
 
-		// Left border
-		if ($this->hasLeftBorder()) $leftBorderSymbol = "X";
-		else $leftBorderSymbol = $this->borderSymbolCollisionLeftOuterBorder;
-		$rowString = substr_replace($rowString, $leftBorderSymbol, 0, 1);
-
-		// Right border
-		if ($this->hasRightBorder()) $rightBorderSymbol = "X";
-		else $rightBorderSymbol = "X";
-		$rowString = substr_replace($rowString, $rightBorderSymbol, -1, 1);
+		if ($this->hasLeftBorder())
+		{
+			$borderSymbolPosition = $this->distanceToLeftOuterBorder + 1;
+			$rowString = mb_substr($rowString, 0, $borderSymbolPosition) . $_borderSymbolLeftRight . mb_substr($rowString, $borderSymbolPosition);
+		}
+		if ($this->hasRightBorder())
+		{
+			$borderSymbolPosition = mb_strlen($rowString) - ($this->distanceToRightOuterBorder + 1);
+			$rowString = mb_substr($rowString, 0, $borderSymbolPosition) . $_borderSymbolLeftRight . mb_substr($rowString, $borderSymbolPosition);
+		}
 
 		return $rowString;
 	}

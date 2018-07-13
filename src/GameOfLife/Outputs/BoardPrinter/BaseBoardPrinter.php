@@ -10,7 +10,7 @@ namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Output\BoardPrinter\BorderPrinter\BaseBorderPrinter;
+use Output\BoardPrinter\Border\BaseBorder;
 
 /**
  * Parent class for board printers.
@@ -36,11 +36,11 @@ abstract class BaseBoardPrinter
     protected $cellDeadSymbol;
 
     /**
-     * The border printer
+     * The border
      *
-     * @var BaseBorderPrinter $borderPrinter
+     * @var BaseBorder $border
      */
-    protected $borderPrinter;
+    protected $border;
 
 
     // Magic Methods
@@ -50,13 +50,13 @@ abstract class BaseBoardPrinter
      *
      * @param String $_cellAliveSymbol The symbol that is used to print a living cell
      * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
-     * @param BaseBorderPrinter $_borderPrinter The border printer
+     * @param BaseBorder $_border The border
      */
-    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol, BaseBorderPrinter $_borderPrinter)
+    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol, BaseBorder $_border)
     {
         $this->cellAliveSymbol = $_cellAliveSymbol;
         $this->cellDeadSymbol = $_cellDeadSymbol;
-        $this->borderPrinter = $_borderPrinter;
+        $this->border = $_border;
     }
 
 
