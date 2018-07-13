@@ -94,6 +94,7 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
         $this->activeInnerBorderPrinter = null;
         $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
         $this->selectionArea = $_selectionArea;
+        $this->border->resetInnerBorders();
 
         if ($_highLightFieldCoordinate)
         {
@@ -106,7 +107,9 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
             $this->activeInnerBorderPrinter = $this->selectionAreaBorderPrinter;
         }
 
-        return parent::getBoardContentString($_board);
+        if ($this->activeInnerBorderPrinter) $this->border->addInnerBorder($this->activeInnerBorderPrinter);
+
+	    return parent::getBoardContentString($_board);
     }
 
 	/**

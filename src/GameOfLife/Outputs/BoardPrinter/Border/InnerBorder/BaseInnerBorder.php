@@ -68,12 +68,11 @@ abstract class BaseInnerBorder extends BaseBorder
     protected $bottomRightCornerCoordinate;
 
 	/**
-	 * The parent border printer of this border printer
+	 * The parent border of this border
 	 *
-	 * @var
+	 * @var BaseBorder $parentBorder
 	 */
-    private $parentBorderPrinter;
-
+    private $parentBorder;
 
 
     // Magic Methods
@@ -131,6 +130,12 @@ abstract class BaseInnerBorder extends BaseBorder
         }
 
         $this->borderTopBottomWidth = $_board->width() - ($this->distanceToBottomOuterBorder + 1) - ($this->distanceToRightOuterBorder + 1);
+    }
+
+
+    public function setParentBorder($_parentBorder)
+    {
+    	$this->parentBorder = $_parentBorder;
     }
 
 
@@ -200,9 +205,9 @@ abstract class BaseInnerBorder extends BaseBorder
         $paddingRightString = str_repeat(" ", $this->distanceToRightOuterBorder);
 	    $borderTopBottomString = $paddingLeftString . $borderTopBottomString . $paddingRightString;
 
-	    // TODO: Add outer border symbols to left and right edge
+	    $borderSymbolLeftRight = $this->parentBorder->borderSymbolLeftRight();
 
-        return "# " . $borderTopBottomString . " #";
+        return $borderSymbolLeftRight . $borderTopBottomString . $borderSymbolLeftRight;
     }
 
 	/**
@@ -218,7 +223,7 @@ abstract class BaseInnerBorder extends BaseBorder
         $rowString = $_rowOutputString;
 
 	    // TODO: Left right border
-	    if ($_y >= $this->topLeftCornerCoordinate->y() && $_y < $this->bottomRightCornerCoordinate->y())
+	    if ($_y >= $this->topLeftCornerCoordinate->y() && $_y <= $this->bottomRightCornerCoordinate->y())
 	    {
 		    $borderSymbolLeftRight = $this->borderSymbolLeftRight;
 	    }
@@ -230,9 +235,9 @@ abstract class BaseInnerBorder extends BaseBorder
         { // Inner top border
             $rowString = $this->getBorderTopString() . "\n" . $rowString;
         }
-        if ($this->hasBottomBorder() && $_y == $this->bottomRightCornerCoordinate->y() + (int)$this->hasTopBorder() + 1)
+        if ($this->hasBottomBorder() && $_y == $this->bottomRightCornerCoordinate->y() + (bool)$this->hasTopBorder())
         { // Inner border bottom
-        	$rowString .= "\n" . $this->getBorderBottomString();
+        	$rowString = $this->getBorderBottomString() . "\n". $rowString;
         }
 
         return $rowString;
@@ -286,5 +291,10 @@ abstract class BaseInnerBorder extends BaseBorder
 		}
 
 		return $rowString;
+	}
+
+	public function calculateBorderTopBottomWidth()
+	{
+		// TODO: Implement calculateBorderTopBottomWidth() method.
 	}
 }

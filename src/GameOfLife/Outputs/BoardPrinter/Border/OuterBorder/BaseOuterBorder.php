@@ -69,6 +69,12 @@ abstract class BaseOuterBorder extends BaseBorder
 		$this->board = $board;
 	}
 
+	public function addInnerBorder($_innerBorder)
+	{
+		parent::addInnerBorder($_innerBorder);
+		$this->calculateBorderTopBottomWidth();
+	}
+
 
 	// Class Methods
 

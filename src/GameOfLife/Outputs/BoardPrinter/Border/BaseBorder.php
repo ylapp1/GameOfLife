@@ -101,6 +101,7 @@ abstract class BaseBorder
         $this->borderSymbolLeftRight = $_borderSymbolLeftRight;
 
 	    $this->borderTopBottomWidth = $_board->width();
+	    $this->innerBorders = array();
     }
 
 
@@ -272,11 +273,20 @@ abstract class BaseBorder
 	/**
 	 * Adds an inner border to this border.
 	 *
-	 * @param $_innerBorder
+	 * @param BaseInnerBorder $_innerBorder
 	 */
 	public function addInnerBorder($_innerBorder)
 	{
 		$this->innerBorders[] = $_innerBorder;
+		$_innerBorder->setParentBorder($this);
+	}
+
+	/**
+	 * Resets the list of inner borders to an empty array.
+	 */
+	public function resetInnerBorders()
+	{
+		$this->innerBorders = array();
 	}
 
 	/**
