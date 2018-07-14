@@ -8,8 +8,8 @@
 
 namespace Output\BoardPrinter\Border;
 
-use GameOfLife\Board;
 use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorder;
+use Output\BoardPrinter\OutputBoard;
 
 /**
  * Parent class for border printers.
@@ -83,7 +83,6 @@ abstract class BaseBorder
     /**
      * BaseBorderPrinter constructor.
      *
-     * @param Board $_board The board to which this border printer belongs
      * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
      * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
      * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
@@ -91,7 +90,7 @@ abstract class BaseBorder
      * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
      * @param String $_borderSymbolLeftRight The symbol for the left an right border
      */
-    protected function __construct(Board $_board, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+    protected function __construct(String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
     {
         $this->borderSymbolTopLeft = $_borderSymbolTopLeft;
         $this->borderSymbolTopRight = $_borderSymbolTopRight;
@@ -100,132 +99,12 @@ abstract class BaseBorder
         $this->borderSymbolTopBottom = $_borderSymbolTopBottom;
         $this->borderSymbolLeftRight = $_borderSymbolLeftRight;
 
-	    $this->borderTopBottomWidth = $_board->width();
+	    $this->borderTopBottomWidth = 0;
 	    $this->innerBorders = array();
     }
 
 
     // Getters and Setters
-
-	/**
-	 * Returns the symbol for the top left corner of the border.
-	 *
-	 * @return String The symbol for the top left corner of the border
-	 */
-	public function borderSymbolTopLeft(): String
-	{
-		return $this->borderSymbolTopLeft;
-	}
-
-	/**
-	 * Sets the symbol for the top left corner of the border.
-	 *
-	 * @param String $borderSymbolTopLeft The symbol for the top left corner of the border
-	 */
-	public function setBorderSymbolTopLeft(String $borderSymbolTopLeft): void
-	{
-		$this->borderSymbolTopLeft = $borderSymbolTopLeft;
-	}
-
-	/**
-	 * Returns the symbol for the top right corner of the border.
-	 *
-	 * @return String The symbol for the top right corner of the border
-	 */
-	public function borderSymbolTopRight(): String
-	{
-		return $this->borderSymbolTopRight;
-	}
-
-	/**
-	 * Sets the symbol for the top right corner of the border.
-	 *
-	 * @param String $borderSymbolTopRight The symbol for the top right corner of the border
-	 */
-	public function setBorderSymbolTopRight(String $borderSymbolTopRight): void
-	{
-		$this->borderSymbolTopRight = $borderSymbolTopRight;
-	}
-
-	/**
-	 * Returns the symbol for the bottom left corner of the border.
-	 *
-	 * @return String The symbol for the bottom left corner of the border
-	 */
-	public function borderSymbolBottomLeft(): String
-	{
-		return $this->borderSymbolBottomLeft;
-	}
-
-	/**
-	 * Sets the symbol for the bottom left corner of the border.
-	 *
-	 * @param String $borderSymbolBottomLeft The symbol for the bottom left corner of the border
-	 */
-	public function setBorderSymbolBottomLeft(String $borderSymbolBottomLeft): void
-	{
-		$this->borderSymbolBottomLeft = $borderSymbolBottomLeft;
-	}
-
-	/**
-	 * Returns the symbol for the bottom right corner of the border.
-	 *
-	 * @return String The symbol for the bottom right corner of the border
-	 */
-	public function borderSymbolBottomRight(): String
-	{
-		return $this->borderSymbolBottomRight;
-	}
-
-	/**
-	 * Sets the symbol for the bottom right corner of the border.
-	 *
-	 * @param String $borderSymbolBottomRight The symbol for the bottom right corner of the border
-	 */
-	public function setBorderSymbolBottomRight(String $borderSymbolBottomRight): void
-	{
-		$this->borderSymbolBottomRight = $borderSymbolBottomRight;
-	}
-
-	/**
-	 * Returns the symbol for the top and bottom border.
-	 *
-	 * @return String The symbol for the top and bottom border
-	 */
-	public function borderSymbolTopBottom(): String
-	{
-		return $this->borderSymbolTopBottom;
-	}
-
-	/**
-	 * Sets the symbol for the top and bottom border.
-	 *
-	 * @param String $borderSymbolTopBottom The symbol for the top and bottom border
-	 */
-	public function setBorderSymbolTopBottom(String $borderSymbolTopBottom): void
-	{
-		$this->borderSymbolTopBottom = $borderSymbolTopBottom;
-	}
-
-	/**
-	 * Returns the symbol for the left an right border.
-	 *
-	 * @return String The symbol for the left an right border
-	 */
-	public function borderSymbolLeftRight(): String
-	{
-		return $this->borderSymbolLeftRight;
-	}
-
-	/**
-	 * Sets the symbol for the left an right border.
-	 *
-	 * @param String $borderSymbolLeftRight The symbol for the left an right border
-	 */
-	public function setBorderSymbolLeftRight(String $borderSymbolLeftRight): void
-	{
-		$this->borderSymbolLeftRight = $borderSymbolLeftRight;
-	}
 
 	/**
 	 * Returns the width of the bottom and top border.
@@ -242,29 +121,9 @@ abstract class BaseBorder
 	 *
 	 * @param int $borderTopBottomWidth The width of the bottom and top border
 	 */
-	public function setBorderTopBottomWidth(int $borderTopBottomWidth): void
+	public function setBorderTopBottomWidth(int $borderTopBottomWidth)
 	{
 		$this->borderTopBottomWidth = $borderTopBottomWidth;
-	}
-
-	/**
-	 * Returns the list of inner borders of this border.
-	 *
-	 * @return BaseInnerBorder[] The list of inner borders of this border
-	 */
-	public function innerBorders(): array
-	{
-		return $this->innerBorders;
-	}
-
-	/**
-	 * Sets the list of inner borders of this border.
-	 *
-	 * @param BaseInnerBorder[] $innerBorders The list of inner borders of this border
-	 */
-	public function setInnerBorders(array $innerBorders): void
-	{
-		$this->innerBorders = $innerBorders;
 	}
 
 
@@ -279,6 +138,8 @@ abstract class BaseBorder
 	{
 		$this->innerBorders[] = $_innerBorder;
 		$_innerBorder->setParentBorder($this);
+
+		$this->calculateBorderTopBottomWidth();
 	}
 
 	/**
@@ -289,47 +150,86 @@ abstract class BaseBorder
 		$this->innerBorders = array();
 	}
 
+	public function addBordersToOutputBoard(OutputBoard $_outputBoard)
+    {
+        // TODO: Outer + inner border top/bottom left/right
+        // TODO: Outer + inner border collisions
+
+        $this->addBorderTopToOutputBoard($_outputBoard);
+        $this->addBorderBottomToOutputBoard($_outputBoard);
+        $this->addBorderLeftToOutputBoard($_outputBoard);
+        $this->addBorderRightToOutputBoard($_outputBoard);
+    }
+
 	/**
 	 * Calculates and sets the top and bottom border with.
+     *
+     * TODO: Is this necessary?
 	 */
     abstract protected function calculateBorderTopBottomWidth();
 
     /**
-     * Returns the string for the top border.
+     * Adds the top border of this border to an output board.
      *
-     * @return String The string for the top border
+     * @param OutputBoard $_outputBoard The output board
      */
-    abstract public function getBorderTopString(): String;
+    abstract protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard);
 
     /**
-     * Returns the string for the bottom border.
+     * Adds the bottom border of this border to an output board.
      *
-     * @return String The string for the bottom border
+     * @param OutputBoard $_outputBoard The output board
      */
-    abstract public function getBorderBottomString(): String;
+    abstract protected function addBorderBottomToOutputBoard(OutputBoard $_outputBoard);
 
     /**
-     * Adds borders to a row string.
+     * Adds the left border of this border to an output board.
      *
-     * @param String $_rowOutputString The row string
-     * @param int $_y The Y-Coordinate of the row string
-     *
-     * @return String The row string with added borders
+     * @param OutputBoard $_outputBoard The output board
      */
-    abstract public function addBordersToRowString(String $_rowOutputString, int $_y): String;
+    abstract protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard);
 
     /**
-     * Returns a horizontal line string.
+     * Adds the right border of this border to an output board.
      *
-     * @param int $_length The length of the line (not including left and right edge symbol)
+     * @param OutputBoard $_outputBoard The output board
+     */
+    abstract protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard);
+
+    /**
+     * Returns a list of symbols for a horizontal or vertical border.
+     *
+     * @param int $_length The length of the border (not including left and right edge symbol)
      * @param String $_leftEdgeSymbol The symbol for the left edge of the line
      * @param String $_rightEdgeSymbol The symbol for the right edge of the line
-     * @param String $_lineSymbol The symbol for the line itself
+     * @param String $_borderSymbol The symbol for the border itself
      *
-     * @return String The line output string
+     * @return String[] The line output symbols
      */
-    protected function getHorizontalLineString(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_lineSymbol): String
+    protected function getBorderSymbolListWithEdgeSymbols(int $_length, String $_leftEdgeSymbol, String $_rightEdgeSymbol, String $_borderSymbol): array
     {
-        return $_leftEdgeSymbol . str_repeat($_lineSymbol, $_length) . $_rightEdgeSymbol;
+        $borderSymbols = array();
+
+        $borderSymbols[] = $_leftEdgeSymbol;
+        $borderSymbols = array_merge($borderSymbols, $this->getBorderSymbolList($_borderSymbol, $_length));
+        $borderSymbols[] = $_rightEdgeSymbol;
+
+        return $borderSymbols;
+    }
+
+    /**
+     * Returns a list of main border symbols.
+     *
+     * @param String $_borderSymbol The symbol for the border itself
+     * @param int $_length The length of the border (not including left and right edge symbol)
+     *
+     * @return String[] The list of border symbols
+     */
+    protected function getBorderSymbolList(String $_borderSymbol, int $_length): array
+    {
+        $borderSymbols = array();
+        $borderSymbols = array_pad($borderSymbols, $_length, $_borderSymbol);
+
+        return $borderSymbols;
     }
 }

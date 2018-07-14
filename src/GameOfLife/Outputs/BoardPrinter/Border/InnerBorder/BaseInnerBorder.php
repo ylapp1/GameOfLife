@@ -11,10 +11,12 @@ namespace Output\BoardPrinter\Border\InnerBorder;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\Border\BaseBorder;
+use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorder;
 
 /**
  * Parent class for inner border printers.
- * Inner Borders are the same as normal borders with the addition that they may touch an outer border with which they will merge
+ * Inner borders must be located inside an outer border and they can overlap with other inner borders or touch the outer
+ * border.
  */
 abstract class BaseInnerBorder extends BaseBorder
 {
@@ -297,4 +299,11 @@ abstract class BaseInnerBorder extends BaseBorder
 	{
 		// TODO: Implement calculateBorderTopBottomWidth() method.
 	}
+
+	protected function getParentOuterBorder()
+    {
+        if ($this->parentBorder instanceof BaseOuterBorder) return $this->parentBorder;
+        elseif ($this->parentBorder instanceof BaseInnerBorder) return $this->parentBorder->getParentOuterBorder();
+        else return null;
+    }
 }

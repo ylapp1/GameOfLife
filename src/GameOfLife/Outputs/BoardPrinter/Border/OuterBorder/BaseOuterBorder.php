@@ -12,7 +12,8 @@ use GameOfLife\Board;
 use Output\BoardPrinter\Border\BaseBorder;
 
 /**
- * Parent class for outer border printers.
+ * Parent class for outer borders.
+ * Outer borders may not overlap.
  */
 abstract class BaseOuterBorder extends BaseBorder
 {
@@ -23,7 +24,7 @@ abstract class BaseOuterBorder extends BaseBorder
 	 *
 	 * @var Board $board
 	 */
-	private $board;
+	protected $board;
 
 
 	// Magic Methods
@@ -31,43 +32,23 @@ abstract class BaseOuterBorder extends BaseBorder
 	/**
 	 * BaseOuterBorderPrinter constructor.
 	 *
-	 * @param Board $_board The board to which this border printer belongs
 	 * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
 	 * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
 	 * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
 	 * @param String $_borderSymbolBottomRight The symbol for the bottom right corner of the border
 	 * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
 	 * @param String $_borderSymbolLeftRight The symbol for the left an right border
-	 */
-	public function __construct(Board $_board, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+     * @param Board $_board The board to which this border printer belongs
+     */
+	public function __construct(String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight, Board $_board)
 	{
-		parent::__construct($_board, $_borderSymbolTopLeft, $_borderSymbolTopRight, $_borderSymbolBottomLeft, $_borderSymbolBottomRight, $_borderSymbolTopBottom, $_borderSymbolLeftRight);
+		parent::__construct($_borderSymbolTopLeft, $_borderSymbolTopRight, $_borderSymbolBottomLeft, $_borderSymbolBottomRight, $_borderSymbolTopBottom, $_borderSymbolLeftRight);
 
 		$this->board = $_board;
 	}
 
 
 	// Getters and Setters
-
-	/**
-	 * Returns the board to which this outer border printer belongs.
-	 *
-	 * @return Board The board to which this outer border printer belongs
-	 */
-	public function board(): Board
-	{
-		return $this->board;
-	}
-
-	/**
-	 * Sets the board to which this outer border printer belongs.
-	 *
-	 * @param Board $board The board to which this outer border printer belongs
-	 */
-	public function setBoard(Board $board): void
-	{
-		$this->board = $board;
-	}
 
 	public function addInnerBorder($_innerBorder)
 	{
@@ -83,25 +64,32 @@ abstract class BaseOuterBorder extends BaseBorder
 	 */
 	protected function calculateBorderTopBottomWidth()
 	{
-		$borderLeftRightPositions = array();
-
-		foreach ($this->innerBorders as $innerBorder)
-		{
-			$borderLeftRightPositions[] = $innerBorder->hasLeftBorder();
-			$borderLeftRightPositions[] = $innerBorder->hasRightBorder();
-		}
-
-		$borderLeftRightPositions = array_unique($borderLeftRightPositions);
-
-		$numberOfInnerBorders = 0;
-		foreach ($borderLeftRightPositions as $borderLeftRightPosition)
-		{
-			if ($borderLeftRightPositions > 0 && $borderLeftRightPosition < $this->board->width())
-			{
-				$numberOfInnerBorders++;
-			}
-		}
-
-		$this->borderTopBottomWidth = $this->board->width() + $numberOfInnerBorders;
+		$this->borderTopBottomWidth = $this->board->width() + count($this->getInnerBorderLeftRightPositions());
 	}
+
+    /**
+     * Returns all left and right border positions of all inner borders.
+     *
+     * @return array
+     */
+	public function getInnerBorderLeftRightPositions()
+    {
+        $innerBorderLeftRightPositions = array();
+
+        foreach ($this->innerBorders as $innerBorder)
+        {
+            if ($innerBorder->hasLeftBorder() && $innerBorder->hasLeftBorder() < $this->board->width())
+            {
+                $innerBorderLeftRightPositions[] = $innerBorder->hasLeftBorder();
+            }
+            if ($innerBorder->hasRightBorder() && $innerBorder->hasRightBorder() < $this->board->width())
+            {
+                $innerBorderLeftRightPositions[] = $innerBorder->hasRightBorder();
+            }
+        }
+
+        $innerBorderLeftRightPositions = array_unique($innerBorderLeftRightPositions);
+
+        return $innerBorderLeftRightPositions;
+    }
 }

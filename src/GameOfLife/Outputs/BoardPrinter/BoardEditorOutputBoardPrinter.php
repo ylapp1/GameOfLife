@@ -14,11 +14,12 @@ use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use Output\BoardPrinter\Border\InnerBorder\HighLightFieldBorder;
 use Output\BoardPrinter\Border\InnerBorder\SelectionAreaBorder;
+use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorder;
 
 /**
  * BoardPrinter for the BoardEditorOutput.
  */
-class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
+class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
 {
 	// Attributes
 
@@ -50,17 +51,6 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	 */
 	private $selectionAreaBorderPrinter;
 
-    /**
-     * The reference to the currently active border printer
-     * There can only be one active inner border printer at a time.
-     * The priority order of the border printers is:
-     * 1. High light field
-     * 2. Selection area
-     *
-     * @var HighLightFieldBorder|SelectionAreaBorder $activeInnerBorderPrinter
-     */
-    private $activeInnerBorderPrinter;
-
 
     // Magic Methods
 
@@ -71,10 +61,9 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct($_board);
+        parent::__construct("o", " ", new BoardOuterBorder($_board));
         $this->highLightFieldBorderPrinter = new HighLightFieldBorder($_board);
         $this->selectionAreaBorderPrinter = new SelectionAreaBorder($_board);
-        $this->cellAliveSymbol = "o";
     }
 
 
@@ -91,7 +80,6 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
 	 */
     public function getBoardContentString(Board $_board, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null): String
     {
-        $this->activeInnerBorderPrinter = null;
         $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
         $this->selectionArea = $_selectionArea;
         $this->border->resetInnerBorders();
@@ -99,68 +87,15 @@ class BoardEditorOutputBoardPrinter extends ConsoleOutputBoardPrinter
         if ($_highLightFieldCoordinate)
         {
             $this->highLightFieldBorderPrinter->initialize($_board, $this->highLightFieldCoordinate);
-            $this->activeInnerBorderPrinter = $this->highLightFieldBorderPrinter;
+            $this->border->addInnerBorder($this->highLightFieldBorderPrinter);
         }
         elseif ($_selectionArea)
         {
             $this->selectionAreaBorderPrinter->initialize($_board, $this->selectionArea);
-            $this->activeInnerBorderPrinter = $this->selectionAreaBorderPrinter;
+            $this->border->addInnerBorder($this->selectionAreaBorderPrinter);
         }
-
-        if ($this->activeInnerBorderPrinter) $this->border->addInnerBorder($this->activeInnerBorderPrinter);
 
 	    return parent::getBoardContentString($_board);
-    }
-
-	/**
-	 * Returns the string for the top border.
-	 *
-	 * @return String The string for the top border
-	 */
-	protected function getBorderTopString(): String
-    {
-        $borderTopString = parent::getBorderTopString();
-        if ($this->activeInnerBorderPrinter)
-        {
-        	$borderTopString = $this->activeInnerBorderPrinter->addCollisionBorderToTopOuterBorder($borderTopString);
-        }
-
-        return $borderTopString;
-    }
-
-	/**
-	 * Returns the string for the bottom border.
-	 *
-	 * @return String The string for the bottom border
-	 */
-	protected function getBorderBottomString(): String
-    {
-        $borderBottomString = parent::getBorderBottomString();
-        if ($this->activeInnerBorderPrinter)
-        {
-        	$borderBottomString = $this->activeInnerBorderPrinter->addCollisionBorderToBottomOuterBorder($borderBottomString);
-        }
-
-        return $borderBottomString;
-    }
-
-	/**
-	 * Returns the output string for the cells of a single row.
-	 *
-	 * @param Field[] $_fields The fields of the row
-	 * @param int $_y The Y-Coordinate of the row
-	 *
-	 * @return String The output string for the cells of the row
-	 */
-    protected function getRowOutputString (array $_fields, int $_y): String
-    {
-        $rowOutputString = parent::getRowOutputString($_fields, $_y);
-        if ($this->activeInnerBorderPrinter)
-        {
-            $rowOutputString = $this->activeInnerBorderPrinter->addBordersToRowString($rowOutputString, $_y);
-        }
-
-        return $rowOutputString;
     }
 
 	/**

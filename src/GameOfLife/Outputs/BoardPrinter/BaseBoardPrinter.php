@@ -42,6 +42,14 @@ abstract class BaseBoardPrinter
      */
     protected $border;
 
+    /**
+     * The output board
+     *
+     * @var OutputBoard $outputBoard
+     */
+    private $outputBoard;
+
+
 
     // Magic Methods
 
@@ -57,6 +65,7 @@ abstract class BaseBoardPrinter
         $this->cellAliveSymbol = $_cellAliveSymbol;
         $this->cellDeadSymbol = $_cellDeadSymbol;
         $this->border = $_border;
+        $this->outputBoard = new OutputBoard();
     }
 
 
@@ -71,41 +80,47 @@ abstract class BaseBoardPrinter
      */
     public function getBoardContentString(Board $_board): String
     {
-        $borderTopString = $this->getBorderTopString();
-        $borderBottomString = $this->getBorderBottomString();
+        $this->outputBoard->reset();
 
-        $boardContentString = $borderTopString . "\n";
         for ($y = 0; $y < $_board->height(); $y++)
         {
-            $rowString = $this->getRowOutputString($_board->fields()[$y], $y);
-            $boardContentString .= $rowString . "\n";
+            $rowOutputSymbols = $this->getRowOutputSymbols($_board->fields()[$y]);
+            $this->outputBoard->addBoardFieldSymbolsRow($rowOutputSymbols);
         }
-        $boardContentString .= $borderBottomString . "\n";
 
-        return $boardContentString;
+        $this->border->addBordersToOutputBoard($this->outputBoard);
+
+        return implode("\n", $this->outputBoard->getRowStrings()) . "\n";
     }
-
-    /**
-     * Returns the string for the top border.
-     *
-     * @return String The string for the top border
-     */
-    abstract protected function getBorderTopString(): String;
-
-    /**
-     * Returns the string for the bottom border.
-     *
-     * @return String The string for the bottom border
-     */
-    abstract protected function getBorderBottomString(): String;
 
     /**
      * Returns the output string for the cells of a single row.
      *
      * @param Field[] $_fields The fields of the row
-     * @param int $_y The Y-Coordinate of the row
      *
-     * @return String The output string for the cells of the row
+     * @return String[] The output symbols for the cells of the row
      */
-    abstract protected function getRowOutputString(array $_fields, int $_y): String;
+    protected function getRowOutputSymbols(array $_fields): array
+    {
+        $rowOutputSymbols = array();
+        foreach ($_fields as $field)
+        {
+            $rowOutputSymbols[] = $this->getCellSymbol($field);
+        }
+
+        return $rowOutputSymbols;
+    }
+
+    /**
+     * Returns the symbol for a cell in a field.
+     *
+     * @param Field $_field The field
+     *
+     * @return String The symbol for the cell in the field
+     */
+    protected function getCellSymbol(Field $_field): String
+    {
+        if ($_field->isAlive()) return $this->cellAliveSymbol;
+        else return $this->cellDeadSymbol;
+    }
 }
