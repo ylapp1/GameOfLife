@@ -9,7 +9,10 @@
 namespace Output\BoardPrinter\Border\OuterBorder;
 
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard;
+use Output\BoardPrinter\OutputBoard\HorizontalOutputBorder;
+use Output\BoardPrinter\OutputBoard\VerticalOutputBorder;
 
 /**
  * Generates border strings for boards.
@@ -51,7 +54,9 @@ class BoardOuterBorder extends BaseOuterBorder
         $borderSymbols = $this->getBorderSymbolListWithEdgeSymbols(
         	$this->borderTopBottomWidth, $this->borderSymbolTopLeft, $this->borderSymbolTopRight, $this->borderSymbolTopBottom
         );
-        $_outputBoard->addOuterBorderTop($borderSymbols);
+        $border = new HorizontalOutputBorder(new Coordinate(0, 0), new Coordinate($this->board->width(), 0), $borderSymbols);
+
+        $_outputBoard->addBorder($border);
     }
 
     /**
@@ -64,7 +69,9 @@ class BoardOuterBorder extends BaseOuterBorder
         $borderSymbols = $this->getBorderSymbolListWithEdgeSymbols(
             $this->borderTopBottomWidth, $this->borderSymbolBottomLeft, $this->borderSymbolBottomRight, $this->borderSymbolTopBottom
         );
-        $_outputBoard->addOuterBorderBottom($borderSymbols);
+	    $border = new HorizontalOutputBorder(new Coordinate(0, $this->board->height()), new Coordinate($this->board->width(), $this->board->height()), $borderSymbols);
+
+	    $_outputBoard->addBorder($border);
     }
 
     /**
@@ -75,7 +82,9 @@ class BoardOuterBorder extends BaseOuterBorder
     protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard)
     {
         $borderSymbols = $this->getBorderSymbolList($this->borderSymbolLeftRight, $this->board->height());
-        $_outputBoard->addOuterBorderLeft($borderSymbols);
+        $border = new VerticalOutputBorder(new Coordinate(0, 0), new Coordinate(0, $this->board->height()), $borderSymbols);
+
+        $_outputBoard->addBorder($border);
     }
 
     /**
@@ -86,6 +95,8 @@ class BoardOuterBorder extends BaseOuterBorder
     protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard)
     {
         $borderSymbols = $this->getBorderSymbolList($this->borderSymbolLeftRight, $this->board->height());
-        $_outputBoard->addOuterBorderRight($borderSymbols);
+        $border = new VerticalOutputBorder(new Coordinate($this->board->width(), 0), new Coordinate($this->board->width(), $this->board->height()), $borderSymbols);
+
+        $_outputBoard->addBorder($border);
     }
 }

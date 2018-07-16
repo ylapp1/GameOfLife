@@ -82,7 +82,6 @@ abstract class BaseInnerBorder extends BaseBorder
 	/**
 	 * BaseInnerBorderPrinter constructor.
 	 *
-	 * @param Board $_board The board to which this border printer belongs
 	 * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
 	 * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
 	 * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
@@ -94,9 +93,9 @@ abstract class BaseInnerBorder extends BaseBorder
 	 * @param String $_borderSymbolCollisionLeftOuterBorder The symbol that will be placed in the left outer border when this border collides with it
 	 * @param String $_borderSymbolCollisionRightOuterBorder The symbol that will be placed in the right outer border when this border collides with it
 	 */
-    protected function __construct(Board $_board, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight, String $_borderSymbolCollisionTopOuterBorder, String $_borderSymbolCollisionBottomOuterBorder, String $_borderSymbolCollisionLeftOuterBorder, String $_borderSymbolCollisionRightOuterBorder)
+    protected function __construct(String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight, String $_borderSymbolCollisionTopOuterBorder, String $_borderSymbolCollisionBottomOuterBorder, String $_borderSymbolCollisionLeftOuterBorder, String $_borderSymbolCollisionRightOuterBorder)
     {
-        parent::__construct($_board, $_borderSymbolTopLeft, $_borderSymbolTopRight, $_borderSymbolBottomLeft, $_borderSymbolBottomRight, $_borderSymbolTopBottom, $_borderSymbolLeftRight);
+        parent::__construct($_borderSymbolTopLeft, $_borderSymbolTopRight, $_borderSymbolBottomLeft, $_borderSymbolBottomRight, $_borderSymbolTopBottom, $_borderSymbolLeftRight);
 
         $this->borderSymbolCollisionTopOuterBorder = $_borderSymbolCollisionTopOuterBorder;
         $this->borderSymbolCollisionBottomOuterBorder = $_borderSymbolCollisionBottomOuterBorder;

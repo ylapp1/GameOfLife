@@ -7,20 +7,89 @@
  */
 
 namespace Output\BoardPrinter\OutputBoard;
+use GameOfLife\Coordinate;
+use Output\BoardPrinter\Border\BaseBorder;
+use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorder;
+use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorder;
 
-class OutputBorder
+/**
+ * Class OutputBorder
+ */
+abstract class OutputBorder
 {
-    private $length;
+	private $borderStartCoordinate;
+    protected $borderSymbols;
 
-    private $borderSymbolCollisionStart;
+    private $borderSymbolOuterBorderCollisionStart;
+    private $borderSymbolOuterBorderCollisionCenter;
+    private $borderSymbolOuterBorderCollisionEnd;
 
-    private $borderSymbolCollisionCenter;
+	private $borderSymbolInnerBorderCollisionStart;
+	private $borderSymbolInnerBorderCollisionCenter;
+	private $borderSymbolInnerBorderCollisionEnd;
 
-    private $borderSymbolCollisionEnd;
+	/**
+	 * The start coordinate of this border
+	 *
+	 * @var Coordinate $startsAt
+	 */
+	protected $startsAt;
 
+	/**
+	 * The end coordinate of this border
+	 *
+	 * @var Coordinate
+	 */
+	protected $endsAt;
 
-    public function __construct()
+	protected function __construct(Coordinate $_startsAt, Coordinate $_endsAt, array $_borderSymbols)
     {
-
+    	$this->startsAt = $_startsAt;
+    	$this->endsAt = $_endsAt;
+    	$this->borderSymbols = $_borderSymbols;
     }
+
+
+    public function startsAt()
+    {
+    	return $this->startsAt;
+    }
+
+    public function endsAt()
+    {
+    	return $this->endsAt;
+    }
+
+
+	abstract protected function collidesWith(OutputBorder $_border): int;
+
+	public function collideWith(OutputBorder $_border)
+	{
+		$borderCollisionPosition = $this->collidesWith($_border);
+		if ($borderCollisionPosition !== null)
+		{
+			if ($_border instanceof BaseOuterBorder) $this->collideWithOuterBorderAt($borderCollisionPosition);
+			elseif ($_border instanceof BaseInnerBorder) $this->collideWithInnerBorderAt($borderCollisionPosition);
+		}
+	}
+
+	protected function collideWithInnerBorderAt(int $_position)
+    {
+    	if ($_position == 0) $collisionSymbol = $this->borderSymbolInnerBorderCollisionStart;
+    	elseif ($_position == count($this->borderSymbols)) $collisionSymbol = $this->borderSymbolInnerBorderCollisionEnd;
+    	else $collisionSymbol = $this->borderSymbolInnerBorderCollisionCenter;
+
+    	$this->borderSymbols[$_position] = $collisionSymbol;
+    }
+
+	protected function collideWithOuterBorderAt(int $_position)
+    {
+	    if ($_position == 0) $collisionSymbol = $this->borderSymbolOuterBorderCollisionStart;
+	    elseif ($_position == count($this->borderSymbols)) $collisionSymbol = $this->borderSymbolOuterBorderCollisionEnd;
+	    else $collisionSymbol = $this->borderSymbolOuterBorderCollisionCenter;
+
+	    $this->borderSymbols[$_position] = $collisionSymbol;
+    }
+
+    abstract public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid);
 }

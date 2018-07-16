@@ -8,6 +8,8 @@
 
 namespace Output\BoardPrinter;
 use GameOfLife\Coordinate;
+use Output\BoardPrinter\OutputBoard\OutputBorder;
+use Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 /**
  * Stores the row and border output strings of the board.
@@ -16,26 +18,26 @@ class OutputBoard
 {
     // Attributes
 
-    /**
-     * The board field symbols that represent the fields of the board
-     *
-     * @var String[][] $boardFieldsSymbols
-     */
-    private $boardFieldsSymbolRows;
+	/**
+	 * The cell symbol grid
+	 *
+	 * @var SymbolGrid $cellSymbolGrid
+	 */
+	private $cellSymbolGrid;
 
-    /**
-     * The horizontal borders between each of the board field rows
-     *
-     * @var String[][] $horizontalInnerBorders
-     */
-    private $horizontalInnerBorders;
+	/**
+	 * The border symbol grid
+	 *
+	 * @var SymbolGrid $borderSymbolGrid
+	 */
+	private $borderSymbolGrid;
 
-    /**
-     * The vertical borders between each of the board field columns
-     *
-     * @var String[][] $verticalInnerBorders
-     */
-    private $verticalInnerBorders;
+	/**
+	 * The inner and outer borders
+	 *
+	 * @var OutputBorder[] $borders
+	 */
+    private $borders;
 
 
     // Magic Methods
@@ -54,9 +56,9 @@ class OutputBoard
 
     public function reset()
     {
-        $this->boardFieldsSymbolRows = array();
-        $this->horizontalInnerBorders = array();
-        $this->verticalInnerBorders = array();
+        $this->cellSymbolGrid->reset();
+        $this->borderSymbolGrid->reset();
+        $this->borders = array();
     }
 
 
@@ -65,24 +67,14 @@ class OutputBoard
         $this->boardFieldsSymbolRows[] = $_boardFieldSymbolsRow;
     }
 
-    public function addOuterBorderTop(array $_borderSymbols)
+    public function addBorder(OutputBorder $_border)
     {
-        $this->addHorizontalBorderAbove(new Coordinate(0, 0), $_borderSymbols, "", "", "");
-    }
+    	foreach ($this->borders as $border)
+	    {
+	    	$border->collideWith($_border);
+	    }
 
-    public function addOuterBorderBottom(array $_borderSymbols)
-    {
-        $this->addHorizontalBorderAbove(new Coordinate(0,   count($this->getRowStrings())), $_borderSymbols, "", "", "");
-    }
-
-    public function addOuterBorderLeft(array $_borderSymbols)
-    {
-        $this->addVerticalBorderLeftFrom(new Coordinate(0, 0), $_borderSymbols, "", "", "");
-    }
-
-    public function addOuterBorderRight(array $_borderSymbols)
-    {
-        $this->addVerticalBorderLeftFrom(new Coordinate(0, count($this->getRowStrings())), $_borderSymbols, "", "", "");
+    	$this->borders[] = $_border;
     }
 
     /**
@@ -112,7 +104,8 @@ class OutputBoard
                 else $newBorderSymbol = $_collisionCenterSymbol;
             }
             else $newBorderSymbol = $borderSymbol;
-            $this->horizontalInnerBorders[$y][$x] = $newBorderSymbol;
+
+            $this->borderSymbolGrid->setSymbolAt(new Coordinate($x, $y), $newBorderSymbol);
         }
     }
 
@@ -129,41 +122,39 @@ class OutputBoard
 
     public function getRowStrings(): array
     {
+    	$this->buildBorderGrid();
         $rowStrings = array();
 
-        $rowIds = array_merge(
-            array_keys($this->boardFieldsSymbolRows),
-            array_keys($this->horizontalInnerBorders),
-            array_keys($this->verticalInnerBorders)
-        );
-        $rowIds = array_unique($rowIds);
-        natsort($rowIds);
-
-        $lowestRowId = array_shift($rowIds);
-        $highestRowId = array_pop($rowIds);
-
-        for ($y = $lowestRowId; $y <= $highestRowId; $y++)
+        foreach ($this->borderSymbolGrid->symbolRows() as $y => $symbolRow)
         {
-            if (isset($this->boardFieldsSymbolRows[$y]))
-            {
-                $boardFieldsSymbolRow = $this->boardFieldsSymbolRows[$y];
-                $rowStrings[] = implode("", $boardFieldsSymbolRow);
-            }
+	        $rowString = "";
+	        foreach ($this->cellSymbolGrid->symbolRows()[$y] as $x => $borderSymbol)
+	        {
+	        	if ($borderSymbol == "") continue;
+		        $rowString .= $borderSymbol;
+	        }
 
-            if (isset($this->horizontalInnerBorders[$y]))
-            {
-                $horizontalInnerBorderString = "";
-                $previousIndex = 0;
-                foreach ($this->horizontalInnerBorders[$y] as $index => $borderSymbol)
-                {
-                    $horizontalInnerBorderString .= str_repeat(" ", $index - $previousIndex - 1) . $borderSymbol;
-                    $previousIndex = $index;
-                }
+	        $rowStrings[] = $rowString;
 
-                $rowStrings[] = $horizontalInnerBorderString;
-            }
+        	$rowString = "";
+        	foreach ($symbolRow as $x => $cellSymbol)
+	        {
+	        	$rowString .= $this->borderSymbolGrid->symbolRows()[$y][$x];
+	        	$rowString .= $cellSymbol;
+	        }
+
+	        $rowStrings[] = $rowString;
         }
 
         return $rowStrings;
+    }
+
+    private function buildBorderGrid()
+    {
+	    $this->borderSymbolGrid->reset();
+	    foreach ($this->borders as $border)
+	    {
+		    $border->addBorderSymbolsToBorderSymbolGrid($this->borderSymbolGrid);
+	    }
     }
 }
