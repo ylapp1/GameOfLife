@@ -8,12 +8,15 @@
 
 namespace Output\BoardPrinter\OutputBoard\OutputBorder;
 
-
 use GameOfLife\Coordinate;
+use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 
-abstract class LineOutputBorder extends OutputBorder
+/**
+ * Parent class for straight line border parts.
+ */
+abstract class LineOutputBorderPart extends OutputBorderPart
 {
-	public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid)
+	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
 	{
 		$borderSymbolIndex = 0;
 

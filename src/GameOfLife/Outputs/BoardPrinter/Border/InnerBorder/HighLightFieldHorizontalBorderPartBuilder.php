@@ -11,7 +11,7 @@ namespace Output\BoardPrinter\Border\InnerBorder;
 /**
  * The horizontal <board width> x 1 border part of the high light field border.
  */
-class HighLightFieldHorizontalBorder extends BaseInnerBorder
+class HighLightFieldHorizontalBorderPartBuilder extends BaseInnerBorderPartBuilder
 {
 
 }

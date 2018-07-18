@@ -10,15 +10,15 @@ namespace Output\BoardPrinter\Border\InnerBorder;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\Border\BaseBorder;
-use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorder;
+use Output\BoardPrinter\Border\BaseBorderPartBuilder;
+use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorderPartBuilder;
 
 /**
  * Parent class for inner border printers.
  * Inner borders must be located inside an outer border and they can overlap with other inner borders or touch the outer
  * border.
  */
-abstract class BaseInnerBorder extends BaseBorder
+abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
 {
 	// Attributes
 
@@ -72,7 +72,7 @@ abstract class BaseInnerBorder extends BaseBorder
 	/**
 	 * The parent border of this border
 	 *
-	 * @var BaseBorder $parentBorder
+	 * @var BaseBorderPartBuilder $parentBorder
 	 */
     private $parentBorder;
 
@@ -301,8 +301,8 @@ abstract class BaseInnerBorder extends BaseBorder
 
 	protected function getParentOuterBorder()
     {
-        if ($this->parentBorder instanceof BaseOuterBorder) return $this->parentBorder;
-        elseif ($this->parentBorder instanceof BaseInnerBorder) return $this->parentBorder->getParentOuterBorder();
+        if ($this->parentBorder instanceof BaseOuterBorderPartBuilder) return $this->parentBorder;
+        elseif ($this->parentBorder instanceof BaseInnerBorderPartBuilder) return $this->parentBorder->getParentOuterBorder();
         else return null;
     }
 }

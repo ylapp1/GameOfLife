@@ -14,12 +14,12 @@ use GameOfLife\Coordinate;
 /**
  * Prints the borders for a high light field.
  */
-class HighLightFieldBorder extends BaseInnerBorder
+class HighLightFieldBorderPartBuilder extends BaseInnerBorderPartBuilder
 {
     // Magic Methods
 
     /**
-     * HighLightFieldBorder constructor.
+     * HighLightFieldBorderPartBuilder constructor.
      *
      * @param Board $_board The board to which this border printer belongs
      */

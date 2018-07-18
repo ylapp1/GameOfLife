@@ -8,21 +8,29 @@
 
 namespace Output\BoardPrinter\OutputBoard\SymbolGrid;
 
-use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorder;
+use GameOfLife\Coordinate;
+use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorderPart;
 
 /**
  * Container to store border symbols.
  */
 class BorderSymbolGrid extends SymbolGrid
 {
+	// Attributes
+
 	/**
 	 * The list of borders
 	 *
-	 * @var OutputBorder[] $borders
+	 * @var OutputBorderPart[] $borders
 	 */
 	private $borders;
 
 
+	// Magic Methods
+
+	/**
+	 * BorderSymbolGrid constructor.
+	 */
 	public function __construct()
 	{
 		parent::__construct();
@@ -30,89 +38,132 @@ class BorderSymbolGrid extends SymbolGrid
 	}
 
 
-	public function addBorder(OutputBorder $_border)
+	// Class Methods
+
+	/**
+	 * Adds a border to this border symbol grid.
+	 *
+	 * @param OutputBorderPart $_border The border
+	 */
+	public function addBorder(OutputBorderPart $_border)
 	{
 		foreach ($this->borders as $border)
 		{
 			$border->collideWith($_border);
 		}
-
 		$this->borders[] = $_border;
 	}
 
+	/**
+	 * Resets the list of borders of this border symbol grid to an empty array.
+	 */
 	public function resetBorders()
 	{
 		$this->borders = array();
 	}
 
+	/**
+	 * Adds the border symbols to the symbol grid.
+	 */
 	public function drawBorders()
 	{
-		// TODO: Draw the borders
-	}
-
-	public function removeEmptyColumns()
-	{
-		for ($x = 0; $x < $this->width; $x++)
-		{
-			$columnIsEmpty = true;
-			foreach ($this->symbolRows as $symbolRow)
-			{
-				if ($symbolRow[$x] != "")
-				{
-					$columnIsEmpty = false;
-					break;
-				}
-			}
-
-			if ($columnIsEmpty)
-			{
-				foreach ($this->symbolRows as $y => $symbolRow)
-				{
-					unset($this->symbolRows[$y][$x]);
-				}
-			}
-		}
-
-
-
-		// TODO: Remove (Horizontal border)
-		$y = $_coordinate->y() - 1;
-		$borderWidth = count($_borderSymbols);
-
-		if (! isset($this->horizontalInnerBorders[$y])) $this->horizontalInnerBorders[$y] = array();
-
-		foreach ($_borderSymbols as $index => $borderSymbol)
-		{
-			$x = $_coordinate->x() + $index;
-
-			if (isset($this->horizontalInnerBorders[$y][$x]))
-			{
-				if ($index == 0) $newBorderSymbol = $_collisionLeftSymbol;
-				elseif ($index == $borderWidth) $newBorderSymbol = $_collisionRightSymbol;
-				else $newBorderSymbol = $_collisionCenterSymbol;
-			}
-			else $newBorderSymbol = $borderSymbol;
-
-			$this->borderSymbolGrid->setSymbolAt(new Coordinate($x, $y), $newBorderSymbol);
-		}
-
-
-
-		// TODO: Remove (Vertical border)
-		foreach ($_borderSymbols as $index => $borderSymbol)
-		{
-			$coordinate = clone $_coordinate;
-			$coordinate->setY($coordinate->y() + $index);
-
-			$this->addHorizontalBorderAbove($_coordinate, array($borderSymbol), $_collisionTopSymbol, $_collisionCenterSymbol, $_collisionBottomSymbol);
-		}
-
-
-
-		// Build grid todo
+		// Add the border symbols to the symbol grid
 		foreach ($this->borders as $border)
 		{
-			$border->addBorderSymbolsToBorderSymbolGrid($this->borderSymbolGrid);
+			$border->addBorderSymbolsToBorderSymbolGrid($this);
 		}
+
+		// Fill the border gaps with border symbols or empty space
+		$boardWidth = 0; // TODO: Get the board width and fetch lowest/highest column id
+		foreach ($this->symbolRows as $y => $symbolRow)
+		{
+			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
+			if (! $rowContainsBorderSymbol) continue;
+
+			for ($x = 0; $x < $boardWidth; $x++)
+			{
+				if (! isset($this->symbolRows[$y][$x]))
+				{
+					$gapContainingBorder = null;
+					if ($rowContainsBorderSymbol) $gapContainingBorder = $this->isGapInsideHorizontalBorder(new Coordinate($x, $y));
+					elseif ($this->columnContainsBorderSymbol($x)) $gapContainingBorder = $this->isGapInsideVerticalBorder(new Coordinate($x, $y));
+
+					if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->symbolCenter; // TODO: Get center symbol from output border
+					else $symbol = " ";
+
+					$this->symbolRows[$y][$x] = $symbol;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Returns whether a specific row contains any border symbols.
+	 *
+	 * @param int $_y The Y-Position of the row
+	 *
+	 * @return Bool True if the row contains a border symbol, false otherwise
+	 */
+	private function rowContainsBorderSymbol(int $_y): Bool
+	{
+		if (isset($this->symbolRows[$_y]) && count($this->symbolRows[$_y]) > 0) return true;
+		else return false;
+	}
+
+	/**
+	 * Returns whether a specific column contains any border symbols.
+	 *
+	 * @param int $_x The X-Position of the column
+	 *
+	 * @return Bool True if the column contains a border symbol, false otherwise
+	 */
+	private function columnContainsBorderSymbol(int $_x): Bool
+	{
+		foreach ($this->symbolRows as $symbolRow)
+		{
+			if (isset($symbolRow[$_x])) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks whether a gap is in the center of a horizontal border.
+	 *
+	 * @param Coordinate $_gapPosition The position of the gap in the symbol grid
+	 *
+	 * @return OutputBorderPart|null The first output border that contains the gap or null
+	 */
+	private function isGapInsideHorizontalBorder(Coordinate $_gapPosition)
+	{
+		foreach ($this->borders as $border)
+		{
+			if ($border->startsAt()->x() < $_gapPosition->x() && $border->endsAt()->x() > $_gapPosition->x())
+			{
+				return $border;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Checks whether a gap is in the center of a vertical border.
+	 *
+	 * @param Coordinate $_gapPosition The position of the gap in the symbol grid
+	 *
+	 * @return OutputBorderPart|null The first output border that contains the gap or null
+	 */
+	private function isGapInsideVerticalBorder(Coordinate $_gapPosition)
+	{
+		foreach ($this->borders as $border)
+		{
+			if ($border->startsAt()->y() < $_gapPosition->y() && $border->endsAt()->y() > $_gapPosition->y())
+			{
+				return $border;
+			}
+		}
+
+		return null;
 	}
 }

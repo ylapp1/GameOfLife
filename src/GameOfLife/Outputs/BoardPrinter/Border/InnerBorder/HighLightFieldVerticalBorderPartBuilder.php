@@ -11,7 +11,7 @@ namespace Output\BoardPrinter\Border\InnerBorder;
 /**
  * The vertical 1 x <board height> border part of the highlight field border.
  */
-class HighLightFieldVerticalBorder extends BaseInnerBorder
+class HighLightFieldVerticalBorderPartBuilder extends BaseInnerBorderPartBuilder
 {
 
 }

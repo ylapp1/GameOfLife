@@ -13,14 +13,14 @@ use GameOfLife\Coordinate;
 /**
  * Class HorizontalOutputBorder
  */
-class HorizontalOutputBorder extends LineOutputBorder
+class HorizontalOutputBorder extends LineOutputBorderPart
 {
 	public function __construct(Coordinate $_startsAt, Coordinate $_endsAt, array $_borderSymbols)
 	{
 		parent::__construct($_startsAt, $_endsAt, $_borderSymbols);
 	}
 
-	public function collidesWith(OutputBorder $_border): int
+	public function collidesWith(OutputBorderPart $_border): int
 	{
 		if ($_border->startsAt()->y() == $this->startsAt->y())
 		{

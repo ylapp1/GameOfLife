@@ -8,7 +8,7 @@
 
 namespace Output\BoardPrinter;
 
-use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorder;
+use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorderPart;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\SymbolGrid;
 
@@ -70,9 +70,9 @@ class OutputBoard
 	/**
 	 * Adds a border to this OutputBoards border grid.
 	 *
-	 * @param OutputBorder $_border The border
+	 * @param OutputBorderPart $_border The border
 	 */
-    public function addBorder(OutputBorder $_border)
+    public function addBorder(OutputBorderPart $_border)
     {
     	$this->borderSymbolGrid->addBorder($_border);
     }

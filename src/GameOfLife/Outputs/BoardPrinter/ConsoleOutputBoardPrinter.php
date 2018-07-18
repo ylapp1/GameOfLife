@@ -9,7 +9,7 @@
 namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorder;
+use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorderPartBuilde;
 
 /**
  * The BoardPrinter for the ConsoleOutput.
@@ -25,6 +25,6 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("☻", " ", new BoardOuterBorder($_board));
+        parent::__construct("☻", " ", new BoardOuterBorderPartBuilde($_board));
     }
 }

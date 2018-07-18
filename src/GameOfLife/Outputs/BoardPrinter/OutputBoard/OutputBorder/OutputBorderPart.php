@@ -9,14 +9,14 @@
 namespace Output\BoardPrinter\OutputBoard\OutputBorder;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorder;
-use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorder;
-use Output\BoardPrinter\OutputBoard\SymbolGrid\SymbolGrid;
+use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorderPartBuilder;
+use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 
 /**
  * Parent class for output borders.
  */
-abstract class OutputBorder
+abstract class OutputBorderPart
 {
 	private $borderStartCoordinate;
     protected $borderSymbols;
@@ -62,15 +62,15 @@ abstract class OutputBorder
     }
 
 
-	abstract protected function collidesWith(OutputBorder $_border): int;
+	abstract protected function collidesWith(OutputBorderPart $_border): int;
 
-	public function collideWith(OutputBorder $_border)
+	public function collideWith(OutputBorderPart $_border)
 	{
 		$borderCollisionPosition = $this->collidesWith($_border);
 		if ($borderCollisionPosition !== null)
 		{
-			if ($_border instanceof BaseOuterBorder) $this->collideWithOuterBorderAt($borderCollisionPosition);
-			elseif ($_border instanceof BaseInnerBorder) $this->collideWithInnerBorderAt($borderCollisionPosition);
+			if ($_border instanceof BaseOuterBorderPartBuilder) $this->collideWithOuterBorderAt($borderCollisionPosition);
+			elseif ($_border instanceof BaseInnerBorderPartBuilder) $this->collideWithInnerBorderAt($borderCollisionPosition);
 		}
 	}
 
@@ -92,5 +92,5 @@ abstract class OutputBorder
 	    $this->borderSymbols[$_position] = $collisionSymbol;
     }
 
-    abstract public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid);
+    abstract public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid);
 }

@@ -17,12 +17,12 @@ use Output\BoardPrinter\OutputBoard\VerticalOutputBorder;
 /**
  * Generates border strings for boards.
  */
-class BoardOuterBorder extends BaseOuterBorder
+class BoardOuterBorderPartBuilde extends BaseOuterBorderPartBuilder
 {
     // Magic Methods
 
     /**
-     * BoardOuterBorder constructor.
+     * BoardOuterBorderPartBuilde constructor.
      *
      * @param Board $_board The board to which the border printer belongs
      */

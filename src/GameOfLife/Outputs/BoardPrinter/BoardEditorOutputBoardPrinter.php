@@ -12,9 +12,9 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardPrinter\Border\InnerBorder\HighLightFieldBorder;
-use Output\BoardPrinter\Border\InnerBorder\SelectionAreaBorder;
-use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorder;
+use Output\BoardPrinter\Border\InnerBorder\HighLightFieldBorderPartBuilder;
+use Output\BoardPrinter\Border\InnerBorder\SelectionAreaBorderPartBuilder;
+use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorderPartBuilde;
 
 /**
  * BoardPrinter for the BoardEditorOutput.
@@ -40,14 +40,14 @@ class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
 	/**
 	 * The high light field border printer
 	 *
-	 * @var HighLightFieldBorder $highLightFieldBorderPrinter
+	 * @var HighLightFieldBorderPartBuilder $highLightFieldBorderPrinter
 	 */
 	private $highLightFieldBorderPrinter;
 
 	/**
 	 * The selection area border printer
 	 *
-	 * @var SelectionAreaBorder $selectionAreaBorderPrinter
+	 * @var SelectionAreaBorderPartBuilder $selectionAreaBorderPrinter
 	 */
 	private $selectionAreaBorderPrinter;
 
@@ -61,9 +61,9 @@ class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("o", " ", new BoardOuterBorder($_board));
-        $this->highLightFieldBorderPrinter = new HighLightFieldBorder($_board);
-        $this->selectionAreaBorderPrinter = new SelectionAreaBorder($_board);
+        parent::__construct("o", " ", new BoardOuterBorderPartBuilde($_board));
+        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPartBuilder($_board);
+        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPartBuilder($_board);
     }
 
 

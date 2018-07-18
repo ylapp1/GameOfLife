@@ -9,13 +9,13 @@
 namespace Output\BoardPrinter\Border\OuterBorder;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\Border\BaseBorder;
+use Output\BoardPrinter\Border\BaseBorderPartBuilder;
 
 /**
  * Parent class for outer borders.
  * Outer borders may not overlap.
  */
-abstract class BaseOuterBorder extends BaseBorder
+abstract class BaseOuterBorderPartBuilder extends BaseBorderPartBuilder
 {
 	// Attributes
 

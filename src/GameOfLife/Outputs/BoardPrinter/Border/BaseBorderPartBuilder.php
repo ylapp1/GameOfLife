@@ -8,7 +8,7 @@
 
 namespace Output\BoardPrinter\Border;
 
-use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorder;
+use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorderPartBuilder;
 use Output\BoardPrinter\OutputBoard;
 
 /**
@@ -17,7 +17,7 @@ use Output\BoardPrinter\OutputBoard;
  * Call getBorderTopString() and getBorderBottomString() to get the top/bottom border strings
  * Call addBordersToRowString() to add the left/right borders to a single row
  */
-abstract class BaseBorder
+abstract class BaseBorderPartBuilder
 {
     // Attributes
 
@@ -73,7 +73,7 @@ abstract class BaseBorder
 	/**
 	 * The list of inner borders of this border
 	 *
-	 * @var BaseInnerBorder[] $innerBorders
+	 * @var BaseInnerBorderPartBuilder[] $innerBorders
 	 */
 	protected $innerBorders;
 
@@ -132,7 +132,7 @@ abstract class BaseBorder
 	/**
 	 * Adds an inner border to this border.
 	 *
-	 * @param BaseInnerBorder $_innerBorder
+	 * @param BaseInnerBorderPartBuilder $_innerBorder
 	 */
 	public function addInnerBorder($_innerBorder)
 	{

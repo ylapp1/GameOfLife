@@ -11,9 +11,9 @@ use GameOfLife\Coordinate;
 
 
 /**
- * Class VerticalOutputBorder
+ * Class VerticalOutputBorderPart
  */
-class VerticalOutputBorder extends LineOutputBorder
+class VerticalOutputBorderPart extends LineOutputBorderPart
 {
 	public function __construct(Coordinate $_startsAt, Coordinate $_endsAt, array $_borderSymbols)
 	{
@@ -23,11 +23,11 @@ class VerticalOutputBorder extends LineOutputBorder
 	/**
 	 * Returns the position where a border collides with this border.
 	 *
-	 * @param OutputBorder $_border The border
+	 * @param OutputBorderPart $_border The border
 	 *
 	 * @return int|null The position in this border at which the other border collides with this border or null if the borders don't collide
 	 */
-	public function collidesWith(OutputBorder $_border): int
+	public function collidesWith(OutputBorderPart $_border): int
 	{
 		if ($_border->startsAt()->x() == $this->startsAt->x())
 		{

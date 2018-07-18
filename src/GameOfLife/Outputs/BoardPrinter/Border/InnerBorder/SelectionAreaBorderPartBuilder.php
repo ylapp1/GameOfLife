@@ -14,12 +14,12 @@ use GameOfLife\Board;
 /**
  * Prints the borders for selection areas inside boards.
  */
-class SelectionAreaBorder extends BaseInnerBorder
+class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 {
     // Magic Methods
 
     /**
-     * SelectionAreaBorder constructor.
+     * SelectionAreaBorderPartBuilder constructor.
      *
      * @param Board $_board The board to which this border printer belongs
      */
