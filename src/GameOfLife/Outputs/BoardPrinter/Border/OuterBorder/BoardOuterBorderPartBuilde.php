@@ -56,7 +56,7 @@ class BoardOuterBorderPartBuilde extends BaseOuterBorderPartBuilder
         );
         $border = new HorizontalOutputBorder(new Coordinate(0, 0), new Coordinate($this->board->width(), 0), $borderSymbols);
 
-        $_outputBoard->addBorder($border);
+        $_outputBoard->addBorderPart($border);
     }
 
     /**
@@ -71,7 +71,7 @@ class BoardOuterBorderPartBuilde extends BaseOuterBorderPartBuilder
         );
 	    $border = new HorizontalOutputBorder(new Coordinate(0, $this->board->height()), new Coordinate($this->board->width(), $this->board->height()), $borderSymbols);
 
-	    $_outputBoard->addBorder($border);
+	    $_outputBoard->addBorderPart($border);
     }
 
     /**
@@ -84,7 +84,7 @@ class BoardOuterBorderPartBuilde extends BaseOuterBorderPartBuilder
         $borderSymbols = $this->getBorderSymbolList($this->borderSymbolLeftRight, $this->board->height());
         $border = new VerticalOutputBorder(new Coordinate(0, 0), new Coordinate(0, $this->board->height()), $borderSymbols);
 
-        $_outputBoard->addBorder($border);
+        $_outputBoard->addBorderPart($border);
     }
 
     /**
@@ -97,6 +97,6 @@ class BoardOuterBorderPartBuilde extends BaseOuterBorderPartBuilder
         $borderSymbols = $this->getBorderSymbolList($this->borderSymbolLeftRight, $this->board->height());
         $border = new VerticalOutputBorder(new Coordinate($this->board->width(), 0), new Coordinate($this->board->width(), $this->board->height()), $borderSymbols);
 
-        $_outputBoard->addBorder($border);
+        $_outputBoard->addBorderPart($border);
     }
 }

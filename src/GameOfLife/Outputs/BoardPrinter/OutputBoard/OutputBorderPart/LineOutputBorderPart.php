@@ -6,16 +6,23 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard\OutputBorder;
+namespace Output\BoardPrinter\OutputBoard\OutputBorderPart;
 
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 
 /**
- * Parent class for straight line border parts.
+ * Parent class for straight line (horizontal or vertical) border parts.
  */
 abstract class LineOutputBorderPart extends OutputBorderPart
 {
+	// Class Methods
+
+	/**
+	 * Adds the border symbols of this border to a border symbol grid.
+	 *
+	 * @param BorderSymbolGrid $_borderSymbolGrid The border symbol grid
+	 */
 	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
 	{
 		$borderSymbolIndex = 0;

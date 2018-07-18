@@ -9,7 +9,7 @@
 namespace Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
 
 /**
  * Container to store border symbols.
@@ -45,7 +45,7 @@ class BorderSymbolGrid extends SymbolGrid
 	 *
 	 * @param OutputBorderPart $_border The border
 	 */
-	public function addBorder(OutputBorderPart $_border)
+	public function addBorderPart(OutputBorderPart $_border)
 	{
 		foreach ($this->borders as $border)
 		{
@@ -64,8 +64,10 @@ class BorderSymbolGrid extends SymbolGrid
 
 	/**
 	 * Adds the border symbols to the symbol grid.
+	 *
+	 * @param int $_boardWidth The number of fields per row
 	 */
-	public function drawBorders()
+	public function drawBorders(int $_boardWidth)
 	{
 		// Add the border symbols to the symbol grid
 		foreach ($this->borders as $border)
@@ -74,13 +76,15 @@ class BorderSymbolGrid extends SymbolGrid
 		}
 
 		// Fill the border gaps with border symbols or empty space
-		$boardWidth = 0; // TODO: Get the board width and fetch lowest/highest column id
+		$lowestColumnId = 0; // TODO: Fetch lower column ids
+		$highestColumnId = $_boardWidth; // TODO: Fetch highest column ids
+
 		foreach ($this->symbolRows as $y => $symbolRow)
 		{
 			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
 			if (! $rowContainsBorderSymbol) continue;
 
-			for ($x = 0; $x < $boardWidth; $x++)
+			for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 			{
 				if (! isset($this->symbolRows[$y][$x]))
 				{
@@ -88,7 +92,7 @@ class BorderSymbolGrid extends SymbolGrid
 					if ($rowContainsBorderSymbol) $gapContainingBorder = $this->isGapInsideHorizontalBorder(new Coordinate($x, $y));
 					elseif ($this->columnContainsBorderSymbol($x)) $gapContainingBorder = $this->isGapInsideVerticalBorder(new Coordinate($x, $y));
 
-					if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->symbolCenter; // TODO: Get center symbol from output border
+					if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->borderSymbolCenter();
 					else $symbol = " ";
 
 					$this->symbolRows[$y][$x] = $symbol;

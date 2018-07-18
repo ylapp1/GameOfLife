@@ -8,7 +8,7 @@
 
 namespace Output\BoardPrinter;
 
-use Output\BoardPrinter\OutputBoard\OutputBorder\OutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\SymbolGrid;
 
@@ -72,19 +72,21 @@ class OutputBoard
 	 *
 	 * @param OutputBorderPart $_border The border
 	 */
-    public function addBorder(OutputBorderPart $_border)
+    public function addBorderPart(OutputBorderPart $_border)
     {
-    	$this->borderSymbolGrid->addBorder($_border);
+    	$this->borderSymbolGrid->addBorderPart($_border);
     }
 
 	/**
 	 * Returns the row strings of this output board.
 	 *
+	 * @param int $_boardWidth The number of fields per row
+	 *
 	 * @return String[] The row strings of this output board
 	 */
-    public function getRowStrings(): array
+    public function getRowStrings(int $_boardWidth): array
     {
-    	$this->borderSymbolGrid->drawBorders();
+    	$this->borderSymbolGrid->drawBorders($_boardWidth);
 
     	$cellSymbolRows = $this->cellSymbolGrid->symbolRows();
     	$borderSymbolRows = $this->borderSymbolGrid->symbolRows();
