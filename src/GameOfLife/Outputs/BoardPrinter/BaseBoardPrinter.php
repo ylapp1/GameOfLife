@@ -50,7 +50,6 @@ abstract class BaseBoardPrinter
     private $outputBoard;
 
 
-
     // Magic Methods
 
     /**

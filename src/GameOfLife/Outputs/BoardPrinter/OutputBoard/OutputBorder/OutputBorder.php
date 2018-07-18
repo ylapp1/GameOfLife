@@ -6,14 +6,15 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard;
+namespace Output\BoardPrinter\OutputBoard\OutputBorder;
+
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\Border\BaseBorder;
 use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorder;
 use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorder;
+use Output\BoardPrinter\OutputBoard\SymbolGrid\SymbolGrid;
 
 /**
- * Class OutputBorder
+ * Parent class for output borders.
  */
 abstract class OutputBorder
 {

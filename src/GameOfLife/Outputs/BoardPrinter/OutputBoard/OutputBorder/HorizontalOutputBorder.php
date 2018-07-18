@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard;
+namespace Output\BoardPrinter\OutputBoard\OutputBorder;
 
 use GameOfLife\Coordinate;
 
