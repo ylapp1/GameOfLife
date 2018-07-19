@@ -33,6 +33,15 @@ class OutputBoard
 	 */
 	private $borderSymbolGrid;
 
+	private $cachedBorderSymbolRows;
+
+
+	public function hasCachedBorders()
+	{
+		if ($this->cachedBorderSymbolRows) return true;
+		else return false;
+	}
+
 
     // Magic Methods
 
@@ -86,10 +95,14 @@ class OutputBoard
 	 */
     public function getRowStrings(int $_boardWidth): array
     {
-    	$this->borderSymbolGrid->drawBorders($_boardWidth);
+    	if (! $this->cachedBorderSymbolRows)
+	    {
+	    	$this->cachedBorderSymbolRows = $this->borderSymbolGrid->drawBorders($_boardWidth);
+		    $this->cachedBorderSymbolRows = $this->borderSymbolGrid->symbolRows();
+	    }
 
     	$cellSymbolRows = $this->cellSymbolGrid->symbolRows();
-    	$borderSymbolRows = $this->borderSymbolGrid->symbolRows();
+    	$borderSymbolRows = $this->cachedBorderSymbolRows;
 
     	// Create a list of row ids
 	    /*
@@ -112,15 +125,27 @@ class OutputBoard
         	if (isset($cellSymbolRows[$y]))
 	        {
 	        	$borderSymbolRowIsSet = isset($borderSymbolRows[$borderSymbolRowIndex]);
+	        	$borderSymbolColumnIndex = 0;
+
 	        	$rowString = "";
-	        	foreach ($cellSymbolRows[$y] as $x => $cellSymbol)
+	        	foreach ($cellSymbolRow as $x => $cellSymbol)
 		        {
 		        	// Add borders between columns
-			        if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$x]))
+			        if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex]))
 			        {
-			        	$rowString .= $borderSymbolRows[$borderSymbolRowIndex][$x];
+			        	$rowString .= $borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex];
 			        }
 			        $rowString .= $cellSymbol;
+
+			        $borderSymbolColumnIndex++;
+		        }
+
+		        // Also add the border right from the board
+		        if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex + 1]))
+		        {
+		        	$rowString .= $borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex + 1];
+
+		        	// TODO: Add highlight number of highlight border printer
 		        }
 
 		        $rowStrings[] = $rowString;

@@ -84,12 +84,11 @@ abstract class OutputBorderPart
 	private $borderSymbolInnerBorderCollisionEnd;
 
 	/**
-	 * The border symbols that currently represent the border
-	 * These will be changed on collision detections
+	 * The border collision symbols inside this border
 	 *
-	 * @var String[] $borderSymbols
+	 * @var String[] $borderCollisionSymbols
 	 */
-	protected $borderSymbols;
+	protected $borderCollisionSymbols;
 
 	/**
 	 * The start coordinate of this border
@@ -138,7 +137,7 @@ abstract class OutputBorderPart
     	$this->borderSymbolInnerBorderCollisionCenter = $_borderSymbolInnerBorderCollisionCenter;
     	$this->borderSymbolInnerBorderCollisionEnd = $_borderSymbolInnerBorderCollisionEnd;
 
-    	$this->initializeBorderSymbols();
+    	$this->borderCollisionSymbols = array();
     }
 
 
@@ -198,26 +197,17 @@ abstract class OutputBorderPart
 	// Class Methods
 
 	/**
-	 * Initializes the border symbols of this border.
-	 * The various border symbols and start/end position of this border must be set before this method is called.
-	 */
-    private function initializeBorderSymbols()
-    {
-	    $borderSymbols = array();
-
-	    $borderSymbols[] = $this->borderSymbolStart;
-	    $borderSymbols = array_merge($borderSymbols, array_pad(array(), $this->getBorderLength(), $this->borderSymbolCenter));
-	    $borderSymbols[] = $this->borderSymbolEnd;
-
-	    $this->borderSymbols = $borderSymbols;
-    }
-
-	/**
 	 * Calculates and returns the length of this border without start/end symbols.
 	 *
 	 * @return int The length of this border without start/end symbols
 	 */
     abstract protected function getBorderLength(): int;
+
+    public function getTotalBorderLength(): int
+    {
+    	// TODO: + (int) hasLeftBorder + (int) has RightBorder
+    	return $this->getBorderLength() + 2;
+    }
 
 	/**
 	 * Returns the position at which this border collides with a border or null if the borders don't collide.
@@ -254,10 +244,10 @@ abstract class OutputBorderPart
 	protected function collideWithInnerBorderAt(int $_position)
     {
     	if ($_position == 0) $collisionSymbol = $this->borderSymbolInnerBorderCollisionStart;
-    	elseif ($_position == $this->getBorderLength()) $collisionSymbol = $this->borderSymbolInnerBorderCollisionEnd;
+    	elseif ($_position == $this->getTotalBorderLength()) $collisionSymbol = $this->borderSymbolInnerBorderCollisionEnd;
     	else $collisionSymbol = $this->borderSymbolInnerBorderCollisionCenter;
 
-    	$this->borderSymbols[$_position] = $collisionSymbol;
+    	$this->borderCollisionSymbols[$_position] = $collisionSymbol;
     }
 
 	/**
@@ -268,10 +258,10 @@ abstract class OutputBorderPart
 	protected function collideWithOuterBorderAt(int $_position)
     {
 	    if ($_position == 0) $collisionSymbol = $this->borderSymbolOuterBorderCollisionStart;
-	    elseif ($_position == count($this->borderSymbols)) $collisionSymbol = $this->borderSymbolOuterBorderCollisionEnd;
+	    elseif ($_position == $this->getTotalBorderLength()) $collisionSymbol = $this->borderSymbolOuterBorderCollisionEnd;
 	    else $collisionSymbol = $this->borderSymbolOuterBorderCollisionCenter;
 
-	    $this->borderSymbols[$_position] = $collisionSymbol;
+	    $this->borderCollisionSymbols[$_position] = $collisionSymbol;
     }
 
 	/**

@@ -53,9 +53,9 @@ class HorizontalOutputBorderPart extends OutputBorderPart
 		if ($_border->startsAt()->y() == $this->startsAt->y())
 		{
 			if ($_border->startsAt()->x() >= $this->startsAt->x() &&
-				$_border->startsAt()->x() < $this->startsAt->x() + count($this->borderSymbols))
+				$_border->startsAt()->x() < $this->startsAt->x() + count($this->borderCollisionSymbols))
 			{
-				return $this->startsAt->x() + count($this->borderSymbols) - $_border->startsAt()->x();
+				return $_border->startsAt()->x() - $this->startsAt->x();
 			}
 		}
 
@@ -98,13 +98,34 @@ class HorizontalOutputBorderPart extends OutputBorderPart
 	 */
 	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
 	{
-		$x = $this->startsAt->x();
-		$y = $this->startsAt->y();
+		$startX = $this->startsAt->x();
+		$startY = $this->startsAt->y() * 2;
+		$totalBorderLength = $this->getTotalBorderLength();
 
-		foreach ($this->borderSymbols as $borderSymbol)
+		// TODO: Only if has left border
+		if (isset($this->borderCollisionSymbols[0])) $borderSymbolStart = $this->borderCollisionSymbols[0];
+		else $borderSymbolStart = $this->borderSymbolStart;
+
+		$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $startY), $borderSymbolStart);
+
+
+		for ($x = 1; $x < $totalBorderLength; $x++)
 		{
-			$_borderSymbolGrid->setSymbolAt(new Coordinate($x, $y), $borderSymbol);
-			$x++;
+			if (isset($this->borderCollisionSymbols[$x])) $borderSymbol = $this->borderCollisionSymbols[$x];
+			else $borderSymbol = $this->borderSymbolCenter;
+
+			$_borderSymbolGrid->setSymbolAt(new Coordinate($x, $startY), $borderSymbol);
 		}
+
+		// TODO: Only if has right border
+		$borderSymbolEndIndex = $startX + $totalBorderLength;
+
+		if (isset($this->borderCollisionSymbols[$totalBorderLength]))
+		{
+			$borderSymbolEnd = $this->borderCollisionSymbols[$totalBorderLength];
+		}
+		else $borderSymbolEnd = $this->borderSymbolEnd;
+
+		$_borderSymbolGrid->setSymbolAt(new Coordinate($borderSymbolEndIndex, $startY), $borderSymbolEnd);
 	}
 }

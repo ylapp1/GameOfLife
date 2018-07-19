@@ -37,8 +37,6 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
             "║",
             $_board
         );
-
-        $this->borderTopBottomWidth = $_board->width();
     }
 
 
@@ -59,12 +57,12 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    $this->borderSymbolTopLeft,
 		    $this->borderSymbolTopBottom,
 		    $this->borderSymbolTopRight,
+		    $this->borderSymbolTopLeft,
 		    "X",
+		    $this->borderSymbolTopRight,
+		    $this->borderSymbolTopLeft,
 		    "X",
-		    "X",
-		    "X",
-		    "X",
-		    "X"
+		    $this->borderSymbolTopRight
 	    );
 
         $_outputBoard->addBorderPart($border);
@@ -85,12 +83,12 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    $this->borderSymbolBottomLeft,
 		    $this->borderSymbolTopBottom,
 		    $this->borderSymbolBottomRight,
+		    $this->borderSymbolBottomLeft,
 		    "X",
+		    $this->borderSymbolBottomRight,
+		    $this->borderSymbolBottomLeft,
 		    "X",
-		    "X",
-		    "X",
-		    "X",
-		    "X"
+		    $this->borderSymbolBottomRight
 	    );
 
 	    $_outputBoard->addBorderPart($border);
@@ -111,12 +109,12 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    $this->borderSymbolTopLeft,
 		    $this->borderSymbolLeftRight,
 		    $this->borderSymbolBottomLeft,
+		    $this->borderSymbolTopLeft,
 		    "X",
+		    $this->borderSymbolBottomLeft,
+		    $this->borderSymbolTopLeft,
 		    "X",
-		    "X",
-		    "X",
-		    "X",
-		    "X"
+		    $this->borderSymbolBottomLeft
 	    );
 
         $_outputBoard->addBorderPart($border);
@@ -132,17 +130,17 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
     	// TODO: Think of outer/inner collision concept
 
         $border = new VerticalOutputBorderPart(
-        	new Coordinate($this->board->width(), 0),
-	        new Coordinate($this->board->width(), $this->board->height()),
+        	new Coordinate($this->board->width() + 1, 0),
+	        new Coordinate($this->board->width() + 1, $this->board->height()),
 	        $this->borderSymbolTopRight,
 	        $this->borderSymbolLeftRight,
 	        $this->borderSymbolBottomRight,
+	        $this->borderSymbolTopRight,
 	        "X",
+	        $this->borderSymbolBottomRight,
+	        $this->borderSymbolTopRight,
 	        "X",
-	        "X",
-	        "X",
-	        "X",
-	        "X"
+	        $this->borderSymbolBottomRight
         );
 
         $_outputBoard->addBorderPart($border);

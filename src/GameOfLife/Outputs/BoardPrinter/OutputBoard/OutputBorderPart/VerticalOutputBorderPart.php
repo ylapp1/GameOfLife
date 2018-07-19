@@ -53,9 +53,9 @@ class VerticalOutputBorderPart extends OutputBorderPart
 		if ($_border->startsAt()->x() == $this->startsAt->x())
 		{
 			if ($_border->startsAt()->y() >= $this->startsAt->y() &&
-				$_border->startsAt()->y() < $this->startsAt->y() + count($this->borderSymbols))
+				$_border->startsAt()->y() < $this->startsAt->y() + $this->getBorderLength())
 			{
-				return $this->startsAt->y() + count($this->borderSymbols) - $_border->startsAt()->y();
+				return $this->startsAt->y() + $this->getBorderLength() - $_border->startsAt()->y();
 			}
 		}
 
@@ -98,13 +98,36 @@ class VerticalOutputBorderPart extends OutputBorderPart
 	 */
 	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
 	{
-		$x = $this->startsAt->x();
-		$y = $this->startsAt->y();
+		$startX = $this->startsAt->x();
+		$startY = $this->startsAt->y() * 2;
+		$totalBorderLength = $this->getTotalBorderLength();
 
-		foreach ($this->borderSymbols as $borderSymbol)
+		// TODO: Only if has top border
+		if (isset($this->borderCollisionSymbols[0])) $borderSymbolStart = $this->borderCollisionSymbols[0];
+		else $borderSymbolStart = $this->borderSymbolStart;
+
+		$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $startY), $borderSymbolStart);
+
+
+		for ($y = 0; $y < $totalBorderLength - 1; $y++)
 		{
-			$_borderSymbolGrid->setSymbolAt(new Coordinate($x, $y), $borderSymbol);
-			$y++;
+			$yGrid = $startY + 1 + $y * 2;
+
+			if (isset($this->borderCollisionSymbols[$y])) $borderSymbol = $this->borderCollisionSymbols[$y];
+			else $borderSymbol = $this->borderSymbolCenter;
+
+			$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $yGrid), $borderSymbol);
 		}
+
+		// TODO: Only if has bottom border
+		$borderSymbolEndIndex = $startY + ($totalBorderLength - 1) * 2;
+
+		if (isset($this->borderCollisionSymbols[$totalBorderLength]))
+		{
+			$borderSymbolEnd = $this->borderCollisionSymbols[$totalBorderLength];
+		}
+		else $borderSymbolEnd = $this->borderSymbolEnd;
+
+		$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $borderSymbolEndIndex), $borderSymbolEnd);
 	}
 }

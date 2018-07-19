@@ -80,22 +80,30 @@ class BorderSymbolGrid extends SymbolGrid
 		$lowestColumnId = 0; // TODO: Fetch lower column ids
 		$highestColumnId = $_boardWidth; // TODO: Fetch highest column ids
 
+
+		$rowIndexes = array_keys($this->symbolRows);
+		sort($rowIndexes);
+		$lowestRowIndex = array_shift($rowIndexes);
+		$highestRowIndex = array_pop($rowIndexes);
+
 		foreach ($this->symbolRows as $y => $symbolRow)
 		{
 			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
+			$isBorderRow = ($y % 2 == 0);
 
 			for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 			{
-				if (! isset($this->symbolRows[$y][$x]))
+				if (!isset($this->symbolRows[$y][$x]))
 				{
-					$symbol = " ";
-					if ($rowContainsBorderSymbol || $this->columnContainsBorderSymbol($x))
+					if ($rowContainsBorderSymbol && $isBorderRow || $this->columnContainsBorderSymbol($x, $lowestRowIndex, $highestRowIndex))
 					{
+						$symbol = " ";
+
 						$gapContainingBorder = $this->getBorderContainingCoordinate(new Coordinate($x, $y));
 						if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->borderSymbolCenter();
-					}
 
-					$this->symbolRows[$y][$x] = $symbol;
+						$this->symbolRows[$y][$x] = $symbol;
+					}
 				}
 			}
 		}
@@ -118,14 +126,21 @@ class BorderSymbolGrid extends SymbolGrid
 	 * Returns whether a specific column contains any border symbols.
 	 *
 	 * @param int $_x The X-Position of the column
+	 * @param int $_lowestRowIndex The lowest row index which will be ignored because it contains the outer upper border
+	 * @param int $_highestRowIndex The highest row index which will be ignored because it contains the outer bottom border
 	 *
 	 * @return Bool True if the column contains a border symbol, false otherwise
 	 */
-	private function columnContainsBorderSymbol(int $_x): Bool
+	private function columnContainsBorderSymbol(int $_x, int $_lowestRowIndex, int $_highestRowIndex): Bool
 	{
-		foreach ($this->symbolRows as $symbolRow)
+		// TODO: Fix this, determine which stuff is outer border
+
+		foreach ($this->symbolRows as $y => $symbolRow)
 		{
-			if (isset($symbolRow[$_x])) return true;
+			if (! ($y == $_lowestRowIndex || $y == $_highestRowIndex))
+			{
+				if (isset($symbolRow[$_x])) return true;
+			}
 		}
 
 		return false;

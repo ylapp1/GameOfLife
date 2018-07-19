@@ -10,6 +10,7 @@ namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
+use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**
  * Prints the borders for selection areas inside boards.
@@ -51,4 +52,44 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
     {
         $this->init($_board, $_selectionArea->topLeftCornerCoordinate(), $_selectionArea->bottomRightCornerCoordinate());
     }
+
+	/**
+	 * Adds the top border of this border to an output board.
+	 *
+	 * @param OutputBoard $_outputBoard The output board
+	 */
+	protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard)
+	{
+		// TODO: Implement addBorderTopToOutputBoard() method.
+	}
+
+	/**
+	 * Adds the bottom border of this border to an output board.
+	 *
+	 * @param OutputBoard $_outputBoard The output board
+	 */
+	protected function addBorderBottomToOutputBoard(OutputBoard $_outputBoard)
+	{
+		// TODO: Implement addBorderBottomToOutputBoard() method.
+	}
+
+	/**
+	 * Adds the left border of this border to an output board.
+	 *
+	 * @param OutputBoard $_outputBoard The output board
+	 */
+	protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard)
+	{
+		// TODO: Implement addBorderLeftToOutputBoard() method.
+	}
+
+	/**
+	 * Adds the right border of this border to an output board.
+	 *
+	 * @param OutputBoard $_outputBoard The output board
+	 */
+	protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard)
+	{
+		// TODO: Implement addBorderRightToOutputBoard() method.
+	}
 }

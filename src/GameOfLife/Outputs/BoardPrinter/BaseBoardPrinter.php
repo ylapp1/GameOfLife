@@ -88,7 +88,7 @@ abstract class BaseBoardPrinter
             $this->outputBoard->addBoardFieldSymbolsRow($rowOutputSymbols);
         }
 
-        $this->border->addBordersToOutputBoard($this->outputBoard);
+	    if ($this->outputBoard->hasCachedBorders() == false) $this->border->addBordersToOutputBoard($this->outputBoard);
 
         return implode("\n", $this->outputBoard->getRowStrings($_board->width())) . "\n";
     }
