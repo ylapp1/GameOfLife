@@ -9,11 +9,12 @@
 namespace Output\BoardPrinter\OutputBoard\OutputBorderPart;
 
 use GameOfLife\Coordinate;
+use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 
 /**
  * Class VerticalOutputBorderPart
  */
-class VerticalOutputBorderPart extends LineOutputBorderPart
+class VerticalOutputBorderPart extends OutputBorderPart
 {
 	// Magic Methods
 
@@ -68,7 +69,8 @@ class VerticalOutputBorderPart extends LineOutputBorderPart
 	 */
 	protected function getBorderLength(): int
 	{
-		return $this->endsAt->y() - $this->startsAt->y() + 1;
+		$totalLength = $this->endsAt->y() - ($this->startsAt->y() - 1);
+		return $totalLength - 2;
 	}
 
 	/**
@@ -87,5 +89,22 @@ class VerticalOutputBorderPart extends LineOutputBorderPart
 			return true;
 		}
 		else return false;
+	}
+
+	/**
+	 * Adds the border symbols of this border to a border symbol grid.
+	 *
+	 * @param BorderSymbolGrid $_borderSymbolGrid The border symbol grid
+	 */
+	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
+	{
+		$x = $this->startsAt->x();
+		$y = $this->startsAt->y();
+
+		foreach ($this->borderSymbols as $borderSymbol)
+		{
+			$_borderSymbolGrid->setSymbolAt(new Coordinate($x, $y), $borderSymbol);
+			$y++;
+		}
 	}
 }

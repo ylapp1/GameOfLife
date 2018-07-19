@@ -64,7 +64,8 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    "X",
 		    "X",
 		    "X",
-		    "X");
+		    "X"
+	    );
 
         $_outputBoard->addBorderPart($border);
     }
@@ -89,7 +90,8 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    "X",
 		    "X",
 		    "X",
-		    "X");
+		    "X"
+	    );
 
 	    $_outputBoard->addBorderPart($border);
     }
@@ -114,7 +116,8 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 		    "X",
 		    "X",
 		    "X",
-		    "X");
+		    "X"
+	    );
 
         $_outputBoard->addBorderPart($border);
     }
@@ -139,7 +142,8 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
 	        "X",
 	        "X",
 	        "X",
-	        "X");
+	        "X"
+        );
 
         $_outputBoard->addBorderPart($border);
     }
