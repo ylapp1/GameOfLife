@@ -92,31 +92,44 @@ class OutputBoard
     	$borderSymbolRows = $this->borderSymbolGrid->symbolRows();
 
     	// Create a list of row ids
+	    /*
 	    $rowIds = array();
 	    $rowIds = array_merge($rowIds, array_keys($cellSymbolRows));
 	    $rowIds = array_merge($rowIds, array_keys($borderSymbolRows));
 	    $rowIds = array_unique($rowIds);
 	    sort($rowIds);
+	    */
 
         $rowStrings = array();
-        foreach ($rowIds as $rowId)
+
+        $borderSymbolRowIndex = 0;
+        foreach ($cellSymbolRows as $y => $cellSymbolRow)
         {
         	// Add borders between rows
-        	if (isset($borderSymbolRows[$rowId])) $rowStrings[] = implode("", $borderSymbolRows[$rowId]);
+        	if (isset($borderSymbolRows[$borderSymbolRowIndex])) $rowStrings[] = implode("", $borderSymbolRows[$borderSymbolRowIndex]);
+        	$borderSymbolRowIndex++;
 
-        	if (isset($cellSymbolRows[$rowId]))
+        	if (isset($cellSymbolRows[$y]))
 	        {
+	        	$borderSymbolRowIsSet = isset($borderSymbolRows[$borderSymbolRowIndex]);
 	        	$rowString = "";
-	        	foreach ($cellSymbolRows[$rowId] as $x => $cellSymbol)
+	        	foreach ($cellSymbolRows[$y] as $x => $cellSymbol)
 		        {
 		        	// Add borders between columns
-			        if (isset($borderSymbolRows[$rowId][$x])) $rowString .= $borderSymbolRows[$rowId][$x];
+			        if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$x]))
+			        {
+			        	$rowString .= $borderSymbolRows[$borderSymbolRowIndex][$x];
+			        }
 			        $rowString .= $cellSymbol;
 		        }
 
 		        $rowStrings[] = $rowString;
 	        }
+	        $borderSymbolRowIndex++;
         }
+
+        // Also add the border below the board
+	    if (isset($borderSymbolRows[$borderSymbolRowIndex])) $rowStrings[] = implode("", $borderSymbolRows[$borderSymbolRowIndex]);
 
         return $rowStrings;
     }

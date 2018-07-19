@@ -64,6 +64,7 @@ class BorderSymbolGrid extends SymbolGrid
 
 	/**
 	 * Adds the border symbols to the symbol grid.
+	 * The grid has two rows per cell symbol row, one for the border above the row and the other for the borders inside the row.
 	 *
 	 * @param int $_boardWidth The number of fields per row
 	 */
@@ -82,18 +83,17 @@ class BorderSymbolGrid extends SymbolGrid
 		foreach ($this->symbolRows as $y => $symbolRow)
 		{
 			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
-			if (! $rowContainsBorderSymbol) continue;
 
 			for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 			{
 				if (! isset($this->symbolRows[$y][$x]))
 				{
-					$gapContainingBorder = null;
-					if ($rowContainsBorderSymbol) $gapContainingBorder = $this->isGapInsideHorizontalBorder(new Coordinate($x, $y));
-					elseif ($this->columnContainsBorderSymbol($x)) $gapContainingBorder = $this->isGapInsideVerticalBorder(new Coordinate($x, $y));
-
-					if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->borderSymbolCenter();
-					else $symbol = " ";
+					$symbol = " ";
+					if ($rowContainsBorderSymbol || $this->columnContainsBorderSymbol($x))
+					{
+						$gapContainingBorder = $this->getBorderContainingCoordinate(new Coordinate($x, $y));
+						if ($gapContainingBorder !== null) $symbol = $gapContainingBorder->borderSymbolCenter();
+					}
 
 					$this->symbolRows[$y][$x] = $symbol;
 				}
@@ -132,40 +132,17 @@ class BorderSymbolGrid extends SymbolGrid
 	}
 
 	/**
-	 * Checks whether a gap is in the center of a horizontal border.
+	 * Returns the first border that contains a specific coordinate.
 	 *
-	 * @param Coordinate $_gapPosition The position of the gap in the symbol grid
+	 * @param Coordinate $_coordinate The coordinate
 	 *
-	 * @return OutputBorderPart|null The first output border that contains the gap or null
+	 * @return OutputBorderPart|null The first output border that contains the coordinate or null if no border contains the coordinate
 	 */
-	private function isGapInsideHorizontalBorder(Coordinate $_gapPosition)
+	private function getBorderContainingCoordinate(Coordinate $_coordinate)
 	{
 		foreach ($this->borders as $border)
 		{
-			if ($border->startsAt()->x() < $_gapPosition->x() && $border->endsAt()->x() > $_gapPosition->x())
-			{
-				return $border;
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Checks whether a gap is in the center of a vertical border.
-	 *
-	 * @param Coordinate $_gapPosition The position of the gap in the symbol grid
-	 *
-	 * @return OutputBorderPart|null The first output border that contains the gap or null
-	 */
-	private function isGapInsideVerticalBorder(Coordinate $_gapPosition)
-	{
-		foreach ($this->borders as $border)
-		{
-			if ($border->startsAt()->y() < $_gapPosition->y() && $border->endsAt()->y() > $_gapPosition->y())
-			{
-				return $border;
-			}
+			if ($border->containsCoordinateBetweenEdges($_coordinate)) return $border;
 		}
 
 		return null;

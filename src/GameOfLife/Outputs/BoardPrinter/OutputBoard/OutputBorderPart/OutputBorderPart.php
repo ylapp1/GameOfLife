@@ -280,4 +280,14 @@ abstract class OutputBorderPart
 	 * @param BorderSymbolGrid $_borderSymbolGrid The border symbol grid
 	 */
     abstract public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid);
+
+	/**
+	 * Returns whether the output border contains a specific coordinate between its left and right edge.
+	 * This does not include the coordinates of the left and right edge.
+	 *
+	 * @param Coordinate $_coordinate The coordinate
+	 *
+	 * @return Bool True if the output border contains the coordinate, false otherwise
+	 */
+    abstract public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool;
 }

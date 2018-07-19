@@ -70,4 +70,22 @@ class HorizontalOutputBorderPart extends LineOutputBorderPart
 	{
 		return $this->endsAt->x() - $this->startsAt->x() + 1;
 	}
+
+	/**
+	 * Returns whether the output border contains a specific coordinate between its left and right edge.
+	 * This does not include the coordinates of the left and right edge.
+	 *
+	 * @param Coordinate $_coordinate The coordinate
+	 *
+	 * @return Bool True if the output border contains the coordinate, false otherwise
+	 */
+	public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool
+	{
+		if ($this->startsAt->y() == $_coordinate->y() && $this->endsAt->y() == $_coordinate->y() &&
+			$this->startsAt->x() < $_coordinate->x() && $this->endsAt->x() > $_coordinate->x())
+		{
+			return true;
+		}
+		else return false;
+	}
 }
