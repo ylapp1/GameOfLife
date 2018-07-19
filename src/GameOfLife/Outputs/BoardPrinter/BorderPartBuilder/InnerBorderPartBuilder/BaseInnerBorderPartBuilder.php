@@ -129,8 +129,6 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
         {
             $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
         }
-
-        $this->borderTopBottomWidth = $_board->width() - ($this->distanceToBottomOuterBorder + 1) - ($this->distanceToRightOuterBorder + 1);
     }
 
 
@@ -158,69 +156,5 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
     public function hasRightBorder()
     {
     	return $this->distanceToRightOuterBorder;
-    }
-
-
-	/**
-	 * Returns the string for the top border.
-	 *
-	 * @return String The string for the top border
-	 */
-    public function getBorderTopString(): String
-    {
-        return $this->getBorderTopBottomString($this->borderSymbolTopLeft, $this->borderSymbolTopRight);
-    }
-
-	/**
-	 * Returns the string for the bottom border.
-	 *
-	 * @return String The string for the bottom border
-	 */
-    public function getBorderBottomString(): String
-    {
-        return $this->getBorderTopBottomString($this->borderSymbolBottomLeft, $this->borderSymbolBottomRight);
-    }
-
-	/**
-	 * Returns a string for either the top or bottom border of this inner border.
-	 * The bottom and top borders only differ in the left and right edge symbols.
-	 *
-	 * @param String $_borderLeftSymbol The symbol for the left edge of the inner border when the border does not collide with the outer border
-	 * @param String $_borderRightSymbol The symbol for the right edge of the inner border when the border does not collide with the outer border
-	 *
-	 * @return String The top or bottom border string of this inner border
-	 */
-    private function getBorderTopBottomString(String $_borderLeftSymbol, String $_borderRightSymbol): String
-    {
-        if ($this->hasLeftBorder()) $borderLeftSymbol = $_borderLeftSymbol;
-        else $borderLeftSymbol = "";
-
-        if ($this->hasRightBorder()) $borderRightSymbol = $_borderRightSymbol;
-        else $borderRightSymbol = "";
-
-        $borderTopBottomString = $this->getHorizontalLineString(
-            $this->borderTopBottomWidth, $borderLeftSymbol, $borderRightSymbol, $this->borderSymbolTopBottom
-        );
-
-        $paddingLeftString = str_repeat(" ", $this->distanceToLeftOuterBorder);
-        $paddingRightString = str_repeat(" ", $this->distanceToRightOuterBorder);
-	    $borderTopBottomString = $paddingLeftString . $borderTopBottomString . $paddingRightString;
-
-	    $borderSymbolLeftRight = $this->parentBorder->borderSymbolLeftRight();
-
-        return $borderSymbolLeftRight . $borderTopBottomString . $borderSymbolLeftRight;
-    }
-
-
-	public function calculateBorderTopBottomWidth()
-	{
-		// TODO: Implement calculateBorderTopBottomWidth() method.
-	}
-
-	protected function getParentOuterBorder()
-    {
-        if ($this->parentBorder instanceof BaseOuterBorderPartBuilder) return $this->parentBorder;
-        elseif ($this->parentBorder instanceof BaseInnerBorderPartBuilder) return $this->parentBorder->getParentOuterBorder();
-        else return null;
     }
 }

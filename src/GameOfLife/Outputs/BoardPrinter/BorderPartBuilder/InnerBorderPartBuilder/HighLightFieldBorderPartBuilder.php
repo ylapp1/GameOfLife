@@ -21,13 +21,10 @@ class HighLightFieldBorderPartBuilder extends BaseInnerBorderPartBuilder
 
     /**
      * HighLightFieldBorderPartBuilder constructor.
-     *
-     * @param Board $_board The board to which this border printer belongs
      */
-    public function __construct(Board $_board)
+    public function __construct()
     {
         parent::__construct(
-	        $_board,
             "┼",
             "┼",
             "┼",

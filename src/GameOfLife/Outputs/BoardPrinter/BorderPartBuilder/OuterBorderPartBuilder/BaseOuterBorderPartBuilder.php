@@ -46,34 +46,4 @@ abstract class BaseOuterBorderPartBuilder extends BaseBorderPartBuilder
 
 		$this->board = $_board;
 	}
-
-
-	// Class Methods
-
-    /**
-     * Returns all left and right border positions of all inner borders.
-     *
-     * @return array
-     */
-	public function getInnerBorderLeftRightPositions()
-    {
-    	// TODO: Obsolete
-        $innerBorderLeftRightPositions = array();
-
-        foreach ($this->innerBorders as $innerBorder)
-        {
-            if ($innerBorder->hasLeftBorder() && $innerBorder->hasLeftBorder() < $this->board->width())
-            {
-                $innerBorderLeftRightPositions[] = $innerBorder->hasLeftBorder();
-            }
-            if ($innerBorder->hasRightBorder() && $innerBorder->hasRightBorder() < $this->board->width())
-            {
-                $innerBorderLeftRightPositions[] = $innerBorder->hasRightBorder();
-            }
-        }
-
-        $innerBorderLeftRightPositions = array_unique($innerBorderLeftRightPositions);
-
-        return $innerBorderLeftRightPositions;
-    }
 }

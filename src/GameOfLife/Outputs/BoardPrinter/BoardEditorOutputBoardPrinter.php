@@ -62,8 +62,8 @@ class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
     public function __construct(Board $_board)
     {
         parent::__construct("o", " ", new BoardOuterBorderPartBuilder($_board));
-        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPartBuilder($_board);
-        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPartBuilder($_board);
+        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPartBuilder();
+        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPartBuilder();
     }
 
 
