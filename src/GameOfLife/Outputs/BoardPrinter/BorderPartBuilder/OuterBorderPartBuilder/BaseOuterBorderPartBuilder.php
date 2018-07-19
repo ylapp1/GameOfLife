@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\Border\OuterBorder;
+namespace Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\Border\BaseBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
 
 /**
  * Parent class for outer borders.
@@ -48,24 +48,7 @@ abstract class BaseOuterBorderPartBuilder extends BaseBorderPartBuilder
 	}
 
 
-	// Getters and Setters
-
-	public function addInnerBorder($_innerBorder)
-	{
-		parent::addInnerBorder($_innerBorder);
-		$this->calculateBorderTopBottomWidth();
-	}
-
-
 	// Class Methods
-
-	/**
-	 * Calculates and sets the top and bottom border with based on the inner borders of this border.
-	 */
-	protected function calculateBorderTopBottomWidth()
-	{
-		$this->borderTopBottomWidth = $this->board->width() + count($this->getInnerBorderLeftRightPositions());
-	}
 
     /**
      * Returns all left and right border positions of all inner borders.
@@ -74,6 +57,7 @@ abstract class BaseOuterBorderPartBuilder extends BaseBorderPartBuilder
      */
 	public function getInnerBorderLeftRightPositions()
     {
+    	// TODO: Obsolete
         $innerBorderLeftRightPositions = array();
 
         foreach ($this->innerBorders as $innerBorder)

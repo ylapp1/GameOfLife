@@ -9,8 +9,8 @@
 namespace Output\BoardPrinter\OutputBoard\OutputBorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorderPartBuilder;
-use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BaseOuterBorderPartBuilder;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
 
 /**

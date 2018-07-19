@@ -47,7 +47,7 @@ class HorizontalOutputBorderPart extends LineOutputBorderPart
 	 *
 	 * @return int|null The position at which this border collides with a border or null if the borders don't collide
 	 */
-	public function collidesWith(OutputBorderPart $_border): int
+	public function collidesWith(OutputBorderPart $_border)
 	{
 		if ($_border->startsAt()->y() == $this->startsAt->y())
 		{

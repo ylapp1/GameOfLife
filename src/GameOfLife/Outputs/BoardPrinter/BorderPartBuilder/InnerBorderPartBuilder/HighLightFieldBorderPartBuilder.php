@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\Border\InnerBorder;
+namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;

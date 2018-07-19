@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\Border\InnerBorder;
+namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 
 /**
  * The horizontal <board width> x 1 border part of the high light field border.

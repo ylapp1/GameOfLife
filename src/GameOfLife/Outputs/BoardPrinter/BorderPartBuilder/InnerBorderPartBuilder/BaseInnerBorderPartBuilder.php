@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\Border\InnerBorder;
+namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\Border\BaseBorderPartBuilder;
-use Output\BoardPrinter\Border\OuterBorder\BaseOuterBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BaseOuterBorderPartBuilder;
 
 /**
  * Parent class for inner border printers.
@@ -211,88 +211,6 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
         return $borderSymbolLeftRight . $borderTopBottomString . $borderSymbolLeftRight;
     }
 
-	/**
-	 * Adds borders to a row string.
-	 *
-	 * @param String $_rowOutputString The row string
-	 * @param int $_y The Y-Coordinate of the row string
-	 *
-	 * @return String The row string with added borders
-	 */
-    public function addBordersToRowString(String $_rowOutputString, int $_y): String
-    {
-        $rowString = $_rowOutputString;
-
-	    // TODO: Left right border
-	    if ($_y >= $this->topLeftCornerCoordinate->y() && $_y <= $this->bottomRightCornerCoordinate->y())
-	    {
-		    $borderSymbolLeftRight = $this->borderSymbolLeftRight;
-	    }
-	    else $borderSymbolLeftRight = " ";
-
-	    $rowString = $this->addCollisionBordersToRowString($rowString, $borderSymbolLeftRight);
-
-        if ($this->hasTopBorder() && $_y == $this->topLeftCornerCoordinate->y())
-        { // Inner top border
-            $rowString = $this->getBorderTopString() . "\n" . $rowString;
-        }
-        if ($this->hasBottomBorder() && $_y == $this->bottomRightCornerCoordinate->y() + (bool)$this->hasTopBorder())
-        { // Inner border bottom
-        	$rowString = $this->getBorderBottomString() . "\n". $rowString;
-        }
-
-        return $rowString;
-    }
-
-
-
-    public function addCollisionBorderToTopOuterBorder(String $_topOuterBorderString): String
-    {
-        if ($this->hasTopBorder()) $borderSymbol = "X"; // TODO: This method cannot know the outer border symbol
-        else $borderSymbol = $this->borderSymbolCollisionTopOuterBorder;
-
-        return $this->addCollisionBorderToOuterBorder($_topOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
-    }
-
-    public function addCollisionBorderToBottomOuterBorder(String $_bottomOuterBorderString): String
-    {
-        if (! $this->hasBottomBorder()) $borderSymbol = $this->borderSymbolCollisionBottomOuterBorder;
-        else $borderSymbol = "X"; // TODO: This method cannot know the outer border symbol
-
-        return $this->addCollisionBorderToOuterBorder($_bottomOuterBorderString, $borderSymbol, $this->borderSymbolPositionsLeftRight);
-    }
-
-    private function addCollisionBorderToOuterBorder(String $_outerBorderString, String $_borderSymbol, array $_borderSymbolPositions): String
-    {
-        $outerBorderString = $_outerBorderString;
-        //if ($_borderSymbol) substr_replace
-
-        foreach ($_borderSymbolPositions as $borderSymbolPosition)
-        {
-            $outerBorderString = substr_replace($outerBorderString, $_borderSymbol, $borderSymbolPosition, 0);
-        }
-
-        return $outerBorderString;
-    }
-
-	private function addCollisionBordersToRowString(String $_rowString, String $_borderSymbolLeftRight): String
-	{
-		// TODO: This method cannot know the number of outer borders in the string ...
-		$rowString = $_rowString;
-
-		if ($this->hasLeftBorder())
-		{
-			$borderSymbolPosition = $this->distanceToLeftOuterBorder + 1;
-			$rowString = mb_substr($rowString, 0, $borderSymbolPosition) . $_borderSymbolLeftRight . mb_substr($rowString, $borderSymbolPosition);
-		}
-		if ($this->hasRightBorder())
-		{
-			$borderSymbolPosition = mb_strlen($rowString) - ($this->distanceToRightOuterBorder + 1);
-			$rowString = mb_substr($rowString, 0, $borderSymbolPosition) . $_borderSymbolLeftRight . mb_substr($rowString, $borderSymbolPosition);
-		}
-
-		return $rowString;
-	}
 
 	public function calculateBorderTopBottomWidth()
 	{

@@ -12,9 +12,9 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardPrinter\Border\InnerBorder\HighLightFieldBorderPartBuilder;
-use Output\BoardPrinter\Border\InnerBorder\SelectionAreaBorderPartBuilder;
-use Output\BoardPrinter\Border\OuterBorder\BoardOuterBorderPartBuilde;
+use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\HighLightFieldBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\SelectionAreaBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
 
 /**
  * BoardPrinter for the BoardEditorOutput.
@@ -61,7 +61,7 @@ class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("o", " ", new BoardOuterBorderPartBuilde($_board));
+        parent::__construct("o", " ", new BoardOuterBorderPartBuilder($_board));
         $this->highLightFieldBorderPrinter = new HighLightFieldBorderPartBuilder($_board);
         $this->selectionAreaBorderPrinter = new SelectionAreaBorderPartBuilder($_board);
     }

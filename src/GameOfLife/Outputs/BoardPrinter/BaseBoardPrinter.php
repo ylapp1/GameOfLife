@@ -10,7 +10,8 @@ namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Output\BoardPrinter\Border\BaseBorderPartBuilder;
+use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**
  * Parent class for board printers.

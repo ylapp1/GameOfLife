@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter;
+namespace Output\BoardPrinter\OutputBoard;
 
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
 use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;

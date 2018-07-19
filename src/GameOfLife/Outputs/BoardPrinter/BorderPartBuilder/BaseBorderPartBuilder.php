@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\Border;
+namespace Output\BoardPrinter\BorderPartBuilder;
 
-use Output\BoardPrinter\Border\InnerBorder\BaseInnerBorderPartBuilder;
-use Output\BoardPrinter\OutputBoard;
+use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**
  * Parent class for border printers.
@@ -138,8 +138,6 @@ abstract class BaseBorderPartBuilder
 	{
 		$this->innerBorders[] = $_innerBorder;
 		$_innerBorder->setParentBorder($this);
-
-		$this->calculateBorderTopBottomWidth();
 	}
 
 	/**
@@ -152,21 +150,11 @@ abstract class BaseBorderPartBuilder
 
 	public function addBordersToOutputBoard(OutputBoard $_outputBoard)
     {
-        // TODO: Outer + inner border top/bottom left/right
-        // TODO: Outer + inner border collisions
-
         $this->addBorderTopToOutputBoard($_outputBoard);
         $this->addBorderBottomToOutputBoard($_outputBoard);
         $this->addBorderLeftToOutputBoard($_outputBoard);
         $this->addBorderRightToOutputBoard($_outputBoard);
     }
-
-	/**
-	 * Calculates and sets the top and bottom border with.
-     *
-     * TODO: Is this necessary?
-	 */
-    abstract protected function calculateBorderTopBottomWidth();
 
     /**
      * Adds the top border of this border to an output board.
