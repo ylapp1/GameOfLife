@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPartBuilder;
+namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder;
 
-use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorderPartBuilder;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**

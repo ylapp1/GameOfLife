@@ -9,7 +9,7 @@
 namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
 
 /**
  * The BoardPrinter for the ConsoleOutput.

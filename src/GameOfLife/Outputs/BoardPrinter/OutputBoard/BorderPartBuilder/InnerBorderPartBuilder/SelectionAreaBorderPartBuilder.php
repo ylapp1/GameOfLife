@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
+namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;

@@ -10,7 +10,7 @@ namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorderPartBuilder;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**

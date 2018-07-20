@@ -12,9 +12,9 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\HighLightFieldBorderPartBuilder;
-use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\SelectionAreaBorderPartBuilder;
-use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\HighLightFieldBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\SelectionAreaBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
 
 /**
  * BoardPrinter for the BoardEditorOutput.

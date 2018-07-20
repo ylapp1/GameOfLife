@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder;
+namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorderPartBuilder;
 
 /**
  * Parent class for outer borders.
