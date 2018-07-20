@@ -10,7 +10,10 @@ namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalOutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalOutputBorderPart;
 
 /**
  * Prints the borders for selection areas inside boards.
@@ -58,7 +61,21 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard)
 	{
-		// TODO: Implement addBorderTopToOutputBoard() method.
+		$border = new HorizontalOutputBorderPart(
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			$this->borderSymbolTopLeft,
+			$this->borderSymbolTopBottom,
+			$this->borderSymbolTopRight,
+			$this->borderSymbolTopLeft,
+			"X",
+			$this->borderSymbolTopRight,
+			$this->borderSymbolTopLeft,
+			"X",
+			$this->borderSymbolTopRight
+		);
+
+		$_outputBoard->addBorderPart($border);
 	}
 
 	/**
@@ -68,7 +85,21 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderBottomToOutputBoard(OutputBoard $_outputBoard)
 	{
-		// TODO: Implement addBorderBottomToOutputBoard() method.
+		$border = new HorizontalOutputBorderPart(
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
+			$this->borderSymbolBottomLeft,
+			$this->borderSymbolTopBottom,
+			$this->borderSymbolBottomRight,
+			$this->borderSymbolBottomLeft,
+			"X",
+			$this->borderSymbolBottomRight,
+			$this->borderSymbolBottomLeft,
+			"X",
+			$this->borderSymbolBottomRight
+		);
+
+		$_outputBoard->addBorderPart($border);
 	}
 
 	/**
@@ -78,7 +109,21 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard)
 	{
-		// TODO: Implement addBorderLeftToOutputBoard() method.
+		$border = new VerticalOutputBorderPart(
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
+			$this->borderSymbolTopLeft,
+			$this->borderSymbolLeftRight,
+			$this->borderSymbolBottomLeft,
+			$this->borderSymbolTopLeft,
+			"X",
+			$this->borderSymbolBottomLeft,
+			$this->borderSymbolTopLeft,
+			"X",
+			$this->borderSymbolBottomLeft
+		);
+
+		$_outputBoard->addBorderPart($border);
 	}
 
 	/**
@@ -88,6 +133,20 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard)
 	{
-		// TODO: Implement addBorderRightToOutputBoard() method.
+		$border = new VerticalOutputBorderPart(
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
+			$this->borderSymbolTopRight,
+			$this->borderSymbolLeftRight,
+			$this->borderSymbolBottomRight,
+			$this->borderSymbolCollisionRightOuterBorder,
+			"X",
+			$this->borderSymbolCollisionRightOuterBorder,
+			$this->borderSymbolTopRight,
+			"X",
+			$this->borderSymbolBottomRight
+		);
+
+		$_outputBoard->addBorderPart($border);
 	}
 }

@@ -130,6 +130,11 @@ abstract class BaseBorderPartBuilder
         $this->addBorderBottomToOutputBoard($_outputBoard);
         $this->addBorderLeftToOutputBoard($_outputBoard);
         $this->addBorderRightToOutputBoard($_outputBoard);
+
+        foreach ($this->innerBorders as $innerBorder)
+        {
+        	$innerBorder->addBordersToOutputBoard($_outputBoard);
+        }
     }
 
     /**

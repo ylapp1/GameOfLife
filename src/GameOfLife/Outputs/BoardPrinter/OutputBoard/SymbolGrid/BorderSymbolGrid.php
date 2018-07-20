@@ -77,8 +77,18 @@ class BorderSymbolGrid extends SymbolGrid
 		}
 
 		// Fill the border gaps with border symbols or empty space
-		$lowestColumnId = 0; // TODO: Fetch lower column ids
-		$highestColumnId = $_boardWidth; // TODO: Fetch highest column ids
+		$lowestColumnIndex = 0;
+		$highestColumnIndex = 0;
+
+		foreach ($this->symbolRows as $symbolRow)
+		{
+			$columnIndexes = array_keys($symbolRow);
+			$symbolRowLowestColumnIndex = array_shift($columnIndexes);
+			$symbolRowHighestColumnIndex = array_pop($columnIndexes);
+
+			if ($symbolRowLowestColumnIndex < $lowestColumnIndex) $lowestColumnIndex = $symbolRowLowestColumnIndex;
+			if ($symbolRowHighestColumnIndex > $highestColumnIndex) $highestColumnIndex = $symbolRowHighestColumnIndex;
+		}
 
 
 		$rowIndexes = array_keys($this->symbolRows);
@@ -91,7 +101,7 @@ class BorderSymbolGrid extends SymbolGrid
 			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
 			$isBorderRow = ($y % 2 == 0);
 
-			for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
+			for ($x = $lowestColumnIndex; $x <= $highestColumnIndex; $x++)
 			{
 				if (!isset($this->symbolRows[$y][$x]))
 				{
@@ -106,6 +116,8 @@ class BorderSymbolGrid extends SymbolGrid
 					}
 				}
 			}
+
+			ksort($this->symbolRows[$y]);
 		}
 	}
 

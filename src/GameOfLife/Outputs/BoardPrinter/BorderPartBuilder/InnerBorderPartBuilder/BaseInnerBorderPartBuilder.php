@@ -11,7 +11,6 @@ namespace Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\BorderPartBuilder\BaseBorderPartBuilder;
-use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BaseOuterBorderPartBuilder;
 
 /**
  * Parent class for inner border printers.
@@ -27,28 +26,28 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
 	 *
 	 * @var String $borderSymbolCollisionTopOuterBorder
 	 */
-    private $borderSymbolCollisionTopOuterBorder;
+    protected $borderSymbolCollisionTopOuterBorder;
 
 	/**
 	 * The symbol that will be placed in the bottom outer border when this border collides with it
 	 *
 	 * @var String $borderSymbolCollisionBottomOuterBorder
 	 */
-    private $borderSymbolCollisionBottomOuterBorder;
+	protected $borderSymbolCollisionBottomOuterBorder;
 
 	/**
 	 * The symbol that will be placed in the left outer border when this border collides with it
 	 *
 	 * @var String $borderSymbolCollisionLeftOuterBorder
 	 */
-    private $borderSymbolCollisionLeftOuterBorder;
+	protected $borderSymbolCollisionLeftOuterBorder;
 
 	/**
 	 * The symbol that will be placed in the right outer border when this border collides with it
 	 *
 	 * @var String $borderSymbolCollisionRightOuterBorder
 	 */
-    private $borderSymbolCollisionRightOuterBorder;
+	protected $borderSymbolCollisionRightOuterBorder;
 
 
     protected $distanceToTopOuterBorder;

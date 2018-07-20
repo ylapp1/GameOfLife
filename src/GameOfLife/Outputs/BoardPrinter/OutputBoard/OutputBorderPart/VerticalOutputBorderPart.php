@@ -84,7 +84,7 @@ class VerticalOutputBorderPart extends OutputBorderPart
 	public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool
 	{
 		if ($this->startsAt->x() == $_coordinate->x() && $this->endsAt->x() == $_coordinate->x() &&
-			$this->startsAt->y() < $_coordinate->y() && $this->endsAt->y() > $_coordinate->y())
+			$this->startsAt->y() * 2 < $_coordinate->y() && $this->endsAt->y() * 2 > $_coordinate->y())
 		{
 			return true;
 		}
