@@ -103,13 +103,13 @@ class HorizontalOutputBorderPart extends OutputBorderPart
 		$totalBorderLength = $this->getTotalBorderLength();
 
 		// TODO: Only if has left border
-		if (isset($this->borderCollisionSymbols[0])) $borderSymbolStart = $this->borderCollisionSymbols[0];
+		if (isset($this->borderCollisionSymbols[$startX])) $borderSymbolStart = $this->borderCollisionSymbols[$startX];
 		else $borderSymbolStart = $this->borderSymbolStart;
 
 		$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $startY), $borderSymbolStart);
 
 
-		for ($x = 1; $x < $totalBorderLength; $x++)
+		for ($x = $startX + 1; $x < $startX + $totalBorderLength; $x++)
 		{
 			if (isset($this->borderCollisionSymbols[$x])) $borderSymbol = $this->borderCollisionSymbols[$x];
 			else $borderSymbol = $this->borderSymbolCenter;

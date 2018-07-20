@@ -10,6 +10,7 @@ namespace Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalOutputBorderPart;
 
 /**
  * Container to store border symbols.
@@ -90,12 +91,6 @@ class BorderSymbolGrid extends SymbolGrid
 			if ($symbolRowHighestColumnIndex > $highestColumnIndex) $highestColumnIndex = $symbolRowHighestColumnIndex;
 		}
 
-
-		$rowIndexes = array_keys($this->symbolRows);
-		sort($rowIndexes);
-		$lowestRowIndex = array_shift($rowIndexes);
-		$highestRowIndex = array_pop($rowIndexes);
-
 		foreach ($this->symbolRows as $y => $symbolRow)
 		{
 			$rowContainsBorderSymbol = $this->rowContainsBorderSymbol($y);
@@ -105,7 +100,7 @@ class BorderSymbolGrid extends SymbolGrid
 			{
 				if (!isset($this->symbolRows[$y][$x]))
 				{
-					if ($rowContainsBorderSymbol && $isBorderRow || $this->columnContainsBorderSymbol($x, $lowestRowIndex, $highestRowIndex))
+					if ($rowContainsBorderSymbol && $isBorderRow || $this->columnContainsVerticalBorder($x))
 					{
 						$symbol = " ";
 
@@ -138,20 +133,17 @@ class BorderSymbolGrid extends SymbolGrid
 	 * Returns whether a specific column contains any border symbols.
 	 *
 	 * @param int $_x The X-Position of the column
-	 * @param int $_lowestRowIndex The lowest row index which will be ignored because it contains the outer upper border
-	 * @param int $_highestRowIndex The highest row index which will be ignored because it contains the outer bottom border
 	 *
 	 * @return Bool True if the column contains a border symbol, false otherwise
 	 */
-	private function columnContainsBorderSymbol(int $_x, int $_lowestRowIndex, int $_highestRowIndex): Bool
+	private function columnContainsVerticalBorder(int $_x): Bool
 	{
 		// TODO: Fix this, determine which stuff is outer border
-
-		foreach ($this->symbolRows as $y => $symbolRow)
+		foreach ($this->borders as $border)
 		{
-			if (! ($y == $_lowestRowIndex || $y == $_highestRowIndex))
+			if ($border instanceof VerticalOutputBorderPart)
 			{
-				if (isset($symbolRow[$_x])) return true;
+				if ($border->startsAt()->x() == $_x && $border->endsAt()->x() == $_x) return true;
 			}
 		}
 
