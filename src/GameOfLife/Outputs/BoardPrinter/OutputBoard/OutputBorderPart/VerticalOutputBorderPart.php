@@ -9,7 +9,7 @@
 namespace Output\BoardPrinter\OutputBoard\OutputBorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
+use Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 /**
  * Class VerticalOutputBorderPart
@@ -55,7 +55,7 @@ class VerticalOutputBorderPart extends OutputBorderPart
 			if ($_border->startsAt()->y() >= $this->startsAt->y() &&
 				$_border->startsAt()->y() < $this->startsAt->y() + $this->getBorderLength())
 			{
-				return $this->startsAt->y() + $this->getBorderLength() - $_border->startsAt()->y();
+				return $_border->startsAt()->y() - $this->startsAt->y();
 			}
 		}
 
@@ -83,7 +83,7 @@ class VerticalOutputBorderPart extends OutputBorderPart
 	 */
 	public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool
 	{
-		if ($this->startsAt->x() == $_coordinate->x() && $this->endsAt->x() == $_coordinate->x() &&
+		if ($this->startsAt->x() * 2 == $_coordinate->x() && $this->endsAt->x() * 2 == $_coordinate->x() &&
 			$this->startsAt->y() * 2 < $_coordinate->y() && $this->endsAt->y() * 2 > $_coordinate->y())
 		{
 			return true;
@@ -94,15 +94,14 @@ class VerticalOutputBorderPart extends OutputBorderPart
 	/**
 	 * Adds the border symbols of this border to a border symbol grid.
 	 *
-	 * @param BorderSymbolGrid $_borderSymbolGrid The border symbol grid
+	 * @param SymbolGrid $_borderSymbolGrid The border symbol grid
 	 */
-	public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid)
+	public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid)
 	{
-		$startX = $this->startsAt->x();
+		$startX = $this->startsAt->x() * 2;
 		$startY = $this->startsAt->y() * 2;
 		$totalBorderLength = $this->getTotalBorderLength();
 
-		// TODO: Only if has top border
 		if (isset($this->borderCollisionSymbols[0])) $borderSymbolStart = $this->borderCollisionSymbols[0];
 		else $borderSymbolStart = $this->borderSymbolStart;
 
@@ -119,7 +118,6 @@ class VerticalOutputBorderPart extends OutputBorderPart
 			$_borderSymbolGrid->setSymbolAt(new Coordinate($startX, $yGrid), $borderSymbol);
 		}
 
-		// TODO: Only if has bottom border
 		$borderSymbolEndIndex = $startY + ($totalBorderLength - 1) * 2;
 
 		if (isset($this->borderCollisionSymbols[$totalBorderLength]))

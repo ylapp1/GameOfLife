@@ -62,8 +62,8 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard)
 	{
 		$border = new HorizontalOutputBorderPart(
-			new Coordinate($this->topLeftCornerCoordinate->x() + 1, $this->topLeftCornerCoordinate->y()),
-			new Coordinate($this->bottomRightCornerCoordinate->x() + 1, $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
 			$this->borderSymbolTopLeft,
 			$this->borderSymbolTopBottom,
 			$this->borderSymbolTopRight,
@@ -86,8 +86,8 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	protected function addBorderBottomToOutputBoard(OutputBoard $_outputBoard)
 	{
 		$border = new HorizontalOutputBorderPart(
-			new Coordinate($this->topLeftCornerCoordinate->x() + 1, $this->bottomRightCornerCoordinate->y()),
-			new Coordinate($this->bottomRightCornerCoordinate->x() + 1, $this->bottomRightCornerCoordinate->y()),
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolBottomLeft,
 			$this->borderSymbolTopBottom,
 			$this->borderSymbolBottomRight,
@@ -110,8 +110,8 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard)
 	{
 		$border = new VerticalOutputBorderPart(
-			new Coordinate($this->topLeftCornerCoordinate->x() + 1, $this->topLeftCornerCoordinate->y()),
-			new Coordinate($this->topLeftCornerCoordinate->x() + 1, $this->bottomRightCornerCoordinate->y()),
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolTopLeft,
 			$this->borderSymbolLeftRight,
 			$this->borderSymbolBottomLeft,
@@ -134,8 +134,8 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard)
 	{
 		$border = new VerticalOutputBorderPart(
-			new Coordinate($this->bottomRightCornerCoordinate->x() + 1, $this->topLeftCornerCoordinate->y()),
-			new Coordinate($this->bottomRightCornerCoordinate->x() + 1, $this->bottomRightCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
+			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolTopRight,
 			$this->borderSymbolLeftRight,
 			$this->borderSymbolBottomRight,
@@ -147,6 +147,6 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 			$this->borderSymbolBottomRight
 		);
 
-		//$_outputBoard->addBorderPart($border);
+		$_outputBoard->addBorderPart($border);
 	}
 }

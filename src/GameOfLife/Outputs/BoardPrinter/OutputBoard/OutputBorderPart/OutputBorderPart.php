@@ -11,7 +11,7 @@ namespace Output\BoardPrinter\OutputBoard\OutputBorderPart;
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorderPartBuilder;
 use Output\BoardPrinter\BorderPartBuilder\OuterBorderPartBuilder\BaseOuterBorderPartBuilder;
-use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
+use Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 /**
  * Container that stores the information about a part of a border.
@@ -267,9 +267,9 @@ abstract class OutputBorderPart
 	/**
 	 * Adds the border symbols of this border to a border symbol grid.
 	 *
-	 * @param BorderSymbolGrid $_borderSymbolGrid The border symbol grid
+	 * @param SymbolGrid $_borderSymbolGrid The border symbol grid
 	 */
-    abstract public function addBorderSymbolsToBorderSymbolGrid(BorderSymbolGrid $_borderSymbolGrid);
+    abstract public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid);
 
 	/**
 	 * Returns whether the output border contains a specific coordinate between its left and right edge.

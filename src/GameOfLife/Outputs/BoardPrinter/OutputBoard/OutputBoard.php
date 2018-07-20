@@ -9,8 +9,6 @@
 namespace Output\BoardPrinter\OutputBoard;
 
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
-use Output\BoardPrinter\OutputBoard\SymbolGrid\BorderSymbolGrid;
-use Output\BoardPrinter\OutputBoard\SymbolGrid\SymbolGrid;
 
 /**
  * Stores the row and border output strings of the board.
@@ -29,9 +27,9 @@ class OutputBoard
 	/**
 	 * The border symbol grid
 	 *
-	 * @var BorderSymbolGrid $borderSymbolGrid
+	 * @var BorderPrinter $borderSymbolGrid
 	 */
-	private $borderSymbolGrid;
+	private $borderPrinter;
 
 	private $cachedBorderSymbolRows;
 
@@ -51,7 +49,7 @@ class OutputBoard
     public function __construct()
     {
     	$this->cellSymbolGrid = new SymbolGrid();
-    	$this->borderSymbolGrid = new BorderSymbolGrid();
+    	$this->borderPrinter = new BorderPrinter();
     }
 
 
@@ -63,7 +61,7 @@ class OutputBoard
     public function reset()
     {
         $this->cellSymbolGrid->reset();
-        $this->borderSymbolGrid->reset();
+        $this->borderPrinter->resetBorders();
     }
 
 	/**
@@ -83,22 +81,22 @@ class OutputBoard
 	 */
     public function addBorderPart(OutputBorderPart $_border)
     {
-    	$this->borderSymbolGrid->addBorderPart($_border);
+    	$this->borderPrinter->addBorderPart($_border);
     }
 
 	/**
 	 * Returns the row strings of this output board.
 	 *
-	 * @param int $_boardWidth The number of fields per row
-	 *
 	 * @return String[] The row strings of this output board
 	 */
-    public function getRowStrings(int $_boardWidth): array
+    public function getRowStrings(): array
     {
+    	$borderSymbolGrid = new SymbolGrid();
+
     	if (! $this->cachedBorderSymbolRows)
 	    {
-	    	$this->cachedBorderSymbolRows = $this->borderSymbolGrid->drawBorders($_boardWidth);
-		    $this->cachedBorderSymbolRows = $this->borderSymbolGrid->symbolRows();
+	    	$this->borderPrinter->drawBorders($borderSymbolGrid);
+		    $this->cachedBorderSymbolRows = $borderSymbolGrid->symbolRows();
 	    }
 
     	$cellSymbolRows = $this->cellSymbolGrid->symbolRows();
@@ -137,15 +135,22 @@ class OutputBoard
 			        }
 			        $rowString .= $cellSymbol;
 
-			        $borderSymbolColumnIndex++;
+			        $borderSymbolColumnIndex += 2;
 		        }
 
 		        // Also add the border right from the board
-		        if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex + 1]))
+		        if ($borderSymbolRowIsSet)
 		        {
-		        	$rowString .= $borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex + 1];
+		        	$rowColumnIds = array_keys($borderSymbolRows[$borderSymbolRowIndex]);
+		        	$highestRowColumnId = array_pop($rowColumnIds);
 
-		        	// TODO: Add highlight number of highlight border printer
+		        	for ($x = $borderSymbolColumnIndex + 2; $x <= $highestRowColumnId; $x += 2)
+		        	{
+				        if (isset($borderSymbolRows[$borderSymbolRowIndex][$x]))
+				        {
+					        $rowString .= $borderSymbolRows[$borderSymbolRowIndex][$x];
+				        }
+			        }
 		        }
 
 		        $rowStrings[] = $rowString;

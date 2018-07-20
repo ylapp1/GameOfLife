@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard\SymbolGrid;
+namespace Output\BoardPrinter\OutputBoard;
 
 use GameOfLife\Coordinate;
 
