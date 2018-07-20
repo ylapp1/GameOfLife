@@ -10,14 +10,14 @@ namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuild
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorder;
 
 /**
  * Parent class for inner border printers.
  * Inner borders must be located inside an outer border and they can overlap with other inner borders or touch the outer
  * border.
  */
-abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
+abstract class BaseInnerBorder extends BaseBorder
 {
 	// Attributes
 
@@ -55,9 +55,6 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
     protected $distanceToLeftOuterBorder;
     protected $distanceToRightOuterBorder;
 
-	protected $borderSymbolPositionsTopBottom;
-	protected $borderSymbolPositionsLeftRight;
-
     /**
      * @var Coordinate $topLeftCornerCoordinate
      */
@@ -67,13 +64,6 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
      * @var Coordinate $bottomRightCornerCoordinate
      */
     protected $bottomRightCornerCoordinate;
-
-	/**
-	 * The parent border of this border
-	 *
-	 * @var BaseBorderPartBuilder $parentBorder
-	 */
-    private $parentBorder;
 
 
     // Magic Methods
@@ -114,26 +104,6 @@ abstract class BaseInnerBorderPartBuilder extends BaseBorderPartBuilder
 
         $this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
         $this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
-
-        $this->borderSymbolPositionsTopBottom = array();
-        if ($this->distanceToTopOuterBorder == 0) $this->borderSymbolPositionsTopBottom[] = $_topLeftCornerCoordinate->y();
-        if ($this->distanceToBottomOuterBorder == 0)
-        {
-            $this->borderSymbolPositionsTopBottom[] = $_bottomRightCornerCoordinate->y() + (int)$this->hasTopBorder() + 1;
-        }
-
-        $this->borderSymbolPositionsLeftRight = array();
-        if ($this->distanceToLeftOuterBorder == 0) $this->borderSymbolPositionsLeftRight[] = $_topLeftCornerCoordinate->x();
-        if ($this->distanceToRightOuterBorder == 0)
-        {
-            $this->borderSymbolPositionsLeftRight[] = $_bottomRightCornerCoordinate->x() + (int)$this->hasLeftBorder() + 1;
-        }
-    }
-
-
-    public function setParentBorder($_parentBorder)
-    {
-    	$this->parentBorder = $_parentBorder;
     }
 
 

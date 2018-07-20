@@ -8,7 +8,8 @@
 
 namespace Output\BoardPrinter\OutputBoard;
 
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorder;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\BaseBorderPart;
 
 /**
  * Stores the row and border output strings of the board.
@@ -27,11 +28,13 @@ class OutputBoard
 	/**
 	 * The border symbol grid
 	 *
-	 * @var BorderPrinter $borderSymbolGrid
+	 * @var TextBorderRenderer $borderSymbolGrid
 	 */
 	private $borderPrinter;
 
 	private $cachedBorderSymbolRows;
+
+	private $baseBorder;
 
 
 	public function hasCachedBorders()
@@ -49,7 +52,7 @@ class OutputBoard
     public function __construct()
     {
     	$this->cellSymbolGrid = new SymbolGrid();
-    	$this->borderPrinter = new BorderPrinter();
+    	$this->borderPrinter = new TextBorderRenderer();
     }
 
 
@@ -77,9 +80,9 @@ class OutputBoard
 	/**
 	 * Adds a border to this OutputBoards border grid.
 	 *
-	 * @param OutputBorderPart $_border The border
+	 * @param BaseBorderPart $_border The border
 	 */
-    public function addBorderPart(OutputBorderPart $_border)
+    public function addBorderPart(BaseBorderPart $_border)
     {
     	$this->borderPrinter->addBorderPart($_border);
     }

@@ -12,14 +12,14 @@ use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\SymbolGrid;
 
 /**
- * Class VerticalOutputBorderPart
+ * Class VerticalBorderPart
  */
-class VerticalOutputBorderPart extends OutputBorderPart
+class VerticalBorderPart extends BaseBorderPart
 {
 	// Magic Methods
 
 	/**
-	 * VerticalOutputBorderPart constructor.
+	 * VerticalBorderPart constructor.
 	 *
 	 * @param Coordinate $_startsAt The start coordinate of this border
 	 * @param Coordinate $_endsAt The end coordinate of this border
@@ -44,11 +44,11 @@ class VerticalOutputBorderPart extends OutputBorderPart
 	/**
 	 * Returns the position where a border collides with this border.
 	 *
-	 * @param OutputBorderPart $_border The border
+	 * @param BaseBorderPart $_border The border
 	 *
 	 * @return int|null The position in this border at which the other border collides with this border or null if the borders don't collide
 	 */
-	public function collidesWith(OutputBorderPart $_border)
+	public function collidesWith(BaseBorderPart $_border)
 	{
 		if ($_border->startsAt()->x() == $this->startsAt->x())
 		{

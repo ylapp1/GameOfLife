@@ -10,7 +10,8 @@ namespace Output\BoardPrinter;
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorderPartBuilder;
+use Output\BoardPrinter\OutputBoard\BorderPartBuilder\BaseBorder;
+use Output\BoardPrinter\OutputBoard\TextBorderRenderer;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**
@@ -37,11 +38,11 @@ abstract class BaseBoardPrinter
     protected $cellDeadSymbol;
 
     /**
-     * The border
+     * The border printer
      *
-     * @var BaseBorderPartBuilder $border
+     * @var TextBorderRenderer $borderPrinter
      */
-    protected $border;
+    protected $borderPrinter;
 
     /**
      * The output board
@@ -58,13 +59,12 @@ abstract class BaseBoardPrinter
      *
      * @param String $_cellAliveSymbol The symbol that is used to print a living cell
      * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
-     * @param BaseBorderPartBuilder $_border The border
      */
-    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol, BaseBorderPartBuilder $_border)
+    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol)
     {
         $this->cellAliveSymbol = $_cellAliveSymbol;
         $this->cellDeadSymbol = $_cellDeadSymbol;
-        $this->border = $_border;
+        $this->borderPrinter = new TextBorderRenderer();
         $this->outputBoard = new OutputBoard();
     }
 
@@ -88,7 +88,7 @@ abstract class BaseBoardPrinter
             $this->outputBoard->addBoardFieldSymbolsRow($rowOutputSymbols);
         }
 
-	    if ($this->outputBoard->hasCachedBorders() == false) $this->border->addBordersToOutputBoard($this->outputBoard);
+	    if ($this->outputBoard->hasCachedBorders() == false) $this->outputBoard->addBordersToOutputBoard($this->outputBoard);
 
         return implode("\n", $this->outputBoard->getRowStrings()) . "\n";
     }

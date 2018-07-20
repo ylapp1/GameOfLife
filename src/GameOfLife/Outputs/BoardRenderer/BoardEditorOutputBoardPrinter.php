@@ -17,7 +17,7 @@ use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\Sel
 use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
 
 /**
- * BoardPrinter for the BoardEditorOutput.
+ * BoardRenderer for the BoardEditorOutput.
  */
 class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
 {

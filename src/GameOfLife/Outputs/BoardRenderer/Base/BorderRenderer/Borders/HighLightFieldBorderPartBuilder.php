@@ -15,7 +15,7 @@ use Output\BoardPrinter\OutputBoard\OutputBoard;
 /**
  * Prints the borders for a high light field.
  */
-class HighLightFieldBorderPartBuilder extends BaseInnerBorderPartBuilder
+class HighLightFieldBorderPartBuilder extends BaseInnerBorder
 {
     // Magic Methods
 

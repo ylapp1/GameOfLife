@@ -11,13 +11,13 @@ namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuild
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalOutputBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalOutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBaseBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
 
 /**
  * Generates border strings for boards.
  */
-class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
+class BoardOuterBorderPartBuilder extends BaseOuterBorder
 {
     // Magic Methods
 
@@ -51,7 +51,7 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
     {
 	    // TODO: Think of outer/inner collision concept
 
-	    $border = new HorizontalOutputBorderPart(
+	    $border = new HorizontalBaseBorderPart(
 		    new Coordinate(0, 0),
 		    new Coordinate($this->board->width(), 0),
 		    $this->borderSymbolTopLeft,
@@ -77,7 +77,7 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
     {
 	    // TODO: Think of outer/inner collision concept
 
-	    $border = new HorizontalOutputBorderPart(
+	    $border = new HorizontalBaseBorderPart(
 		    new Coordinate(0, $this->board->height()),
 		    new Coordinate($this->board->width(), $this->board->height()),
 		    $this->borderSymbolBottomLeft,
@@ -103,7 +103,7 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
     {
     	// TODO: Think of outer/inner collision concept
 
-	    $border = new VerticalOutputBorderPart(
+	    $border = new VerticalBorderPart(
 		    new Coordinate(0, 0),
 		    new Coordinate(0, $this->board->height()),
 		    $this->borderSymbolTopLeft,
@@ -129,7 +129,7 @@ class BoardOuterBorderPartBuilder extends BaseOuterBorderPartBuilder
     {
     	// TODO: Think of outer/inner collision concept
 
-        $border = new VerticalOutputBorderPart(
+        $border = new VerticalBorderPart(
         	new Coordinate($this->board->width() + 1, 0),
 	        new Coordinate($this->board->width() + 1, $this->board->height()),
 	        $this->borderSymbolTopRight,

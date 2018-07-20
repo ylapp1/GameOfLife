@@ -10,50 +10,15 @@ namespace Output\BoardPrinter\OutputBoard;
 
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalOutputBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\OutputBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalOutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBaseBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\BaseBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
 
 /**
  * Prints borders to a symbol grid.
  */
-class BorderPrinter
+class TextBorderRenderer
 {
-	/**
-	 * The list of borders
-	 *
-	 * @var OutputBorderPart[] $borders
-	 */
-	private $borders;
-
-
-	public function __construct()
-	{
-		$this->borders = array();
-	}
-
-	/**
-	 * Adds a border to this border symbol grid.
-	 *
-	 * @param OutputBorderPart $_border The border
-	 */
-	public function addBorderPart(OutputBorderPart $_border)
-	{
-		foreach ($this->borders as $border)
-		{
-			$border->collideWith($_border);
-		}
-		$this->borders[] = $_border;
-	}
-
-	/**
-	 * Resets the list of borders of this border symbol grid to an empty array.
-	 */
-	public function resetBorders()
-	{
-		$this->borders = array();
-	}
-
 	/**
 	 * Adds the border symbols to a symbol grid.
 	 * The grid has two rows per cell symbol row, one for the border above the row and the other for the borders inside the row.
@@ -133,7 +98,7 @@ class BorderPrinter
 	/**
 	 * @param int $_y
 	 *
-	 * @return HorizontalOutputBorderPart[]
+	 * @return HorizontalBaseBorderPart[]
 	 */
 	private function getHorizontalBordersOfBorderRow(int $_y)
 	{
@@ -141,7 +106,7 @@ class BorderPrinter
 
 		foreach ($this->borders as $border)
 		{
-			if ($border instanceof HorizontalOutputBorderPart)
+			if ($border instanceof HorizontalBaseBorderPart)
 			{
 				if ($border->startsAt()->y() * 2 == $_y && $border->endsAt()->y() * 2 == $_y) $borders[] = $border;
 			}
@@ -164,33 +129,14 @@ class BorderPrinter
 		else return false;
 	}
 
-	/**
-	 * Returns whether a specific column contains any border symbols.
-	 *
-	 * @param int $_x The X-Position of the column
-	 *
-	 * @return Bool True if the column contains a border symbol, false otherwise
-	 */
-	private function columnContainsVerticalBorder(int $_x): Bool
-	{
-		// TODO: Fix this, determine which stuff is outer border
-		foreach ($this->borders as $border)
-		{
-			if ($border instanceof VerticalOutputBorderPart)
-			{
-				if ($border->startsAt()->x() == $_x && $border->endsAt()->x() == $_x) return true;
-			}
-		}
 
-		return false;
-	}
 
 	/**
 	 * Returns the first border that contains a specific coordinate.
 	 *
 	 * @param Coordinate $_coordinate The coordinate
 	 *
-	 * @return OutputBorderPart|null The first output border that contains the coordinate or null if no border contains the coordinate
+	 * @return BaseBorderPart|null The first output border that contains the coordinate or null if no border contains the coordinate
 	 */
 	private function getBorderContainingCoordinate(Coordinate $_coordinate)
 	{

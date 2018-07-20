@@ -14,12 +14,12 @@ use Output\BoardPrinter\OutputBoard\SymbolGrid;
 /**
  * Class for horizontal border parts.
  */
-class HorizontalOutputBorderPart extends OutputBorderPart
+class HorizontalBorderPart extends BaseBorderPart
 {
 	// Magic Methods
 
 	/**
-	 * HorizontalOutputBorderPart constructor.
+	 * HorizontalBaseBorderPart constructor.
 	 *
 	 * @param Coordinate $_startsAt The start coordinate of this border
 	 * @param Coordinate $_endsAt The end coordinate of this border
@@ -44,11 +44,11 @@ class HorizontalOutputBorderPart extends OutputBorderPart
 	/**
 	 * Returns the position at which this border collides with a border or null if the borders don't collide.
 	 *
-	 * @param OutputBorderPart $_border The border
+	 * @param BaseBorderPart $_border The border
 	 *
 	 * @return int|null The position at which this border collides with a border or null if the borders don't collide
 	 */
-	public function collidesWith(OutputBorderPart $_border)
+	public function collidesWith(BaseBorderPart $_border)
 	{
 		if ($_border->startsAt()->y() == $this->startsAt->y())
 		{

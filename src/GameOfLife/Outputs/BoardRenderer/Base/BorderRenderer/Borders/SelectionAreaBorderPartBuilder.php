@@ -12,13 +12,13 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\OutputBoard;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalOutputBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalOutputBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBaseBorderPart;
+use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
 
 /**
  * Prints the borders for selection areas inside boards.
  */
-class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
+class SelectionAreaBorderPartBuilder extends BaseInnerBorder
 {
     // Magic Methods
 
@@ -61,7 +61,7 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard)
 	{
-		$border = new HorizontalOutputBorderPart(
+		$border = new HorizontalBaseBorderPart(
 			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
 			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
 			$this->borderSymbolTopLeft,
@@ -85,7 +85,7 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderBottomToOutputBoard(OutputBoard $_outputBoard)
 	{
-		$border = new HorizontalOutputBorderPart(
+		$border = new HorizontalBaseBorderPart(
 			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolBottomLeft,
@@ -109,7 +109,7 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderLeftToOutputBoard(OutputBoard $_outputBoard)
 	{
-		$border = new VerticalOutputBorderPart(
+		$border = new VerticalBorderPart(
 			new Coordinate($this->topLeftCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
 			new Coordinate($this->topLeftCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolTopLeft,
@@ -133,7 +133,7 @@ class SelectionAreaBorderPartBuilder extends BaseInnerBorderPartBuilder
 	 */
 	protected function addBorderRightToOutputBoard(OutputBoard $_outputBoard)
 	{
-		$border = new VerticalOutputBorderPart(
+		$border = new VerticalBorderPart(
 			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->topLeftCornerCoordinate->y()),
 			new Coordinate($this->bottomRightCornerCoordinate->x(), $this->bottomRightCornerCoordinate->y()),
 			$this->borderSymbolTopRight,

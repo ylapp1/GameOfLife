@@ -11,10 +11,11 @@ namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuild
 use Output\BoardPrinter\OutputBoard\OutputBoard;
 
 /**
- * The vertical 1 x <board height> border part of the highlight field border.
+ * The horizontal <board width> x 1 border part of the high light field border.
  */
-class HighLightFieldVerticalBorderPartBuilder extends BaseInnerBorderPartBuilder
+class HighLightFieldHorizontalBorderPartBuilder extends BaseInnerBorder
 {
+
 	protected function addBorderTopToOutputBoard(OutputBoard $_outputBoard)
 	{
 		// TODO: Implement addBorderTopToOutputBoard() method.
@@ -34,5 +35,4 @@ class HighLightFieldVerticalBorderPartBuilder extends BaseInnerBorderPartBuilder
 	{
 		// TODO: Implement addBorderRightToOutputBoard() method.
 	}
-
 }

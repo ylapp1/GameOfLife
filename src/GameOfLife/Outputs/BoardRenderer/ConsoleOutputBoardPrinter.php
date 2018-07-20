@@ -12,7 +12,7 @@ use GameOfLife\Board;
 use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
 
 /**
- * The BoardPrinter for the ConsoleOutput.
+ * The BoardRenderer for the ConsoleOutput.
  */
 class ConsoleOutputBoardPrinter extends BaseBoardPrinter
 {
