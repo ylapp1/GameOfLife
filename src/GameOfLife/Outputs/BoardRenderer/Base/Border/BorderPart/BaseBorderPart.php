@@ -6,11 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base;
+namespace Output\BoardRenderer\Base\Border\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\BaseRenderedBoard;
-use Output\BoardRenderer\Base\BorderPartShapes\BaseBorderPartShape;
+use Output\BoardRenderer\Base\BaseSymbolGrid;
+use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
+use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
  * Container that stores the information about a part of a border.
@@ -47,19 +48,30 @@ abstract class BaseBorderPart
 	 */
 	protected $collisions;
 
+    /**
+     * The parent border shape
+     *
+     * @var BaseBorderShape $parentBorderShape
+     */
+	protected $parentBorderShape;
+
 
 	// Magic Methods
 
 	/**
 	 * BaseBorderPart constructor.
 	 *
+     * @param BaseBorderShape $_parentBorderShape The parent border shape
 	 * @param Coordinate $_startsAt The start coordinate of this border
 	 * @param Coordinate $_endsAt The end coordinate of this border
+     * @param BaseBorderPartShape $_shape The shape of this border part
 	 */
-	protected function __construct(Coordinate $_startsAt, Coordinate $_endsAt)
+	protected function __construct($_parentBorderShape, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
     {
+        $this->parentBorderShape = $_parentBorderShape;
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
+    	$this->shape = $_shape;
     }
 
 
@@ -88,54 +100,15 @@ abstract class BaseBorderPart
 
 	// Class Methods
 
-
-	// Edges
-
-	/**
-	 * Returns whether this border part has a start edge.
-	 *
-	 * @return Bool True if this border part has a start edge, false otherwise
-	 */
-	abstract public function hasStartEdge(): Bool;
-
-	/**
-	 * Returns whether this border part has a end edge.
-	 *
-	 * @return Bool True if this border part has a end edge, false otherwise
-	 */
-	abstract public function hasEndEdge(): Bool;
-
-
-	// Border length
-
 	/**
 	 * Calculates and returns the length of this border part with start and end edges.
 	 *
 	 * @return int The length of this border part without start and end edges
 	 */
-	abstract public function getTotalLength(): int;
-
-	/**
-	 * Calculates and returns the length of this border part without start and end edges.
-	 *
-	 * @return int The length of this border part without start and end edges
-	 */
-	public function getLengthWithoutEdges(): int
-	{
-		return $this->getTotalLength() - (int)$this->hasStartEdge() - (int)$this->hasEndEdge();
-	}
-
-
-	// Collisions
-
-	/**
-	 * Returns the position at which this border part collides with another border part or null if there is no collision.
-	 *
-	 * @param BaseBorderPart $_borderPart The other border part
-	 *
-	 * @return int|null The position at which this border part collides with the other border part or null if there is no collision
-	 */
-	abstract protected function collidesWith(BaseBorderPart $_borderPart);
+	public function getTotalLength(): int
+    {
+        return $this->shape->getTotalLength();
+    }
 
 	/**
 	 * Checks whether this border part collides with another border part and adds border part collisions to this border
@@ -145,24 +118,24 @@ abstract class BaseBorderPart
 	 */
 	public function checkCollisionWith(BaseBorderPart $_borderPart)
 	{
-		$collisionPosition = $this->collidesWith($_borderPart);
+		$collisionPosition = $this->shape->collidesWith($_borderPart);
 		if ($collisionPosition !== null)
 		{
 			// TODO: Fix border parts overlapping case
 
 			// If this parent border parent border has the child "collided border" then isInnerCollision
 			// Else is outer collision
-			$isOuterBorderPart = true;
+			$isOuterBorderPart = true; // TODO: Fix is outer board detection
 			$this->collisions[] = new BorderPartCollision($collisionPosition, $_borderPart, $isOuterBorderPart);
 		}
 	}
 
 	/**
-	 * Renders this border part and adds it to a rendered board.
+	 * Renders this border part and adds it to a symbol grid.
 	 *
-	 * @param BaseRenderedBoard $_renderedBoard The rendered board
+	 * @param BaseSymbolGrid $_symbolGrid The symbol grid
 	 */
-	abstract public function addToRenderedBoard(BaseRenderedBoard $_renderedBoard);
+	abstract public function addToSymbolGrid($_symbolGrid);
 
 	/**
 	 * Returns whether the output border contains a specific coordinate between its left and right edge.
@@ -172,5 +145,25 @@ abstract class BaseBorderPart
 	 *
 	 * @return Bool True if the output border contains the coordinate, false otherwise
 	 */
-    abstract public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool;
+    public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool
+    {
+        if ($_coordinate !== $this->startsAt() && $_coordinate !== $this->endsAt() &&
+            $this->shape->containsCoordinate($_coordinate))
+        {
+            return true;
+        }
+        else return false;
+    }
+
+    /**
+     * Returns whether this border part contains a specific coordinate.
+     *
+     * @param Coordinate $_coordinate The coordinate
+     *
+     * @return Bool True if this border part contains the coordinate, false otherwise
+     */
+    public function containsCoordinate(Coordinate $_coordinate): Bool
+    {
+        return $this->shape->containsCoordinate($_coordinate);
+    }
 }

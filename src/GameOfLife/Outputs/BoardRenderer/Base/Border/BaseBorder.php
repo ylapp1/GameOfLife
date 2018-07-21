@@ -6,11 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard\BorderPartBuilder;
+namespace Output\BoardRenderer\Base\Border;
 
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\BaseInnerBorder;
 use Output\BoardRenderer\Base\BaseBorderRenderer;
-use Output\BoardRenderer\Base\BorderShapes\BaseBorderShape;
+use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
  * Parent class for border printers.
@@ -25,7 +24,7 @@ abstract class BaseBorder
 	/**
 	 * The list of inner borders of this border
 	 *
-	 * @var BaseInnerBorder[] $innerBorders
+	 * @var BaseBorder[] $innerBorders
 	 */
 	protected $innerBorders;
 
@@ -110,7 +109,6 @@ abstract class BaseBorder
 	public function addBorderPartsToBorderRenderer(BaseBorderRenderer $_borderRenderer)
 	{
 		$this->borderShape->addBorderPartsToBorderRenderer($_borderRenderer);
-
 		foreach ($this->innerBorders as $innerBorder)
 		{
 			$innerBorder->addBorderPartsToBorderRenderer($_borderRenderer);

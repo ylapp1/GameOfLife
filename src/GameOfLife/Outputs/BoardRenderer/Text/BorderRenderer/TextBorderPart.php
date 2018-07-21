@@ -185,7 +185,67 @@ class TextBorderPart
 	/**
 	 * Adds the border symbols of this border to a border symbol grid.
 	 *
-	 * @param SymbolGrid $_borderSymbolGrid The border symbol grid
+	 * @param BaseSymbolGrid $_borderSymbolGrid The border symbol grid
 	 */
-	abstract public function addBorderSymbolsToBorderSymbolGrid(SymbolGrid $_borderSymbolGrid);
+	abstract public function addBorderSymbolsToBorderSymbolGrid(BaseSymbolGrid $_borderSymbolGrid);
+
+
+
+
+	// Inner border stuff
+
+    /**
+     * The symbol that will be placed in the top outer border when this border collides with it
+     *
+     * @var String $borderSymbolCollisionTopOuterBorder
+     */
+    protected $borderSymbolCollisionTopOuterBorder;
+
+    /**
+     * The symbol that will be placed in the bottom outer border when this border collides with it
+     *
+     * @var String $borderSymbolCollisionBottomOuterBorder
+     */
+    protected $borderSymbolCollisionBottomOuterBorder;
+
+    /**
+     * The symbol that will be placed in the left outer border when this border collides with it
+     *
+     * @var String $borderSymbolCollisionLeftOuterBorder
+     */
+    protected $borderSymbolCollisionLeftOuterBorder;
+
+    /**
+     * The symbol that will be placed in the right outer border when this border collides with it
+     *
+     * @var String $borderSymbolCollisionRightOuterBorder
+     */
+    protected $borderSymbolCollisionRightOuterBorder;
+
+
+    // Magic Methods
+
+    /**
+     * BaseInnerBorderPrinter constructor.
+     *
+     * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
+     * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
+     * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
+     * @param String $_borderSymbolBottomRight The symbol for the bottom right corner of the border
+     * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
+     * @param String $_borderSymbolLeftRight The symbol for the left an right border
+     * @param String $_borderSymbolCollisionTopOuterBorder The symbol that will be placed in the top outer border when this border collides with it
+     * @param String $_borderSymbolCollisionBottomOuterBorder The symbol that will be placed in the bottom outer border when this border collides with it
+     * @param String $_borderSymbolCollisionLeftOuterBorder The symbol that will be placed in the left outer border when this border collides with it
+     * @param String $_borderSymbolCollisionRightOuterBorder The symbol that will be placed in the right outer border when this border collides with it
+     */
+    protected function __construct(String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight, String $_borderSymbolCollisionTopOuterBorder, String $_borderSymbolCollisionBottomOuterBorder, String $_borderSymbolCollisionLeftOuterBorder, String $_borderSymbolCollisionRightOuterBorder)
+    {
+        parent::__construct($_borderSymbolTopLeft, $_borderSymbolTopRight, $_borderSymbolBottomLeft, $_borderSymbolBottomRight, $_borderSymbolTopBottom, $_borderSymbolLeftRight);
+
+        $this->borderSymbolCollisionTopOuterBorder = $_borderSymbolCollisionTopOuterBorder;
+        $this->borderSymbolCollisionBottomOuterBorder = $_borderSymbolCollisionBottomOuterBorder;
+        $this->borderSymbolCollisionLeftOuterBorder = $_borderSymbolCollisionLeftOuterBorder;
+        $this->borderSymbolCollisionRightOuterBorder = $_borderSymbolCollisionRightOuterBorder;
+    }
 }

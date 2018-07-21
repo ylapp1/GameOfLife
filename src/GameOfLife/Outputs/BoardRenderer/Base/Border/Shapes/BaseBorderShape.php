@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\BorderPartShapes;
+namespace Output\BoardRenderer\Base\Border\Shapes;
 
 use Output\BoardRenderer\Base\BaseBorderRenderer;
 
 /**
- * Stores information about a specific border part shape.
+ * Creates border parts that form a specific shape.
  */
-abstract class BaseBorderPartShape
+abstract class BaseBorderShape
 {
 	// Class Methods
 

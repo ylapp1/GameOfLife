@@ -13,20 +13,21 @@ use GameOfLife\Coordinate;
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBaseBorderPart;
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\BaseBorderPart;
 use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
+use Output\BoardRenderer\Base\BorderRenderer\BaseBorderRenderer;
 
 /**
  * Prints borders to a symbol grid.
  */
-class TextBorderRenderer
+class TextBorderRenderer extends BaseBorderRenderer
 {
 	/**
 	 * Adds the border symbols to a symbol grid.
 	 * The grid has two rows per cell symbol row, one for the border above the row and the other for the borders inside the row.
 	 * It also has two columns per cell column, one for the border left and the other for the cell itself.
 	 *
-	 * @param SymbolGrid $_symbolGrid The symbol grid
+	 * @param BaseSymbolGrid $_symbolGrid The symbol grid
 	 */
-	public function drawBorders(SymbolGrid $_symbolGrid)
+	public function drawBorders(BaseSymbolGrid $_symbolGrid)
 	{
 		// Add the border symbols to the symbol grid
 		foreach ($this->borders as $border)
@@ -118,12 +119,12 @@ class TextBorderRenderer
 	/**
 	 * Returns whether a specific row contains any border symbols.
 	 *
-	 * @param SymbolGrid $_symbolGrid The symbol grid
+	 * @param BaseSymbolGrid $_symbolGrid The symbol grid
 	 * @param int $_y The Y-Position of the row
 	 *
 	 * @return Bool True if the row contains a border symbol, false otherwise
 	 */
-	private function rowContainsBorderSymbol(SymbolGrid $_symbolGrid, int $_y): Bool
+	private function rowContainsBorderSymbol(BaseSymbolGrid $_symbolGrid, int $_y): Bool
 	{
 		if (isset($this->symbolRows[$_y]) && count($_symbolGrid->symbolRows()[$_y]) > 0) return true;
 		else return false;

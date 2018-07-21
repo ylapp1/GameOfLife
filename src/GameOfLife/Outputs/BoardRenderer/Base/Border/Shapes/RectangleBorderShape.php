@@ -6,12 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\BorderShapes;
+namespace Output\BoardRenderer\Base\Border\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
-use Output\BoardRenderer\Base\BaseBorderPart;
+use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use Output\BoardRenderer\Base\BaseBorderRenderer;
 
 /**
@@ -68,29 +66,33 @@ abstract class RectangleBorderShape extends BaseBorderShape
 
 	/**
 	 * Generates and returns the top border part of this border shape.
+     * This must return a border part with a horizontal shape.
 	 *
-	 * @return HorizontalBorderPart The top border part of this border shape
+	 * @return BaseBorderPart The top border part of this border shape
 	 */
-	abstract protected function getTopBorderPart(): HorizontalBorderPart;
+	abstract protected function getTopBorderPart();
 
 	/**
 	 * Generates and returns the bottom border part of this border shape.
-	 *
-	 * @return HorizontalBorderPart The bottom border part of this border shape
+     * This must return a border part with a horizontal shape.
+     *
+	 * @return BaseBorderPart The bottom border part of this border shape
 	 */
-	abstract protected function getBottomBorderPart():HorizontalBorderPart;
+	abstract protected function getBottomBorderPart();
 
 	/**
 	 * Generates and returns the left border part of this border shape.
-	 *
-	 * @return VerticalBorderPart The left border part of this border shape
+     * This must return a border part with a vertical shape.
+     *
+	 * @return BaseBorderPart The left border part of this border shape
 	 */
-	abstract protected function getLeftBorderPart(): VerticalBorderPart;
+	abstract protected function getLeftBorderPart();
 
 	/**
 	 * Generates and returns the right border part of this border shape.
-	 *
-	 * @return VerticalBorderPart The right border part of this border shape
+     * This must return a border part with a vertical shape.
+     *
+	 * @return BaseBorderPart The right border part of this border shape
 	 */
-	abstract protected function getRightBorderPart(): VerticalBorderPart;
+	abstract protected function getRightBorderPart();
 }
