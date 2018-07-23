@@ -16,23 +16,39 @@ use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
  */
 abstract class BaseBorderShape
 {
+    // Attributes
+
     /**
      * @var BaseBorder $parentBorder
      */
     protected $parentBorder;
 
+
+    // Magic Methods
+
     /**
      * BaseBorderShape constructor.
+     *
+     * @param BaseBorder $_parentBorder The parent border
      */
     protected function __construct($_parentBorder)
     {
         $this->parentBorder = $_parentBorder;
     }
 
+
+    // Getters and Setters
+
+    /**
+     * Returns the parent border of this border shape.
+     *
+     * @return BaseBorder The parent border of this border shape
+     */
     public function parentBorder()
     {
         return $this->parentBorder;
     }
+
 
     // Class Methods
 

@@ -9,6 +9,7 @@
 namespace Output\BoardRenderer\Base\Border\Shapes;
 
 use GameOfLife\Coordinate;
+use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
@@ -40,11 +41,13 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	/**
 	 * RectangleBorderShape constructor.
 	 *
+     * @param BaseBorder $_parentBorder The parent border of this border shape
 	 * @param Coordinate $_topLeftCornerCoordinate The top left corner coordinate of this border shape
 	 * @param Coordinate $_bottomRightCornerCoordinate The bottom right corner coordinate of this border shape
 	 */
-	protected function __construct(Coordinate $_topLeftCornerCoordinate, Coordinate $_bottomRightCornerCoordinate)
+	protected function __construct($_parentBorder, Coordinate $_topLeftCornerCoordinate, Coordinate $_bottomRightCornerCoordinate)
 	{
+	    parent::__construct($_parentBorder);
 		$this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
 		$this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
 	}

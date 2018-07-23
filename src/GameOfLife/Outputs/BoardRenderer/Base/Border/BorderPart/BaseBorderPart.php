@@ -10,8 +10,8 @@ namespace Output\BoardRenderer\Base\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\BaseCanvas;
+use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
-use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
  * Container that stores the information about a part of a border.
@@ -49,11 +49,11 @@ abstract class BaseBorderPart
 	protected $collisions;
 
     /**
-     * The parent border shape
+     * The parent border
      *
-     * @var BaseBorderShape $parentBorderShape
+     * @var BaseBorder $parentBorder
      */
-	protected $parentBorderShape;
+	protected $parentBorder;
 
 
 	// Magic Methods
@@ -61,14 +61,14 @@ abstract class BaseBorderPart
 	/**
 	 * BaseBorderPart constructor.
 	 *
-     * @param BaseBorderShape $_parentBorderShape The parent border shape
+     * @param BaseBorder $_parentBorder The parent border
 	 * @param Coordinate $_startsAt The start coordinate of this border
 	 * @param Coordinate $_endsAt The end coordinate of this border
      * @param BaseBorderPartShape $_shape The shape of this border part
 	 */
-	protected function __construct($_parentBorderShape, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
+	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
     {
-        $this->parentBorderShape = $_parentBorderShape;
+        $this->parentBorder = $_parentBorder;
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
@@ -97,6 +97,16 @@ abstract class BaseBorderPart
 		return $this->endsAt;
 	}
 
+    /**
+     * Returns the parent border of this border part.
+     *
+     * @return BaseBorder The parent border of this border part
+     */
+	public function parentBorder()
+    {
+        return $this->parentBorder;
+    }
+
 
 	// Class Methods
 
@@ -123,11 +133,13 @@ abstract class BaseBorderPart
 		{
 			// TODO: Fix border parts overlapping case
 
-            $this->parentBorderShape->parentBorder()->containsInnerBorder($_borderPart)
+            if ($_borderPart->parentBorder() === $this->parentBorder ||
+                $this->parentBorder->containsBorder($_borderPart->parentBorder()))
+            {
+                $isOuterBorderPart = false;
+            }
+            else $isOuterBorderPart = true;
 
-			// If this parent border parent border has the child "collided border" then isInnerCollision
-			// Else is outer collision
-			$isOuterBorderPart = true; // TODO: Fix is outer board detection
 			$this->collisions[] = new BorderPartCollision($collisionPosition, $_borderPart, $isOuterBorderPart);
 		}
 	}
