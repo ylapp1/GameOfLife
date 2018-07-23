@@ -8,19 +8,38 @@
 
 namespace Output\BoardRenderer\Base\Border\Shapes;
 
-use Output\BoardRenderer\Base\BaseBorderRenderer;
+use Output\BoardRenderer\Base\Border\BaseBorder;
+use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
  * Creates border parts that form a specific shape.
  */
 abstract class BaseBorderShape
 {
-	// Class Methods
+    /**
+     * @var BaseBorder $parentBorder
+     */
+    protected $parentBorder;
 
-	/**
-	 * Adds all borders of this border shape to a border renderer.
-	 *
-	 * @param BaseBorderRenderer $_borderRenderer The border renderer
-	 */
-	abstract public function addBorderPartsToBorderRenderer(BaseBorderRenderer $_borderRenderer);
+    /**
+     * BaseBorderShape constructor.
+     */
+    protected function __construct($_parentBorder)
+    {
+        $this->parentBorder = $_parentBorder;
+    }
+
+    public function parentBorder()
+    {
+        return $this->parentBorder;
+    }
+
+    // Class Methods
+
+    /**
+     * Returns all border parts of this border shape.
+     *
+     * @return BaseBorderPart[] The list of border parts
+     */
+    abstract public function getBorderParts();
 }

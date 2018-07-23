@@ -20,6 +20,41 @@ use Output\BoardRenderer\Base\BorderRenderer\BaseBorderRenderer;
  */
 class TextBorderRenderer extends BaseBorderRenderer
 {
+    /**
+     * The border symbol grid
+     *
+     * @var BaseSymbolGrid $borderSymbolGrid
+     */
+    private $borderSymbolGrid;
+
+    /**
+     * Resets the rendered borders.
+     */
+    public function resetRenderedBorders()
+    {
+        $this->borderParts = array();
+    }
+
+    /**
+     * The list of rendered border parts
+     *
+     * @var mixed[] $renderedBorderParts
+     */
+    protected $renderedBorderParts;
+
+
+    // Getters and Setters
+
+    /**
+     * Returns the rendered borders that were rendered with renderBorderParts().
+     *
+     * @return mixed The rendered borders
+     */
+    public function borderSymbolGrid()
+    {
+        return $this->borderSymbolGrid;
+    }
+
 	/**
 	 * Adds the border symbols to a symbol grid.
 	 * The grid has two rows per cell symbol row, one for the border above the row and the other for the borders inside the row.
@@ -148,4 +183,25 @@ class TextBorderRenderer extends BaseBorderRenderer
 
 		return null;
 	}
+
+    /**
+     * Returns whether a specific column contains any border symbols.
+     *
+     * @param int $_x The X-Position of the column
+     *
+     * @return Bool True if the column contains a border symbol, false otherwise
+     */
+    private function columnContainsVerticalBorder(int $_x): Bool
+    {
+        // TODO: Fix this, determine which stuff is outer border
+        foreach ($this->borderParts as $border)
+        {
+            if ($border instanceof VerticalOutputBorderPart)
+            {
+                if ($border->startsAt()->x() == $_x && $border->endsAt()->x() == $_x) return true;
+            }
+        }
+
+        return false;
+    }
 }

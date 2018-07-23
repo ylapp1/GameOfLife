@@ -8,62 +8,52 @@
 
 namespace Output\BoardRenderer\Base;
 
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 
+/**
+ * Renders a list of board fields and adds them to a canvas.
+ *
+ * Call renderBoardFields() to render a list of board fields and add them to a canvas
+ */
 abstract class BaseBoardFieldRenderer
 {
-    /**
-     * @var BaseSymbolGrid $boardFieldSymbolGrid
-     */
-    protected $boardFieldSymbolGrid;
-
-
-    public function boardFieldSymbolGrid()
-    {
-        return $this->boardFieldSymbolGrid;
-    }
-
-    public function reset()
-    {
-        $this->boardFieldSymbolGrid->reset();
-    }
+    // Class Methods
 
     /**
-     * @param Field[][] $_boardFieldRows
+     * Renders a two dimensional list of board fields and adds them to a canvas.
+     *
+     * @param Field[][] $_boardFields The board fields
+     * @param BaseCanvas $_canvas The canvas
      */
-    public function renderBoardFields($_boardFieldRows)
+    public function renderBoardFields($_boardFields, $_canvas)
     {
-        foreach ($_boardFieldRows as $boardFieldRow)
+        foreach ($_boardFields as $boardFieldRow)
         {
-            $rowOutputSymbols = $this->getRowOutputSymbols($boardFieldRow);
-            $this->boardFieldSymbolGrid->addSymbolRow($rowOutputSymbols);
+            foreach ($boardFieldRow as $boardField)
+            {
+                $renderedField = $this->renderBoardField($boardField);
+                $renderedFieldPosition = $this->getBoardFieldCanvasPosition($boardField);
+                $_canvas->addRenderedBoardFieldAt($renderedField, $renderedFieldPosition);
+            }
         }
     }
 
     /**
-     * Returns the output string for the cells of a single row.
+     * Renders a board field.
      *
-     * @param Field[] $_fields The fields of the row
+     * @param Field $_field The board field
      *
-     * @return String[] The output symbols for the cells of the row
+     * @return mixed The rendered board field
      */
-    protected function getRowOutputSymbols(array $_fields): array
-    {
-        $rowOutputSymbols = array();
-        foreach ($_fields as $field)
-        {
-            $rowOutputSymbols[] = $this->getCellSymbol($field);
-        }
-
-        return $rowOutputSymbols;
-    }
+    abstract protected function renderBoardField(Field $_field);
 
     /**
-     * Returns the symbol for a cell in a field.
+     * Calculates and returns the position of the board field on the canvas.
      *
-     * @param Bool $_cellState The cell state (alive or dead)
+     * @param Field $_field The field
      *
-     * @return mixed The symbol for the cell in the field
+     * @return Coordinate The position of the board field on the canvas
      */
-    abstract protected function getCellSymbol(Bool $_cellState);
+    abstract protected function getBoardFieldCanvasPosition(Field $_field): Coordinate;
 }

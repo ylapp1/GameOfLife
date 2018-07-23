@@ -10,7 +10,6 @@ namespace Output\BoardRenderer\Base\Border\Shapes;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Output\BoardRenderer\Base\BaseBorderRenderer;
 
 /**
  * Creates border parts that form a rectangle.
@@ -18,6 +17,8 @@ use Output\BoardRenderer\Base\BaseBorderRenderer;
 abstract class RectangleBorderShape extends BaseBorderShape
 {
 	// Attributes
+
+    // TODO: Get rid of code duplication in selection area and this
 
 	/**
 	 * The top left corner coordinate of this border shape
@@ -52,16 +53,18 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	// Class Methods
 
 	/**
-	 * Adds all borders of this border part builder to a border renderer.
-	 *
-	 * @param BaseBorderRenderer $_borderRenderer The border renderer
+	 * Returns all border parts of this border shape.
+     *
+     * @return BaseBorderPart[] The list of border parts
 	 */
-	public function addBorderPartsToBorderRenderer(BaseBorderRenderer $_borderRenderer)
+	public function getBorderParts()
 	{
-		$_borderRenderer->addBorderPart($this->getTopBorderPart());
-		$_borderRenderer->addBorderPart($this->getBottomBorderPart());
-		$_borderRenderer->addBorderPart($this->getLeftBorderPart());
-		$_borderRenderer->addBorderPart($this->getRightBorderPart());
+	    return array(
+	        $this->getTopBorderPart(),
+            $this->getBottomBorderPart(),
+            $this->getLeftBorderPart(),
+            $this->getRightBorderPart()
+        );
 	}
 
 	/**

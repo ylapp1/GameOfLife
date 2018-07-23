@@ -9,7 +9,7 @@
 namespace Output\BoardRenderer\Base\Border\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\BaseSymbolGrid;
+use Output\BoardRenderer\Base\BaseCanvas;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
@@ -123,6 +123,8 @@ abstract class BaseBorderPart
 		{
 			// TODO: Fix border parts overlapping case
 
+            $this->parentBorderShape->parentBorder()->containsInnerBorder($_borderPart)
+
 			// If this parent border parent border has the child "collided border" then isInnerCollision
 			// Else is outer collision
 			$isOuterBorderPart = true; // TODO: Fix is outer board detection
@@ -133,9 +135,12 @@ abstract class BaseBorderPart
 	/**
 	 * Renders this border part and adds it to a symbol grid.
 	 *
-	 * @param BaseSymbolGrid $_symbolGrid The symbol grid
+	 * @param BaseCanvas $_canvas The canvas
 	 */
-	abstract public function addToSymbolGrid($_symbolGrid);
+	public function addToCanvas($_canvas)
+    {
+        $this->shape->addBorderPartToCanvas($_canvas);
+    }
 
 	/**
 	 * Returns whether the output border contains a specific coordinate between its left and right edge.

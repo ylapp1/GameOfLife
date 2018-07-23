@@ -8,14 +8,21 @@
 
 namespace Output\BoardRenderer\Base;
 
-
 use GameOfLife\Board;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 
+/**
+ * Renders a board.
+ *
+ * Call renderBoard() to render a board
+ * Call getContent() to get the rendered board
+ */
 abstract class BaseBoardRenderer
 {
+    // Attributes
+
     /**
-     * The border and its inner borders
+     * The main border and its inner borders
      *
      * @var BaseBorder $border
      */
@@ -36,48 +43,38 @@ abstract class BaseBoardRenderer
     protected $boardFieldRenderer;
 
     /**
-     * The cached rendered border symbol grid
+     * The canvas on which the borders and board fields will be rendered
      *
-     * @var BaseSymbolGrid $borderSymbolGrid
+     * @var BaseCanvas $canvas
      */
-    protected $borderSymbolGrid;
+    protected $canvas;
+
+
+    // Class Methods
 
     /**
-     * The cached board field symbol grid
+     * Renders a board to the canvas of this board renderer.
      *
-     * @var BaseSymbolGrid $boardFieldSymbolGrid
+     * @param Board $_board The board
      */
-    protected $boardFieldSymbolGrid;
-
-    /**
-     * The combination of border and board field symbol grid
-     *
-     * @var BaseSymbolGrid $boardSymbolGrid
-     */
-    protected $boardSymbolGrid;
-
-
-    /**
-     * Resets the symbol and border symbol grid.
-     */
-    public function reset()
-    {
-        $this->boardFieldRenderer->reset();
-        $this->borderRenderer->resetBorders();
-    }
-
     public function renderBoard(Board $_board)
     {
+        $this->canvas->reset();
+
         // Render the borders
-        $this->border->addBorderPartsToBorderRenderer($this->borderRenderer);
-        $this->borderRenderer->renderBorderParts();
+        $this->borderRenderer->renderBorder($this->border, $this->canvas);
 
         // Render the board fields
-        $this->boardFieldRenderer->renderBoardFields($_board->fields());
-
-        // Merge the border and board field symbol grids
-        // TODO
+        $this->boardFieldRenderer->renderBoardFields($_board->fields(), $this->canvas);
     }
 
-    abstract public function getBoardContent();
+    /**
+     * Returns the rendered board content.
+     *
+     * @return mixed The rendered board content
+     */
+    public function getContent()
+    {
+        return $this->canvas->getContent();
+    }
 }

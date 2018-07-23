@@ -9,6 +9,7 @@
 namespace Output\BoardRenderer\Base\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
+use Output\BoardRenderer\Base\BaseCanvas;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
@@ -32,6 +33,18 @@ abstract class BaseBorderPartShape
     {
         $this->parentBorderPart = $_parentBorderPart;
     }
+
+
+    // Getters and Setters
+
+    /**
+     * @return BaseBorderPart
+     */
+    public function parentBorderPart()
+    {
+        return $this->parentBorderPart;
+    }
+
 
     // Class Methods
 
@@ -59,4 +72,11 @@ abstract class BaseBorderPartShape
      * @return Bool True if the parent border part contains the coordinate, false otherwise
      */
     abstract public function containsCoordinate(Coordinate $_coordinate): Bool;
+
+    /**
+     * Draws the parent border part to a canvas.
+     *
+     * @param BaseCanvas $_canvas The canvas
+     */
+    abstract public function addBorderPartToCanvas($_canvas);
 }

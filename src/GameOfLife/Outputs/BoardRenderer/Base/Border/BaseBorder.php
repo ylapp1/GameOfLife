@@ -8,7 +8,7 @@
 
 namespace Output\BoardRenderer\Base\Border;
 
-use Output\BoardRenderer\Base\BaseBorderRenderer;
+use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
@@ -101,17 +101,37 @@ abstract class BaseBorder
 		$this->innerBorders = array();
 	}
 
+	public function containsBorderPart($_borderPart)
+    {
+        $containsInnerBorder = false;
+
+        foreach ($this->innerBorders as $innerBorder)
+        {
+            if ($innerBorder == $_border || $innerBorder->containsBorderPart($_border))
+            {
+                $containsInnerBorder = true;
+                break;
+            }
+        }
+
+        return $containsInnerBorder;
+    }
+
 	/**
 	 * Adds all borders of this border part builder to an output board.
-	 *
-	 * @param BaseBorderRenderer $_borderRenderer The output board
+     *
+     * @return BaseBorderPart[] The list of border parts
 	 */
-	public function addBorderPartsToBorderRenderer(BaseBorderRenderer $_borderRenderer)
+	public function getBorderParts()
 	{
-		$this->borderShape->addBorderPartsToBorderRenderer($_borderRenderer);
-		foreach ($this->innerBorders as $innerBorder)
-		{
-			$innerBorder->addBorderPartsToBorderRenderer($_borderRenderer);
-		}
+	    $borderParts = $this->borderShape->getBorderParts();
+
+	    foreach ($this->innerBorders as $innerBorder)
+        {
+            $innerBorderParts = $innerBorder->getBorderParts();
+            $borderParts = array_merge($borderParts, $innerBorderParts);
+        }
+
+        return $borderParts;
 	}
 }

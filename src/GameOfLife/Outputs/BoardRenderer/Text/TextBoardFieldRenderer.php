@@ -12,6 +12,22 @@ namespace Output\BoardPrinter\OutputBoard;
 class TextBoardFieldRenderer
 {
     /**
+     * @var BaseSymbolGrid $boardFieldSymbolGrid
+     */
+    protected $boardFieldSymbolGrid;
+
+
+    public function boardFieldSymbolGrid()
+    {
+        return $this->boardFieldSymbolGrid;
+    }
+
+    protected function reset()
+    {
+        $this->boardFieldSymbolGrid->reset();
+    }
+
+    /**
      * Returns the symbol for a cell in a field.
      *
      * @param Field $_field The field
@@ -24,4 +40,21 @@ class TextBoardFieldRenderer
         else return $this->cellDeadSymbol;
     }
 
+    /**
+     * Returns the output string for the cells of a single row.
+     *
+     * @param Field[] $_fields The fields of the row
+     *
+     * @return String[] The output symbols for the cells of the row
+     */
+    protected function getRowOutputSymbols(array $_fields): array
+    {
+        $rowOutputSymbols = array();
+        foreach ($_fields as $field)
+        {
+            $rowOutputSymbols[] = $this->getCellSymbol($field);
+        }
+
+        return $rowOutputSymbols;
+    }
 }
