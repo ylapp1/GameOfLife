@@ -72,6 +72,7 @@ abstract class BaseBorderPart
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
+    	$this->shape->setParentBorder($this);
     }
 
 

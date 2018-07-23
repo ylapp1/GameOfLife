@@ -9,14 +9,14 @@
 namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalBorderPartShape;
+use Output\BoardRenderer\Base\Border\BorderPart\Shapes\VerticalBorderPartShape;
 use Output\BoardRenderer\Text\BorderPart\TextBorderPart;
 use Output\BoardRenderer\Text\TextCanvas;
 
 /**
- * Class for horizontal text border parts.
+ * Class for vertical text border parts.
  */
-class TextHorizontalBorderPartShape extends HorizontalBorderPartShape
+class TextVerticalBorderPartShape extends VerticalBorderPartShape
 {
     // Class Methods
 
@@ -37,12 +37,12 @@ class TextHorizontalBorderPartShape extends HorizontalBorderPartShape
         $startY = $this->parentBorderPart->startsAt()->y();
 
         $_canvas->addRenderedBorderAt(new Coordinate($startX, $startY), $borderSymbols[0]);
-        for ($x = 1; $x < $totalLength - 2; $x++)
+        for ($y = 1; $y < $totalLength - 2; $y++)
         {
-            $xPositionOnGrid = $startX + $x;
-            $_canvas->addRenderedBorderAt(new Coordinate($xPositionOnGrid, $startY), $borderSymbols[$x]);
+            $yPositionOnGrid = $startY + $y;
+            $_canvas->addRenderedBorderAt(new Coordinate($startX, $yPositionOnGrid), $borderSymbols[$y]);
         }
-        $_canvas->addRenderedBorderAt(new Coordinate($startX + $totalLength, $startY), $borderSymbols[$totalLength]);
+        $_canvas->addRenderedBorderAt(new Coordinate($startX, $startY + $totalLength), $borderSymbols[$totalLength]);
 
         // TODO: Need method to add single border symbol to canvas
     }

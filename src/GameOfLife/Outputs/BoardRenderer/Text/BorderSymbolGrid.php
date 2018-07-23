@@ -8,7 +8,6 @@
 
 namespace Output\BoardRenderer\Text;
 
-
 use GameOfLife\Coordinate;
 
 /**
@@ -36,6 +35,6 @@ class BorderSymbolGrid extends SymbolGrid
 
     public function setCellRowSymbolAt(Coordinate $_coordinate, String $_symbol)
     {
-
+        $yGrid = $startY + 1 + $y * 2;
     }
 }

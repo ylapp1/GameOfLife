@@ -6,55 +6,75 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard;
+namespace Output\BoardRenderer\Text;
 
+use GameOfLife\Coordinate;
+use GameOfLife\Field;
+use Output\BoardRenderer\Base\BaseBoardFieldRenderer;
 
-class TextBoardFieldRenderer
+/**
+ * Renders a list of board fields as symbols and adds them to a canvas.
+ *
+ * Call renderBoardFields() to render a list of board fields and add them to a canvas
+ */
+class TextBoardFieldRenderer extends BaseBoardFieldRenderer
 {
+    // Attributes
+
     /**
-     * @var BaseSymbolGrid $boardFieldSymbolGrid
+     * The symbol that is used to print a living cell
+     *
+     * @var String $cellAliveSymbol
      */
-    protected $boardFieldSymbolGrid;
-
-
-    public function boardFieldSymbolGrid()
-    {
-        return $this->boardFieldSymbolGrid;
-    }
-
-    protected function reset()
-    {
-        $this->boardFieldSymbolGrid->reset();
-    }
+    protected $cellAliveSymbol;
 
     /**
-     * Returns the symbol for a cell in a field.
+     * The symbol that is used to print a dead cell
+     *
+     * @var String $cellDeadSymbol
+     */
+    protected $cellDeadSymbol;
+
+
+    // Magic Methods
+
+    /**
+     * TextBoardFieldRenderer constructor.
+     *
+     * @param String $_cellAliveSymbol The symbol that is used to print a living cell
+     * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
+     */
+    public function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol)
+    {
+        $this->cellAliveSymbol = $_cellAliveSymbol;
+        $this->cellDeadSymbol = $_cellDeadSymbol;
+    }
+
+
+    // Class Methods
+
+    /**
+     * Calculates and returns the position of the board field on the canvas.
      *
      * @param Field $_field The field
      *
-     * @return String The symbol for the cell in the field
+     * @return Coordinate The position of the board field on the canvas
      */
-    protected function getCellSymbol(Field $_field): String
+    protected function getBoardFieldCanvasPosition(Field $_field): Coordinate
     {
-        if ($_field->isAlive()) return $this->cellAliveSymbol;
-        else return $this->cellDeadSymbol;
+        return $_field->coordinate();
     }
 
     /**
-     * Returns the output string for the cells of a single row.
+     * Renders a board field.
      *
-     * @param Field[] $_fields The fields of the row
+     * @param Field $_field The board field
      *
-     * @return String[] The output symbols for the cells of the row
+     * @return String The rendered board field
      */
-    protected function getRowOutputSymbols(array $_fields): array
+    protected function renderBoardField(Field $_field)
     {
-        $rowOutputSymbols = array();
-        foreach ($_fields as $field)
-        {
-            $rowOutputSymbols[] = $this->getCellSymbol($field);
-        }
-
-        return $rowOutputSymbols;
+        if ($_field->isAlive()) return $this->cellAliveSymbol;
+        else return $this->cellDeadSymbol;
     }
 }

@@ -9,9 +9,9 @@
 namespace Output\BoardRenderer\Text\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\BaseSymbolGrid;
+use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Output\BoardRenderer\Text\SymbolGrid;
+use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 class TextBorderPart extends BaseBorderPart
 {
@@ -60,20 +60,15 @@ class TextBorderPart extends BaseBorderPart
     protected $collisionSymbolEnd;
 
 
-
-    /**
-     * The border collision symbols inside this border
-     *
-     * @var String[] $borderCollisionSymbols
-     */
-    //protected $borderCollisionSymbols;
-
+    // Magic Methods
 
     /**
      * TextBorderPart constructor.
      *
+     * @param BaseBorder $_parentBorder The parent border of this border part
      * @param Coordinate $_startsAt The start coordinate of this border
      * @param Coordinate $_endsAt The end coordinate of this border
+     * @param BaseBorderPartShape $_shape The shape of this boder part
      * @param String $_borderSymbolStart The symbol for the start of the border
      * @param String $_borderSymbolCenter The symbol for the center parts of the border
      * @param String $_borderSymbolEnd The symbol for the end of the border
@@ -84,21 +79,15 @@ class TextBorderPart extends BaseBorderPart
      * @param String $_borderSymbolInnerBorderCollisionCenter The symbol for the center parts of the border when a center part collides with an inner border
      * @param String $_borderSymbolInnerBorderCollisionEnd The symbol for the end of the border when the end collides with an inner border
      */
-    protected function __construct(Coordinate $_startsAt, Coordinate $_endsAt, String $_borderSymbolStart, String $_borderSymbolCenter, String $_borderSymbolEnd, String $_borderSymbolOuterBorderCollisionStart, String $_borderSymbolOuterBorderCollisionCenter, String $_borderSymbolOuterBorderCollisionEnd, String $_borderSymbolInnerBorderCollisionStart, String $_borderSymbolInnerBorderCollisionCenter, String $_borderSymbolInnerBorderCollisionEnd)
+    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, String $_borderSymbolStart, String $_borderSymbolCenter, String $_borderSymbolEnd, String $_borderSymbolOuterBorderCollisionStart = null, String $_borderSymbolOuterBorderCollisionCenter = null, String $_borderSymbolOuterBorderCollisionEnd = null, String $_borderSymbolInnerBorderCollisionStart = null, String $_borderSymbolInnerBorderCollisionCenter = null, String $_borderSymbolInnerBorderCollisionEnd = null)
     {
-        $this->borderSymbolStart = $_borderSymbolStart;
-        $this->borderSymbolCenter = $_borderSymbolCenter;
-        $this->borderSymbolEnd = $_borderSymbolEnd;
-        $this->borderSymbolOuterBorderCollisionStart = $_borderSymbolOuterBorderCollisionStart;
-        $this->borderSymbolOuterBorderCollisionCenter = $_borderSymbolOuterBorderCollisionCenter;
-        $this->borderSymbolOuterBorderCollisionEnd = $_borderSymbolOuterBorderCollisionEnd;
-        $this->borderSymbolInnerBorderCollisionStart = $_borderSymbolInnerBorderCollisionStart;
-        $this->borderSymbolInnerBorderCollisionCenter = $_borderSymbolInnerBorderCollisionCenter;
-        $this->borderSymbolInnerBorderCollisionEnd = $_borderSymbolInnerBorderCollisionEnd;
+        parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape);
 
-        $this->borderCollisionSymbols = array();
+        // TODO: Default collision symbols = normal border symbols
     }
 
+
+    // Getters and Setters
 
     public function borderSymbolStart()
     {
@@ -131,6 +120,8 @@ class TextBorderPart extends BaseBorderPart
     }
 
 
+    // Class Methods
+
     /**
      * Returns the symbols that will be used to print this border part.
      *
@@ -144,12 +135,17 @@ class TextBorderPart extends BaseBorderPart
         return $borderSymbols;
     }
 
-    protected function renderBorderPart()
+    /**
+     * Returns the border symbols without collision symbols.
+     *
+     * @return String[] The border symbols without collision symbols
+     */
+    private function renderBorderPart(): array
     {
         $borderSymbols = array();
 
         $borderSymbols[0] = $this->borderSymbolStart;
-        for ($i = 0; $i < $this->getTotalLength() - 2; $i++)
+        for ($i = 1; $i < $this->getTotalLength() - 2; $i++)
         {
             $borderSymbols[$i] = $this->borderSymbolCenter;
         }
@@ -158,7 +154,14 @@ class TextBorderPart extends BaseBorderPart
         return $borderSymbols;
     }
 
-    protected function renderCollisions(array $_borderSymbols)
+    /**
+     * Adds the collision symbols to a list of border symbols and returns the updated list.
+     *
+     * @param String[] $_borderSymbols The list of border symbols
+     *
+     * @return String[] The updated list of border symbols
+     */
+    private function renderCollisions(array $_borderSymbols): array
     {
         foreach ($this->collisions as $collision)
         {
@@ -180,15 +183,5 @@ class TextBorderPart extends BaseBorderPart
         }
 
         return $_borderSymbols;
-    }
-
-    /**
-     * Renders this border part and adds it to a symbol grid.
-     *
-     * @param BaseSymbolGrid $_symbolGrid The symbol grid
-     */
-    public function addToSymbolGrid($_symbolGrid)
-    {
-        $this->shape->drawBorderPartToSymbolGrid($_symbolGrid);
     }
 }

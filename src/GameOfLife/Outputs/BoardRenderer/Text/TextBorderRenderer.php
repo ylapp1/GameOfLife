@@ -6,14 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter\OutputBoard;
-
+namespace Output\BoardRenderer\Text;
 
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\HorizontalBaseBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\BaseBorderPart;
-use Output\BoardPrinter\OutputBoard\OutputBorderPart\VerticalBorderPart;
-use Output\BoardRenderer\Base\BorderRenderer\BaseBorderRenderer;
+use Output\BoardRenderer\Base\BaseBorderRenderer;
 
 /**
  * Prints borders to a symbol grid.
@@ -26,14 +22,6 @@ class TextBorderRenderer extends BaseBorderRenderer
      * @var BaseSymbolGrid $borderSymbolGrid
      */
     private $borderSymbolGrid;
-
-    /**
-     * Resets the rendered borders.
-     */
-    public function resetRenderedBorders()
-    {
-        $this->borderParts = array();
-    }
 
     /**
      * The list of rendered border parts

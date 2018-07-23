@@ -33,14 +33,14 @@ abstract class BaseBorder
 	 *
 	 * @var BaseBorder $parentBorder
 	 */
-	private $parentBorder;
+	protected $parentBorder;
 
 	/**
 	 * The border shape of this border
 	 *
-	 * @var BaseBorderShape $borderShape
+	 * @var BaseBorderShape $shape
 	 */
-	private $borderShape;
+	protected $shape;
 
 
 	// Magic Methods
@@ -49,11 +49,13 @@ abstract class BaseBorder
 	 * BaseBorder constructor.
 	 *
 	 * @param BaseBorder $_parentBorder The parent border of this border
+     * @param BaseBorderShape $_shape The shape of this border
 	 */
-	protected function __construct(BaseBorder $_parentBorder = null)
+	protected function __construct(BaseBorder $_parentBorder = null, $_shape)
 	{
 		$this->innerBorders = array();
 		$this->parentBorder = $_parentBorder;
+		$this->shape = $_shape;
 	}
 
 
@@ -131,7 +133,7 @@ abstract class BaseBorder
 	 */
 	public function getBorderParts()
 	{
-	    $borderParts = $this->borderShape->getBorderParts();
+	    $borderParts = $this->shape->getBorderParts();
 
 	    foreach ($this->innerBorders as $innerBorder)
         {

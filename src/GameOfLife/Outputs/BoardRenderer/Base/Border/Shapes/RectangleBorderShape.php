@@ -26,14 +26,14 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 *
 	 * @var Coordinate $topLeftCornerCoordinate
 	 */
-	private $topLeftCornerCoordinate;
+	protected $topLeftCornerCoordinate;
 
 	/**
 	 * The bottom right corner coordinate of this border shape
 	 *
 	 * @var Coordinate $bottomRightCornerCoordinate
 	 */
-	private $bottomRightCornerCoordinate;
+    protected $bottomRightCornerCoordinate;
 
 
 	// Magic Methods

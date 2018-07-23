@@ -24,16 +24,6 @@ abstract class BaseBorderPartShape
      */
     protected $parentBorderPart;
 
-    /**
-     * BaseBorderPartShape constructor.
-     *
-     * @param BaseBorderPart $_parentBorderPart The parent border part of this border part shape
-     */
-    protected function __construct($_parentBorderPart)
-    {
-        $this->parentBorderPart = $_parentBorderPart;
-    }
-
 
     // Getters and Setters
 
@@ -43,6 +33,16 @@ abstract class BaseBorderPartShape
     public function parentBorderPart()
     {
         return $this->parentBorderPart;
+    }
+
+    /**
+     * Sets the parent border part of this border part shape.
+     *
+     * @param BaseBorderPart $_parentBorderPart The parent border part of this border part shape
+     */
+    public function setParentBorder($_parentBorderPart)
+    {
+        $this->parentBorderPart = $_parentBorderPart;
     }
 
 

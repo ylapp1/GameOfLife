@@ -8,6 +8,8 @@
 
 namespace Output\BoardRenderer\Text;
 
+use GameOfLife\Coordinate;
+
 /**
  * Container that stores a two dimensional list of symbols for cell and border symbols.
  * This class does not check that all rows have the same amount of symbols.
@@ -19,7 +21,7 @@ class SymbolGrid
     /**
      * The list of symbol rows
      *
-     * @var mixed[][]
+     * @var String[][]
      */
     protected $symbolRows;
 
@@ -40,7 +42,7 @@ class SymbolGrid
     /**
      * Returns the symbol rows.
      *
-     * @return mixed[][] The symbol rows
+     * @return String[][] The symbol rows
      */
     public function symbolRows(): array
     {
@@ -62,7 +64,7 @@ class SymbolGrid
      * Sets the symbol at a specific position inside the grid.
      *
      * @param Coordinate $_position The position
-     * @param mixed $_symbol The new symbol
+     * @param String $_symbol The new symbol
      */
     public function setSymbolAt(Coordinate $_position, $_symbol)
     {
@@ -98,6 +100,4 @@ class SymbolGrid
             }
         }
     }
-
-
 }

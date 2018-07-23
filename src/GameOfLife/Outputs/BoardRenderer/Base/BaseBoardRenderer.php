@@ -50,6 +50,25 @@ abstract class BaseBoardRenderer
     protected $canvas;
 
 
+    // Magic Methods
+
+    /**
+     * BaseBoardRenderer constructor.
+     *
+     * @param BaseBorder $_border The border
+     * @param BaseBorderRenderer $_borderRenderer The border renderer
+     * @param BaseBoardFieldRenderer $_boardFieldRenderer The board field renderer
+     * @param BaseCanvas $_canvas The canvas
+     */
+    protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas)
+    {
+        $this->border = $_border;
+        $this->borderRenderer = $_borderRenderer;
+        $this->boardFieldRenderer = $_boardFieldRenderer;
+        $this->canvas = $_canvas;
+    }
+
+
     // Class Methods
 
     /**
