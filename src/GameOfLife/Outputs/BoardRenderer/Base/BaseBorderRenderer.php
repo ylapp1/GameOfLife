@@ -38,7 +38,5 @@ abstract class BaseBorderRenderer
 
             $borderPart->addToCanvas($_canvas);
         }
-
-        // TODO: Cache rendered border parts
     }
 }

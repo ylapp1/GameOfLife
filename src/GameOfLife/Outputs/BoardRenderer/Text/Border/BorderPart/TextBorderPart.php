@@ -13,6 +13,10 @@ use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
+/**
+ * Container that stores the information about a part of a border.
+ * This class uses text symbols to render the border part.
+ */
 class TextBorderPart extends BaseBorderPart
 {
     // Attributes

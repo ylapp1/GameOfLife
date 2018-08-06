@@ -9,6 +9,7 @@
 namespace Output\BoardRenderer\Text;
 
 use Output\BoardRenderer\Base\BaseBoardRenderer;
+use Output\BoardRenderer\Base\Border\BaseBorder;
 
 /**
  * Renders a board to text symbols.
@@ -21,13 +22,17 @@ class TextBoardRenderer extends BaseBoardRenderer
     /**
      * TextBoardRenderer constructor.
      *
+     * @param BaseBorder $_border The border of the board
      * @param String $_cellAliveSymbol The symbol that is used to print a living cell
      * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
      */
-    protected function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol)
+    protected function __construct($_border, String $_cellAliveSymbol, String $_cellDeadSymbol)
     {
-        $this->canvas = new TextCanvas();
-        $this->borderRenderer = new TextBorderRenderer();
-        $this->boardFieldRenderer = new TextBoardFieldRenderer($_cellAliveSymbol, $_cellDeadSymbol);
+        parent::__construct(
+        	$_border,
+	        new TextBorderRenderer(),
+	        new TextBoardFieldRenderer($_cellAliveSymbol, $_cellDeadSymbol),
+	        new TextCanvas()
+        );
     }
 }

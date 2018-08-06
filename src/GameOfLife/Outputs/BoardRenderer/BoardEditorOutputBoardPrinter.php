@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter;
+namespace Output\BoardRenderer;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;

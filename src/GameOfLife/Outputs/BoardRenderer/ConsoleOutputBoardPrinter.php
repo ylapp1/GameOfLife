@@ -6,15 +6,19 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardPrinter;
+namespace Output\BoardRenderer;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
+use Output\BoardRenderer\Base\BaseBoardRenderer;
+use Output\BoardRenderer\Text\Border\BoardOuterBorder;
+use Output\BoardRenderer\Text\TextBoardFieldRenderer;
+use Output\BoardRenderer\Text\TextBorderRenderer;
+use Output\BoardRenderer\Text\TextCanvas;
 
 /**
  * The BoardRenderer for the ConsoleOutput.
  */
-class ConsoleOutputBoardPrinter extends BaseBoardPrinter
+class ConsoleOutputBoardPrinter extends BaseBoardRenderer
 {
 	// Magic Methods
 
@@ -25,6 +29,11 @@ class ConsoleOutputBoardPrinter extends BaseBoardPrinter
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("☻", " ", new BoardOuterBorderPartBuilder($_board));
+        parent::__construct(
+        	new BoardOuterBorder($_board),
+        	new TextBorderRenderer(),
+        	new TextBoardFieldRenderer("☻", " "),
+	        new TextCanvas()
+        );
     }
 }
