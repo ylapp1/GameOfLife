@@ -36,6 +36,7 @@ class HighLightFieldHorizontalBorder extends BaseBorder
     public function addBordersToRowString(String $_rowOutputString, int $_y): String
     {
         // TODO: This string must be added right to the outer border
+	    // TODO: additionally two symbols must be added to the left of the board to move it back to the center
         $rowOutputString = $_rowOutputString;
 
         if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())

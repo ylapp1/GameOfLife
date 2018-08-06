@@ -49,6 +49,19 @@ class TextCanvas extends BaseCanvas
     }
 
 
+    // Getters and Setters
+
+	/**
+	 * Returns the border symbol grid.
+	 *
+	 * @return String[][] The border symbol grid
+	 */
+	public function borderSymbolGrid(): array
+	{
+		return $this->borderSymbolGrid;
+	}
+
+
 	// Class Methods
 
 	/**
@@ -104,7 +117,6 @@ class TextCanvas extends BaseCanvas
     public function getContent()
     {
 	    $this->reset();
-	    $this->renderBorderSymbolGrid();
 
 	    // Find the highest row id
 	    $rowIds = array_merge(array_keys($this->boardFieldSymbolGrid), array_keys($this->borderSymbolGrid));
@@ -131,10 +143,7 @@ class TextCanvas extends BaseCanvas
 		    $borderSymbolRowIndex = $y * 2;
 
 		    // Add borders between rows
-		    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex]))
-		    {
-			    $rowStrings[] = $this->getBorderRowString($borderSymbolRowIndex);
-		    }
+		    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex])) $rowStrings[] = $this->getBorderRowString($borderSymbolRowIndex);
 
 		    // Add cell symbol rows
 		    if (isset($cellSymbolRow)) $rowStrings[] = $this->getCellSymbolRowString($y, $highestColumnId);
@@ -144,108 +153,51 @@ class TextCanvas extends BaseCanvas
     }
 
 	/**
-	 * Fills the gaps in the border symbol grid that exist because of vertical borders.
-	 */
-    private function renderBorderSymbolGrid()
-    {
-	    // Find the lowest and highest column ids
-	    $columnIds = array();
-	    foreach ($this->borderSymbolGrid as $borderSymbolRow)
-	    {
-		    $columnIds = array_merge($columnIds, array_keys($borderSymbolRow));
-	    }
-	    natsort($columnIds);
-	    $lowestColumnId = array_shift($columnIds);
-	    $highestColumnId = array_pop($columnIds);
-
-	    for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
-	    {
-		    // TODO: Fix this, determine which stuff is outer border
-		    $columnContainsBorderSymbol = $this->columnContainsBorderSymbol($x);
-		    $isBorderColumn = ($x % 2 == 0);
-
-		    foreach ($this->borderSymbolGrid as $y => $borderSymbolRow)
-	    	{
-	    		$isBorderRow = ($y % 2 == 0);
-
-	    		if 
-			    if (! $isBorderColumn || $columnContainsBorderSymbol)
-			    {
-			    	$this->borderSymbolGrid[$y][$x] = " ";
-			    }
-
-			    // TODO: Auto complete borders
-		    }
-
-		    ksort($this->borderSymbolGrid[$y]);
-	    }
-    }
-
-	/**
-	 * Returns whether a specific column contains any border symbols.
-	 *
-	 * @param int $_x The X-Position of the column
-	 *
-	 * @return Bool True if the column contains a border symbol, false otherwise
-	 */
-	private function columnContainsBorderSymbol(int $_x): Bool
-	{
-		foreach ($this->borderSymbolGrid as $y => $borderSymbolRow)
-		{
-			if ($borderSymbolRow[$_x]) return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Returns the string for a border row.
 	 *
-	 * @param int $_y The Y-Coordinate of th border row
+	 * @param int $_y The Y-Coordinate of the border row
 	 *
 	 * @return String The border row string
 	 */
     private function getBorderRowString(int $_y): String
     {
     	$rowString = implode("", $this->borderSymbolGrid[$_y]);
-
-    	// TODO: Fill gaps with empty space before returning
-
 	    return $rowString;
     }
 
-    private function getCellSymbolRowString(int $_y, int $_highestColumnId)
+	/**
+	 * Returns the string for a cell symbol row including the vertical borders between the cells.
+	 *
+	 * @param int $_y The Y-Coordinate of the cell symbol row
+	 * @param int $_highestColumnId The highest column id of all rows
+	 *
+	 * @return String The cell symbol row string
+	 */
+    private function getCellSymbolRowString(int $_y, int $_highestColumnId): String
     {
-	    $borderSymbolRowIsSet = isset($borderSymbolRows[$borderSymbolRowIndex]);
 	    $borderSymbolRowIndex = $_y * 2 + 1;
 	    $borderSymbolColumnIndex = 0;
 
+	    $borderSymbolRow = $this->borderSymbolGrid[$borderSymbolRowIndex];
+	    $cellSymbolRow = $this->boardFieldSymbolGrid[$_y];
+
+	    $borderSymbolRowIsSet = isset($borderSymbolRow);
+
 	    $rowString = "";
-	    foreach ($cellSymbolRow as $x => $cellSymbol)
+	    for ($x = 0; $x < $_highestColumnId; $x++)
 	    {
 		    // Add borders between columns
-		    if ($borderSymbolRowIsSet && isset($borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex]))
+		    if ($borderSymbolRowIsSet && isset($borderSymbolRow[$borderSymbolColumnIndex]))
 		    {
-			    $rowString .= $borderSymbolRows[$borderSymbolRowIndex][$borderSymbolColumnIndex];
+			    $rowString .= $borderSymbolRow[$borderSymbolColumnIndex];
 		    }
-		    $rowString .= $cellSymbol;
+
+		    // Add the cell symbol
+		    if (isset($cellSymbolRow[$x])) $rowString .= $cellSymbolRow[$x];
 
 		    $borderSymbolColumnIndex += 2;
 	    }
 
-	    // Also add the border right from the board
-	    if ($borderSymbolRowIsSet)
-	    {
-		    $rowColumnIds = array_keys($borderSymbolRows[$borderSymbolRowIndex]);
-		    $highestRowColumnId = array_pop($rowColumnIds);
-
-		    for ($x = $borderSymbolColumnIndex + 2; $x <= $highestRowColumnId; $x += 2)
-		    {
-			    if (isset($borderSymbolRows[$borderSymbolRowIndex][$x]))
-			    {
-				    $rowString .= $borderSymbolRows[$borderSymbolRowIndex][$x];
-			    }
-		    }
-	    }
+	    return $rowString;
     }
 }
