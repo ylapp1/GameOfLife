@@ -8,8 +8,10 @@
 
 namespace Output\BoardRenderer\Text;
 
+use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\BaseBorderRenderer;
 use Output\BoardRenderer\Base\Border\BaseBorder;
+use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 
 /**
  * Renders a border and its inner borders and adds them to a canvas.
@@ -25,19 +27,20 @@ class TextBorderRenderer extends BaseBorderRenderer
 	public function renderBorder($_border, $_canvas)
 	{
 		parent::renderBorder($_border, $_canvas);
-		$this->autoCompleteBorderSymbolGrid($_canvas->borderSymbolGrid());
+		$this->autoCompleteBorderSymbolGrid($_canvas->borderSymbolGrid(), $_border);
 	}
 
 	/**
 	 * Fills the gaps in the border symbol grid that exist because of vertical borders.
 	 *
 	 * @param String[][] $_borderSymbolGrid The border symbol grid
+	 * @param BaseBorder $_border The border
 	 */
-	private function autoCompleteBorderSymbolGrid(array $_borderSymbolGrid)
+	private function autoCompleteBorderSymbolGrid(array $_borderSymbolGrid, $_border)
 	{
 		// Find the lowest and highest column ids
 		$columnIds = array();
-		foreach ($this->borderSymbolGrid as $borderSymbolRow)
+		foreach ($_borderSymbolGrid as $borderSymbolRow)
 		{
 			$columnIds = array_merge($columnIds, array_keys($borderSymbolRow));
 		}
@@ -45,47 +48,44 @@ class TextBorderRenderer extends BaseBorderRenderer
 		$lowestColumnId = array_shift($columnIds);
 		$highestColumnId = array_pop($columnIds);
 
-
-		// TODO: Border renderer must render the complete border grid and add it to the text canvas at once because only this class can know whether a coordinate is inside a border
-		// TODO: (Diagonal, Curved, etc)
-
 		for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 		{
 			// TODO: Fix this, determine which stuff is outer border
 			$columnContainsBorderSymbol = $this->columnContainsBorderSymbol($_borderSymbolGrid, $x);
 			$isBorderColumn = ($x % 2 == 0);
 
-			foreach ($this->borderSymbolGrid as $y => $borderSymbolRow)
+			if ($isBorderColumn && ! $columnContainsBorderSymbol) continue;
+
+
+			$borderSymbol = " ";
+
+			if ($isBorderColumn) $borderCollisionCheckCoordinateX = $x / 2;
+			else $borderCollisionCheckCoordinateX = ($x - 1) / 2;
+
+			foreach ($_borderSymbolGrid as $y => $borderSymbolRow)
 			{
 				$isBorderRow = ($y % 2 == 0);
 
 				if ($isBorderRow)
 				{
-					if (! $isBorderColumn) $borderSymbol = " ";
-					elseif ($columnContainsBorderSymbol)
+					$borderCollisionCheckCoordinate = new Coordinate($borderCollisionCheckCoordinateX, $y);
+
+					/** @var TextBorderPart $borderPart */
+					foreach ($_border->getBorderParts() as $borderPart)
 					{
-						// TODO: Case A: border column is inside border
-						// TODO: Case B: border column is outside border
+						if ($borderPart->containsCoordinateBetweenEdges($borderCollisionCheckCoordinate))
+						{
+							$borderSymbol = $borderPart->borderSymbolCenter();
+							break;
+						}
 					}
-					else continue;
-				}
-				else
-				{
-					if ($isBorderColumn && $columnContainsBorderSymbol)
-					{
-						// TODO: Case A: border column is inside border
-						// TODO: Case B: border column is outside border
-					}
-					if (! $isBorderColumn || $columnContainsBorderSymbol)
-					{
-						$this->borderSymbolGrid[$y][$x] = " ";
-					}
+
+
+					$_borderSymbolGrid[$y][$x] = $borderSymbol;
 				}
 
-				// TODO: Auto complete borders
+				ksort($_borderSymbolGrid[$y]);
 			}
-
-			ksort($this->borderSymbolGrid[$y]);
 		}
 	}
 
@@ -101,7 +101,7 @@ class TextBorderRenderer extends BaseBorderRenderer
 	{
 		foreach ($_borderSymbolGrid as $y => $borderSymbolRow)
 		{
-			if ($borderSymbolRow[$_x]) return true;
+			if (isset($borderSymbolRow[$_x])) return true;
 		}
 
 		return false;

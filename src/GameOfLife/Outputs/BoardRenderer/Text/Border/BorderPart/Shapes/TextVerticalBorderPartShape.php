@@ -10,8 +10,8 @@ namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\VerticalBorderPartShape;
-use Output\BoardRenderer\Text\BorderPart\TextBorderPart;
-use Output\BoardRenderer\Text\BorderPart\TextRenderedBorderPart;
+use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 use Output\BoardRenderer\Text\TextCanvas;
 
 /**
@@ -32,13 +32,12 @@ class TextVerticalBorderPartShape extends VerticalBorderPartShape
         $parentBorderPart = $this->parentBorderPart;
 
         $borderSymbols = $parentBorderPart->getBorderSymbols();
-        $totalLength = $this->getTotalLength();
 
 	    // Create the rendered border part
 	    $renderedBorderPart = new TextRenderedBorderPart();
-	    for ($y = 1; $y < $totalLength - 2; $y++)
+	    foreach ($borderSymbols as $y => $borderSymbol)
 	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbols[$y], new Coordinate(0, $y), true);
+		    $renderedBorderPart->addBorderSymbol($borderSymbol, new Coordinate(0, $y), true);
 	    }
 
         $_canvas->addRenderedBorderAt($renderedBorderPart, $this->parentBorderPart->startsAt());

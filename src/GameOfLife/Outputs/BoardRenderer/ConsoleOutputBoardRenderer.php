@@ -18,12 +18,12 @@ use Output\BoardRenderer\Text\TextCanvas;
 /**
  * The BoardRenderer for the ConsoleOutput.
  */
-class ConsoleOutputBoardPrinter extends BaseBoardRenderer
+class ConsoleOutputBoardRenderer extends BaseBoardRenderer
 {
 	// Magic Methods
 
     /**
-     * ConsoleOutputBoardPrinter constructor.
+     * ConsoleOutputBoardRenderer constructor.
      *
      * @param Board $_board The board to which this board printer belongs
      */

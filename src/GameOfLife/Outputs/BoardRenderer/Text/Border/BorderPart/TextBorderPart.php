@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\BorderPart;
+namespace Output\BoardRenderer\Text\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BaseBorder;
@@ -86,8 +86,15 @@ class TextBorderPart extends BaseBorderPart
     public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, String $_borderSymbolStart, String $_borderSymbolCenter, String $_borderSymbolEnd, String $_borderSymbolOuterBorderCollisionStart = null, String $_borderSymbolOuterBorderCollisionCenter = null, String $_borderSymbolOuterBorderCollisionEnd = null, String $_borderSymbolInnerBorderCollisionStart = null, String $_borderSymbolInnerBorderCollisionCenter = null, String $_borderSymbolInnerBorderCollisionEnd = null)
     {
         parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape);
+        $this->borderSymbolStart = $_borderSymbolStart;
+        $this->borderSymbolCenter = $_borderSymbolCenter;
+        $this->borderSymbolEnd = $_borderSymbolEnd;
 
         // TODO: Default collision symbols = normal border symbols
+
+	    $this->collisionSymbolStart = $_borderSymbolStart;
+	    $this->collisionSymbolCenter = $_borderSymbolCenter;
+	    $this->collisionSymbolEnd = $_borderSymbolEnd;
     }
 
 
@@ -134,9 +141,10 @@ class TextBorderPart extends BaseBorderPart
     public function getBorderSymbols(): array
     {
         $borderSymbols = $this->renderBorderPart();
-        $borderSymbols = $this->renderCollisions($borderSymbols);
 
-        return $borderSymbols;
+	    $borderSymbols = $this->renderCollisions($borderSymbols);
+
+	    return $borderSymbols;
     }
 
     /**
@@ -149,7 +157,7 @@ class TextBorderPart extends BaseBorderPart
         $borderSymbols = array();
 
         $borderSymbols[0] = $this->borderSymbolStart;
-        for ($i = 1; $i < $this->getTotalLength() - 2; $i++)
+        for ($i = 1; $i <= $this->getTotalLength() - 2; $i++)
         {
             $borderSymbols[$i] = $this->borderSymbolCenter;
         }

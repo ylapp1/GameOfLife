@@ -12,7 +12,8 @@ use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use Output\BoardRenderer\Text\BorderPart\TextBorderPart;
+use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
+use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 
 /**
  * Creates border parts that form a rectangle.
@@ -160,7 +161,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $this->parentBorder,
             $startsAt,
             $endsAt,
-            new TextHorizontalBorderPartShape(),
+            new TextVerticalBorderPartShape(),
             $this->borderSymbolTopLeft,
             $this->borderSymbolLeftRight,
             $this->borderSymbolBottomLeft
@@ -184,7 +185,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $this->parentBorder,
             $startsAt,
             $endsAt,
-            new TextHorizontalBorderPartShape(),
+            new TextVerticalBorderPartShape(),
             $this->borderSymbolTopRight,
             $this->borderSymbolLeftRight,
             $this->borderSymbolBottomRight

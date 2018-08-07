@@ -69,6 +69,7 @@ abstract class BaseBorderPart
 	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
     {
         $this->parentBorder = $_parentBorder;
+        $this->collisions = array();
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;

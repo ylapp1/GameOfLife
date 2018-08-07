@@ -9,7 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use Output\BoardPrinter\ConsoleOutputBoardPrinter;
+use Output\BoardRenderer\ConsoleOutputBoardRenderer;
 use Ulrichsg\Getopt;
 
 /**
@@ -22,9 +22,9 @@ class ConsoleOutput extends BaseOutput
     /**
      * The board printer
      *
-     * @var ConsoleOutputBoardPrinter $boardPrinter
+     * @var ConsoleOutputBoardRenderer $boardRenderer
      */
-    private $boardPrinter;
+    private $boardRenderer;
 
     /**
      * The time for that one game step will be displayed in the console in microseconds
@@ -71,7 +71,7 @@ class ConsoleOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-	    $this->boardPrinter = new ConsoleOutputBoardPrinter($_board);
+	    $this->boardRenderer = new ConsoleOutputBoardRenderer($_board);
 
 	    if ($_options->getOption("consoleOutputStepTime") !== null)
         {
@@ -91,7 +91,8 @@ class ConsoleOutput extends BaseOutput
         $this->printTitle();
 
         $gameStepString = "Game step: " . $_gameStep . "\n";
-        $boardContentString = $this->boardPrinter->getBoardContentString($_board);
+        $this->boardRenderer->renderBoard($_board);
+        $boardContentString = $this->boardRenderer->getContent();
         $this->shellOutputHelper->printCenteredOutputString($gameStepString);
         $this->shellOutputHelper->printCenteredOutputString($boardContentString);
 

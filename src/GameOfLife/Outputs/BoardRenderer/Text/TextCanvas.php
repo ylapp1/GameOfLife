@@ -10,7 +10,7 @@ namespace Output\BoardRenderer\Text;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\BaseCanvas;
-use Output\BoardRenderer\Text\BorderPart\TextRenderedBorderPart;
+use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Canvas on which borders and cells can be drawn.
@@ -92,7 +92,7 @@ class TextCanvas extends BaseCanvas
 	    	$xPosition = $_at->x() + $borderSymbolPosition->x();
 	    	$yPosition = $_at->y() + $borderSymbolPosition->y();
 
-	    	if (! $this->borderSymbolGrid[$yPosition]) $this->borderSymbolGrid[$yPosition] = array();
+	    	if (! isset($this->borderSymbolGrid[$yPosition])) $this->borderSymbolGrid[$yPosition] = array();
 	    	$this->borderSymbolGrid[$yPosition][$xPosition] = $borderSymbol;
 	    }
     }
@@ -105,7 +105,7 @@ class TextCanvas extends BaseCanvas
 	 */
     public function addRenderedBoardFieldAt($_renderedBoardField, Coordinate $_at)
     {
-    	if (! $this->boardFieldSymbolGrid[$_at->y()]) $this->boardFieldSymbolGrid[$_at->y()] = array();
+    	if (! isset($this->boardFieldSymbolGrid[$_at->y()])) $this->boardFieldSymbolGrid[$_at->y()] = array();
     	$this->boardFieldSymbolGrid[$_at->y()][$_at->x()] = $_renderedBoardField;
     }
 
@@ -116,8 +116,6 @@ class TextCanvas extends BaseCanvas
 	 */
     public function getContent()
     {
-	    $this->reset();
-
 	    // Find the highest row id
 	    $rowIds = array_merge(array_keys($this->boardFieldSymbolGrid), array_keys($this->borderSymbolGrid));
 	    natsort($rowIds);
@@ -139,14 +137,13 @@ class TextCanvas extends BaseCanvas
 	    $rowStrings = array();
 	    for ($y = 0; $y <= $highestRowId; $y++)
 	    {
-	    	$cellSymbolRow = $this->boardFieldSymbolGrid[$y];
 		    $borderSymbolRowIndex = $y * 2;
 
 		    // Add borders between rows
 		    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex])) $rowStrings[] = $this->getBorderRowString($borderSymbolRowIndex);
 
 		    // Add cell symbol rows
-		    if (isset($cellSymbolRow)) $rowStrings[] = $this->getCellSymbolRowString($y, $highestColumnId);
+		    if (isset($this->boardFieldSymbolGrid[$y])) $rowStrings[] = $this->getCellSymbolRowString($y, $highestColumnId);
 	    }
 
 	    return implode("\n", $rowStrings) . "\n";
@@ -178,16 +175,16 @@ class TextCanvas extends BaseCanvas
 	    $borderSymbolRowIndex = $_y * 2 + 1;
 	    $borderSymbolColumnIndex = 0;
 
-	    $borderSymbolRow = $this->borderSymbolGrid[$borderSymbolRowIndex];
 	    $cellSymbolRow = $this->boardFieldSymbolGrid[$_y];
 
-	    $borderSymbolRowIsSet = isset($borderSymbolRow);
+	    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex])) $borderSymbolRow = $this->borderSymbolGrid[$borderSymbolRowIndex];
+	    else $borderSymbolRow = null;
 
 	    $rowString = "";
 	    for ($x = 0; $x < $_highestColumnId; $x++)
 	    {
 		    // Add borders between columns
-		    if ($borderSymbolRowIsSet && isset($borderSymbolRow[$borderSymbolColumnIndex]))
+		    if ($borderSymbolRow && isset($borderSymbolRow[$borderSymbolColumnIndex]))
 		    {
 			    $rowString .= $borderSymbolRow[$borderSymbolColumnIndex];
 		    }
