@@ -25,7 +25,7 @@ abstract class VerticalBorderPartShape extends BaseBorderPartShape
      */
     public function getTotalLength(): int
     {
-        return $this->parentBorderPart->endsAt()->y() - $this->parentBorderPart->startsAt()->y() + 1;
+        return $this->parentBorderPart->endsAt()->y() - $this->parentBorderPart->startsAt()->y() + 2;
     }
 
     /**

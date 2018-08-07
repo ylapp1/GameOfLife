@@ -105,7 +105,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
     {
         $startsAt = clone $this->topLeftCornerCoordinate;
         $endsAt = new Coordinate(
-            $this->bottomRightCornerCoordinate->x(),
+            $this->bottomRightCornerCoordinate->x() + 1,
             $this->topLeftCornerCoordinate->y()
         );
 
@@ -129,9 +129,12 @@ class TextRectangleBorderShape extends RectangleBorderShape
     {
         $startsAt = new Coordinate(
             $this->topLeftCornerCoordinate->x(),
-            $this->bottomRightCornerCoordinate->y()
+            $this->bottomRightCornerCoordinate->y() + 1
         );
-        $endsAt = clone $this->bottomRightCornerCoordinate;
+        $endsAt = new Coordinate(
+        	$this->bottomRightCornerCoordinate->x() + 1,
+	        $this->bottomRightCornerCoordinate->y() + 1
+        );
 
         return new TextBorderPart(
             $this->parentBorder,
@@ -154,7 +157,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
         $startsAt = clone $this->topLeftCornerCoordinate;
         $endsAt = new Coordinate(
             $this->topLeftCornerCoordinate->x(),
-            $this->bottomRightCornerCoordinate->y()
+            $this->bottomRightCornerCoordinate->y() + 1
         );
 
         return new TextBorderPart(
@@ -176,10 +179,13 @@ class TextRectangleBorderShape extends RectangleBorderShape
     protected function getRightBorderPart(): TextBorderPart
     {
         $startsAt = new Coordinate(
-            $this->bottomRightCornerCoordinate->x(),
+            $this->bottomRightCornerCoordinate->x() + 1,
             $this->topLeftCornerCoordinate->y()
         );
-        $endsAt = clone $this->bottomRightCornerCoordinate;
+	    $endsAt = new Coordinate(
+		    $this->bottomRightCornerCoordinate->x() + 1,
+		    $this->bottomRightCornerCoordinate->y() + 1
+	    );
 
         return new TextBorderPart(
             $this->parentBorder,

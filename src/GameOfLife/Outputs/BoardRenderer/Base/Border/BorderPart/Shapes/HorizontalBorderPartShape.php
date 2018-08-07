@@ -25,7 +25,7 @@ abstract class HorizontalBorderPartShape extends BaseBorderPartShape
      */
     public function getTotalLength(): int
     {
-        return $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x() + 1;
+        return $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x() + 2;
     }
 
     /**

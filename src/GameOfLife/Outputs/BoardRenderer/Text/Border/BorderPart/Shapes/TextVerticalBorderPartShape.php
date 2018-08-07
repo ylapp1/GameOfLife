@@ -32,13 +32,16 @@ class TextVerticalBorderPartShape extends VerticalBorderPartShape
         $parentBorderPart = $this->parentBorderPart;
 
         $borderSymbols = $parentBorderPart->getBorderSymbols();
+        $numberOfBorderSymbols = count($borderSymbols);
 
 	    // Create the rendered border part
 	    $renderedBorderPart = new TextRenderedBorderPart();
-	    foreach ($borderSymbols as $y => $borderSymbol)
+	    $renderedBorderPart->addBorderSymbol($borderSymbols[0], new Coordinate(0, 0), false, false);
+	    for ($y = 0; $y < $numberOfBorderSymbols - 2; $y++)
 	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbol, new Coordinate(0, $y), true);
+		    $renderedBorderPart->addBorderSymbol($borderSymbols[$y + 1], new Coordinate(0, $y), true, false);
 	    }
+	    $renderedBorderPart->addBorderSymbol($borderSymbols[$numberOfBorderSymbols - 1], new Coordinate(0, $numberOfBorderSymbols - 2), false, false);
 
         $_canvas->addRenderedBorderAt($renderedBorderPart, $this->parentBorderPart->startsAt());
     }

@@ -32,13 +32,16 @@ class TextHorizontalBorderPartShape extends HorizontalBorderPartShape
         $parentBorderPart = $this->parentBorderPart;
 
         $borderSymbols = $parentBorderPart->getBorderSymbols();
+	    $numberOfBorderSymbols = count($borderSymbols);
 
-        // Create the rendered border part
+	    // Create the rendered border part
 	    $renderedBorderPart = new TextRenderedBorderPart();
-	    foreach ($borderSymbols as $x => $borderSymbol)
+	    $renderedBorderPart->addBorderSymbol($borderSymbols[0], new Coordinate(0, 0), false, false);
+	    for ($x = 1; $x < $numberOfBorderSymbols - 1; $x++)
 	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbol, new Coordinate($x, 0), false);
+		    $renderedBorderPart->addBorderSymbol($borderSymbols[$x], new Coordinate($x, 0), false, true);
 	    }
+	    $renderedBorderPart->addBorderSymbol($borderSymbols[$numberOfBorderSymbols - 1], new Coordinate($numberOfBorderSymbols - 2, 0), false, false);
 
 	    $_canvas->addRenderedBorderAt($renderedBorderPart, $this->parentBorderPart->startsAt());
     }

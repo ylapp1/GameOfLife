@@ -62,16 +62,15 @@ class TextRenderedBorderPart
 	 * @param String $_symbol The border symbol
 	 * @param Coordinate $_at The coordinate of the border symbol relative to the start of the border
 	 * @param Bool $_isInCellSymbolRow If true, the border symbol will be added inside a cell symbol row
+	 * @param Bool $_isInCellSymbolColumn If true, the border symbol will be added inside a cell symbol column
 	 */
-	public function addBorderSymbol(String $_symbol, Coordinate $_at, Bool $_isInCellSymbolRow)
+	public function addBorderSymbol(String $_symbol, Coordinate $_at, Bool $_isInCellSymbolRow, Bool $_isInCellSymbolColumn)
 	{
 		$xPosition = $_at->x() * 2;
-		$yPosition = $_at->y() * 2;
+		if ($_isInCellSymbolColumn) $xPosition += 1;
 
-		if ($_isInCellSymbolRow)
-		{ // The border symbol is inside a cell symbol row
-			$yPosition += 1;
-		}
+		$yPosition = $_at->y() * 2;
+		if ($_isInCellSymbolRow) $yPosition += 1;
 
 		$this->borderSymbols[] = array(new Coordinate($xPosition, $yPosition), $_symbol);
 	}

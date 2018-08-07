@@ -89,8 +89,8 @@ class TextCanvas extends BaseCanvas
 	    	$borderSymbolPosition = $borderSymbolData[0];
 	    	$borderSymbol = $borderSymbolData[1];
 
-	    	$xPosition = $_at->x() + $borderSymbolPosition->x();
-	    	$yPosition = $_at->y() + $borderSymbolPosition->y();
+	    	$xPosition = $_at->x() * 2 + $borderSymbolPosition->x();
+	    	$yPosition = $_at->y() * 2 + $borderSymbolPosition->y();
 
 	    	if (! isset($this->borderSymbolGrid[$yPosition])) $this->borderSymbolGrid[$yPosition] = array();
 	    	$this->borderSymbolGrid[$yPosition][$xPosition] = $borderSymbol;
