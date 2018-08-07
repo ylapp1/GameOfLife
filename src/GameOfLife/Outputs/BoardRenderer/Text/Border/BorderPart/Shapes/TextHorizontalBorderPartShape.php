@@ -37,9 +37,9 @@ class TextHorizontalBorderPartShape extends HorizontalBorderPartShape
 	    // Create the rendered border part
 	    $renderedBorderPart = new TextRenderedBorderPart();
 	    $renderedBorderPart->addBorderSymbol($borderSymbols[0], new Coordinate(0, 0), false, false);
-	    for ($x = 1; $x < $numberOfBorderSymbols - 1; $x++)
+	    for ($x = 0; $x < $numberOfBorderSymbols - 2; $x++)
 	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbols[$x], new Coordinate($x, 0), false, true);
+		    $renderedBorderPart->addBorderSymbol($borderSymbols[$x + 1], new Coordinate($x, 0), false, true);
 	    }
 	    $renderedBorderPart->addBorderSymbol($borderSymbols[$numberOfBorderSymbols - 1], new Coordinate($numberOfBorderSymbols - 2, 0), false, false);
 
