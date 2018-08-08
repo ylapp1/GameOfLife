@@ -33,18 +33,19 @@ abstract class HorizontalBorderPartShape extends BaseBorderPartShape
      *
      * @param BaseBorderPart $_borderPart The other border part
      *
-     * @return int|null The position at which the parent border part collides with the other border part or null if there is no collision
+     * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
      */
     public function collidesWith($_borderPart)
     {
         $startX = $this->parentBorderPart->startsAt()->x();
-        $startY = $this->parentBorderPart->startsAt()->y();
+	    $checkCoordinate = clone $this->parentBorderPart->startsAt();
 
-        for ($x = $startX; $x <= $this->parentBorderPart->endsAt()->x(); $x++)
+	    for ($x = $startX; $x <= $this->parentBorderPart->endsAt()->x(); $x++)
         {
-            if ($_borderPart->containsCoordinate(new Coordinate($x, $startY)))
+	        $checkCoordinate->setX($x);
+            if ($_borderPart->containsCoordinate($checkCoordinate))
             {
-                return $x - $startX;
+                return $checkCoordinate;
             }
         }
 
@@ -70,5 +71,22 @@ abstract class HorizontalBorderPartShape extends BaseBorderPartShape
         }
 
         return false;
+    }
+
+	/**
+	 * Returns the distance of a coordinate to the start of the parent border part.
+	 * If the coordinate is not inside the border this function will return null.
+	 *
+	 * @param Coordinate $_coordinate The coordinate
+	 *
+	 * @return int The distance of the coordinate to the start of the parent border part or null if the coordinate is not inside the border
+	 */
+    public function getCoordinatePosition(Coordinate $_coordinate)
+    {
+    	if ($this->containsCoordinate($_coordinate))
+	    {
+	    	return $_coordinate->x() - $this->parentBorderPart->startsAt()->x();
+	    }
+    	else return null;
     }
 }

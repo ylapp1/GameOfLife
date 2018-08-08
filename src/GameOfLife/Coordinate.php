@@ -44,6 +44,22 @@ class Coordinate
 		$this->y = $_y;
 	}
 
+	/**
+	 * Returns whether another coordinate equals this coordinate.
+	 *
+	 * @param Coordinate $_coordinate The other coordinate
+	 *
+	 * @return Bool True if the other coordinate equals this coordinate, false otherwise
+	 */
+	public function equals(Coordinate $_coordinate): Bool
+	{
+		if ($_coordinate->x() == $this->x && $_coordinate->y() == $this->y)
+		{
+			return true;
+		}
+		else return false;
+	}
+
 
 	// Getters and Setters
 

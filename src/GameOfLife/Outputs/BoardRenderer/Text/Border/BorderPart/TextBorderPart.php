@@ -141,7 +141,6 @@ class TextBorderPart extends BaseBorderPart
     public function getBorderSymbols(): array
     {
         $borderSymbols = $this->renderBorderPart();
-
 	    $borderSymbols = $this->renderCollisions($borderSymbols);
 
 	    return $borderSymbols;
@@ -157,11 +156,11 @@ class TextBorderPart extends BaseBorderPart
         $borderSymbols = array();
 
         $borderSymbols[0] = $this->borderSymbolStart;
-        for ($i = 1; $i <= $this->getTotalLength() - 2; $i++)
+        for ($i = 1; $i <= $this->shape->getTotalLength() - 2; $i++)
         {
             $borderSymbols[$i] = $this->borderSymbolCenter;
         }
-        $borderSymbols[$this->getTotalLength() - 1] = $this->borderSymbolEnd;
+        $borderSymbols[$this->shape->getTotalLength() - 1] = $this->borderSymbolEnd;
 
         return $borderSymbols;
     }
@@ -180,17 +179,18 @@ class TextBorderPart extends BaseBorderPart
             $collidingBorder = $collision->with();
             if ($collidingBorder instanceof TextBorderPart)
             {
-                if ($collision->position() == 0)
+                if ($collision->position()->equals($collidingBorder->startsAt()))
                 {
                     $collisionSymbol = $collidingBorder->collisionSymbolStart();
                 }
-                elseif ($collision->position() == $this->getTotalLength())
+                elseif ($collision->position()->equals($collidingBorder->endsAt()))
                 {
                     $collisionSymbol = $collidingBorder->collisionSymbolEnd();
                 }
                 else $collisionSymbol = $collidingBorder->collisionSymbolCenter();
 
-                $_borderSymbols[$collision->position()] = $collisionSymbol;
+	            $collisionPosition = $this->shape->getCoordinatePosition($collision->position());
+	            $_borderSymbols[$collisionPosition] = $collisionSymbol;
             }
         }
 

@@ -8,6 +8,8 @@
 
 namespace Output\BoardRenderer\Base\Border\BorderPart;
 
+use GameOfLife\Coordinate;
+
 /**
  * Stores information about a border part collision.
  */
@@ -18,7 +20,7 @@ class BorderPartCollision
 	/**
 	 * The position of the collision inside the border relative from the start position of the border
 	 *
-	 * @var int $position
+	 * @var Coordinate $position
 	 */
 	private $position;
 
@@ -42,11 +44,11 @@ class BorderPartCollision
 	/**
 	 * BorderPartCollision constructor.
 	 *
-	 * @param int $_position The position of the collision inside the border relative from the start position of the border
+	 * @param Coordinate $_position The position of the collision inside the border relative from the start position of the border
 	 * @param BaseBorderPart $_with The reference to the border that collides
 	 * @param bool $_isOuterBorderCollision Indicates whether the colliding border is an outer border
 	 */
-	public function __construct(int $_position, $_with, Bool $_isOuterBorderCollision)
+	public function __construct(Coordinate $_position, $_with, Bool $_isOuterBorderCollision)
 	{
 		$this->position = $_position;
 		$this->with = $_with;
@@ -59,9 +61,9 @@ class BorderPartCollision
     /**
      * Returns the position of the collision inside the border relative from the start position of the border.
      *
-     * @return int The position of the collision inside the border relative from the start position of the border
+     * @return Coordinate The position of the collision inside the border relative from the start position of the border
      */
-	public function position(): int
+	public function position(): Coordinate
     {
         return $this->position;
     }

@@ -109,18 +109,18 @@ abstract class BaseBorderPart
         return $this->parentBorder;
     }
 
+	/**
+	 * Returns the shape of this border part.
+	 *
+	 * @return BaseBorderPartShape The shape of this border part
+	 */
+    public function shape()
+    {
+    	return $this->shape;
+    }
+
 
 	// Class Methods
-
-	/**
-	 * Calculates and returns the length of this border part with start and end edges.
-	 *
-	 * @return int The length of this border part without start and end edges
-	 */
-	public function getTotalLength(): int
-    {
-        return $this->shape->getTotalLength();
-    }
 
 	/**
 	 * Checks whether this border part collides with another border part and adds border part collisions to this border
@@ -156,24 +156,6 @@ abstract class BaseBorderPart
         $this->shape->addBorderPartToCanvas($_canvas);
     }
 
-	/**
-	 * Returns whether the output border contains a specific coordinate between its left and right edge.
-	 * This does not include the coordinates of the left and right edge.
-	 *
-	 * @param Coordinate $_coordinate The coordinate
-	 *
-	 * @return Bool True if the output border contains the coordinate, false otherwise
-	 */
-    public function containsCoordinateBetweenEdges(Coordinate $_coordinate): Bool
-    {
-        if ($_coordinate !== $this->startsAt() && $_coordinate !== $this->endsAt() &&
-            $this->shape->containsCoordinate($_coordinate))
-        {
-            return true;
-        }
-        else return false;
-    }
-
     /**
      * Returns whether this border part contains a specific coordinate.
      *
@@ -183,6 +165,6 @@ abstract class BaseBorderPart
      */
     public function containsCoordinate(Coordinate $_coordinate): Bool
     {
-        return $this->shape->containsCoordinate($_coordinate);
+	    return $this->shape->containsCoordinate($_coordinate);
     }
 }

@@ -60,7 +60,7 @@ abstract class BaseBorderPartShape
      *
      * @param BaseBorderPart $_borderPart The other border part
      *
-     * @return int|null The position at which the parent border part collides with the other border part or null if there is no collision
+     * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
      */
     abstract public function collidesWith($_borderPart);
 
@@ -73,10 +73,22 @@ abstract class BaseBorderPartShape
      */
     abstract public function containsCoordinate(Coordinate $_coordinate): Bool;
 
+	/**
+	 * Returns the distance of a coordinate to the start of the parent border part.
+	 * If the coordinate is not inside the border this function will return null.
+	 *
+	 * @param Coordinate $_coordinate The coordinate
+	 *
+	 * @return int The distance of the coordinate to the start of the parent border part or null if the coordinate is not inside the border
+	 */
+    abstract public function getCoordinatePosition(Coordinate $_coordinate);
+
     /**
      * Draws the parent border part to a canvas.
      *
      * @param BaseCanvas $_canvas The canvas
+     *
+     * TODO: Use getRenderedBorderPart instead
      */
     abstract public function addBorderPartToCanvas($_canvas);
 }
