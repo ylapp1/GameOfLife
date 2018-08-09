@@ -18,25 +18,25 @@ class BorderPartCollision
     // Attributes
 
 	/**
-	 * The position of the collision inside the border relative from the start position of the border
+	 * The position of the border part collision inside the border grid
 	 *
 	 * @var Coordinate $position
 	 */
 	private $position;
 
 	/**
-	 * The reference to the colliding border part
+	 * The colliding border part
 	 *
 	 * @var BaseBorderPart $with
 	 */
 	private $with;
 
 	/**
-	 * Indicates whether the colliding border is an outer border
+	 * Indicates whether the colliding border part is a outer border
 	 *
-	 * @var Bool $isOuterBorderCollision
+	 * @var Bool $isOuterBorderPartCollision
 	 */
-	private $isOuterBorderCollision;
+	private $isOuterBorderPartCollision;
 
 
 	// Magic Methods
@@ -52,7 +52,7 @@ class BorderPartCollision
 	{
 		$this->position = $_position;
 		$this->with = $_with;
-		$this->isOuterBorderCollision = $_isOuterBorderCollision;
+		$this->isOuterBorderPartCollision = $_isOuterBorderCollision;
 	}
 
 
@@ -69,9 +69,9 @@ class BorderPartCollision
     }
 
     /**
-     * Returns the reference to the colliding border part.
+     * Returns the colliding border part.
      *
-     * @return BaseBorderPart The reference to the colliding border part
+     * @return BaseBorderPart The colliding border part
      */
     public function with()
     {
@@ -83,8 +83,8 @@ class BorderPartCollision
      *
      * @return Bool True if the colliding border is an outer border, false otherwise
      */
-    public function isOuterBorderCollision(): Bool
+    public function isOuterBorderPartCollision(): Bool
     {
-        return $this->isOuterBorderCollision;
+        return $this->isOuterBorderPartCollision;
     }
 }

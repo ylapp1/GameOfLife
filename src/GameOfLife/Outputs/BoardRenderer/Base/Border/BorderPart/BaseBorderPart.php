@@ -9,40 +9,41 @@
 namespace Output\BoardRenderer\Base\Border\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\BaseCanvas;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 /**
- * Container that stores the information about a part of a border.
+ * Container class that stores information about a border part.
+ * A border part is a single line of the total border with a fixed start and end point, for example horizontal, vertical,
+ * diagonal or curved lines.
  */
 abstract class BaseBorderPart
 {
 	// Attributes
 
 	/**
-	 * The start coordinate of this border
+	 * The start coordinate
 	 *
 	 * @var Coordinate $startsAt
 	 */
 	protected $startsAt;
 
 	/**
-	 * The end coordinate of this border
+	 * The end coordinate
 	 *
 	 * @var Coordinate $endsAt
 	 */
 	protected $endsAt;
 
 	/**
-	 * The shape of this border part
+	 * The shape
 	 *
 	 * @var BaseBorderPartShape $shape
 	 */
 	protected $shape;
 
 	/**
-	 * The list of collisions with other borders.
+	 * The list of collisions with other borders
 	 *
 	 * @var BorderPartCollision[] $collisions
 	 */
@@ -62,8 +63,8 @@ abstract class BaseBorderPart
 	 * BaseBorderPart constructor.
 	 *
      * @param BaseBorder $_parentBorder The parent border
-	 * @param Coordinate $_startsAt The start coordinate of this border
-	 * @param Coordinate $_endsAt The end coordinate of this border
+	 * @param Coordinate $_startsAt The start coordinate of this border part
+	 * @param Coordinate $_endsAt The end coordinate of this border part
      * @param BaseBorderPartShape $_shape The shape of this border part
 	 */
 	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
@@ -80,9 +81,9 @@ abstract class BaseBorderPart
     // Getters and Setters
 
 	/**
-	 * Returns the start coordinate of this border.
+	 * Returns the start coordinate.
 	 *
-	 * @return Coordinate The start coordinate of this border
+	 * @return Coordinate The start coordinate
 	 */
 	public function startsAt(): Coordinate
 	{
@@ -90,9 +91,9 @@ abstract class BaseBorderPart
 	}
 
 	/**
-	 * Returns the end coordinate of this border
+	 * Returns the end coordinate.
 	 *
-	 * @return Coordinate The end coordinate of this border
+	 * @return Coordinate The end coordinate
 	 */
 	public function endsAt(): Coordinate
 	{
@@ -100,9 +101,9 @@ abstract class BaseBorderPart
 	}
 
     /**
-     * Returns the parent border of this border part.
+     * Returns the parent border.
      *
-     * @return BaseBorder The parent border of this border part
+     * @return BaseBorder The parent border
      */
 	public function parentBorder()
     {
@@ -110,9 +111,9 @@ abstract class BaseBorderPart
     }
 
 	/**
-	 * Returns the shape of this border part.
+	 * Returns the border part shape.
 	 *
-	 * @return BaseBorderPartShape The shape of this border part
+	 * @return BaseBorderPartShape The border part shape
 	 */
     public function shape()
     {
@@ -123,15 +124,13 @@ abstract class BaseBorderPart
 	// Class Methods
 
 	/**
-	 * Checks whether this border part collides with another border part and adds border part collisions to this border
+	 * Checks whether this border part collides with another border part and adds a border part collision to this border
 	 * part if a collision was detected.
 	 *
 	 * @param BaseBorderPart $_borderPart The other border part
 	 */
 	public function checkCollisionWith(BaseBorderPart $_borderPart)
 	{
-		// TODO: Fix border parts overlapping case
-
 		$collisionPosition = $this->shape->getCollisionPositionWith($_borderPart);
 		if ($collisionPosition !== null)
 		{
@@ -148,13 +147,13 @@ abstract class BaseBorderPart
 	}
 
 	/**
-	 * Renders this border part and adds it to a symbol grid.
+	 * Creates and returns the rendered border part.
 	 *
-	 * @param BaseCanvas $_canvas The canvas
+	 * @return mixed The rendered border part
 	 */
-	public function addToCanvas($_canvas)
+	public function getRenderedBorderPart()
     {
-    	$_canvas->addRenderedBorderAt($this->shape->getRenderedBorderPart(), $this->startsAt);
+    	return $this->shape->getRenderedBorderPart();
     }
 
     /**

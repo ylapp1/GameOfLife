@@ -99,6 +99,7 @@ class TextBorderPart extends BaseBorderPart
         $this->borderSymbolEnd = $_borderSymbolEnd;
 
         // TODO: Default collision symbols = normal border symbols
+	    // TODO: Fix collision start left, collision start top, collision start right and all else
 
 	    $this->collisionSymbolStart = $_borderSymbolStart;
 	    $this->collisionSymbolCenter = $_borderSymbolCenter;
@@ -184,22 +185,22 @@ class TextBorderPart extends BaseBorderPart
     {
 	    foreach ($this->collisions as $collision)
         {
-            $collidingBorder = $collision->with();
-            if ($collidingBorder instanceof TextBorderPart)
-            {
-                if ($collision->position()->equals($collidingBorder->startsAt()))
-                {
-                    $collisionSymbol = $collidingBorder->collisionSymbolStart();
-                }
-                elseif ($collision->position()->equals($collidingBorder->endsAt()))
-                {
-                    $collisionSymbol = $collidingBorder->collisionSymbolEnd();
-                }
-                else $collisionSymbol = $collidingBorder->collisionSymbolCenter();
+            if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();
+            else $dominatingBorderPart = $this;
 
-	            $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
-	            $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;
+            if ($collision->position()->equals($dominatingBorderPart->startsAt()))
+            {
+            	$collisionSymbol = $dominatingBorderPart->collisionSymbolStart();
             }
+            elseif ($collision->position()->equals($dominatingBorderPart->endsAt()))
+            {
+            	$collisionSymbol = $dominatingBorderPart->collisionSymbolEnd();
+            }
+            else $collisionSymbol = $dominatingBorderPart->collisionSymbolCenter();
+
+            $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
+            $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;
+
         }
 
         return $_borderSymbols;

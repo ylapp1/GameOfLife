@@ -36,7 +36,7 @@ abstract class BaseBorderRenderer
             }
             $fetchedBorderParts[] = $borderPart;
 
-            $borderPart->addToCanvas($_canvas);
+            $_canvas->addRenderedBorderAt($borderPart->getRenderedBorderPart(), $borderPart->startsAt());
         }
     }
 }
