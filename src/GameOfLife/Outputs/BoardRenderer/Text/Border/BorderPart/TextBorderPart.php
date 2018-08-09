@@ -11,7 +11,8 @@ namespace Output\BoardRenderer\Text\Border\BorderPart;
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
+use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
+use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 
 /**
  * Container that stores the information about a part of a border.
@@ -20,6 +21,13 @@ use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 class TextBorderPart extends BaseBorderPart
 {
     // Attributes
+
+	/**
+	 * The shape of this border part
+	 *
+	 * @var TextHorizontalBorderPartShape|TextVerticalBorderPartShape
+	 */
+	protected $shape;
 
     /**
      * The symbol for the start of the border
@@ -72,7 +80,7 @@ class TextBorderPart extends BaseBorderPart
      * @param BaseBorder $_parentBorder The parent border of this border part
      * @param Coordinate $_startsAt The start coordinate of this border
      * @param Coordinate $_endsAt The end coordinate of this border
-     * @param BaseBorderPartShape $_shape The shape of this boder part
+     * @param TextHorizontalBorderPartShape|TextVerticalBorderPartShape $_shape The shape of this border part
      * @param String $_borderSymbolStart The symbol for the start of the border
      * @param String $_borderSymbolCenter The symbol for the center parts of the border
      * @param String $_borderSymbolEnd The symbol for the end of the border
@@ -155,12 +163,12 @@ class TextBorderPart extends BaseBorderPart
     {
         $borderSymbols = array();
 
-        $borderSymbols[0] = $this->borderSymbolStart;
-        for ($i = 1; $i <= $this->shape->getTotalLength() - 2; $i++)
+        $borderSymbols[] = $this->borderSymbolStart;
+        for ($i = 1; $i <= $this->shape->getNumberOfBorderSymbols(); $i++)
         {
             $borderSymbols[$i] = $this->borderSymbolCenter;
         }
-        $borderSymbols[$this->shape->getTotalLength() - 1] = $this->borderSymbolEnd;
+        $borderSymbols[] = $this->borderSymbolEnd;
 
         return $borderSymbols;
     }
@@ -174,7 +182,7 @@ class TextBorderPart extends BaseBorderPart
      */
     private function renderCollisions(array $_borderSymbols): array
     {
-        foreach ($this->collisions as $collision)
+	    foreach ($this->collisions as $collision)
         {
             $collidingBorder = $collision->with();
             if ($collidingBorder instanceof TextBorderPart)
@@ -189,8 +197,8 @@ class TextBorderPart extends BaseBorderPart
                 }
                 else $collisionSymbol = $collidingBorder->collisionSymbolCenter();
 
-	            $collisionPosition = $this->shape->getCoordinatePosition($collision->position());
-	            $_borderSymbols[$collisionPosition] = $collisionSymbol;
+	            $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
+	            $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;
             }
         }
 

@@ -12,37 +12,76 @@ use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
-use Output\BoardRenderer\Text\TextCanvas;
 
 /**
- * Class for horizontal text border parts.
+ * Shape for horizontal text border parts.
  */
-class TextHorizontalBorderPartShape extends HorizontalBorderPartShape
+class TextHorizontalBorderPartShape extends HorizontalBorderPartShape implements TextBorderPartShapeInterface
 {
+	// Attributes
+
+	/**
+	 * The parent border part
+	 *
+	 * @var TextBorderPart $parentBorderPart
+	 */
+	protected $parentBorderPart;
+
+
     // Class Methods
 
-    /**
-     * Draws the parent border part to a canvas.
-     *
-     * @param TextCanvas $_canvas The canvas
-     */
-    public function addBorderPartToCanvas($_canvas)
-    {
-        /** @var TextBorderPart $parentBorderPart */
-        $parentBorderPart = $this->parentBorderPart;
+	/**
+	 * Calculates and returns the number of border symbols that are necessary to render the parent border part with this shape not including start and end edges.
+	 *
+	 * @return int The number of border symbols that are necessary to render the parent border part with this shape not including start and end edges
+	 */
+	public function getNumberOfBorderSymbols(): int
+	{
+		return $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x();
+	}
 
-        $borderSymbols = $parentBorderPart->getBorderSymbols();
-	    $numberOfBorderSymbols = count($borderSymbols);
+	/**
+	 * Returns the position of a coordinate inside the list of border symbols of the parent border part.
+	 *
+	 * @param Coordinate $_coordinate The coordinate
+	 *
+	 * @return int|null The position of the coordinate inside the list of border symbols of the parent border part or null if the coordinate is not inside the parent border part
+	 */
+	public function getBorderSymbolPositionOf(Coordinate $_coordinate)
+	{
+		if ($this->containsCoordinate($_coordinate))
+		{
+			if ($_coordinate->equals($this->parentBorderPart->startsAt())) return 0;
+			elseif ($_coordinate->equals($this->parentBorderPart->endsAt())) return $this->getNumberOfBorderSymbols() + 1;
+			else return $_coordinate->x() - $this->parentBorderPart->startsAt()->x();
+		}
+		else return null;
+	}
+
+	/**
+	 * Creates and returns the rendered parent border part.
+	 *
+	 * @return TextRenderedBorderPart The rendered parent border part
+	 */
+    public function getRenderedBorderPart()
+    {
+        $borderSymbols = $this->parentBorderPart->getBorderSymbols();
+
+	    // Using unset instead of array_shift here because array_shift changes the indexes of the array
+	    $borderSymbolStart = $borderSymbols[0];
+        unset($borderSymbols[0]);
+        $borderSymbolEnd = array_pop($borderSymbols);
 
 	    // Create the rendered border part
 	    $renderedBorderPart = new TextRenderedBorderPart();
-	    $renderedBorderPart->addBorderSymbol($borderSymbols[0], new Coordinate(0, 0), false, false);
-	    for ($x = 0; $x < $numberOfBorderSymbols - 2; $x++)
-	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbols[$x + 1], new Coordinate($x, 0), false, true);
-	    }
-	    $renderedBorderPart->addBorderSymbol($borderSymbols[$numberOfBorderSymbols - 1], new Coordinate($numberOfBorderSymbols - 2, 0), false, false);
 
-	    $_canvas->addRenderedBorderAt($renderedBorderPart, $this->parentBorderPart->startsAt());
+	    $renderedBorderPart->addBorderSymbol($borderSymbolStart, new Coordinate(0, 0), false, false);
+	    foreach ($borderSymbols as $x => $borderSymbol)
+	    {
+		    $renderedBorderPart->addBorderSymbol($borderSymbol, new Coordinate($x - 1, 0), false, true);
+	    }
+	    $renderedBorderPart->addBorderSymbol($borderSymbolEnd, new Coordinate($this->getNumberOfBorderSymbols(), 0), false, false);
+
+	    return $renderedBorderPart;
     }
 }

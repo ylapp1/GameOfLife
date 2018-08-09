@@ -73,7 +73,7 @@ abstract class BaseBorderPart
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
-    	$this->shape->setParentBorder($this);
+    	$this->shape->setParentBorderPart($this);
     }
 
 
@@ -130,17 +130,18 @@ abstract class BaseBorderPart
 	 */
 	public function checkCollisionWith(BaseBorderPart $_borderPart)
 	{
-		$collisionPosition = $this->shape->collidesWith($_borderPart);
+		// TODO: Fix border parts overlapping case
+
+		$collisionPosition = $this->shape->getCollisionPositionWith($_borderPart);
 		if ($collisionPosition !== null)
 		{
-			// TODO: Fix border parts overlapping case
-
-            if ($_borderPart->parentBorder() === $this->parentBorder ||
-                $this->parentBorder->containsBorder($_borderPart->parentBorder()))
-            {
-                $isOuterBorderPart = false;
-            }
-            else $isOuterBorderPart = true;
+			// Check whether the other border part is a inner or outer border part
+			if ($_borderPart->parentBorder() === $this->parentBorder() ||
+				$this->parentBorder()->containsBorder($_borderPart->parentBorder()))
+			{
+				$isOuterBorderPart = false;
+			}
+			else $isOuterBorderPart = true;
 
 			$this->collisions[] = new BorderPartCollision($collisionPosition, $_borderPart, $isOuterBorderPart);
 		}
@@ -153,7 +154,7 @@ abstract class BaseBorderPart
 	 */
 	public function addToCanvas($_canvas)
     {
-        $this->shape->addBorderPartToCanvas($_canvas);
+    	$_canvas->addRenderedBorderAt($this->shape->getRenderedBorderPart(), $this->startsAt);
     }
 
     /**
