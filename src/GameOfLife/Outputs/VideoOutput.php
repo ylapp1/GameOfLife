@@ -243,7 +243,8 @@ class VideoOutput extends ImageOutput
     {
         echo "\rGamestep: " . $_gameStep;
 
-        $image = $this->imageCreator->createImage($_board);
+	    $this->imageBoardRenderer->renderBoard($_board);
+	    $image = $this->imageBoardRenderer->getContent();
 
         $fileName = $_gameStep . ".png";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;

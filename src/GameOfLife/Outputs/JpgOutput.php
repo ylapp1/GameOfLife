@@ -49,9 +49,10 @@ class JpgOutput extends ImageOutput
     public function outputBoard(Board $_board, int $_gameStep)
     {
         echo "\rGamestep: " . $_gameStep;
-        $image = $this->imageCreator->createImage($_board);
+        $this->imageBoardRenderer->renderBoard($_board);
+	    $image = $this->imageBoardRenderer->getContent();
 
-        $fileName = $_gameStep . ".jpg";
+	    $fileName = $_gameStep . ".jpg";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
 
         imagejpeg($image, $filePath);

@@ -9,6 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
+use Output\BoardRenderer\ImageOutputBoardRenderer;
 use Output\Helpers\ColorSelector;
 use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
@@ -42,11 +43,11 @@ abstract class ImageOutput extends BaseOutput
     protected $fileSystemWriter;
 
     /**
-     * The image creator
+     * The image board renderer
      *
-     * @var ImageCreator $imageCreator
+     * @var ImageOutputBoardRenderer $imageBoardRenderer
      */
-    protected $imageCreator;
+    protected $imageBoardRenderer;
 
     /**
      * The output directory for images
@@ -118,26 +119,6 @@ abstract class ImageOutput extends BaseOutput
     public function setFileSystemHandler(FileSystemWriter $_fileSystemWriter)
     {
         $this->fileSystemWriter = $_fileSystemWriter;
-    }
-
-    /**
-     * Returns the image creator of this output.
-     *
-     * @return ImageCreator The image creator
-     */
-    public function imageCreator(): ImageCreator
-    {
-        return $this->imageCreator;
-    }
-
-    /**
-     * Sets the image creator of this output.
-     *
-     * @param ImageCreator $_imageCreator The image creator
-     */
-    public function setImageCreator(ImageCreator $_imageCreator)
-    {
-        $this->imageCreator = $_imageCreator;
     }
 
     /**
@@ -241,7 +222,15 @@ abstract class ImageOutput extends BaseOutput
         $gridColor = $colorSelector->getColor($gridColorString);
 
         // initialize the ImageCreator
-        $this->imageCreator = new ImageCreator($_board->height(), $_board->width(), $cellSize, $cellColor, $backgroundColor, $gridColor);
+        $this->imageBoardRenderer = new ImageOutputBoardRenderer(
+        	$_board,
+	        null,
+	        true,
+	        $cellSize,
+	        $backgroundColor,
+	        $cellColor,
+	        $gridColor
+        );
     }
 
     /**
