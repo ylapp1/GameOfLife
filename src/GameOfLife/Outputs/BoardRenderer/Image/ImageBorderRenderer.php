@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Image;
+namespace BoardRenderer\Image;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\Base\BaseBorderRenderer;
+use BoardRenderer\Base\BaseBorderRenderer;
 use Output\Helpers\ImageColor;
 
 /**

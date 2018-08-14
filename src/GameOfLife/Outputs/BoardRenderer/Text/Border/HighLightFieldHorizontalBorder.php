@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border;
+namespace BoardRenderer\Text\Border;
 
-use Output\BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BaseBorder;
 
 /**
  * The horizontal <board width> x 1 border part of the high light field border.

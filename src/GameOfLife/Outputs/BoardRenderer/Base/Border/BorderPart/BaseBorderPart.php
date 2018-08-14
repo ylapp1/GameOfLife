@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\Border\BorderPart;
+namespace BoardRenderer\Base\Border\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 /**
  * Container class that stores information about a border part.

@@ -6,13 +6,13 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
+namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalCollisionBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
+use BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalCollisionBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
+use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Shape for horizontal text border parts.

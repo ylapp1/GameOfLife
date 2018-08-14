@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Image;
+namespace BoardRenderer\Image;
 
-use Output\BoardRenderer\Base\BaseCanvas;
+use BoardRenderer\Base\BaseCanvas;
 
 /**
  * Canvas that draws images onto a resource.

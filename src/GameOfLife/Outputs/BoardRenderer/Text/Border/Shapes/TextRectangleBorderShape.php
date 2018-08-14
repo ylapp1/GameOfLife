@@ -6,16 +6,16 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\Shapes;
+namespace BoardRenderer\Text\Border\Shapes;
 
 use GameOfLife\Coordinate;
 use GameOfLife\Rectangle;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
+use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 
 /**
  * Creates border parts that form a rectangle.

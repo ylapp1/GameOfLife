@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Image\CellImage;
+namespace BoardRenderer\Image\CellImage;
 
 use Output\Helpers\ImageColor;
 

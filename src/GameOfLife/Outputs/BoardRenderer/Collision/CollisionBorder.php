@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Collision;
+namespace BoardRenderer\Collision;
 
-use Output\BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BaseBorder;
 
 class CollisionBorder extends BaseBorder
 {

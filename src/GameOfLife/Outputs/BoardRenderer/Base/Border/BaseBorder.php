@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\Border;
+namespace BoardRenderer\Base\Border;
 
-use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Output\BoardRenderer\Base\Border\Shapes\BaseBorderShape;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
  * Parent class for border printers.

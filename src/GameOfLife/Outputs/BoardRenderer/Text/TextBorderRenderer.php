@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text;
+namespace BoardRenderer\Text;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\BaseBorderRenderer;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Base\BaseBorderRenderer;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 
 /**
  * Renders a border and its inner borders and adds them to a canvas.

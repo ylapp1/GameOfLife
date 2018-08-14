@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Image;
+namespace BoardRenderer\Image;
 
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardRenderer\Base\BaseBoardFieldRenderer;
+use BoardRenderer\Base\BaseBoardFieldRenderer;
 
 /**
  * Class that renders board fields for images.

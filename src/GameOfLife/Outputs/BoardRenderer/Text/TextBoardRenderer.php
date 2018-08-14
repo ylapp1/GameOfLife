@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text;
+namespace BoardRenderer\Text;
 
-use Output\BoardRenderer\Base\BaseBoardRenderer;
-use Output\BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\BaseBoardRenderer;
+use BoardRenderer\Base\Border\BaseBorder;
 
 /**
  * Renders a board to text symbols.

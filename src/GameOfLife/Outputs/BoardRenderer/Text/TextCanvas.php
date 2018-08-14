@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text;
+namespace BoardRenderer\Text;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\BaseCanvas;
-use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
+use BoardRenderer\Base\BaseCanvas;
+use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Canvas on which borders and cells can be drawn.

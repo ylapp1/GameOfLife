@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Collision\Border\BorderPart;
+namespace BoardRenderer\Collision\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 

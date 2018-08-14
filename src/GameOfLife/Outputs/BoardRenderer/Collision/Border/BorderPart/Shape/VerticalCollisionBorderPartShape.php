@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\Border\BorderPart\Shapes;
+namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
-use Output\BoardRenderer\Collision\Border\BorderPart\Shape\CollisionBorderPartShape;
+use BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
+use BoardRenderer\Collision\Border\BorderPart\Shape\CollisionBorderPartShape;
 
 /**
  * Shape for vertical border parts.

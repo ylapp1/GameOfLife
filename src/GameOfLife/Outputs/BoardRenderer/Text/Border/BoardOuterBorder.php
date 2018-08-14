@@ -6,12 +6,13 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border;
+namespace BoardRenderer\Text\Border;
 
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
+use GameOfLife\Rectangle;
 
 /**
  * Generates border strings for boards.
@@ -29,13 +30,13 @@ class BoardOuterBorder extends BaseBorder
     {
         $topLeftCornerCoordinate = new Coordinate(0, 0);
         $bottomRightCornerCoordinate = new Coordinate($_board->width() - 1, $_board->height() - 1);
+        $rectangle = new Rectangle($topLeftCornerCoordinate, $bottomRightCornerCoordinate);
 
         parent::__construct(
             null,
             new TextRectangleBorderShape(
                 $this,
-                $topLeftCornerCoordinate,
-                $bottomRightCornerCoordinate,
+	            $rectangle,
                 "╔",
                 "╗",
                 "╚",

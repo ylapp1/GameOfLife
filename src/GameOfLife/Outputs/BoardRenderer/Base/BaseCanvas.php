@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base;
+namespace BoardRenderer\Base;
 
 /**
  * Canvas on which borders and cells can be drawn.

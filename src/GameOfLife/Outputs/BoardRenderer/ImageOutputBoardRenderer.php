@@ -9,12 +9,12 @@
 namespace Output\BoardRenderer;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\Base\BaseBoardRenderer;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Image\CellImage\SmileyCellImage;
-use Output\BoardRenderer\Image\ImageBoardFieldRenderer;
-use Output\BoardRenderer\Image\ImageBorderRenderer;
-use Output\BoardRenderer\Image\ImageCanvas;
+use BoardRenderer\Base\BaseBoardRenderer;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Image\CellImage\SmileyCellImage;
+use BoardRenderer\Image\ImageBoardFieldRenderer;
+use BoardRenderer\Image\ImageBorderRenderer;
+use BoardRenderer\Image\ImageCanvas;
 use Output\Helpers\ImageColor;
 
 /**

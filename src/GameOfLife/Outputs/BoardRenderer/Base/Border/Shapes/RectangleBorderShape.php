@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\Border\Shapes;
+namespace BoardRenderer\Base\Border\Shapes;
 
 use GameOfLife\Rectangle;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
  * Creates border parts that form a rectangle.

@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
+namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\VerticalCollisionBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
+use BoardRenderer\Base\Border\BorderPart\Shapes\VerticalCollisionBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Shape for vertical text border parts.

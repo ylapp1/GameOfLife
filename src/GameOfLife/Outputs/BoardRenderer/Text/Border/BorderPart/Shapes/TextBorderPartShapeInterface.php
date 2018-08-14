@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
+namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
 

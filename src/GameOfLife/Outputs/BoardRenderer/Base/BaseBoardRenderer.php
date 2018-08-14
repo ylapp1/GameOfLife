@@ -6,10 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base;
+namespace BoardRenderer\Base;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BaseBorder;
 
 /**
  * Renders a board.

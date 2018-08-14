@@ -6,14 +6,14 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer;
+namespace BoardRenderer;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\Base\BaseBoardRenderer;
-use Output\BoardRenderer\Text\Border\BoardOuterBorder;
-use Output\BoardRenderer\Text\TextBoardFieldRenderer;
-use Output\BoardRenderer\Text\TextBorderRenderer;
-use Output\BoardRenderer\Text\TextCanvas;
+use BoardRenderer\Base\BaseBoardRenderer;
+use BoardRenderer\Text\Border\BoardOuterBorder;
+use BoardRenderer\Text\TextBoardFieldRenderer;
+use BoardRenderer\Text\TextBorderRenderer;
+use BoardRenderer\Text\TextCanvas;
 
 /**
  * The BoardRenderer for the ConsoleOutput.

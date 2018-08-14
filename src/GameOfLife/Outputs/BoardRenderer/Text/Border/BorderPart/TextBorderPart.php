@@ -6,15 +6,15 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\BorderPart;
+namespace BoardRenderer\Text\Border\BorderPart;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
-use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use Output\BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
+use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
+use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
+use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 
 /**
  * Container that stores the information about a part of a border.

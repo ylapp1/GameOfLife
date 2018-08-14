@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Base\Border\BorderPart\Shapes;
+namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
-use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
  * Defines the shape of a border part.

@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Collision\Border\BorderPart\Shape;
+namespace BoardRenderer\Collision\Border\BorderPart\Shape;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 /**
  * Base class for border part shapes that can collide with other border part shapes.

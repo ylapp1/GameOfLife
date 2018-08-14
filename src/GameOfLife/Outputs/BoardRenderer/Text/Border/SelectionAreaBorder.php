@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border;
+namespace BoardRenderer\Text\Border;
 
 use BoardEditor\SelectionArea;
-use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
 
 /**
  * Prints the borders for selection areas inside boards.

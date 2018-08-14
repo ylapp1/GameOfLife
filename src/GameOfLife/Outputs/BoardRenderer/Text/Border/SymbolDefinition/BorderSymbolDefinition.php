@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border\SymbolDefinition;
+namespace BoardRenderer\Text\Border\SymbolDefinition;
 
 /**
  * Defines the symbols of a border.

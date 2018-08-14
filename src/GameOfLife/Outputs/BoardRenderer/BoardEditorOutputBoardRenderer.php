@@ -6,13 +6,13 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer;
+namespace BoardRenderer;
 
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardRenderer\Base\BaseBoardRenderer;
+use BoardRenderer\Base\BaseBoardRenderer;
 
 /**
  * BoardRenderer for the BoardEditorOutput.

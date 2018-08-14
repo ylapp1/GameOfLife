@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text\Border;
+namespace BoardRenderer\Text\Border;
 
-use Output\BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BaseBorder;
 
 /**
  * The vertical 1 x <board height> border part of the highlight field border.

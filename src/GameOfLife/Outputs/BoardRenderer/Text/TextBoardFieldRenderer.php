@@ -6,11 +6,11 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer\Text;
+namespace BoardRenderer\Text;
 
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardRenderer\Base\BaseBoardFieldRenderer;
+use BoardRenderer\Base\BaseBoardFieldRenderer;
 
 /**
  * Renders a list of board fields as symbols and adds them to a canvas.
