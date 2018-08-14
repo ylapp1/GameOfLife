@@ -14,6 +14,7 @@ use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
+use Output\BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 
 /**
  * Container that stores the information about a part of a border.
@@ -37,26 +38,26 @@ class TextBorderPart extends BaseBorderPart
 	 */
 	protected $borderSymbolDefinition;
 
-    /**
-     * The symbol for the start of the border when the start collides with a border
-     *
-     * @var String $collisionSymbolStart
-     */
-    protected $collisionSymbolStart;
+	/**
+	 * The collision symbol definition for the start symbol position
+	 *
+	 * @var CollisionSymbolDefinition $startCollisionSymbolDefinition
+	 */
+	protected $startCollisionSymbolDefinition;
 
-    /**
-     * The symbol for the center parts of the border when a center part collides with an outer border
-     *
-     * @var String $borderSymbolOuterBorderCollisionCenter
-     */
-    protected $collisionSymbolCenter;
+	/**
+	 * The collision symbol definition for a center symbol position
+	 *
+	 * @var CollisionSymbolDefinition $centerCollisionSymbolDefinition
+	 */
+	protected $centerCollisionSymbolDefinition;
 
-    /**
-     * The symbol for the end of the border when the end collides with an outer border
-     *
-     * @var String $borderSymbolOuterBorderCollisionEnd
-     */
-    protected $collisionSymbolEnd;
+	/**
+	 * The collision symbol definition for the end symbol position
+	 *
+	 * @var CollisionSymbolDefinition $endCollisionSymbolDefinition
+	 */
+	protected $endCollisionSymbolDefinition;
 
 
     // Magic Methods
@@ -68,51 +69,68 @@ class TextBorderPart extends BaseBorderPart
      * @param Coordinate $_startsAt The start coordinate of this border
      * @param Coordinate $_endsAt The end coordinate of this border
      * @param TextHorizontalBorderPartShape|TextVerticalBorderPartShape $_shape The shape of this border part
-     * @param String $_borderSymbolStart The symbol for the start of the border
-     * @param String $_borderSymbolCenter The symbol for the center parts of the border
-     * @param String $_borderSymbolEnd The symbol for the end of the border
-     * @param String $_borderSymbolOuterBorderCollisionStart The symbol for the start of the border when the start collides with an outer border
-     * @param String $_borderSymbolOuterBorderCollisionCenter The symbol for the center parts of the border when a center part collides with an outer border
-     * @param String $_borderSymbolOuterBorderCollisionEnd The symbol for the end of the border when the end collides with an outer border
-     * @param String $_borderSymbolInnerBorderCollisionStart The symbol for the start of the border when the start collides with an inner border
-     * @param String $_borderSymbolInnerBorderCollisionCenter The symbol for the center parts of the border when a center part collides with an inner border
-     * @param String $_borderSymbolInnerBorderCollisionEnd The symbol for the end of the border when the end collides with an inner border
+     * @param BorderSymbolDefinition $_borderSymbolDefinition The border symbol definition
+     * @param CollisionSymbolDefinition $_startCollisionSymbolDefinition The collision symbol definition for the start symbol position
+     * @param CollisionSymbolDefinition $_centerCollisionSymbolDefinition The collision symbol definition for a center symbol position
+     * @param CollisionSymbolDefinition $_endCollisionSymbolDefinition The collision symbol definition for the end symbol position
      */
-    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, String $_borderSymbolStart, String $_borderSymbolCenter, String $_borderSymbolEnd, String $_borderSymbolOuterBorderCollisionStart = null, String $_borderSymbolOuterBorderCollisionCenter = null, String $_borderSymbolOuterBorderCollisionEnd = null, String $_borderSymbolInnerBorderCollisionStart = null, String $_borderSymbolInnerBorderCollisionCenter = null, String $_borderSymbolInnerBorderCollisionEnd = null)
+    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderSymbolDefinition $_borderSymbolDefinition, CollisionSymbolDefinition $_startCollisionSymbolDefinition = null, CollisionSymbolDefinition $_centerCollisionSymbolDefinition = null, CollisionSymbolDefinition $_endCollisionSymbolDefinition = null)
     {
         parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape);
 
-        $this->borderSymbolDefinition = new BorderSymbolDefinition($_borderSymbolStart, $_borderSymbolCenter, $_borderSymbolEnd);
+        $this->borderSymbolDefinition = $_borderSymbolDefinition;
 
-        // TODO: Default collision symbols = normal border symbols
-	    // TODO: Fix collision start left, collision start top, collision start right and all else
+        if ($_startCollisionSymbolDefinition) $this->startCollisionSymbolDefinition = $_startCollisionSymbolDefinition;
+        else $this->startCollisionSymbolDefinition = new CollisionSymbolDefinition();
 
-	    $this->collisionSymbolStart = $_borderSymbolStart;
-	    $this->collisionSymbolCenter = $_borderSymbolCenter;
-	    $this->collisionSymbolEnd = $_borderSymbolEnd;
+        if ($_centerCollisionSymbolDefinition) $this->centerCollisionSymbolDefinition = $_centerCollisionSymbolDefinition;
+        else $this->centerCollisionSymbolDefinition = new CollisionSymbolDefinition();
+
+        if ($_endCollisionSymbolDefinition) $this->endCollisionSymbolDefinition = $_endCollisionSymbolDefinition;
+        else $this->endCollisionSymbolDefinition = new CollisionSymbolDefinition();
     }
 
 
     // Getters and Setters
 
+	/**
+	 * Returns the border symbol definition.
+	 *
+	 * @return BorderSymbolDefinition The border symbol definition
+	 */
 	public function borderSymbolDefinition(): BorderSymbolDefinition
 	{
 		return $this->borderSymbolDefinition;
 	}
 
-    public function collisionSymbolStart()
+	/**
+	 * Returns the collision symbol definition for the start symbol position.
+	 *
+	 * @return CollisionSymbolDefinition The collision symbol definition for the start symbol position
+	 */
+    public function startCollisionSymbolDefinition(): CollisionSymbolDefinition
     {
-        return $this->collisionSymbolStart;
+        return $this->startCollisionSymbolDefinition;
     }
 
-    public function collisionSymbolCenter()
+	/**
+	 * Returns the collision symbol definition for a center symbol position.
+	 *
+	 * @return CollisionSymbolDefinition The collision symbol definition for a center symbol position
+	 */
+    public function centerCollisionSymbolDefinition(): CollisionSymbolDefinition
     {
-        return $this->collisionSymbolCenter;
+        return $this->centerCollisionSymbolDefinition;
     }
 
-    public function collisionSymbolEnd()
+	/**
+	 * Returns the collision symbol definition for the end symbol position.
+	 *
+	 * @return CollisionSymbolDefinition The collision symbol definition for the end symbol position
+	 */
+    public function endCollisionSymbolDefinition(): CollisionSymbolDefinition
     {
-        return $this->collisionSymbolEnd;
+        return $this->endCollisionSymbolDefinition;
     }
 
 
@@ -159,20 +177,38 @@ class TextBorderPart extends BaseBorderPart
      */
     private function renderCollisions(array $_borderSymbols): array
     {
+	    // TODO: Fix collision position edge and first/last symbol
+
 	    foreach ($this->collisions as $collision)
         {
+        	// Find dominating border
             if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();
             else $dominatingBorderPart = $this;
 
+            // Find collision symbol definition
+	        $collisionSymbolDefinition = null;
+	        $defaultCollisionSymbol = null;
+
             if ($collision->position()->equals($dominatingBorderPart->startsAt()))
             {
-            	$collisionSymbol = $dominatingBorderPart->collisionSymbolStart();
+            	$collisionSymbolDefinition = $dominatingBorderPart->startCollisionSymbolDefinition();
+	            $defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->startSymbol();
             }
             elseif ($collision->position()->equals($dominatingBorderPart->endsAt()))
             {
-            	$collisionSymbol = $dominatingBorderPart->collisionSymbolEnd();
+            	$collisionSymbolDefinition = $dominatingBorderPart->endCollisionSymbolDefinition();
+            	$defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->endSymbol();
             }
-            else $collisionSymbol = $dominatingBorderPart->collisionSymbolCenter();
+            else
+            {
+            	$collisionSymbolDefinition = $dominatingBorderPart->centerCollisionSymbolDefinition();
+            	$defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->centerSymbol();
+            }
+
+            // Find collision symbol
+	        // TODO: Find the real symbol
+	        $collisionSymbol = $collisionSymbolDefinition->collisionFromTopSymbol();
+            if (! $collisionSymbol) $collisionSymbol = $defaultCollisionSymbol;
 
             $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
             $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;

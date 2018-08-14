@@ -14,6 +14,7 @@ use Output\BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 
 /**
  * Creates border parts that form a rectangle.
@@ -114,9 +115,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-            $this->borderSymbolTopLeft,
-            $this->borderSymbolTopBottom,
-            $this->borderSymbolTopRight
+	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight)
         );
     }
 
@@ -141,9 +140,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-            $this->borderSymbolBottomLeft,
-            $this->borderSymbolTopBottom,
-            $this->borderSymbolBottomRight
+            new BorderSymbolDefinition($this->borderSymbolBottomLeft, $this->borderSymbolTopBottom, $this->borderSymbolBottomRight)
         );
     }
 
@@ -165,9 +162,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalBorderPartShape(),
-            $this->borderSymbolTopLeft,
-            $this->borderSymbolLeftRight,
-            $this->borderSymbolBottomLeft
+            new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolLeftRight, $this->borderSymbolBottomLeft)
         );
     }
 
@@ -192,9 +187,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalBorderPartShape(),
-            $this->borderSymbolTopRight,
-            $this->borderSymbolLeftRight,
-            $this->borderSymbolBottomRight
+            new BorderSymbolDefinition($this->borderSymbolTopRight, $this->borderSymbolLeftRight, $this->borderSymbolBottomRight)
         );
     }
 }
