@@ -13,6 +13,7 @@ use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
+use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 
 /**
  * Container that stores the information about a part of a border.
@@ -29,26 +30,12 @@ class TextBorderPart extends BaseBorderPart
 	 */
 	protected $shape;
 
-    /**
-     * The symbol for the start of the border
-     *
-     * @var String $borderSymbolStart
-     */
-    protected $borderSymbolStart;
-
-    /**
-     * The symbol for the center parts of the border
-     *
-     * @var String $borderSymbolCenter
-     */
-    protected $borderSymbolCenter;
-
-    /**
-     * The symbol for the end of the border
-     *
-     * @var String $borderSymbolEnd
-     */
-    protected $borderSymbolEnd;
+	/**
+	 * The border symbol definition
+	 *
+	 * @var BorderSymbolDefinition $borderSymbolDefinition
+	 */
+	protected $borderSymbolDefinition;
 
     /**
      * The symbol for the start of the border when the start collides with a border
@@ -94,9 +81,8 @@ class TextBorderPart extends BaseBorderPart
     public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, String $_borderSymbolStart, String $_borderSymbolCenter, String $_borderSymbolEnd, String $_borderSymbolOuterBorderCollisionStart = null, String $_borderSymbolOuterBorderCollisionCenter = null, String $_borderSymbolOuterBorderCollisionEnd = null, String $_borderSymbolInnerBorderCollisionStart = null, String $_borderSymbolInnerBorderCollisionCenter = null, String $_borderSymbolInnerBorderCollisionEnd = null)
     {
         parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape);
-        $this->borderSymbolStart = $_borderSymbolStart;
-        $this->borderSymbolCenter = $_borderSymbolCenter;
-        $this->borderSymbolEnd = $_borderSymbolEnd;
+
+        $this->borderSymbolDefinition = new BorderSymbolDefinition($_borderSymbolStart, $_borderSymbolCenter, $_borderSymbolEnd);
 
         // TODO: Default collision symbols = normal border symbols
 	    // TODO: Fix collision start left, collision start top, collision start right and all else
@@ -109,20 +95,10 @@ class TextBorderPart extends BaseBorderPart
 
     // Getters and Setters
 
-    public function borderSymbolStart()
-    {
-        return $this->borderSymbolStart;
-    }
-
-    public function borderSymbolCenter()
-    {
-        return $this->borderSymbolCenter;
-    }
-
-    public function borderSymbolEnd()
-    {
-        return $this->borderSymbolEnd;
-    }
+	public function borderSymbolDefinition(): BorderSymbolDefinition
+	{
+		return $this->borderSymbolDefinition;
+	}
 
     public function collisionSymbolStart()
     {
@@ -164,12 +140,12 @@ class TextBorderPart extends BaseBorderPart
     {
         $borderSymbols = array();
 
-        $borderSymbols[] = $this->borderSymbolStart;
+        $borderSymbols[] = $this->borderSymbolDefinition->startSymbol();
         for ($i = 1; $i <= $this->shape->getNumberOfBorderSymbols(); $i++)
         {
-            $borderSymbols[$i] = $this->borderSymbolCenter;
+            $borderSymbols[$i] = $this->borderSymbolDefinition->centerSymbol();
         }
-        $borderSymbols[] = $this->borderSymbolEnd;
+        $borderSymbols[] = $this->borderSymbolDefinition->endSymbol();
 
         return $borderSymbols;
     }

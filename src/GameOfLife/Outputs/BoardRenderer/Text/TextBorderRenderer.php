@@ -75,7 +75,7 @@ class TextBorderRenderer extends BaseBorderRenderer
 					{
 						if ($borderPart->containsCoordinate($borderCollisionCheckCoordinate))
 						{
-							$borderSymbol = $borderPart->borderSymbolCenter();
+							$borderSymbol = $borderPart->borderSymbolDefinition()->centerSymbol();
 							break;
 						}
 					}
