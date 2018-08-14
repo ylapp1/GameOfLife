@@ -18,25 +18,63 @@ use GameOfLife\Field;
  */
 abstract class BaseBoardFieldRenderer
 {
-    // Class Methods
+	// Attributes
+
+	/**
+	 * The rendered cell for alive cells
+	 *
+	 * @var mixed $renderedCellAlive
+	 */
+	private $renderedCellAlive;
+
+	/**
+	 * The rendered cell for dead cells
+	 *
+	 * @var mixed $renderedCellDead
+	 */
+	private $renderedCellDead;
+
+
+	// Magic Methods
+
+	/**
+	 * BaseBoardFieldRenderer constructor.
+	 *
+	 * @param mixed $_renderedCellAlive The rendered cell for alive cells
+	 * @param mixed $_renderedCellDead The rendered cell for dead cells
+	 */
+	public function __construct($_renderedCellAlive = null, $_renderedCellDead = null)
+	{
+		$this->renderedCellAlive = $_renderedCellAlive;
+		$this->renderedCellDead = $_renderedCellDead;
+	}
+
+
+	// Class Methods
 
     /**
-     * Renders a two dimensional list of board fields and adds them to a canvas.
+     * Renders a two dimensional list of board fields and returns the list of rendered board fields.
      *
      * @param Field[][] $_boardFields The board fields
-     * @param BaseCanvas $_canvas The canvas
+     *
+     * @return mixed[][] The list of rendered board fields
      */
-    public function renderBoardFields($_boardFields, $_canvas)
+    public function getRenderedBoardFields($_boardFields): array
     {
+    	$renderedBoardFields = array();
+
         foreach ($_boardFields as $boardFieldRow)
         {
             foreach ($boardFieldRow as $boardField)
             {
                 $renderedField = $this->renderBoardField($boardField);
                 $renderedFieldPosition = $this->getBoardFieldCanvasPosition($boardField);
-                $_canvas->addRenderedBoardFieldAt($renderedField, $renderedFieldPosition);
+
+                $renderedBoardFields[$renderedFieldPosition->y()][$renderedFieldPosition->x()] = $renderedField;
             }
         }
+
+        return $renderedBoardFields;
     }
 
     /**
@@ -46,7 +84,11 @@ abstract class BaseBoardFieldRenderer
      *
      * @return mixed The rendered board field
      */
-    abstract protected function renderBoardField(Field $_field);
+    protected function renderBoardField(Field $_field)
+    {
+    	if ($_field->isAlive()) return $this->renderedCellAlive;
+    	else return $this->renderedCellDead;
+    }
 
     /**
      * Calculates and returns the position of the board field on the canvas.

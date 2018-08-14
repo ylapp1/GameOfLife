@@ -9,10 +9,11 @@
 namespace Output\BoardRenderer\Text\Border\Shapes;
 
 use GameOfLife\Coordinate;
+use GameOfLife\Rectangle;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
+use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 
@@ -72,8 +73,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
      * BaseBorderPrinter constructor.
      *
      * @param BaseBorder $_parentBorder The parent border
-     * @param Coordinate $_topLeftCornerCoordinate The coordinate of the top left corner of the rectangle
-     * @param Coordinate $_bottomRightCornerCoordinate The coordinate of the bottom right corner of the rectangle
+     * @param Rectangle $_rectangle The rectangle
      * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
      * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
      * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
@@ -81,9 +81,9 @@ class TextRectangleBorderShape extends RectangleBorderShape
      * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
      * @param String $_borderSymbolLeftRight The symbol for the left an right border
      */
-	public function __construct($_parentBorder, Coordinate $_topLeftCornerCoordinate, Coordinate $_bottomRightCornerCoordinate, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+	public function __construct($_parentBorder, Rectangle $_rectangle, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
 	{
-	    parent::__construct($_parentBorder, $_topLeftCornerCoordinate, $_bottomRightCornerCoordinate);
+	    parent::__construct($_parentBorder, $_rectangle);
 		$this->borderSymbolTopLeft = $_borderSymbolTopLeft;
 		$this->borderSymbolTopRight = $_borderSymbolTopRight;
 		$this->borderSymbolBottomLeft = $_borderSymbolBottomLeft;
@@ -104,10 +104,10 @@ class TextRectangleBorderShape extends RectangleBorderShape
      */
 	protected function getTopBorderPart(): TextBorderPart
     {
-        $startsAt = clone $this->topLeftCornerCoordinate;
+        $startsAt = clone $this->rectangle->topLeftCornerCoordinate();
         $endsAt = new Coordinate(
-            $this->bottomRightCornerCoordinate->x() + 1,
-            $this->topLeftCornerCoordinate->y()
+            $this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+            $this->rectangle->topLeftCornerCoordinate()->y()
         );
 
         return new TextBorderPart(
@@ -127,12 +127,12 @@ class TextRectangleBorderShape extends RectangleBorderShape
     protected function getBottomBorderPart(): TextBorderPart
     {
         $startsAt = new Coordinate(
-            $this->topLeftCornerCoordinate->x(),
-            $this->bottomRightCornerCoordinate->y() + 1
+            $this->rectangle->topLeftCornerCoordinate()->x(),
+            $this->rectangle->bottomRightCornerCoordinate()->y() + 1
         );
         $endsAt = new Coordinate(
-        	$this->bottomRightCornerCoordinate->x() + 1,
-	        $this->bottomRightCornerCoordinate->y() + 1
+        	$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+	        $this->rectangle->bottomRightCornerCoordinate()->y() + 1
         );
 
         return new TextBorderPart(
@@ -151,17 +151,17 @@ class TextRectangleBorderShape extends RectangleBorderShape
      */
     protected function getLeftBorderPart(): TextBorderPart
     {
-        $startsAt = clone $this->topLeftCornerCoordinate;
+        $startsAt = clone $this->rectangle->topLeftCornerCoordinate();
         $endsAt = new Coordinate(
-            $this->topLeftCornerCoordinate->x(),
-            $this->bottomRightCornerCoordinate->y() + 1
+            $this->rectangle->topLeftCornerCoordinate()->x(),
+            $this->rectangle->bottomRightCornerCoordinate()->y() + 1
         );
 
         return new TextBorderPart(
             $this->parentBorder,
             $startsAt,
             $endsAt,
-            new TextVerticalBorderPartShape(),
+            new TextVerticalCollisionBorderPartShape(),
             new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolLeftRight, $this->borderSymbolBottomLeft)
         );
     }
@@ -174,19 +174,19 @@ class TextRectangleBorderShape extends RectangleBorderShape
     protected function getRightBorderPart(): TextBorderPart
     {
         $startsAt = new Coordinate(
-            $this->bottomRightCornerCoordinate->x() + 1,
-            $this->topLeftCornerCoordinate->y()
+            $this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+            $this->rectangle->topLeftCornerCoordinate()->y()
         );
 	    $endsAt = new Coordinate(
-		    $this->bottomRightCornerCoordinate->x() + 1,
-		    $this->bottomRightCornerCoordinate->y() + 1
+		    $this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+		    $this->rectangle->bottomRightCornerCoordinate()->y() + 1
 	    );
 
         return new TextBorderPart(
             $this->parentBorder,
             $startsAt,
             $endsAt,
-            new TextVerticalBorderPartShape(),
+            new TextVerticalCollisionBorderPartShape(),
             new BorderSymbolDefinition($this->borderSymbolTopRight, $this->borderSymbolLeftRight, $this->borderSymbolBottomRight)
         );
     }

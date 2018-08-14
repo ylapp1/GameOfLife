@@ -15,28 +15,21 @@ use Output\BoardRenderer\Base\Border\BaseBorder;
  */
 abstract class BaseBorderRenderer
 {
-    // Class Methods
+	// Class Methods
 
 	/**
-	 * Renders a border and its inner borders and adds them to a canvas.
-     *
-     * @param BaseBorder $_border The border
-     * @param BaseCanvas $_canvas The canvas
+	 * Initializes the grid.
+	 *
+	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
 	 */
-	public function renderBorder($_border, $_canvas)
-    {
-        $fetchedBorderParts = array();
+	abstract protected function initializeGrid(Bool $_hasBackgroundGrid = true);
 
-        // Fetch the border parts
-        foreach ($_border->getBorderParts() as $borderPart)
-        {
-            foreach ($fetchedBorderParts as $fetchedBorderPart)
-            {
-                $borderPart->checkCollisionWith($fetchedBorderPart);
-            }
-            $fetchedBorderParts[] = $borderPart;
-
-            $_canvas->addRenderedBorderAt($borderPart->getRenderedBorderPart(), $borderPart->startsAt());
-        }
-    }
+	/**
+	 * Renders and returns the border grid.
+	 *
+	 * @param BaseBorder $_border The main border
+	 *
+	 * @return mixed[][] The rendered border grid
+	 */
+	abstract public function getRenderedBorderGrid($_border = null);
 }

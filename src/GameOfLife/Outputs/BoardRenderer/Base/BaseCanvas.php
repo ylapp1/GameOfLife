@@ -8,8 +8,6 @@
 
 namespace Output\BoardRenderer\Base;
 
-use GameOfLife\Coordinate;
-
 /**
  * Canvas on which borders and cells can be drawn.
  */
@@ -23,20 +21,18 @@ abstract class BaseCanvas
     abstract public function reset();
 
     /**
-     * Adds a rendered border at a specific position to the canvas.
+     * Adds the rendered border grid to the canvas.
      *
-     * @param mixed $_renderedBorder The rendered border
-     * @param Coordinate $_at The position at which the rendered border will be added to the canvas
+     * @param mixed[][] $_renderedBorderGrid The rendered border grid
      */
-    abstract public function addRenderedBorderAt($_renderedBorder, Coordinate $_at);
+    abstract public function addRenderedBorderGrid($_renderedBorderGrid);
 
     /**
-     * Adds a rendered board field at a specific position to the canvas.
+     * Adds the rendered board fields to the canvas.
      *
-     * @param mixed $_renderedBoardField The rendered board field
-     * @param Coordinate $_at The position at which the rendered board field will be added to the canvas
+     * @param mixed[][] $_renderedBoardFields The list of rendered board fields
      */
-    abstract public function addRenderedBoardFieldAt($_renderedBoardField, Coordinate $_at);
+    abstract public function addRenderedBoardFields(array $_renderedBoardFields);
 
     /**
      * Returns the content of the canvas.

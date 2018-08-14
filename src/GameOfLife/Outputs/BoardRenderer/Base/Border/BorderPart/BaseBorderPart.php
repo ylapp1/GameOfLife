@@ -42,13 +42,6 @@ abstract class BaseBorderPart
 	 */
 	protected $shape;
 
-	/**
-	 * The list of collisions with other borders
-	 *
-	 * @var BorderPartCollision[] $collisions
-	 */
-	protected $collisions;
-
     /**
      * The parent border
      *
@@ -70,7 +63,6 @@ abstract class BaseBorderPart
 	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
     {
         $this->parentBorder = $_parentBorder;
-        $this->collisions = array();
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
@@ -124,29 +116,6 @@ abstract class BaseBorderPart
 	// Class Methods
 
 	/**
-	 * Checks whether this border part collides with another border part and adds a border part collision to this border
-	 * part if a collision was detected.
-	 *
-	 * @param BaseBorderPart $_borderPart The other border part
-	 */
-	public function checkCollisionWith(BaseBorderPart $_borderPart)
-	{
-		$collisionPosition = $this->shape->getCollisionPositionWith($_borderPart);
-		if ($collisionPosition !== null)
-		{
-			// Check whether the other border part is a inner or outer border part
-			if ($_borderPart->parentBorder() === $this->parentBorder() ||
-				$this->parentBorder()->containsBorder($_borderPart->parentBorder()))
-			{
-				$isOuterBorderPart = false;
-			}
-			else $isOuterBorderPart = true;
-
-			$this->collisions[] = new BorderPartCollision($collisionPosition, $_borderPart, $isOuterBorderPart);
-		}
-	}
-
-	/**
 	 * Creates and returns the rendered border part.
 	 *
 	 * @return mixed The rendered border part
@@ -154,17 +123,5 @@ abstract class BaseBorderPart
 	public function getRenderedBorderPart()
     {
     	return $this->shape->getRenderedBorderPart();
-    }
-
-    /**
-     * Returns whether this border part contains a specific coordinate.
-     *
-     * @param Coordinate $_coordinate The coordinate
-     *
-     * @return Bool True if this border part contains the coordinate, false otherwise
-     */
-    public function containsCoordinate(Coordinate $_coordinate): Bool
-    {
-	    return $this->shape->containsCoordinate($_coordinate);
     }
 }

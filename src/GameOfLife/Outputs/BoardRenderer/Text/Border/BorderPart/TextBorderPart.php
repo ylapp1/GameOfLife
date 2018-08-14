@@ -10,9 +10,9 @@ namespace Output\BoardRenderer\Text\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BaseBorder;
-use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use Output\BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
 use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
+use Output\BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use Output\BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use Output\BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 
@@ -20,14 +20,14 @@ use Output\BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
  * Container that stores the information about a part of a border.
  * This class uses text symbols to render the border part.
  */
-class TextBorderPart extends BaseBorderPart
+class TextBorderPart extends CollisionBorderPart
 {
     // Attributes
 
 	/**
 	 * The shape of this border part
 	 *
-	 * @var TextHorizontalBorderPartShape|TextVerticalBorderPartShape
+	 * @var TextHorizontalBorderPartShape|TextVerticalCollisionBorderPartShape
 	 */
 	protected $shape;
 
@@ -68,7 +68,7 @@ class TextBorderPart extends BaseBorderPart
      * @param BaseBorder $_parentBorder The parent border of this border part
      * @param Coordinate $_startsAt The start coordinate of this border
      * @param Coordinate $_endsAt The end coordinate of this border
-     * @param TextHorizontalBorderPartShape|TextVerticalBorderPartShape $_shape The shape of this border part
+     * @param TextHorizontalBorderPartShape|TextVerticalCollisionBorderPartShape $_shape The shape of this border part
      * @param BorderSymbolDefinition $_borderSymbolDefinition The border symbol definition
      * @param CollisionSymbolDefinition $_startCollisionSymbolDefinition The collision symbol definition for the start symbol position
      * @param CollisionSymbolDefinition $_centerCollisionSymbolDefinition The collision symbol definition for a center symbol position

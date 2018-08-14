@@ -9,14 +9,14 @@
 namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\VerticalBorderPartShape;
+use Output\BoardRenderer\Base\Border\BorderPart\Shapes\VerticalCollisionBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Shape for vertical text border parts.
  */
-class TextVerticalBorderPartShape extends VerticalBorderPartShape implements TextBorderPartShapeInterface
+class TextVerticalCollisionBorderPartShape extends VerticalCollisionBorderPartShape implements TextBorderPartShapeInterface
 {
 	// Attributes
 

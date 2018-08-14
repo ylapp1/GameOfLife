@@ -9,14 +9,15 @@
 namespace Output\BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use GameOfLife\Coordinate;
-use Output\BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalBorderPartShape;
+use Output\BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalCollisionBorderPartShape;
 use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use Output\BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
 use Output\BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Shape for horizontal text border parts.
  */
-class TextHorizontalBorderPartShape extends HorizontalBorderPartShape implements TextBorderPartShapeInterface
+class TextHorizontalBorderPartShape extends HorizontalCollisionBorderPartShape implements TextBorderPartShapeInterface
 {
 	// Attributes
 
@@ -83,5 +84,27 @@ class TextHorizontalBorderPartShape extends HorizontalBorderPartShape implements
 	    $renderedBorderPart->addBorderSymbol($borderSymbolEnd, new Coordinate($this->getNumberOfBorderSymbols(), 0), false, false);
 
 	    return $renderedBorderPart;
+    }
+
+    public function getCollisionPositionWith($_borderPart)
+    {
+    	$collisionPosition = parent::getCollisionPositionWith($_borderPart);
+    	// TODO: Add necessary information
+
+	    $textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
+	    	$collisionPosition->x(),
+		    $collisionPosition->y(),
+		    "",
+		    "",
+		    "",
+		    "",
+		    "",
+		    "",
+		    "",
+		    "",
+		    ""
+	    );
+
+	    return $textBorderPartCollisionPosition;
     }
 }

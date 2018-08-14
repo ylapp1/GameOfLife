@@ -8,7 +8,6 @@
 
 namespace Output\BoardRenderer\Base\Border\BorderPart\Shapes;
 
-use GameOfLife\Coordinate;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
 /**
@@ -43,24 +42,6 @@ abstract class BaseBorderPartShape
 
 
     // Class Methods
-
-	/**
-	 * Returns whether the parent border part contains a specific coordinate.
-	 *
-	 * @param Coordinate $_coordinate The coordinate
-	 *
-	 * @return Bool True if the parent border part contains the coordinate, false otherwise
-	 */
-	abstract public function containsCoordinate(Coordinate $_coordinate): Bool;
-
-    /**
-     * Returns the position at which the parent border part collides with another border part or null if there is no collision.
-     *
-     * @param BaseBorderPart $_borderPart The other border part
-     *
-     * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
-     */
-    abstract public function getCollisionPositionWith($_borderPart);
 
     /**
      * Creates and returns the rendered parent border part.

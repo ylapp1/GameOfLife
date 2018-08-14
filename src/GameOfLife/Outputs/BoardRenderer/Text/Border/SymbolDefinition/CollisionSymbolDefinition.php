@@ -59,6 +59,8 @@ class CollisionSymbolDefinition
 	 */
 	protected $collisionLeftAndRightSymbol;
 
+	// TODO: Add diagonal collision symbols
+
 
 	// Magic Methods
 

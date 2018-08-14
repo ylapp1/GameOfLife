@@ -8,7 +8,7 @@
 
 namespace Output\BoardRenderer\Base\Border\Shapes;
 
-use GameOfLife\Coordinate;
+use GameOfLife\Rectangle;
 use Output\BoardRenderer\Base\Border\BaseBorder;
 use Output\BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 
@@ -19,21 +19,12 @@ abstract class RectangleBorderShape extends BaseBorderShape
 {
 	// Attributes
 
-    // TODO: Get rid of code duplication in selection area and this
-
 	/**
-	 * The top left corner coordinate of this border shape
+	 * The rectangle
 	 *
-	 * @var Coordinate $topLeftCornerCoordinate
+	 * @var Rectangle $rectangle
 	 */
-	protected $topLeftCornerCoordinate;
-
-	/**
-	 * The bottom right corner coordinate of this border shape
-	 *
-	 * @var Coordinate $bottomRightCornerCoordinate
-	 */
-    protected $bottomRightCornerCoordinate;
+	protected $rectangle;
 
 
 	// Magic Methods
@@ -42,14 +33,12 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * RectangleBorderShape constructor.
 	 *
      * @param BaseBorder $_parentBorder The parent border of this border shape
-	 * @param Coordinate $_topLeftCornerCoordinate The top left corner coordinate of this border shape
-	 * @param Coordinate $_bottomRightCornerCoordinate The bottom right corner coordinate of this border shape
+	 * @param Rectangle $_rectangle The rectangle
 	 */
-	protected function __construct($_parentBorder, Coordinate $_topLeftCornerCoordinate, Coordinate $_bottomRightCornerCoordinate)
+	protected function __construct($_parentBorder, Rectangle $_rectangle)
 	{
 	    parent::__construct($_parentBorder);
-		$this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
-		$this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
+		$this->rectangle = $_rectangle;
 	}
 
 

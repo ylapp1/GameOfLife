@@ -81,10 +81,12 @@ abstract class BaseBoardRenderer
         $this->canvas->reset();
 
         // Render the borders
-        $this->borderRenderer->renderBorder($this->border, $this->canvas);
+        $renderedBorderGrid = $this->borderRenderer->getRenderedBorderGrid($this->border);
+	    $this->canvas->addRenderedBorderGrid($renderedBorderGrid);
 
         // Render the board fields
-        $this->boardFieldRenderer->renderBoardFields($_board->fields(), $this->canvas);
+	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());
+	    $this->canvas->addRenderedBoardFields($renderedBoardFields);
     }
 
     /**

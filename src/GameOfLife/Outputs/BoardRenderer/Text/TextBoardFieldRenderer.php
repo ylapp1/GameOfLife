@@ -19,23 +19,6 @@ use Output\BoardRenderer\Base\BaseBoardFieldRenderer;
  */
 class TextBoardFieldRenderer extends BaseBoardFieldRenderer
 {
-    // Attributes
-
-    /**
-     * The symbol that is used to print a living cell
-     *
-     * @var String $cellAliveSymbol
-     */
-    protected $cellAliveSymbol;
-
-    /**
-     * The symbol that is used to print a dead cell
-     *
-     * @var String $cellDeadSymbol
-     */
-    protected $cellDeadSymbol;
-
-
     // Magic Methods
 
     /**
@@ -46,8 +29,7 @@ class TextBoardFieldRenderer extends BaseBoardFieldRenderer
      */
     public function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol)
     {
-        $this->cellAliveSymbol = $_cellAliveSymbol;
-        $this->cellDeadSymbol = $_cellDeadSymbol;
+    	parent::__construct($_cellAliveSymbol, $_cellDeadSymbol);
     }
 
 
@@ -63,18 +45,5 @@ class TextBoardFieldRenderer extends BaseBoardFieldRenderer
     protected function getBoardFieldCanvasPosition(Field $_field): Coordinate
     {
         return $_field->coordinate();
-    }
-
-    /**
-     * Renders a board field.
-     *
-     * @param Field $_field The board field
-     *
-     * @return String The rendered board field
-     */
-    protected function renderBoardField(Field $_field)
-    {
-        if ($_field->isAlive()) return $this->cellAliveSymbol;
-        else return $this->cellDeadSymbol;
     }
 }
