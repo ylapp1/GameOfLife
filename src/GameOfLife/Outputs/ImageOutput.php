@@ -11,7 +11,6 @@ namespace Output;
 use GameOfLife\Board;
 use Output\BoardRenderer\ImageOutputBoardRenderer;
 use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemReader;
 use Utils\FileSystem\FileSystemWriter;
@@ -41,13 +40,6 @@ abstract class ImageOutput extends BaseOutput
      * @var FileSystemWriter $fileSystemWriter
      */
     protected $fileSystemWriter;
-
-    /**
-     * The image board renderer
-     *
-     * @var ImageOutputBoardRenderer $imageBoardRenderer
-     */
-    protected $imageBoardRenderer;
 
     /**
      * The output directory for images
@@ -222,7 +214,7 @@ abstract class ImageOutput extends BaseOutput
         $gridColor = $colorSelector->getColor($gridColorString);
 
         // initialize the ImageCreator
-        $this->imageBoardRenderer = new ImageOutputBoardRenderer(
+        $this->boardRenderer = new ImageOutputBoardRenderer(
         	$_board,
 	        null,
 	        true,

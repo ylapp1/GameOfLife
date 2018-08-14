@@ -135,8 +135,8 @@ class GifOutput extends ImageOutput
     {
         echo "\rGamestep: " . $_gameStep;
 
-	    $this->imageBoardRenderer->renderBoard($_board);
-	    $image = $this->imageBoardRenderer->getContent();
+	    $this->boardRenderer->renderBoard($_board);
+	    $image = $this->boardRenderer->getContent();
 
         $fileName = $_gameStep . ".gif";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;

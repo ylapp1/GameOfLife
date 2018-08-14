@@ -12,14 +12,12 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\HighLightFieldBorderPartBuilder;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\InnerBorderPartBuilder\SelectionAreaBorderPartBuilder;
-use Output\BoardPrinter\OutputBoard\BorderPartBuilder\OuterBorderPartBuilder\BoardOuterBorderPartBuilder;
+use Output\BoardRenderer\Base\BaseBoardRenderer;
 
 /**
  * BoardRenderer for the BoardEditorOutput.
  */
-class BoardEditorOutputBoardPrinter extends BaseBoardPrinter
+class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 {
 	// Attributes
 

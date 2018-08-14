@@ -9,6 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
+use Output\BoardRenderer\Base\BaseBoardRenderer;
 use Ulrichsg\Getopt;
 use Utils\Shell\ShellOutputHelper;
 
@@ -37,6 +38,13 @@ abstract class BaseOutput
      * @var ShellOutputHelper $shellOutputHelper
      */
     protected $shellOutputHelper;
+
+	/**
+	 * The board renderer
+	 *
+	 * @var BaseBoardRenderer $boardRenderer
+	 */
+    protected $boardRenderer;
 
 
     // Magic Methods

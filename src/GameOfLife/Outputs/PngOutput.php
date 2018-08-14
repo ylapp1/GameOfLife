@@ -49,8 +49,8 @@ class PngOutput extends ImageOutput
     public function outputBoard(Board $_board, int $_gameStep)
     {
         echo "\rGamestep: " . $_gameStep;
-	    $this->imageBoardRenderer->renderBoard($_board);
-	    $image = $this->imageBoardRenderer->getContent();
+	    $this->boardRenderer->renderBoard($_board);
+	    $image = $this->boardRenderer->getContent();
 
         $fileName = $_gameStep . ".png";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;

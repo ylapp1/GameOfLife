@@ -20,13 +20,6 @@ class ConsoleOutput extends BaseOutput
     // Attributes
 
     /**
-     * The board printer
-     *
-     * @var ConsoleOutputBoardRenderer $boardRenderer
-     */
-    private $boardRenderer;
-
-    /**
      * The time for that one game step will be displayed in the console in microseconds
      *
      * @var int $stepDisplayTimeInMicroseconds

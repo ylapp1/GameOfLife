@@ -11,7 +11,6 @@ namespace Output;
 use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use Output\BoardPrinter\BoardEditorOutputBoardPrinter;
 use Ulrichsg\Getopt;
 
 /**
@@ -19,16 +18,6 @@ use Ulrichsg\Getopt;
  */
 class BoardEditorOutput extends BaseOutput
 {
-	// Attributes
-
-    /**
-     * The board printer
-     *
-     * @var BoardEditorOutputBoardPrinter $boardPrinter
-     */
-    private $boardPrinter;
-
-
     // Magic Methods
 
 	/**
@@ -60,7 +49,7 @@ class BoardEditorOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-	    $this->boardPrinter = new BoardEditorOutputBoardPrinter($_board);
+	    $this->boardRenderer = new BoardEditorOutputBoardPrinter($_board);
     }
 
     /**
@@ -73,7 +62,8 @@ class BoardEditorOutput extends BaseOutput
      */
     public function outputBoard(Board $_board, int $_gameStep, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null)
     {
-        $boardContentString = $this->boardPrinter->getBoardContentString($_board, $_highLightFieldCoordinate, $_selectionArea);
+        $this->boardRenderer->renderBoard($_board, $_highLightFieldCoordinate, $_selectionArea);
+        $boardContentString = $this->boardRenderer->getContent();
         $this->shellOutputHelper->printCenteredOutputString($boardContentString);
     }
 }
