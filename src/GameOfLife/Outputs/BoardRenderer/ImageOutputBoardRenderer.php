@@ -8,9 +8,7 @@
 
 namespace Output\BoardRenderer;
 
-use BoardRenderer\Base\Border\Shapes\NullBorderShape;
 use BoardRenderer\Image\Border\ImageBoardOuterBorder;
-use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
 use BoardRenderer\Base\BaseBoardRenderer;
 use BoardRenderer\Image\CellImage\SmileyCellImage;
@@ -38,8 +36,7 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 	 */
 	public function __construct(Board $_board, Bool $_hasBackgroundGrid, int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_foregroundColor, ImageColor $_gridColor)
 	{
-		//$mainBorder = new ImageBoardOuterBorder($_board, $_gridColor, $_fieldSize);
-		$mainBorder = new ImageBorder(null, new NullBorderShape(), $_gridColor, $_fieldSize);
+		$mainBorder = new ImageBoardOuterBorder($_board, $_gridColor, $_fieldSize);
 
 		parent::__construct(
 			$mainBorder,

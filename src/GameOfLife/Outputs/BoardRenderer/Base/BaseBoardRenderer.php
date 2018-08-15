@@ -70,6 +70,7 @@ abstract class BaseBoardRenderer
     protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas)
     {
     	// TODO: Add option "cache border grids", default true
+	    // TODO: Move this class to BoardRenderer folder
         $this->border = $_border;
         $this->borderRenderer = $_borderRenderer;
         $this->boardFieldRenderer = $_boardFieldRenderer;

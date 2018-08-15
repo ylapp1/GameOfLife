@@ -30,7 +30,7 @@ class ImageBoardOuterBorder extends ImageBorder
 	 */
 	public function __construct(Board $_board, ImageColor $_gridColor, int $_fieldSize)
 	{
-		$topLeftCornerCoordinate = new Coordinate(-1, -1);
+		$topLeftCornerCoordinate = new Coordinate(0, 0);
 		$bottomRightCornerCoordinate = new Coordinate($_board->width() - 1, $_board->height() - 1);
 		$rectangle = new Rectangle($topLeftCornerCoordinate, $bottomRightCornerCoordinate);
 

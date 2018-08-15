@@ -255,8 +255,9 @@ abstract class BaseBorderGrid
 	{
 		$totalBorderWidth = 0;
 
-		for ($x = -1; $x < $_x; $x++)
+		foreach ($this->getSortedBorderColumnIds() as $x)
 		{
+			if ($x > $_x) break;
 			$totalBorderWidth += $this->getMaximumBorderWidthInColumn($x);
 		}
 
@@ -274,11 +275,74 @@ abstract class BaseBorderGrid
 	{
 		$totalBorderHeight = 0;
 
-		for ($y = -1; $y < $_y; $y++)
+		foreach ($this->getSortedBorderRowIds() as $y)
 		{
+			if ($y > $_y) break;
 			$totalBorderHeight += $this->getMaximumBorderHeightInRow($y);
 		}
 
 		return $totalBorderHeight;
 	}
+
+	/**
+	 * Returns a list of sorted border column ids.
+	 *
+	 * @return int[] The list of sorted border column ids
+	 */
+	protected function getSortedBorderColumnIds(): array
+	{
+		$columnIds = array();
+
+		foreach ($this->borderPositionsGrid as $borderPositionRow)
+		{
+			$columnIds = array_merge($columnIds, array_keys($borderPositionRow));
+		}
+
+		$columnIds = array_unique($columnIds);
+		natsort($columnIds);
+
+		return $columnIds;
+	}
+
+	/**
+	 * Returns a list of sorted border row ids.
+	 *
+	 * @return int[] The list of sorted border row ids
+	 */
+	public function getSortedBorderRowIds(): array
+	{
+		$rowIds = array_keys($this->borderPositionsGrid);
+		natsort($rowIds);
+
+		return $rowIds;
+	}
+
+	public function getLowestColumnId()
+	{
+		$columnIds = $this->getSortedBorderColumnIds();
+
+		if ($columnIds) return $columnIds[0];
+		else return null;
+	}
+
+	public function getHighestColumnId()
+	{
+		$columnIds = $this->getSortedBorderColumnIds();
+		return array_pop($columnIds);
+	}
+
+	public function getLowestRowId()
+	{
+		$rowIds = $this->getSortedBorderRowIds();
+		if ($rowIds) return $rowIds[0];
+		else return null;
+	}
+
+	public function getHighestRowId()
+	{
+		$rowIds = $this->getSortedBorderRowIds();
+		return array_pop($rowIds);
+	}
+
+	// TODO: Export column/row id stuff to "Grid" class
 }

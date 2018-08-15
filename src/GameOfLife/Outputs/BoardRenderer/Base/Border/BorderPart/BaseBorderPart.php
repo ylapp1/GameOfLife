@@ -46,6 +46,8 @@ abstract class BaseBorderPart
      * The parent border
      *
      * @var BaseBorder $parentBorder
+     *
+     * TODO: Change this to parent border shape!
      */
 	protected $parentBorder;
 

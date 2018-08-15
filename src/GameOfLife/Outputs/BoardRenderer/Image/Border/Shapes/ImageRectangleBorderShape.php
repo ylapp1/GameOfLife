@@ -57,12 +57,12 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	protected function getTopBorderPart(): ImageBorderPart
 	{
 		$startsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x() - 1,
-			$this->rectangle->topLeftCornerCoordinate()->y() - 1
+			$this->rectangle->topLeftCornerCoordinate()->x(),
+			$this->rectangle->topLeftCornerCoordinate()->y()
 		);
 		$endsAt = new Coordinate(
-			$this->rectangle->bottomRightCornerCoordinate()->x(),
-			$this->rectangle->topLeftCornerCoordinate()->y() - 1
+			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+			$this->rectangle->topLeftCornerCoordinate()->y()
 		);
 
 		return new ImageBorderPart(
@@ -82,12 +82,12 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	protected function getBottomBorderPart(): ImageBorderPart
 	{
 		$startsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x() - 1,
-			$this->rectangle->bottomRightCornerCoordinate()->y()
+			$this->rectangle->topLeftCornerCoordinate()->x(),
+			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 		$endsAt = new Coordinate(
-			$this->rectangle->bottomRightCornerCoordinate()->x(),
-			$this->rectangle->bottomRightCornerCoordinate()->y()
+			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
 		return new ImageBorderPart(
@@ -107,12 +107,12 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	protected function getLeftBorderPart(): ImageBorderPart
 	{
 		$startsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x() - 1,
-			$this->rectangle->topLeftCornerCoordinate()->y() - 1
+			$this->rectangle->topLeftCornerCoordinate()->x(),
+			$this->rectangle->topLeftCornerCoordinate()->y()
 		);
 		$endsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x() - 1,
-			$this->rectangle->bottomRightCornerCoordinate()->y()
+			$this->rectangle->topLeftCornerCoordinate()->x(),
+			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
 		return new ImageBorderPart(
@@ -132,12 +132,12 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	protected function getRightBorderPart(): ImageBorderPart
 	{
 		$startsAt = new Coordinate(
-			$this->rectangle->bottomRightCornerCoordinate()->x(),
-			$this->rectangle->topLeftCornerCoordinate()->y() - 1
+			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+			$this->rectangle->topLeftCornerCoordinate()->y()
 		);
 		$endsAt = new Coordinate(
-			$this->rectangle->bottomRightCornerCoordinate()->x(),
-			$this->rectangle->bottomRightCornerCoordinate()->y()
+			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
+			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
 		return new ImageBorderPart(

@@ -9,7 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\ConsoleOutputBoardRenderer;
+use BoardRenderer\ConsoleOutputBoardRenderer;
 use Ulrichsg\Getopt;
 
 /**

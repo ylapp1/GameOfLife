@@ -95,8 +95,9 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX);
-			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY);
+			// TODO: Fix this, all borders are shifted away from their original start position
+			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $renderedBorderPart->parentBorderPart()->thickness()->width();
+			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $renderedBorderPart->parentBorderPart()->thickness()->height();
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));
@@ -112,9 +113,8 @@ class ImageBorderGrid extends BaseBorderGrid
 	 */
 	private function initializeImage()
 	{
-		// TODO: Find last column/row id for this
-		$imageWidth = $this->board->width() * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($this->board->width());
-		$imageHeight = $this->board->height() * $this->fieldSize + $this->getTotalBorderHeightUntilRow($this->board->height());
+		$imageWidth = $this->board->width() * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($this->getHighestColumnId());
+		$imageHeight = $this->board->height() * $this->fieldSize + $this->getTotalBorderHeightUntilRow($this->getHighestRowId());
 
 		$image = imagecreate($imageWidth, $imageHeight);
 		imagefill($image, 0, 0, $this->backgroundColor->getColor($image));
