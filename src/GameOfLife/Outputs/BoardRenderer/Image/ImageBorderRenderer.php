@@ -8,76 +8,34 @@
 
 namespace BoardRenderer\Image;
 
+use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
 use BoardRenderer\Base\BaseBorderRenderer;
 use Output\Helpers\ImageColor;
 
 /**
- * Class ImageBorderRenderer
+ * Renders the borders as a resource.
  */
 class ImageBorderRenderer extends BaseBorderRenderer
 {
-	private $fieldSize;
-
-	private $gridColor;
-
-	private $baseImage;
-
-	private $gridImage;
-
-
-	public function __construct(bool $_hasBackgroundGrid = true, Board $_board, int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_gridColor)
-	{
-		$this->fieldSize = $_fieldSize;
-		$this->gridColor = $_gridColor;
-
-		$this->baseImage = imagecreate($_board->width() * $this->fieldSize, $_board->height() * $this->fieldSize);
-		imagefill($this->baseImage, 0, 0, $_backgroundColor->getColor($this->baseImage));
-
-		$this->gridImage = $this->initializeGrid($_hasBackgroundGrid, $_board);
-	}
-
 	/**
-	 * Initializes and returns the background image of each image (an empty grid).
+	 * ImageBorderRenderer constructor.
 	 *
-	 * Requires the class attribute $cellSize to be set
-	 *
-	 * @param Bool $_hasBackgroundGrid If true, the grid will be initialized as a background grid, else it will be an empty grid
-	 * @param Board $_board The board
-	 *
-	 * @return resource The initialized grid
+	 * @param Board $_board The board for which the border will be rendered
+	 * @param ImageBorder $_border The border
+	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
+	 * @param int $_fieldSize The height and width of a single field
+	 * @param ImageColor $_backgroundColor The background color
 	 */
-	protected function initializeGrid(Bool $_hasBackgroundGrid = false, Board $_board = null)
+	public function __construct(Board $_board, ImageBorder $_border, Bool $_hasBackgroundGrid = true, int $_fieldSize, ImageColor $_backgroundColor)
 	{
+		$borderGrid = new ImageBorderGrid(
+			$_board,
+			$_border,
+			$_fieldSize,
+			$_backgroundColor
+		);
 
-		if ($_board && $_hasBackgroundGrid)
-		{
-			$gridImage = $this->baseImage;
-
-			// draw grid
-			imagesetthickness($gridImage, 1);
-
-			// Vertical lines
-			for ($x = 0; $x < $_board->width() * $this->fieldSize; $x += $this->fieldSize)
-			{
-				imageline($gridImage, $x, 0, $x, imagesy($gridImage), $this->gridColor->getColor($gridImage));
-			}
-
-			// Horizontal lines
-			for ($y = 0; $y < $_board->height() * $this->fieldSize; $y += $this->fieldSize)
-			{
-				imageline($gridImage, 0, $y, imagesx($gridImage), $y, $this->gridColor->getColor($gridImage));
-			}
-
-			imagesetthickness($gridImage, 1);
-
-			return $gridImage;
-		}
-		else return null;
-	}
-
-	public function getRenderedBorderGrid($_border = null)
-	{
-		return $this->gridImage;
+		parent::__construct($_board, $_border, $borderGrid, $_hasBackgroundGrid);
 	}
 }

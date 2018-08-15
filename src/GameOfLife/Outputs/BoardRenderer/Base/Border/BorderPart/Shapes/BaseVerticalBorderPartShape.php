@@ -8,16 +8,31 @@
 
 namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use GameOfLife\Coordinate;
-use BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
-use BoardRenderer\Collision\Border\BorderPart\Shape\CollisionBorderPartShape;
 
 /**
- * Shape for vertical border parts.
+ * Base class for vertical border part shapes.
  */
-abstract class VerticalCollisionBorderPartShape extends CollisionBorderPartShape
+abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 {
-	// Class Methods
+	/**
+	 * Returns the border part grid positions for the parent border part.
+	 *
+	 * @return Coordinate[] The border part grid positions
+	 */
+	protected function getBorderPartGridPositions(): array
+	{
+		$borderPartGridPositions = array();
+
+		$startX = $this->parentBorderPart->startsAt()->x();
+		for ($y = $this->parentBorderPart->startsAt()->y() + 1; $y <= $this->parentBorderPart->endsAt()->y(); $y++)
+		{
+			$borderPartGridPositions[] = new Coordinate($startX, $y);
+		}
+
+		return $borderPartGridPositions;
+	}
 
 	/**
 	 * Returns whether the parent border part contains a specific coordinate.
@@ -43,22 +58,22 @@ abstract class VerticalCollisionBorderPartShape extends CollisionBorderPartShape
 	/**
 	 * Returns the position at which the parent border part collides with another border part or null if there is no collision.
 	 *
-	 * @param CollisionBorderPart $_borderPart The other border part
+	 * @param BaseBorderPart $_borderPart The other border part
 	 *
 	 * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
 	 */
 	public function getCollisionPositionWith($_borderPart)
 	{
-        $checkCoordinate = clone $this->parentBorderPart->startsAt();
+		$checkCoordinate = clone $this->parentBorderPart->startsAt();
 
-	    for ($y = $this->parentBorderPart->startsAt()->y(); $y <= $this->parentBorderPart->endsAt()->y(); $y++)
-        {
-        	$checkCoordinate->setY($y);
-            if ($_borderPart->containsCoordinate($checkCoordinate))
-            {
-	            return $checkCoordinate;
-            }
-        }
+		for ($y = $this->parentBorderPart->startsAt()->y(); $y <= $this->parentBorderPart->endsAt()->y(); $y++)
+		{
+			$checkCoordinate->setY($y);
+			if ($_borderPart->containsCoordinate($checkCoordinate))
+			{
+				return $checkCoordinate;
+			}
+		}
 
 		return null;
 	}

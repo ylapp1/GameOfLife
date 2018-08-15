@@ -49,6 +49,13 @@ abstract class BaseBoardRenderer
      */
     protected $canvas;
 
+	/**
+	 * The cached border grid
+	 *
+	 * @var BaseBorderGrid $cachedBorderGrid
+	 */
+    protected $cachedBorderGrid;
+
 
     // Magic Methods
 
@@ -62,6 +69,7 @@ abstract class BaseBoardRenderer
      */
     protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas)
     {
+    	// TODO: Add option "cache border grids", default true
         $this->border = $_border;
         $this->borderRenderer = $_borderRenderer;
         $this->boardFieldRenderer = $_boardFieldRenderer;
@@ -81,8 +89,8 @@ abstract class BaseBoardRenderer
         $this->canvas->reset();
 
         // Render the borders
-        $renderedBorderGrid = $this->borderRenderer->getRenderedBorderGrid($this->border);
-	    $this->canvas->addRenderedBorderGrid($renderedBorderGrid);
+	    if (! $this->cachedBorderGrid) $this->cachedBorderGrid = $this->borderRenderer->getBorderGrid();
+	    $this->canvas->addBorderGrid($this->cachedBorderGrid);
 
         // Render the board fields
 	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());

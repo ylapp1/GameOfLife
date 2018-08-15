@@ -63,13 +63,14 @@ class ImageCanvas extends BaseCanvas
 	}
 
 	/**
-	 * Adds the rendered border grid to the canvas.
+	 * Adds the border grid to the canvas.
 	 *
-	 * @param resource $_renderedBorderGrid The rendered border grid
+	 * @param ImageBorderGrid $_borderGrid The border grid
 	 */
-	public function addRenderedBorderGrid($_renderedBorderGrid)
+	public function addBorderGrid($_borderGrid)
 	{
-		$this->backgroundImage = $_renderedBorderGrid;
+		$this->borderGrid = $_borderGrid;
+		$this->backgroundImage = $_borderGrid->renderBorderGrid();
 	}
 
 	/**
@@ -94,11 +95,14 @@ class ImageCanvas extends BaseCanvas
 					$imageWidth = imagesx($renderedBoardField);
 					$imageHeight = imagesy($renderedBoardField);
 
-					// Center the images
-					$startX = $x * $this->fieldSize + ($this->fieldSize - $imageWidth) / 2;
-					$startY = $y * $this->fieldSize + ($this->fieldSize - $imageHeight) / 2;
+					$fieldStartX = $x * $this->fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
+					$fieldStartY = $y * $this->fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
 
-					imagecopymerge($this->image, $renderedBoardField, $startX, $startY, 0, 0, $imageWidth, $imageHeight, 100);
+					// Center the cell image
+					$cellStartX = $fieldStartX + ($this->fieldSize - $imageWidth) / 2;
+					$cellStartY = $fieldStartY + ($this->fieldSize - $imageHeight) / 2;
+
+					imagecopymerge($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight, 100);
 				}
 			}
 		}

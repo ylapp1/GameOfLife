@@ -13,6 +13,16 @@ namespace BoardRenderer\Base;
  */
 abstract class BaseCanvas
 {
+	// Attributes
+
+	/**
+	 * The border grid that was created by the border renderer
+	 *
+	 * @var BaseBorderGrid $borderGrid
+	 */
+	protected $borderGrid;
+
+
     // Class Methods
 
     /**
@@ -23,9 +33,9 @@ abstract class BaseCanvas
     /**
      * Adds the rendered border grid to the canvas.
      *
-     * @param mixed[][] $_renderedBorderGrid The rendered border grid
+     * @param BaseBorderGrid $_borderGrid The border grid
      */
-    abstract public function addRenderedBorderGrid($_renderedBorderGrid);
+    abstract public function addBorderGrid($_borderGrid);
 
     /**
      * Adds the rendered board fields to the canvas.

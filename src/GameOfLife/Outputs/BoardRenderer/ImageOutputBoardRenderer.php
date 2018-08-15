@@ -8,9 +8,10 @@
 
 namespace Output\BoardRenderer;
 
+use BoardRenderer\Base\Border\Shapes\NullBorderShape;
+use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
 use BoardRenderer\Base\BaseBoardRenderer;
-use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Image\CellImage\SmileyCellImage;
 use BoardRenderer\Image\ImageBoardFieldRenderer;
 use BoardRenderer\Image\ImageBorderRenderer;
@@ -28,18 +29,24 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 	 * ImageOutputBoardRenderer constructor.
 	 *
 	 * @param Board $_board The board
-	 * @param BaseBorder $_border The border
 	 * @param Bool $_hasBackgroundGrid If true, the board will have a background grid that can be overwritten by borders
 	 * @param int $_fieldSize The height and width of each field
 	 * @param ImageColor $_backgroundColor The background color
 	 * @param ImageColor $_foregroundColor The foreground color
 	 * @param ImageColor $_gridColor The grid color
 	 */
-	public function __construct(Board $_board, BaseBorder $_border = null, Bool $_hasBackgroundGrid, int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_foregroundColor, ImageColor $_gridColor)
+	public function __construct(Board $_board, Bool $_hasBackgroundGrid, int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_foregroundColor, ImageColor $_gridColor)
 	{
+		$mainBorder = new ImageBorder(
+			null,
+			new NullBorderShape(),
+			$_gridColor,
+			$_fieldSize
+		);
+
 		parent::__construct(
-			$_border,
-			new ImageBorderRenderer($_hasBackgroundGrid, $_board, $_fieldSize, $_backgroundColor, $_gridColor),
+			$mainBorder,
+			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid, $_fieldSize, $_backgroundColor),
 			$this->initializeBoardFieldRenderer($_fieldSize, $_backgroundColor, $_foregroundColor),
 			new ImageCanvas($_fieldSize)
 		);

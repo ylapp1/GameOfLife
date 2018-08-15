@@ -216,7 +216,6 @@ abstract class ImageOutput extends BaseOutput
         // initialize the ImageCreator
         $this->boardRenderer = new ImageOutputBoardRenderer(
         	$_board,
-	        null,
 	        true,
 	        $cellSize,
 	        $backgroundColor,

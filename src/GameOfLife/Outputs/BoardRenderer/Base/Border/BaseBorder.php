@@ -120,4 +120,27 @@ abstract class BaseBorder
 
         return $borderParts;
 	}
+
+	/**
+	 * Returns whether this border contains a specific border.
+	 *
+	 * @param BaseBorder $_border The border
+	 *
+	 * @return Bool True if this border contains the border, false otherwise
+	 */
+	public function containsBorder($_border)
+	{
+		$containsBorder = false;
+
+		foreach ($this->innerBorders as $innerBorder)
+		{
+			if ($innerBorder === $_border || $innerBorder->containsBorder($_border))
+			{
+				$containsBorder = true;
+				break;
+			}
+		}
+
+		return $containsBorder;
+	}
 }

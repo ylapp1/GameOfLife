@@ -9,27 +9,86 @@
 namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Image\Border\ImageBorder;
+use GameOfLife\Board;
 
 /**
  * Renders a border and its inner borders and adds them to a canvas.
  */
 abstract class BaseBorderRenderer
 {
+	// Attributes
+
+	/**
+	 * The rendered border grid
+	 *
+	 * @var BaseBorderGrid $renderedBorderGrid
+	 */
+	protected $borderGrid;
+
+	/**
+	 * The main border
+	 *
+	 * @var ImageBorder $border
+	 */
+	protected $border;
+
+	/**
+	 * The list of border parts
+	 *
+	 * @var BaseBorderPart $borderParts
+	 */
+	protected $borderParts;
+
+
+	// Magic Methods
+
+	/**
+	 * BaseBorderRenderer constructor.
+	 *
+	 * @param Board $_board The board
+	 * @param BaseBorder $_border The main border
+	 * @param BaseBorderGrid $_borderGrid The border grid
+	 * @param Bool $_hasBackgroundGrid If true, the border grid will have a background grid
+	 */
+	protected function __construct(Board $_board, $_border, $_borderGrid, Bool $_hasBackgroundGrid)
+	{
+		$this->border = $_border;
+		$this->borderParts = array();
+		$this->borderGrid = $_borderGrid;
+
+		if ($_hasBackgroundGrid) $this->borderParts = $this->borderGrid->getBackgroundGridBorderParts($_board, $_border);
+	}
+
+
 	// Class Methods
 
 	/**
-	 * Initializes the grid.
+	 * Adds all border parts to the border grid and returns the updated border grid.
 	 *
-	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
+	 * @return BaseBorderGrid The border grid
 	 */
-	abstract protected function initializeGrid(Bool $_hasBackgroundGrid = true);
+	public function getBorderGrid()
+	{
+		$this->borderGrid->reset();
 
-	/**
-	 * Renders and returns the border grid.
-	 *
-	 * @param BaseBorder $_border The main border
-	 *
-	 * @return mixed[][] The rendered border grid
-	 */
-	abstract public function getRenderedBorderGrid($_border = null);
+		/** @var BaseBorderPart[] $borderParts */
+		$borderParts = array_merge($this->borderParts, $this->border->getBorderParts());
+
+		$processedBorderParts = array();
+
+		foreach ($borderParts as $borderPart)
+		{
+			foreach ($processedBorderParts as $processedBorderPart)
+			{
+				$borderPart->checkCollisionWith($processedBorderPart);
+			}
+			$processedBorderParts[] = $borderPart;
+
+			$this->borderGrid->addBorderPart($borderPart);
+		}
+
+		return $this->borderGrid;
+	}
 }
