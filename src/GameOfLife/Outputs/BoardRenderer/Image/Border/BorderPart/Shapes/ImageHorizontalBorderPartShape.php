@@ -28,17 +28,22 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 
 	// Class Methods
 
+	/**
+	 * Creates and returns the rendered parent border part image.
+	 *
+	 * @return resource The rendered parent border part image
+	 */
 	protected function getRawRenderedBorderPart()
 	{
 		$fieldSize = $this->parentBorderPart->parentBorder()->fieldSize();
 		$borderPartWidth = $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x() + 1;
 		$additionalPixels = count($this->parentBorderPart->getCollisionPositions());
 
-		// TODO: Height = thickness
-		$image = imagecreate($borderPartWidth * $fieldSize + $additionalPixels, 1);
-		imagefill($image, 0, 0, $this->parentBorderPart->parentBorder()->gridColor()->getColor($image));
+		$imageWidth = ($borderPartWidth * $fieldSize) * $this->parentBorderPart->thickness()->width() + $additionalPixels;
+		$imageHeight = $this->parentBorderPart->thickness()->height();
 
-		// You could also use imagesetthickness(1) and then imageline() to draw the image on an already existing image
+		$image = imagecreate($imageWidth, $imageHeight);
+		imagefill($image, 0, 0, $this->parentBorderPart->parentBorder()->gridColor()->getColor($image));
 
 		return $image;
 	}

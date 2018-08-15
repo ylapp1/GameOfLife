@@ -54,7 +54,6 @@ class ImageBoardFieldRenderer extends BaseBoardFieldRenderer
 	 */
 	public function getBoardFieldCanvasPosition(Field $_field): Coordinate
 	{
-		// TODO: Cannot know if the position must be shifted because of borders
 		return new Coordinate(
 			$_field->coordinate()->x(),
 			$_field->coordinate()->y()

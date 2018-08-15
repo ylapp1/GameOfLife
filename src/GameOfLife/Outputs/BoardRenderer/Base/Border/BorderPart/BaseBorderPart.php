@@ -8,7 +8,6 @@
 
 namespace BoardRenderer\Base\Border\BorderPart;
 
-use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
 use GameOfLife\Coordinate;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
@@ -66,6 +65,13 @@ abstract class BaseBorderPart
 	 */
 	protected $otherBorderPartCollisions;
 
+	/**
+	 * The thickness of the border in symbols, pixels, etc.
+	 *
+	 * @var BorderPartThickness $thickness
+	 */
+	protected $thickness;
+
 
 	// Magic Methods
 
@@ -76,14 +82,16 @@ abstract class BaseBorderPart
 	 * @param Coordinate $_startsAt The start coordinate of this border part
 	 * @param Coordinate $_endsAt The end coordinate of this border part
      * @param BaseBorderPartShape $_shape The shape of this border part
+	 * @param BorderPartThickness $_thickness The thickness of the border part in symbols, pixels, etc.
 	 */
-	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape)
+	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness)
     {
         $this->parentBorder = $_parentBorder;
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
     	$this->shape->setParentBorderPart($this);
+    	$this->thickness = $_thickness;
 	    $this->ownCollisions = array();
 	    $this->otherBorderPartCollisions = array();
     }
@@ -129,6 +137,16 @@ abstract class BaseBorderPart
     public function shape()
     {
     	return $this->shape;
+    }
+
+	/**
+	 * Returns the thickness of this border part.
+	 *
+	 * @return BorderPartThickness The thickness of this border part
+	 */
+    public function thickness(): BorderPartThickness
+    {
+    	return $this->thickness;
     }
 
 

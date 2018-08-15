@@ -28,17 +28,22 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 
 	// Class Methods
 
+	/**
+	 * Creates and returns the rendered parent border part image.
+	 *
+	 * @return resource The rendered parent border part image
+	 */
 	protected function getRawRenderedBorderPart()
 	{
 		$fieldSize = $this->parentBorderPart->parentBorder()->fieldSize();
 		$borderPartHeight = $this->parentBorderPart->endsAt()->y() - $this->parentBorderPart->startsAt()->y() + 1;
 		$additionalPixels = count($this->parentBorderPart->getCollisionPositions());
 
-		// TODO: Width = thickness
-		$image = imagecreate(1, $borderPartHeight * $fieldSize + $additionalPixels);
-		imagefill($image, 0, 0, $this->parentBorderPart->parentBorder()->gridColor()->getColor($image));
+		$imageWidth = $this->parentBorderPart->thickness()->width();
+		$imageHeight = ($borderPartHeight * $fieldSize) * $this->parentBorderPart->thickness()->height() + $additionalPixels;
 
-		// You could also use imagesetthickness(1) and then imageline() to draw the image on an already existing image
+		$image = imagecreate($imageWidth, $imageHeight);
+		imagefill($image, 0, 0, $this->parentBorderPart->parentBorder()->gridColor()->getColor($image));
 
 		return $image;
 	}

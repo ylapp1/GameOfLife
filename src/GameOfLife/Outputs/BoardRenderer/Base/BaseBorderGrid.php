@@ -10,6 +10,7 @@ namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
@@ -39,10 +40,9 @@ abstract class BaseBorderGrid
 	 * The grid of border positions
 	 * The fields in this array are positioned "left to the corresponding cell"
 	 *
-	 * @var Bool[][] $borderPositionsGrid
+	 * @var BorderPartThickness[][] $borderPositionsGrid
 	 */
 	protected $borderPositionsGrid;
-	// TODO: Take into account thickness of the border (Save thickness value instead of true/false)
 
 
 	// Magic Methods
@@ -139,14 +139,29 @@ abstract class BaseBorderGrid
 	 */
 	protected function updateBorderPositionsGrid($_renderedBorderPart)
 	{
-		foreach ($_renderedBorderPart->borderPartGridPositions() as $position)
+		foreach ($_renderedBorderPart->borderPartGridPositions() as $at)
 		{
-			if (! isset($this->borderPositionsGrid[$position->y()]))
+			if (! isset($this->borderPositionsGrid[$at->y()]))
 			{
-				$this->borderPositionsGrid[$position->y()] = array();
+				$this->borderPositionsGrid[$at->y()] = array();
 			}
 
-			$this->borderPositionsGrid[$position->y()][$position->x()] = true;
+			$borderThickness = $_renderedBorderPart->parentBorderPart()->thickness();
+
+			if (isset($this->borderPositionsGrid[$at->y()][$at->x()]))
+			{
+				$borderPositionThickness = $this->borderPositionsGrid[$at->y()][$at->x()];
+
+				if ($borderPositionThickness->width() < $borderThickness->width())
+				{
+					$borderPositionThickness->setWidth($borderThickness->width());
+				}
+				if ($borderPositionThickness->height() < $borderThickness->height())
+				{
+					$borderPositionThickness->setHeight($borderPositionThickness->height());
+				}
+			}
+			else $this->borderPositionsGrid[$at->y()][$at->x()] = clone $borderThickness;
 		}
 	}
 
@@ -199,7 +214,7 @@ abstract class BaseBorderGrid
 		{
 			foreach ($this->borderPositionsGrid[$_y] as $x => $borderHeight)
 			{
-				if ($borderHeight > $maximumBorderHeight) $maximumBorderHeight = $borderHeight;
+				if ($borderHeight->height() > $maximumBorderHeight) $maximumBorderHeight = $borderHeight->height();
 			}
 		}
 
@@ -221,8 +236,8 @@ abstract class BaseBorderGrid
 		{
 			if (isset($borderPositionsRow[$_x]))
 			{
-				$borderWidth = (int)$borderPositionsRow[$_x];
-				if ($borderWidth > $maximumBorderWidth) $maximumBorderWidth = $borderWidth;
+				$borderWidth = $borderPositionsRow[$_x];
+				if ($borderWidth->width() > $maximumBorderWidth) $maximumBorderWidth = $borderWidth->width();
 			}
 		}
 
@@ -240,7 +255,7 @@ abstract class BaseBorderGrid
 	{
 		$totalBorderWidth = 0;
 
-		for ($x = 0; $x < $_x; $x++)
+		for ($x = -1; $x < $_x; $x++)
 		{
 			$totalBorderWidth += $this->getMaximumBorderWidthInColumn($x);
 		}
@@ -259,7 +274,7 @@ abstract class BaseBorderGrid
 	{
 		$totalBorderHeight = 0;
 
-		for ($y = 0; $y < $_y; $y++)
+		for ($y = -1; $y < $_y; $y++)
 		{
 			$totalBorderHeight += $this->getMaximumBorderHeightInRow($y);
 		}

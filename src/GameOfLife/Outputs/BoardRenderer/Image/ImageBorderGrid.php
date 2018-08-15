@@ -11,6 +11,7 @@ namespace BoardRenderer\Image;
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\BorderPart\ImageBorderPart;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
@@ -51,7 +52,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,
-			new ImageHorizontalBorderPartShape()
+			new ImageHorizontalBorderPartShape(),
+			new BorderPartThickness(1, 1)
 		);
 	}
 
@@ -70,7 +72,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,
-			new ImageVerticalBorderPartShape()
+			new ImageVerticalBorderPartShape(),
+			new BorderPartThickness(1, 1)
 		);
 	}
 

@@ -38,12 +38,13 @@ class ImageBorder extends BaseBorder
 
 	/**
 	 * ImageBorder constructor.
-	 * @param BaseBorder|null $_parentBorder
-	 * @param BaseBorderShape $_shape
-	 * @param ImageColor $_gridColor
-	 * @param int $_fieldSize
+	 *
+	 * @param ImageBorder|null $_parentBorder The parent border
+	 * @param BaseBorderShape $_shape The border shape
+	 * @param ImageColor $_gridColor The grid color (and border color)
+	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(BaseBorder $_parentBorder = null, BaseBorderShape $_shape, ImageColor $_gridColor, int $_fieldSize)
+	public function __construct(ImageBorder $_parentBorder = null, BaseBorderShape $_shape, ImageColor $_gridColor, int $_fieldSize)
 	{
 		parent::__construct($_parentBorder, $_shape);
 		$this->gridColor = $_gridColor;
@@ -63,6 +64,11 @@ class ImageBorder extends BaseBorder
 		return $this->gridColor;
 	}
 
+	/**
+	 * Returns the height and width of each field.
+	 *
+	 * @return int The height and width of each field
+	 */
 	public function fieldSize(): int
 	{
 		return $this->fieldSize;
