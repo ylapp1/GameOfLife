@@ -25,7 +25,11 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 	 */
 	protected function getRawRenderedBorderPart()
 	{
-		$borderPartWidth = $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x() + 1;
+		$xEnd = $this->parentBorderPart->endsAt()->x();
+		$maximumAllowedXCoordinate = $this->parentBorderPart->parentBorder()->shape()->getMaximumAllowedXCoordinate($this->parentBorderPart->startsAt()->y());
+		if ($xEnd > $maximumAllowedXCoordinate) $xEnd = $maximumAllowedXCoordinate;
+
+		$borderPartWidth = $xEnd - $this->parentBorderPart->startsAt()->x() + 1;
 
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorder();
@@ -33,8 +37,11 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 		$fieldSize = $parentBorder->fieldSize();
 		$thickness = $this->parentBorderPart->thickness();
 
-		// TODO: Calculate total collision position width
-		$additionalPixels = count($this->parentBorderPart->getCollisionPositions());
+		$additionalPixels = 0;
+		foreach ($this->parentBorderPart->getCollisionThicknesses() as $collisionThickness)
+		{
+			$additionalPixels += $collisionThickness->width();
+		}
 
 		$imageWidth = $borderPartWidth * $fieldSize * $thickness->width() + $additionalPixels;
 		$imageHeight = $thickness->height();

@@ -163,4 +163,14 @@ abstract class RectangleBorderShape extends BaseBorderShape
 
 		return $borderHeight;
 	}
+
+	public function getMaximumAllowedYCoordinate(int $_y): int
+	{
+		return $this->rectangle->bottomRightCornerCoordinate()->y();
+	}
+
+	public function getMaximumAllowedXCoordinate(int $_x): int
+	{
+		return $this->rectangle->bottomRightCornerCoordinate()->x();
+	}
 }

@@ -212,32 +212,45 @@ class BorderPart
 	/**
 	 * Returns all collision positions of this border part.
 	 *
-	 * @return Coordinate[] The collision positions
+	 * @return BorderPartThickness[] The collision positions
 	 */
-	public function getCollisionPositions(): array
+	public function getCollisionThicknesses(): array
 	{
-		/** @var Coordinate[] $collisionPositions */
-		$collisionPositions = array();
+		/** @var BorderPartThickness[] $collisionThicknesses */
+		$collisionThicknesses = array();
 
 		/** @var BorderPartCollision[] $allCollisions */
 		$allCollisions = array_merge($this->ownCollisions, $this->otherBorderPartCollisions);
+		$processedCollisionPositions = array();
 
 		foreach ($allCollisions as $collision)
 		{
 			$isExistingPosition = false;
-			foreach ($collisionPositions as $collisionPosition)
+			foreach ($processedCollisionPositions as $index => $collisionPosition)
 			{
 				if ($collisionPosition->equals($collision->position()))
 				{
+					if ($collisionThicknesses[$index]->height() < $collision->with()->thickness()->height())
+					{
+						$collisionThicknesses[$index]->setHeight($collision->with()->thickness()->height());
+					}
+					if ($collisionThicknesses[$index]->width() < $collision->with()->thickness()->width())
+					{
+						$collisionThicknesses[$index]->setWidth($collision->with()->thickness()->width());
+					}
 					$isExistingPosition = true;
 					break;
 				}
 			}
 
-			if (! $isExistingPosition) $collisionPositions[] = $collision->position();
+			if (! $isExistingPosition)
+			{
+				$collisionThicknesses[] = clone $collision->with()->thickness();
+				$processedCollisionPositions[] = $collision->position();
+			}
 		}
 
-		return $collisionPositions;
+		return $collisionThicknesses;
 	}
 
 	/**

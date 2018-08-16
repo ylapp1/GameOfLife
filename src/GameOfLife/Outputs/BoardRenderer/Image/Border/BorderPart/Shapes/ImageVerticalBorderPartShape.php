@@ -25,7 +25,11 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 	 */
 	protected function getRawRenderedBorderPart()
 	{
-		$borderPartHeight = $this->parentBorderPart->endsAt()->y() - $this->parentBorderPart->startsAt()->y() + 1;
+		$yEnd = $this->parentBorderPart->endsAt()->y();
+		$maximumAllowedYCoordinate = $this->parentBorderPart->parentBorder()->shape()->getMaximumAllowedYCoordinate($this->parentBorderPart->startsAt()->x());
+		if ($yEnd > $maximumAllowedYCoordinate) $yEnd = $maximumAllowedYCoordinate;
+
+		$borderPartHeight = $yEnd - $this->parentBorderPart->startsAt()->y() + 1;
 
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorder();
@@ -33,8 +37,11 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 		$fieldSize = $parentBorder->fieldSize();
 		$thickness = $this->parentBorderPart->thickness();
 
-		// TODO: Calculate total collision position height
-		$additionalPixels = count($this->parentBorderPart->getCollisionPositions());
+		$additionalPixels = 0;
+		foreach ($this->parentBorderPart->getCollisionThicknesses() as $collisionThickness)
+		{
+			$additionalPixels += $collisionThickness->height();
+		}
 
 		$imageWidth = $thickness->width();
 		$imageHeight = $borderPartHeight * $fieldSize * $thickness->height() + $additionalPixels;

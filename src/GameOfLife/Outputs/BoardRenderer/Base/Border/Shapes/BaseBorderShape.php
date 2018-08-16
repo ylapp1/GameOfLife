@@ -76,4 +76,22 @@ abstract class BaseBorderShape
 	 * @return int The total border height of this border shape until that row
 	 */
     abstract public function getBorderHeightInRow(int $_y): int;
+
+	/**
+	 * Returns the maximum allowed width for a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The maximum allowed width for that row
+	 */
+    abstract public function getMaximumAllowedYCoordinate(int $_y): int;
+
+	/**
+	 * Returns the maximum allowed height for a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int The maximum allowed height for that column
+	 */
+    abstract public function getMaximumAllowedXCoordinate(int $_x): int;
 }

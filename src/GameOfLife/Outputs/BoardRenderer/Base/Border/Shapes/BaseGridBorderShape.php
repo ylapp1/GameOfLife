@@ -58,7 +58,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		{
 			$borderPart = $this->getVerticalBackgroundGridBorderPart(
 				new Coordinate($x, 0),
-				new Coordinate($x, $height),
+				new Coordinate($x, $height + 1),
 				$this->parentBorder
 			);
 			$backgroundGridBorderParts[] = $borderPart;
@@ -122,5 +122,15 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		// TODO: Fix fixed number ...
 		if ($_y > $startsAt->y() && $_y <= $endsAt->y()) return 1;
 		else return 0;
+	}
+
+	public function getMaximumAllowedYCoordinate(int $_y): int
+	{
+		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedYCoordinate($_y);
+	}
+
+	public function getMaximumAllowedXCoordinate(int $_x): int
+	{
+		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedXCoordinate($_x);
 	}
 }

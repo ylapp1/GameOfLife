@@ -47,4 +47,14 @@ class NullBorderShape extends BaseBorderShape
 	{
 		return 0;
 	}
+
+	public function getMaximumAllowedYCoordinate(int $_y): int
+	{
+		return 0;
+	}
+
+	public function getMaximumAllowedXCoordinate(int $_x): int
+	{
+		return 0;
+	}
 }
