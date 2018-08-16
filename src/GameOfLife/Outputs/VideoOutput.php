@@ -270,7 +270,6 @@ class VideoOutput extends ImageOutput
 
         $this->generateVideoFile();
 
-        unset($this->imageCreator);
         $this->fileSystemWriter->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
@@ -297,6 +296,7 @@ class VideoOutput extends ImageOutput
         }
 
         echo "\nGenerating video file ...";
+        // TODO: Fix video creation
 
         // Create video from image frames
         $this->ffmpegHelper->addOption("-framerate " . $this->fps);
