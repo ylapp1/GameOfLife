@@ -8,9 +8,9 @@
 
 namespace BoardRenderer\Image\Border\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
-use BoardRenderer\Image\Border\BorderPart\ImageBorderPart;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
 use BoardRenderer\Image\Border\ImageBorder;
@@ -26,13 +26,13 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The main border
+	 * @param ImageBorder $_parentBorder The outer border
 	 *
-	 * @return ImageBorderPart
+	 * @return BorderPart The horizontal border part
 	 */
-	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
+	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder): BorderPart
 	{
-		return new ImageBorderPart(
+		return new BorderPart(
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,
@@ -46,13 +46,13 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The main border
+	 * @param ImageBorder $_parentBorder The outer border
 	 *
-	 * @return ImageBorderPart The vertical border part
+	 * @return BorderPart The vertical border part
 	 */
-	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
+	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder): BorderPart
 	{
-		return new ImageBorderPart(
+		return new BorderPart(
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,

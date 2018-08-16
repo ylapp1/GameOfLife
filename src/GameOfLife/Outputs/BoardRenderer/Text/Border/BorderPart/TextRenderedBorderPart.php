@@ -10,6 +10,8 @@ namespace BoardRenderer\Text\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 
+// TODO: Rename to text raw rendered border part
+
 /**
  * Stores the symbols and their relative positions for a rendered border part.
  */

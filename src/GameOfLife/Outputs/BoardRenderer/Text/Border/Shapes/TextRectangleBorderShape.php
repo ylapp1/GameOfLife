@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Text\Border\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use GameOfLife\Coordinate;
 use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
@@ -115,7 +116,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight)
+	        new BorderPartThickness(1, 1),
+	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight),
         );
     }
 
@@ -140,7 +142,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-            new BorderSymbolDefinition($this->borderSymbolBottomLeft, $this->borderSymbolTopBottom, $this->borderSymbolBottomRight)
+	        new BorderPartThickness(1, 1),
+	        new BorderSymbolDefinition($this->borderSymbolBottomLeft, $this->borderSymbolTopBottom, $this->borderSymbolBottomRight)
         );
     }
 
@@ -162,7 +165,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-            new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolLeftRight, $this->borderSymbolBottomLeft)
+	        new BorderPartThickness(1, 1),
+	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolLeftRight, $this->borderSymbolBottomLeft)
         );
     }
 
@@ -187,7 +191,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-            new BorderSymbolDefinition($this->borderSymbolTopRight, $this->borderSymbolLeftRight, $this->borderSymbolBottomRight)
+	        new BorderPartThickness(1, 1),
+	        new BorderSymbolDefinition($this->borderSymbolTopRight, $this->borderSymbolLeftRight, $this->borderSymbolBottomRight)
         );
     }
 }

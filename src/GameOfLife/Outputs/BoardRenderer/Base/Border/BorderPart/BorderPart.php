@@ -17,7 +17,7 @@ use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
  * A border part is a single line of the total border with a fixed start and end point, for example horizontal, vertical,
  * diagonal or curved lines.
  */
-abstract class BaseBorderPart
+class BorderPart
 {
 	// Attributes
 
@@ -86,7 +86,7 @@ abstract class BaseBorderPart
      * @param BaseBorderPartShape $_shape The shape of this border part
 	 * @param BorderPartThickness $_thickness The thickness of the border part in symbols, pixels, etc.
 	 */
-	protected function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness)
+	public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness)
     {
         $this->parentBorder = $_parentBorder;
     	$this->startsAt = $_startsAt;
@@ -168,7 +168,7 @@ abstract class BaseBorderPart
 	 * Adds a border part collision of an other border part with this border part.
 	 *
 	 * @param Coordinate $_at The collision position
-	 * @param BaseBorderPart $_otherBorderPart The other border part
+	 * @param BorderPart $_otherBorderPart The other border part
 	 */
     public function addOtherBorderPartCollision(Coordinate $_at, $_otherBorderPart)
     {
@@ -178,7 +178,7 @@ abstract class BaseBorderPart
 	/**
 	 * Returns whether another border part is an outer border part relative to this border part.
 	 *
-	 * @param BaseBorderPart $_borderPart The other border part
+	 * @param BorderPart $_borderPart The other border part
 	 *
 	 * @return Bool True if the other border part is an outer border part, false otherwise
 	 */
@@ -197,7 +197,7 @@ abstract class BaseBorderPart
 	 * Checks whether this border part collides with another border part and adds a border part collision to this border
 	 * part if a collision was detected.
 	 *
-	 * @param BaseBorderPart $_borderPart The other border part
+	 * @param BorderPart $_borderPart The other border part
 	 */
 	public function checkCollisionWith($_borderPart)
 	{

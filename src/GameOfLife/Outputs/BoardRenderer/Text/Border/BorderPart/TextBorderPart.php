@@ -8,9 +8,11 @@
 
 namespace BoardRenderer\Text\Border\BorderPart;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
+use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 use GameOfLife\Coordinate;
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Collision\Border\BorderPart\CollisionBorderPart;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
@@ -20,7 +22,7 @@ use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
  * Container that stores the information about a part of a border.
  * This class uses text symbols to render the border part.
  */
-class TextBorderPart extends CollisionBorderPart
+class TextBorderPart extends BorderPart
 {
     // Attributes
 
@@ -68,15 +70,16 @@ class TextBorderPart extends CollisionBorderPart
      * @param BaseBorder $_parentBorder The parent border of this border part
      * @param Coordinate $_startsAt The start coordinate of this border
      * @param Coordinate $_endsAt The end coordinate of this border
-     * @param TextHorizontalBorderPartShape|TextVerticalCollisionBorderPartShape $_shape The shape of this border part
+     * @param BaseBorderPartShape $_shape The shape of this border part
+     * @param BorderPartThickness $_thickness The thickness of this border part
      * @param BorderSymbolDefinition $_borderSymbolDefinition The border symbol definition
      * @param CollisionSymbolDefinition $_startCollisionSymbolDefinition The collision symbol definition for the start symbol position
      * @param CollisionSymbolDefinition $_centerCollisionSymbolDefinition The collision symbol definition for a center symbol position
      * @param CollisionSymbolDefinition $_endCollisionSymbolDefinition The collision symbol definition for the end symbol position
      */
-    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderSymbolDefinition $_borderSymbolDefinition, CollisionSymbolDefinition $_startCollisionSymbolDefinition = null, CollisionSymbolDefinition $_centerCollisionSymbolDefinition = null, CollisionSymbolDefinition $_endCollisionSymbolDefinition = null)
+    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness, BorderSymbolDefinition $_borderSymbolDefinition, CollisionSymbolDefinition $_startCollisionSymbolDefinition = null, CollisionSymbolDefinition $_centerCollisionSymbolDefinition = null, CollisionSymbolDefinition $_endCollisionSymbolDefinition = null)
     {
-        parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape);
+        parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape, $_thickness);
 
         $this->borderSymbolDefinition = $_borderSymbolDefinition;
 

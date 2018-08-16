@@ -8,8 +8,8 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
 use GameOfLife\Coordinate;
-use BoardRenderer\Base\Border\BorderPart\Shapes\HorizontalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
 use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
@@ -17,7 +17,7 @@ use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 /**
  * Shape for horizontal text border parts.
  */
-class TextHorizontalBorderPartShape extends HorizontalCollisionBorderPartShape implements TextBorderPartShapeInterface
+class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implements TextBorderPartShapeInterface
 {
 	// Attributes
 
@@ -64,7 +64,7 @@ class TextHorizontalBorderPartShape extends HorizontalCollisionBorderPartShape i
 	 *
 	 * @return TextRenderedBorderPart The rendered parent border part
 	 */
-    public function getRenderedBorderPart()
+    public function getRawRenderedBorderPart()
     {
         $borderSymbols = $this->parentBorderPart->getBorderSymbols();
 

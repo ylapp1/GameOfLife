@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use GameOfLife\Coordinate;
 
@@ -25,7 +25,7 @@ abstract class BaseBorderPartShape
     /**
      * The parent border part
      *
-     * @var BaseBorderPart $parentBorderPart
+     * @var BorderPart $parentBorderPart
      */
     protected $parentBorderPart;
 
@@ -35,7 +35,7 @@ abstract class BaseBorderPartShape
 	/**
 	 * Sets the parent border part.
 	 *
-	 * @param BaseBorderPart $_parentBorderPart The parent border part
+	 * @param BorderPart $_parentBorderPart The parent border part
 	 */
 	public function setParentBorderPart($_parentBorderPart)
 	{
@@ -85,7 +85,7 @@ abstract class BaseBorderPartShape
 	/**
 	 * Returns the position at which the parent border part collides with another border part or null if there is no collision.
 	 *
-	 * @param BaseBorderPart $_borderPart The other border part
+	 * @param BorderPart $_borderPart The other border part
 	 *
 	 * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
 	 */

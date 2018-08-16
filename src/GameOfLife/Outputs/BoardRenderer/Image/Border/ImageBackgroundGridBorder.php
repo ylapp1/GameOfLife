@@ -9,32 +9,27 @@
 namespace BoardRenderer\Image\Border;
 
 use BoardRenderer\Image\Border\Shapes\ImageGridBorderShape;
-use GameOfLife\Board;
 use Output\Helpers\ImageColor;
 
 /**
- * The background grid border.
+ * The background grid border for images.
  */
 class ImageBackgroundGridBorder extends ImageBorder
 {
 	// Magic Methods
 
 	/**
-	 * BoardOuterBorder constructor.
+	 * ImageBackgroundGridBorder constructor.
 	 *
-	 * @param ImageBorder $_parentBorder The parent border
-	 * @param Board $_board The board for which the outer border will be created
+	 * @param ImageBorder $_parentBorder The parent border in which the background grid will be created
 	 * @param ImageColor $_gridColor The color of the grid (and the borders)
 	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(ImageBorder $_parentBorder, Board $_board, ImageColor $_gridColor, int $_fieldSize)
+	public function __construct(ImageBorder $_parentBorder, ImageColor $_gridColor, int $_fieldSize)
 	{
 		parent::__construct(
-			null,
-			new ImageGridBorderShape(
-				$this,
-				$_board
-			),
+			$_parentBorder,
+			new ImageGridBorderShape($this),
 			$_gridColor,
 			$_fieldSize
 		);

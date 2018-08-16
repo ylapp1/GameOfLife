@@ -68,9 +68,12 @@ abstract class BaseBoardFieldRenderer
             foreach ($boardFieldRow as $boardField)
             {
                 $renderedField = $this->renderBoardField($boardField);
-                $renderedFieldPosition = $this->getBoardFieldCanvasPosition($boardField);
 
-                $renderedBoardFields[$renderedFieldPosition->y()][$renderedFieldPosition->x()] = $renderedField;
+                if ($renderedField)
+                {
+	                $renderedFieldPosition = $this->getBoardFieldCanvasPosition($boardField);
+	                $renderedBoardFields[$renderedFieldPosition->y()][$renderedFieldPosition->x()] = $renderedField;
+                }
             }
         }
 

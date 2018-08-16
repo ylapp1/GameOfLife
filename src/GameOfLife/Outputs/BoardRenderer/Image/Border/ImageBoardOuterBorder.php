@@ -15,14 +15,14 @@ use GameOfLife\Rectangle;
 use Output\Helpers\ImageColor;
 
 /**
- * The outer border of the board for the ImageBoardRenderer.
+ * The outer border of the board for images.
  */
 class ImageBoardOuterBorder extends ImageBorder
 {
 	// Magic Methods
 
 	/**
-	 * BoardOuterBorder constructor.
+	 * ImageBoardOuterBorder constructor.
 	 *
 	 * @param Board $_board The board for which the outer border will be created
 	 * @param ImageColor $_gridColor The color of the grid (and the borders)
@@ -36,10 +36,7 @@ class ImageBoardOuterBorder extends ImageBorder
 
 		parent::__construct(
 			null,
-			new ImageRectangleBorderShape(
-				$this,
-				$rectangle
-			),
+			new ImageRectangleBorderShape($this, $rectangle),
 			$_gridColor,
 			$_fieldSize
 		);

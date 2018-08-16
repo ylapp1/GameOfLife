@@ -10,7 +10,7 @@ namespace BoardRenderer\Base\Border\Shapes;
 
 use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 
 /**
  * Creates border parts that form a rectangle.
@@ -35,10 +35,18 @@ abstract class RectangleBorderShape extends BaseBorderShape
      * @param BaseBorder $_parentBorder The parent border of this border shape
 	 * @param Rectangle $_rectangle The rectangle
 	 */
-	protected function __construct($_parentBorder, Rectangle $_rectangle)
+	public function __construct($_parentBorder, Rectangle $_rectangle)
 	{
 	    parent::__construct($_parentBorder);
 		$this->rectangle = $_rectangle;
+	}
+
+
+	// Getters and Setters
+
+	public function rectangle(): Rectangle
+	{
+		return $this->rectangle;
 	}
 
 
@@ -47,7 +55,7 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	/**
 	 * Returns all border parts of this border shape.
      *
-     * @return BaseBorderPart[] The list of border parts
+     * @return BorderPart[] The list of border parts
 	 */
 	public function getBorderParts()
 	{
@@ -63,7 +71,7 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * Generates and returns the top border part of this border shape.
      * This must return a border part with a horizontal shape.
 	 *
-	 * @return BaseBorderPart The top border part of this border shape
+	 * @return BorderPart The top border part of this border shape
 	 */
 	abstract protected function getTopBorderPart();
 
@@ -71,7 +79,7 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * Generates and returns the bottom border part of this border shape.
      * This must return a border part with a horizontal shape.
      *
-	 * @return BaseBorderPart The bottom border part of this border shape
+	 * @return BorderPart The bottom border part of this border shape
 	 */
 	abstract protected function getBottomBorderPart();
 
@@ -79,7 +87,7 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * Generates and returns the left border part of this border shape.
      * This must return a border part with a vertical shape.
      *
-	 * @return BaseBorderPart The left border part of this border shape
+	 * @return BorderPart The left border part of this border shape
 	 */
 	abstract protected function getLeftBorderPart();
 
@@ -87,7 +95,7 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * Generates and returns the right border part of this border shape.
      * This must return a border part with a vertical shape.
      *
-	 * @return BaseBorderPart The right border part of this border shape
+	 * @return BorderPart The right border part of this border shape
 	 */
 	abstract protected function getRightBorderPart();
 

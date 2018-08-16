@@ -8,36 +8,18 @@
 
 namespace BoardRenderer\Image\CellImage;
 
-use Output\Helpers\ImageColor;
-
 /**
  * Creates and returns a cell smiley image.
  * The smiley image looks like a regular smiling smiley (like this: ☻)
  */
 class SmileyCellImage extends TransparentCellImage
 {
-	// Magic Methods
-
-	/**
-	 * BaseCellImage constructor.
-	 *
-	 * @param ImageColor $_backgroundColor The background color of the cell image
-	 * @param ImageColor $_foreGroundColor The foreground color of the cell image
-	 * @param int $_height The height of the image
-	 * @param int $_width The width of the image
-	 */
-	public function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
-	{
-		parent::__construct($_backgroundColor, $_foreGroundColor, $_height, $_width);
-	}
-
-
 	// Class Methods
 
 	/**
-	 * Creates and returns a cell smiley image.
+	 * Creates and returns a smiley image.
 	 *
-	 * @return resource The cell image
+	 * @return resource The smiley image
 	 */
 	public function getImage()
 	{

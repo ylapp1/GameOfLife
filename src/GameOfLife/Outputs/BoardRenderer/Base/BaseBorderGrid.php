@@ -8,8 +8,7 @@
 
 namespace BoardRenderer\Base;
 
-use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use GameOfLife\Board;
@@ -24,7 +23,7 @@ abstract class BaseBorderGrid
 	/**
 	 * The list of border parts
 	 *
-	 * @var BaseBorderPart[] $borderParts
+	 * @var BorderPart[] $borderParts
 	 */
 	protected $borderParts;
 
@@ -43,17 +42,33 @@ abstract class BaseBorderGrid
 	 */
 	protected $borderPositionsGrid;
 
+	/**
+	 * The board for which the border grid is created
+	 *
+	 * @var Board $board
+	 */
+	protected $board;
+
+	/**
+	 * The height/width of a single field
+	 *
+	 * @var int $fieldSize
+	 */
+	protected $fieldSize;
+
 
 	// Magic Methods
 
 	/**
 	 * BaseBorderGrid constructor.
 	 *
-	 * @param Board $_board The board
-	 * @param BaseBorder $_border The main border
+	 * @param Board $_board The board for which the border grid is created
+	 * @param int $_fieldSize The height/width of a single field
 	 */
-	public function __construct(Board $_board, $_border)
+	public function __construct(Board $_board, int $_fieldSize)
 	{
+		$this->board = $_board;
+		$this->fieldSize = $_fieldSize;
 		$this->borderParts = array();
 		$this->borderPositionsGrid = array();
 		$this->renderedBorderParts = array();
@@ -65,7 +80,7 @@ abstract class BaseBorderGrid
 	/**
 	 * Adds a border part to this border grid.
 	 *
-	 * @param BaseBorderPart $_borderPart The border part
+	 * @param BorderPart $_borderPart The border part
 	 */
 	public function addBorderPart($_borderPart)
 	{

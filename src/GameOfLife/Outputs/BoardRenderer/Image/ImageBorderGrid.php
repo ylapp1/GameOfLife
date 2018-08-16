@@ -9,7 +9,6 @@
 namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseBorderGrid;
-use BoardRenderer\Base\Border\BaseBorder;
 use GameOfLife\Board;
 use Output\Helpers\ImageColor;
 
@@ -18,17 +17,33 @@ use Output\Helpers\ImageColor;
  */
 class ImageBorderGrid extends BaseBorderGrid
 {
-	private $board;
-	private $fieldSize;
+	// Attributes
+
+	/**
+	 * The background color of the border grid
+	 *
+	 * @var ImageColor $backgroundColor
+	 */
 	private $backgroundColor;
 
-	public function __construct(Board $_board, BaseBorder $_border, int $_fieldSize, ImageColor $_backgroundColor)
+
+	// Magic Methods
+
+	/**
+	 * ImageBorderGrid constructor.
+	 *
+	 * @param Board $_board The board for which the border grid is created
+	 * @param int $_fieldSize The height/width of a single field
+	 * @param ImageColor $_backgroundColor The background color of the border grid
+	 */
+	public function __construct(Board $_board, int $_fieldSize, ImageColor $_backgroundColor)
 	{
-		parent::__construct($_board, $_border);
-		$this->board = $_board;
-		$this->fieldSize = $_fieldSize;
+		parent::__construct($_board, $_fieldSize);
 		$this->backgroundColor = $_backgroundColor;
 	}
+
+
+	// Class Methods
 
 	/**
 	 * Creates and returns the rendered border grid.

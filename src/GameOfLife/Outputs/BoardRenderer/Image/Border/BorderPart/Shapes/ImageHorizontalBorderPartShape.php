@@ -9,23 +9,13 @@
 namespace BoardRenderer\Image\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
-use BoardRenderer\Image\Border\BorderPart\ImageBorderPart;
+use BoardRenderer\Image\Border\ImageBorder;
 
 /**
  * Creates and returns the image for a horizontal border part.
  */
 class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 {
-	// Attributes
-
-	/**
-	 * The parent border part
-	 *
-	 * @var ImageBorderPart $parentBorderPart
-	 */
-	protected $parentBorderPart;
-
-
 	// Class Methods
 
 	/**
@@ -35,15 +25,27 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 	 */
 	protected function getRawRenderedBorderPart()
 	{
-		$fieldSize = $this->parentBorderPart->parentBorder()->fieldSize();
 		$borderPartWidth = $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x() + 1;
+
+		/** @var ImageBorder $parentBorder */
+		$parentBorder = $this->parentBorderPart->parentBorder();
+
+		// TODO: Find better place to store field size!
+		// TODO: Field size should be in base classes
+		$fieldSize = $parentBorder->fieldSize();
+		$thickness = $this->parentBorderPart->thickness();
+
+		// TODO: Calculate total collision position width
 		$additionalPixels = count($this->parentBorderPart->getCollisionPositions());
 
-		$imageWidth = ($borderPartWidth * $fieldSize) * $this->parentBorderPart->thickness()->width() + $additionalPixels;
-		$imageHeight = $this->parentBorderPart->thickness()->height();
+		$imageWidth = $borderPartWidth * $fieldSize * $thickness->width() + $additionalPixels;
+		$imageHeight = $thickness->height();
 
 		$image = imagecreate($imageWidth, $imageHeight);
-		imagefill($image, 0, 0, $this->parentBorderPart->parentBorder()->gridColor()->getColor($image));
+
+		// TODO: Rename gridColor attribute to color
+		// TODO: Grid color should be in base classes too (maybe)
+		imagefill($image, 0, 0, $parentBorder->gridColor()->getColor($image));
 
 		return $image;
 	}

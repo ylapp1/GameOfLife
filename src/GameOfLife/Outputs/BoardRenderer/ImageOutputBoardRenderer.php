@@ -18,7 +18,7 @@ use BoardRenderer\Image\ImageCanvas;
 use Output\Helpers\ImageColor;
 
 /**
- * Renders boards as resources.
+ * Renders boards as images.
  */
 class ImageOutputBoardRenderer extends BaseBoardRenderer
 {
@@ -69,11 +69,7 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 			$headSize
 		);
 
-		$boardFieldRenderer = new ImageBoardFieldRenderer(
-			$_fieldSize,
-			$smileyCellImage->getImage(),
-			null
-		);
+		$boardFieldRenderer = new ImageBoardFieldRenderer($smileyCellImage->getImage(), null);
 
 		return $boardFieldRenderer;
 	}

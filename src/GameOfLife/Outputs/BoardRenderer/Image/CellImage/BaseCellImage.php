@@ -56,7 +56,7 @@ abstract class BaseCellImage
 	 * @param int $_height The height of the image
 	 * @param int $_width The width of the image
 	 */
-	protected function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
+	public function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
 	{
 		$this->backgroundColor = $_backgroundColor;
 		$this->foreGroundColor = $_foreGroundColor;
@@ -68,7 +68,7 @@ abstract class BaseCellImage
 	// Class Methods
 
 	/**
-	 * Returns the cell image.
+	 * Creates and returns the cell image.
 	 *
 	 * @return resource The cell image
 	 */

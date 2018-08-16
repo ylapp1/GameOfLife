@@ -8,14 +8,14 @@
 
 namespace BoardRenderer\Image;
 
+use BoardRenderer\Base\BaseBorderRenderer;
 use BoardRenderer\Image\Border\ImageBackgroundGridBorder;
 use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
-use BoardRenderer\Base\BaseBorderRenderer;
 use Output\Helpers\ImageColor;
 
 /**
- * Renders the borders as a resource.
+ * Renders the borders as images.
  */
 class ImageBorderRenderer extends BaseBorderRenderer
 {
@@ -32,14 +32,13 @@ class ImageBorderRenderer extends BaseBorderRenderer
 	{
 		$borderGrid = new ImageBorderGrid(
 			$_board,
-			$_border,
 			$_fieldSize,
 			$_backgroundColor
 		);
 
 		if ($_hasBackgroundGrid)
 		{
-			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_board, $_border->gridColor(), $_fieldSize);
+			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->gridColor(), $_fieldSize);
 			$_border->addInnerBorder($backgroundGridBorder);
 		}
 

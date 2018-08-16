@@ -9,7 +9,7 @@
 namespace BoardRenderer\Base\Border\Shapes;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 
 /**
  * Creates border parts that form a specific shape.
@@ -55,7 +55,7 @@ abstract class BaseBorderShape
     /**
      * Returns all border parts of this border shape.
      *
-     * @return BaseBorderPart[] The list of border parts
+     * @return BorderPart[] The list of border parts
      */
     abstract public function getBorderParts();
 

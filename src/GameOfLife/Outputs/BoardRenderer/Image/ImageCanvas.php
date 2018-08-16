@@ -11,18 +11,11 @@ namespace BoardRenderer\Image;
 use BoardRenderer\Base\BaseCanvas;
 
 /**
- * Canvas that draws images onto a resource.
+ * Draws images onto a resource.
  */
 class ImageCanvas extends BaseCanvas
 {
-	// Constructor
-
-	/**
-	 * The background image of the canvas.
-	 *
-	 * @var resource $backgroundImage
-	 */
-	private $backgroundImage;
+	// Attributes
 
 	/**
 	 * The total image (border and cell images combined)
@@ -70,7 +63,7 @@ class ImageCanvas extends BaseCanvas
 	public function addBorderGrid($_borderGrid)
 	{
 		$this->borderGrid = $_borderGrid;
-		$this->backgroundImage = $_borderGrid->renderBorderGrid();
+		$this->image = $_borderGrid->renderBorderGrid();
 	}
 
 	/**
@@ -80,30 +73,21 @@ class ImageCanvas extends BaseCanvas
 	 */
 	public function addRenderedBoardFields(array $_renderedBoardFields)
 	{
-		$backgroundImageWidth = imagesx($this->backgroundImage);
-		$backgroundImageHeight = imagesy($this->backgroundImage);
-
-		$this->image = imagecreate($backgroundImageWidth, $backgroundImageHeight);
-		imagecopy($this->image, $this->backgroundImage, 0,0,0,0, $backgroundImageWidth, $backgroundImageHeight);
-
 		foreach ($_renderedBoardFields as $y => $renderedBoardFieldRow)
 		{
 			foreach ($renderedBoardFieldRow as $x => $renderedBoardField)
 			{
-				if ($renderedBoardField)
-				{
-					$imageWidth = imagesx($renderedBoardField);
-					$imageHeight = imagesy($renderedBoardField);
+				$imageWidth = imagesx($renderedBoardField);
+				$imageHeight = imagesy($renderedBoardField);
 
-					$fieldStartX = $x * $this->fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
-					$fieldStartY = $y * $this->fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
+				$fieldStartX = $x * $this->fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
+				$fieldStartY = $y * $this->fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
 
-					// Center the cell image
-					$cellStartX = $fieldStartX + ($this->fieldSize - $imageWidth) / 2;
-					$cellStartY = $fieldStartY + ($this->fieldSize - $imageHeight) / 2;
+				// Center the cell image
+				$cellStartX = $fieldStartX + ($this->fieldSize - $imageWidth) / 2;
+				$cellStartY = $fieldStartY + ($this->fieldSize - $imageHeight) / 2;
 
-					imagecopymerge($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight, 100);
-				}
+				imagecopymerge($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight, 100);
 			}
 		}
 	}

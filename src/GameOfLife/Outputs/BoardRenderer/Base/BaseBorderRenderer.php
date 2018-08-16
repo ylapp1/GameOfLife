@@ -9,7 +9,7 @@
 namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
 
@@ -37,7 +37,7 @@ abstract class BaseBorderRenderer
 	/**
 	 * The list of border parts
 	 *
-	 * @var BaseBorderPart $borderParts
+	 * @var BorderPart $borderParts
 	 */
 	protected $borderParts;
 
@@ -52,7 +52,7 @@ abstract class BaseBorderRenderer
 	 * @param BaseBorderGrid $_borderGrid The border grid
 	 * @param Bool $_hasBackgroundGrid If true, the border grid will have a background grid
 	 */
-	protected function __construct(Board $_board, $_border, $_borderGrid, Bool $_hasBackgroundGrid)
+	public function __construct(Board $_board, $_border, $_borderGrid, Bool $_hasBackgroundGrid)
 	{
 		$this->border = $_border;
 		$this->borderParts = array();
@@ -71,7 +71,7 @@ abstract class BaseBorderRenderer
 	{
 		$this->borderGrid->reset();
 
-		/** @var BaseBorderPart[] $borderParts */
+		/** @var BorderPart[] $borderParts */
 		$borderParts = array_merge($this->borderParts, $this->border->getBorderParts());
 
 		$processedBorderParts = array();

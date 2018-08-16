@@ -13,7 +13,8 @@ use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use Output\Helpers\ImageColor;
 
 /**
- * Renders borders as resources.
+ * Renders borders as images.
+ * // TODO: Move stuff from this to base class (text can be colored too and have different sizes...)
  */
 abstract class ImageBorder extends BaseBorder
 {
