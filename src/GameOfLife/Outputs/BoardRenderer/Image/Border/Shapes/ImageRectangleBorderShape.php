@@ -9,7 +9,6 @@
 namespace BoardRenderer\Image\Border\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPart;
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
@@ -43,7 +42,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageHorizontalBorderPartShape(),
-			new BorderPartThickness(1, 15) // TODO: Should read thickness from parent border
+			$this->horizontalThickness
 		);
 	}
 
@@ -68,7 +67,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageHorizontalBorderPartShape(),
-			new BorderPartThickness(1, 15) // TODO: Should read thickness from parent border
+			$this->horizontalThickness
 		);
 	}
 
@@ -93,7 +92,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageVerticalBorderPartShape(),
-			new BorderPartThickness(15, 1) // TODO: Should read thickness from parent border
+			$this->verticalThickness
 		);
 	}
 
@@ -118,7 +117,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageVerticalBorderPartShape(),
-			new BorderPartThickness(15, 1) // TODO: Should read thickness from parent border
+			$this->verticalThickness
 		);
 	}
 }

@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Image\Border;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageRectangleBorderShape;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
@@ -36,9 +37,14 @@ class ImageBoardOuterBorder extends ImageBorder
 
 		parent::__construct(
 			null,
-			new ImageRectangleBorderShape($this, $rectangle),
-			$_gridColor,
-			$_fieldSize
+			new ImageRectangleBorderShape(
+				$this,
+				$rectangle,
+				new BorderPartThickness(1, 15),
+				new BorderPartThickness(15, 1)
+			),
+			$_fieldSize,
+			$_gridColor
 		);
 	}
 }

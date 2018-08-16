@@ -14,25 +14,17 @@ use Output\Helpers\ImageColor;
 
 /**
  * Renders borders as images.
- * // TODO: Move stuff from this to base class (text can be colored too and have different sizes...)
  */
 abstract class ImageBorder extends BaseBorder
 {
 	// Attributes
 
 	/**
-	 * The grid color
+	 * The border color
 	 *
-	 * @var ImageColor $gridColor
+	 * @var ImageColor $color
 	 */
-	private $gridColor;
-
-	/**
-	 * The height and width of a single field
-	 *
-	 * @var int $fieldSize
-	 */
-	private $fieldSize;
+	private $color;
 
 
 	// Magic Methods
@@ -45,33 +37,22 @@ abstract class ImageBorder extends BaseBorder
 	 * @param ImageColor $_gridColor The grid color (and border color)
 	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(ImageBorder $_parentBorder = null, BaseBorderShape $_shape, ImageColor $_gridColor, int $_fieldSize)
+	public function __construct(ImageBorder $_parentBorder = null, BaseBorderShape $_shape, int $_fieldSize, ImageColor $_gridColor)
 	{
-		parent::__construct($_parentBorder, $_shape);
-		$this->gridColor = $_gridColor;
-		$this->fieldSize = $_fieldSize;
+		parent::__construct($_parentBorder, $_shape, $_fieldSize);
+		$this->color = $_gridColor;
 	}
 
 
 	// Getters and Setters
 
 	/**
-	 * Returns the grid color.
+	 * Returns the border color.
 	 *
-	 * @return ImageColor The grid color
+	 * @return ImageColor The border color
 	 */
-	public function gridColor(): ImageColor
+	public function color(): ImageColor
 	{
-		return $this->gridColor;
-	}
-
-	/**
-	 * Returns the height and width of each field.
-	 *
-	 * @return int The height and width of each field
-	 */
-	public function fieldSize(): int
-	{
-		return $this->fieldSize;
+		return $this->color;
 	}
 }

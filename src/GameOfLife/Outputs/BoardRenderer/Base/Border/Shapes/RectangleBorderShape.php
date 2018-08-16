@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Base\Border\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BorderPart;
@@ -26,19 +27,37 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 */
 	protected $rectangle;
 
+	/**
+	 * Defines the thickness of horizontal parts of this border
+	 *
+	 * @var BorderPartThickness $horizontalThickness
+	 */
+	protected $horizontalThickness;
+
+	/**
+	 * Defines the thickness of vertical parts of this border
+	 *
+	 * @var BorderPartThickness $verticalThickness
+	 */
+	protected $verticalThickness;
+
 
 	// Magic Methods
 
 	/**
 	 * RectangleBorderShape constructor.
 	 *
-     * @param BaseBorder $_parentBorder The parent border of this border shape
+	 * @param BaseBorder $_parentBorder The parent border of this border shape
 	 * @param Rectangle $_rectangle The rectangle
+	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal parts of this border
+	 * @param BorderPartThickness $_verticalThickness The thickness for vertical parts of this border
 	 */
-	public function __construct($_parentBorder, Rectangle $_rectangle)
+	public function __construct($_parentBorder, Rectangle $_rectangle, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness)
 	{
 	    parent::__construct($_parentBorder);
 		$this->rectangle = $_rectangle;
+		$this->horizontalThickness = $_horizontalThickness;
+		$this->verticalThickness = $_verticalThickness;
 	}
 
 
@@ -110,15 +129,13 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	{
 		$borderWidth = 0;
 
-		// TODO: Fix the way in which thickness is fetched (instead add border shape thickness attribute)
-
 		if ($_x == $this->rectangle->topLeftCornerCoordinate()->x())
 		{
-			$borderWidth += $this->getLeftBorderPart()->thickness()->width();
+			$borderWidth += $this->verticalThickness->width();
 		}
 		if ($_x == $this->rectangle->bottomRightCornerCoordinate()->x() + 1)
 		{
-			$borderWidth += $this->getRightBorderPart()->thickness()->width();
+			$borderWidth += $this->verticalThickness->width();
 		}
 
 		return $borderWidth;
@@ -135,15 +152,13 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	{
 		$borderHeight = 0;
 
-		// TODO: Fix the way in which thickness is fetched (instead add border shape thickness attribute)
-
 		if ($_y == $this->rectangle->topLeftCornerCoordinate()->y())
 		{
-			$borderHeight += $this->getTopBorderPart()->thickness()->height();
+			$borderHeight += $this->horizontalThickness->height();
 		}
 		if ($_y == $this->rectangle->bottomRightCornerCoordinate()->y() + 1)
 		{
-			$borderHeight += $this->getBottomBorderPart()->thickness()->height();
+			$borderHeight += $this->horizontalThickness->height();
 		}
 
 		return $borderHeight;

@@ -30,8 +30,8 @@ class ImageBackgroundGridBorder extends ImageBorder
 		parent::__construct(
 			$_parentBorder,
 			new ImageGridBorderShape($this),
-			$_gridColor,
-			$_fieldSize
+			$_fieldSize,
+			$_gridColor
 		);
 	}
 }

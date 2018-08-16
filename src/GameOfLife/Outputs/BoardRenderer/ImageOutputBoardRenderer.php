@@ -42,7 +42,7 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 			$mainBorder,
 			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid, $_fieldSize, $_backgroundColor),
 			$this->initializeBoardFieldRenderer($_fieldSize, $_backgroundColor, $_foregroundColor),
-			new ImageCanvas($_fieldSize)
+			new ImageCanvas(true, $_fieldSize)
 		);
 	}
 

@@ -37,10 +37,12 @@ class ImageCanvas extends BaseCanvas
 	/**
 	 * ImageCanvas constructor.
 	 *
+	 * @param Bool $_cachesBorderGrid Indicates whether this canvas caches the rendered border grid
 	 * @param int $_fieldSize The field size in pixels
 	 */
-	public function __construct(int $_fieldSize)
+	public function __construct(Bool $_cachesBorderGrid = false, int $_fieldSize)
 	{
+		parent::__construct($_cachesBorderGrid);
 		$this->fieldSize = $_fieldSize;
 	}
 
@@ -56,23 +58,18 @@ class ImageCanvas extends BaseCanvas
 	}
 
 	/**
-	 * Adds the border grid to the canvas.
-	 *
-	 * @param ImageBorderGrid $_borderGrid The border grid
-	 */
-	public function addBorderGrid($_borderGrid)
-	{
-		$this->borderGrid = $_borderGrid;
-		$this->image = $_borderGrid->renderBorderGrid();
-	}
-
-	/**
 	 * Adds the rendered board fields to the total image.
 	 *
 	 * @param resource[][] $_renderedBoardFields The list of rendered board fields
 	 */
 	public function addRenderedBoardFields(array $_renderedBoardFields)
 	{
+		$renderedBorderGridWidth = imagesx($this->cachedRenderedBorderGrid);
+		$renderedBorderGridHeight = imagesy($this->cachedRenderedBorderGrid);
+
+		$this->image = imagecreate($renderedBorderGridWidth, $renderedBorderGridHeight);
+		imagecopy($this->image, $this->cachedRenderedBorderGrid, 0, 0, 0, 0, $renderedBorderGridWidth, $renderedBorderGridHeight);
+
 		foreach ($_renderedBoardFields as $y => $renderedBoardFieldRow)
 		{
 			foreach ($renderedBoardFieldRow as $x => $renderedBoardField)

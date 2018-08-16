@@ -38,7 +38,7 @@ class ImageBorderRenderer extends BaseBorderRenderer
 
 		if ($_hasBackgroundGrid)
 		{
-			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->gridColor(), $_fieldSize);
+			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->color(), $_fieldSize);
 			$_border->addInnerBorder($backgroundGridBorder);
 		}
 

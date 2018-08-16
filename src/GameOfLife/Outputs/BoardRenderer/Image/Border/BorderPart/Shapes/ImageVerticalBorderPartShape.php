@@ -30,8 +30,6 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorder();
 
-		// TODO: Find better place to store field size!
-		// TODO: Field size should be in base class
 		$fieldSize = $parentBorder->fieldSize();
 		$thickness = $this->parentBorderPart->thickness();
 
@@ -42,10 +40,7 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 		$imageHeight = $borderPartHeight * $fieldSize * $thickness->height() + $additionalPixels;
 
 		$image = imagecreate($imageWidth, $imageHeight);
-
-		// TODO: Rename gridColor attribute to color
-		// TODO: Grid color should be in base class too (maybe)
-		imagefill($image, 0, 0, $parentBorder->gridColor()->getColor($image));
+		imagefill($image, 0, 0, $parentBorder->color()->getColor($image));
 
 		return $image;
 	}

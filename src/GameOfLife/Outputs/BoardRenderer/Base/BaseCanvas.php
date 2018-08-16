@@ -22,8 +22,46 @@ abstract class BaseCanvas
 	 */
 	protected $borderGrid;
 
+	/**
+	 * The cached rendered border grid
+	 *
+	 * @var mixed $cachedRenderedBorderGrid
+	 */
+	protected $cachedRenderedBorderGrid;
 
-    // Class Methods
+	/**
+	 * Indicates whether this canvas caches the border grid
+	 *
+	 * @var Bool $cachesBorderGrid
+	 */
+	protected $cachesBorderGrid;
+
+
+	// Magic Methods
+
+	/**
+	 * BaseCanvas constructor.
+	 *
+	 * @param Bool $_cachesBorderGrid Indicates whether this canvas caches the border grid
+	 */
+	public function __construct(Bool $_cachesBorderGrid = true)
+	{
+		$this->cachesBorderGrid = $_cachesBorderGrid;
+	}
+
+
+	// Class Methods
+
+	/**
+	 * Returns whether this canvas caches the border grid.
+	 *
+	 * @return Bool Indicates whether this canvas caches the border grid
+	 */
+	public function hasCachedBorderGrid(): Bool
+	{
+		if ($this->cachesBorderGrid && $this->cachedRenderedBorderGrid) return true;
+		else return false;
+	}
 
     /**
      * Resets the content of the canvas.
@@ -35,7 +73,14 @@ abstract class BaseCanvas
      *
      * @param BaseBorderGrid $_borderGrid The border grid
      */
-    abstract public function addBorderGrid($_borderGrid);
+    public function addBorderGrid($_borderGrid)
+    {
+	    if (! $this->cachedRenderedBorderGrid || ! $this->cachesBorderGrid)
+	    {
+		    $this->borderGrid = $_borderGrid;
+		    $this->cachedRenderedBorderGrid = $_borderGrid->renderBorderGrid();
+	    }
+    }
 
     /**
      * Adds the rendered board fields to the canvas.

@@ -117,7 +117,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $endsAt,
             new TextHorizontalBorderPartShape(),
 	        new BorderPartThickness(1, 1),
-	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight),
+	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight)
         );
     }
 
