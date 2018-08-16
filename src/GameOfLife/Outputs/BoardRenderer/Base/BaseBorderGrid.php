@@ -84,6 +84,10 @@ abstract class BaseBorderGrid
 	 */
 	public function addBorderPart($_borderPart)
 	{
+		foreach ($this->borderParts as $borderPart)
+		{
+			$_borderPart->checkCollisionWith($borderPart);
+		}
 		$this->borderParts[] = $_borderPart;
 	}
 

@@ -84,7 +84,7 @@ class ImageCanvas extends BaseCanvas
 				$cellStartX = $fieldStartX + ($this->fieldSize - $imageWidth) / 2;
 				$cellStartY = $fieldStartY + ($this->fieldSize - $imageHeight) / 2;
 
-				imagecopymerge($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight, 100);
+				imagecopy($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight);
 			}
 		}
 	}

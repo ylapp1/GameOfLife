@@ -34,13 +34,6 @@ abstract class BaseBorderRenderer
 	 */
 	protected $border;
 
-	/**
-	 * The list of border parts
-	 *
-	 * @var BorderPart $borderParts
-	 */
-	protected $borderParts;
-
 
 	// Magic Methods
 
@@ -55,7 +48,6 @@ abstract class BaseBorderRenderer
 	public function __construct(Board $_board, $_border, $_borderGrid, Bool $_hasBackgroundGrid)
 	{
 		$this->border = $_border;
-		$this->borderParts = array();
 		$this->borderGrid = $_borderGrid;
 	}
 
@@ -71,19 +63,8 @@ abstract class BaseBorderRenderer
 	{
 		$this->borderGrid->reset();
 
-		/** @var BorderPart[] $borderParts */
-		$borderParts = array_merge($this->borderParts, $this->border->getBorderParts());
-
-		$processedBorderParts = array();
-
-		foreach ($borderParts as $borderPart)
+		foreach ($this->border->getBorderParts() as $borderPart)
 		{
-			foreach ($processedBorderParts as $processedBorderPart)
-			{
-				$borderPart->checkCollisionWith($processedBorderPart);
-			}
-			$processedBorderParts[] = $borderPart;
-
 			$this->borderGrid->addBorderPart($borderPart);
 		}
 
