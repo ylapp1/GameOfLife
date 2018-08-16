@@ -39,8 +39,8 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		$startsAt = $parentBorderShape->rectangle()->topLeftCornerCoordinate();
 		$endsAt = $parentBorderShape->rectangle()->bottomRightCornerCoordinate();
 
-		$width = $endsAt->x() - $startsAt->x();
-		$height = $endsAt->y() - $startsAt->y();
+		$width = $endsAt->x() - $startsAt->x() + 1;
+		$height = $endsAt->y() - $startsAt->y() + 1;
 
 		// Add horizontal border parts
 		for ($y = $startsAt->y() + 1; $y <= $endsAt->y(); $y++)
@@ -58,7 +58,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		{
 			$borderPart = $this->getVerticalBackgroundGridBorderPart(
 				new Coordinate($x, 0),
-				new Coordinate($x, $height + 1),
+				new Coordinate($x, $height),
 				$this->parentBorder
 			);
 			$backgroundGridBorderParts[] = $borderPart;
