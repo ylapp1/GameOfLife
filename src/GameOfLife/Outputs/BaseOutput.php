@@ -8,8 +8,8 @@
 
 namespace Output;
 
+use BoardRenderer\Base\BaseBoardRenderer;
 use GameOfLife\Board;
-use Output\BoardRenderer\Base\BaseBoardRenderer;
 use Ulrichsg\Getopt;
 use Utils\Shell\ShellOutputHelper;
 
