@@ -37,4 +37,14 @@ class NullBorderShape extends BaseBorderShape
 	{
 		return array();
 	}
+
+	public function getBorderWidthInColumn(int $_x): int
+	{
+		return 0;
+	}
+
+	public function getBorderHeightInRow(int $_y): int
+	{
+		return 0;
+	}
 }

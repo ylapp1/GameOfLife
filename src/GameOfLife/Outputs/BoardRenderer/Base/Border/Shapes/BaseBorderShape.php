@@ -58,4 +58,22 @@ abstract class BaseBorderShape
      * @return BaseBorderPart[] The list of border parts
      */
     abstract public function getBorderParts();
+
+	/**
+	 * Calculates and returns the total border width until a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int The total column width of this border shape until that column
+	 */
+    abstract public function getBorderWidthInColumn(int $_x): int;
+
+	/**
+	 * Calculates and returns the total border height until a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The total border height of this border shape until that row
+	 */
+    abstract public function getBorderHeightInRow(int $_y): int;
 }

@@ -81,6 +81,16 @@ abstract class BaseBorder
 		$this->parentBorder = $_parentBorder;
 	}
 
+	/**
+	 * Returns the shape of this border.
+	 *
+	 * @return BaseBorderShape The shape of this border
+	 */
+	public function shape()
+	{
+		return $this->shape;
+	}
+
 
 	// Class Methods
 

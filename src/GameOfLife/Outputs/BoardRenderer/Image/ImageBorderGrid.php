@@ -10,14 +10,7 @@ namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
-use BoardRenderer\Image\Border\BorderPart\ImageBorderPart;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
-use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
-use GameOfLife\Coordinate;
 use Output\Helpers\ImageColor;
 
 /**
@@ -38,46 +31,6 @@ class ImageBorderGrid extends BaseBorderGrid
 	}
 
 	/**
-	 * Returns a horizontal border part for the background grid.
-	 *
-	 * @param Coordinate $_startsAt The start position
-	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The main border
-	 *
-	 * @return BaseBorderPart The horizontal border part
-	 */
-	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
-	{
-		return new ImageBorderPart(
-			$_parentBorder,
-			$_startsAt,
-			$_endsAt,
-			new ImageHorizontalBorderPartShape(),
-			new BorderPartThickness(1, 1)
-		);
-	}
-
-	/**
-	 * Returns a vertical border part for the background grid.
-	 *
-	 * @param Coordinate $_startsAt The start position
-	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The main border
-	 *
-	 * @return BaseBorderPart The vertical border part
-	 */
-	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
-	{
-		return new ImageBorderPart(
-			$_parentBorder,
-			$_startsAt,
-			$_endsAt,
-			new ImageVerticalBorderPartShape(),
-			new BorderPartThickness(1, 1)
-		);
-	}
-
-	/**
 	 * Creates and returns the rendered border grid.
 	 *
 	 * @return resource The rendered border grid
@@ -95,9 +48,10 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			// TODO: Fix this, all borders are shifted away from their original start position
-			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $renderedBorderPart->parentBorderPart()->thickness()->width();
-			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $renderedBorderPart->parentBorderPart()->thickness()->height();
+			$parentBorderShape = $renderedBorderPart->parentBorderPart()->parentBorder()->shape();
+
+			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $parentBorderShape->getBorderWidthInColumn($startX);
+			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $parentBorderShape->getBorderHeightInRow($startY);
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));

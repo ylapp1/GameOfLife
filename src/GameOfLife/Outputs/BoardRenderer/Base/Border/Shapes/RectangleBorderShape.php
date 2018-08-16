@@ -90,4 +90,54 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 * @return BaseBorderPart The right border part of this border shape
 	 */
 	abstract protected function getRightBorderPart();
+
+	/**
+	 * Calculates and returns the total border width until a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int The total column width of this border shape until that column
+	 */
+	public function getBorderWidthInColumn(int $_x): int
+	{
+		$borderWidth = 0;
+
+		// TODO: Fix the way in which thickness is fetched (instead add border shape thickness attribute)
+
+		if ($_x == $this->rectangle->topLeftCornerCoordinate()->x())
+		{
+			$borderWidth += $this->getLeftBorderPart()->thickness()->width();
+		}
+		if ($_x == $this->rectangle->bottomRightCornerCoordinate()->x() + 1)
+		{
+			$borderWidth += $this->getRightBorderPart()->thickness()->width();
+		}
+
+		return $borderWidth;
+	}
+
+	/**
+	 * Calculates and returns the total border height until a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The total border height of this border shape until that row
+	 */
+	public function getBorderHeightInRow(int $_y): int
+	{
+		$borderHeight = 0;
+
+		// TODO: Fix the way in which thickness is fetched (instead add border shape thickness attribute)
+
+		if ($_y == $this->rectangle->topLeftCornerCoordinate()->y())
+		{
+			$borderHeight += $this->getTopBorderPart()->thickness()->height();
+		}
+		if ($_y == $this->rectangle->bottomRightCornerCoordinate()->y() + 1)
+		{
+			$borderHeight += $this->getBottomBorderPart()->thickness()->height();
+		}
+
+		return $borderHeight;
+	}
 }

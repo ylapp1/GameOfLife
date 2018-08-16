@@ -15,7 +15,7 @@ use Output\Helpers\ImageColor;
 /**
  * Renders borders as resources.
  */
-class ImageBorder extends BaseBorder
+abstract class ImageBorder extends BaseBorder
 {
 	// Attributes
 

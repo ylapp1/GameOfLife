@@ -13,7 +13,6 @@ use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use GameOfLife\Board;
-use GameOfLife\Coordinate;
 
 /**
  * Stores the rendered borders and the rendered background grid.
@@ -72,65 +71,6 @@ abstract class BaseBorderGrid
 	{
 		$this->borderParts[] = $_borderPart;
 	}
-
-	/**
-	 * Returns the background grid border parts.
-	 *
-	 * @param Board $_board The board
-	 * @param BaseBorder $_border The border
-	 *
-	 * @return BaseBorderPart[] The background grid border parts
-	 */
-	public function getBackgroundGridBorderParts(Board $_board, $_border): array
-	{
-		$backgroundGridBorderParts = array();
-
-		// Add horizontal border parts
-		for ($y = 1; $y < $_board->height(); $y++)
-		{
-			$borderPart = $this->getHorizontalBackgroundGridBorderPart(
-				new Coordinate(0, $y),
-				new Coordinate($_board->width() - 1, $y),
-				$_border
-			);
-			$backgroundGridBorderParts[] = $borderPart;
-		}
-
-		// Add vertical border parts
-		for ($x = 1; $x < $_board->width(); $x++)
-		{
-			$borderPart = $this->getVerticalBackgroundGridBorderPart(
-				new Coordinate($x, 0),
-				new Coordinate($x, $_board->height() - 1),
-				$_border
-			);
-			$backgroundGridBorderParts[] = $borderPart;
-		}
-
-		return $backgroundGridBorderParts;
-	}
-
-	/**
-	 * Returns a horizontal border part for the background grid.
-	 *
-	 * @param Coordinate $_startsAt The start position
-	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
-	 *
-	 * @return BaseBorderPart The horizontal border part
-	 */
-	abstract protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder);
-
-	/**
-	 * Returns a vertical border part for the background grid.
-	 *
-	 * @param Coordinate $_startsAt The start position
-	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
-	 *
-	 * @return BaseBorderPart The vertical border part
-	 */
-	abstract protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder);
 
 	/**
 	 * Adds a list of border part grid positions to the border positions grid.

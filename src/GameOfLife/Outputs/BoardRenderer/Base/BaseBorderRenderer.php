@@ -57,8 +57,6 @@ abstract class BaseBorderRenderer
 		$this->border = $_border;
 		$this->borderParts = array();
 		$this->borderGrid = $_borderGrid;
-
-		if ($_hasBackgroundGrid) $this->borderParts = $this->borderGrid->getBackgroundGridBorderParts($_board, $_border);
 	}
 
 
