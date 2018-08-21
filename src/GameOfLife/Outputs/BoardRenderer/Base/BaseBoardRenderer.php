@@ -76,6 +76,8 @@ abstract class BaseBoardRenderer
      * Renders a board to the canvas of this board renderer.
      *
      * @param Board $_board The board
+     *
+     * @return mixed The rendered board content
      */
     public function renderBoard(Board $_board)
     {
@@ -90,6 +92,8 @@ abstract class BaseBoardRenderer
         // Render the board fields
 	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());
 	    $this->canvas->addRenderedBoardFields($renderedBoardFields);
+
+	    return $this->canvas->getContent();
     }
 
     /**
