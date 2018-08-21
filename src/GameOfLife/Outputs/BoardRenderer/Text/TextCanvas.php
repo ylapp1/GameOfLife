@@ -8,9 +8,7 @@
 
 namespace BoardRenderer\Text;
 
-use GameOfLife\Coordinate;
 use BoardRenderer\Base\BaseCanvas;
-use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
 
 /**
  * Canvas on which borders and cells can be drawn.
@@ -21,93 +19,49 @@ class TextCanvas extends BaseCanvas
 	// Attributes
 
 	/**
-	 * The border symbol grid
-	 * The grid has two rows per cell symbol row, one for the border above the row and the other for the borders inside the row.
-	 * It also has two columns per cell column, one for the border left and the other for the cell itself.
+	 * The board field symbol rows
 	 *
-	 * @var String[][] $borderSymbolGrid
+	 * @var String[][] $boardFieldSymbolRows
 	 */
-    private $borderSymbolGrid;
-
-	/**
-	 * The board field symbol grid
-	 *
-	 * @var String[][] $boardFieldSymbolGrid
-	 */
-    private $boardFieldSymbolGrid;
+    private $boardFieldSymbolRows;
 
 
     // Magic Methods
 
 	/**
 	 * TextCanvas constructor.
-	 */
-    public function __construct()
-    {
-    	$this->borderSymbolGrid = array();
-    	$this->boardFieldSymbolGrid = array();
-    }
-
-
-    // Getters and Setters
-
-	/**
-	 * Returns the border symbol grid.
 	 *
-	 * @return String[][] The border symbol grid
+	 * @param Bool $_cachesBorderGrid Indicates whether this canvas caches the border grid
 	 */
-	public function borderSymbolGrid(): array
-	{
-		return $this->borderSymbolGrid;
-	}
+    public function __construct(Bool $_cachesBorderGrid = true)
+    {
+    	$this->boardFieldSymbolRows = array();
+    	parent::__construct($_cachesBorderGrid);
+    }
 
 
 	// Class Methods
 
 	/**
 	 * Resets the cached board field symbols.
-	 *
-	 * @param Bool $_resetBorders If true, the cached border symbols will be reset too
 	 */
-	public function reset(Bool $_resetBorders = false)
+	public function reset()
 	{
-		if ($_resetBorders) $this->borderSymbolGrid = array();
-		$this->boardFieldSymbolGrid = array();
+		$this->boardFieldSymbolRows = array();
 	}
 
 	/**
-	 * Adds a rendered border part to the border symbol grid at a specific position.
+	 * Adds the rendered board fields to the canvas.
 	 *
-	 * @param TextRenderedBorderPart $_renderedBorder The rendered border part
-	 * @param Coordinate $_at The start position of the rendered border part
+	 * @param String[][] $_renderedBoardFields The list of rendered board fields
+	 * @param int $_fieldSize The height/width of a single field in symbols
 	 */
-    public function addRenderedBorderAt($_renderedBorder, Coordinate $_at)
-    {
-    	foreach ($_renderedBorder->borderSymbols() as $borderSymbolData)
-	    {
-	    	/** @var Coordinate $borderSymbolPosition */
-	    	$borderSymbolPosition = $borderSymbolData[0];
-	    	$borderSymbol = $borderSymbolData[1];
+	public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize)
+	{
+		$this->boardFieldSymbolRows = $_renderedBoardFields;
 
-	    	$xPosition = $_at->x() * 2 + $borderSymbolPosition->x();
-	    	$yPosition = $_at->y() * 2 + $borderSymbolPosition->y();
-
-	    	if (! isset($this->borderSymbolGrid[$yPosition])) $this->borderSymbolGrid[$yPosition] = array();
-	    	$this->borderSymbolGrid[$yPosition][$xPosition] = $borderSymbol;
-	    }
-    }
-
-	/**
-	 * Adds a rendered board field symbol to the board field symbol grid at a specific position.
-	 *
-	 * @param String $_renderedBoardField The rendered board field
-	 * @param Coordinate $_at The position of the rendered board field
-	 */
-    public function addRenderedBoardFieldAt($_renderedBoardField, Coordinate $_at)
-    {
-    	if (! isset($this->boardFieldSymbolGrid[$_at->y()])) $this->boardFieldSymbolGrid[$_at->y()] = array();
-    	$this->boardFieldSymbolGrid[$_at->y()][$_at->x()] = $_renderedBoardField;
-    }
+		// TODO: Do something with field size
+	}
 
 	/**
 	 * Returns the output string that represents the drawn borders and cell symbols.
@@ -116,85 +70,130 @@ class TextCanvas extends BaseCanvas
 	 */
     public function getContent()
     {
-	    // Find the highest row id
-	    $rowIds = array_merge(array_keys($this->boardFieldSymbolGrid), array_keys($this->borderSymbolGrid));
-	    natsort($rowIds);
-	    $highestRowId = array_pop($rowIds);
+	    $totalGridRows = $this->getTotalGrid();
+	    $totalGridString = "\n";
 
-	    // Find the highest column id
-	    $columnIds = array();
-	    foreach ($this->boardFieldSymbolGrid as $boardFieldSymbolRow)
+	    foreach ($totalGridRows as $totalGridRow)
 	    {
-	    	$columnIds = array_merge($columnIds, array_keys($boardFieldSymbolRow));
+	    	$totalGridString .= implode("", $totalGridRow) . "\n";
 	    }
-	    foreach ($this->borderSymbolGrid as $borderSymbolRow)
-	    {
-	    	$columnIds = array_merge($columnIds, array_keys($borderSymbolRow));
-	    }
-	    natsort($columnIds);
-	    $highestColumnId = array_pop($columnIds);
 
-	    $rowStrings = array();
+	    return $totalGridString;
+    }
+
+	/**
+	 * Generates and returns the total grid from the border and board field symbol grids.
+	 *
+	 * @return String[][] The total grid
+	 */
+    private function getTotalGrid()
+    {
+    	$highestRowId = $this->getHighestRowId();
+	    $highestColumnId = $this->getHighestColumnId();
+
+	    $totalGridRows = array();
 	    for ($y = 0; $y <= $highestRowId; $y++)
 	    {
-		    $borderSymbolRowIndex = $y * 2;
+	    	$borderSymbolRowIndex = $y * 2;
 
 		    // Add borders between rows
-		    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex])) $rowStrings[] = $this->getBorderRowString($borderSymbolRowIndex);
+		    if (isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex])) $totalGridRows[] = $this->cachedRenderedBorderGrid[$borderSymbolRowIndex];
 
 		    // Add cell symbol rows
-		    if (isset($this->boardFieldSymbolGrid[$y])) $rowStrings[] = $this->getCellSymbolRowString($y, $highestColumnId);
-	    }
-
-	    return implode("\n", $rowStrings) . "\n";
-    }
-
-	/**
-	 * Returns the string for a border row.
-	 *
-	 * @param int $_y The Y-Coordinate of the border row
-	 *
-	 * @return String The border row string
-	 */
-    private function getBorderRowString(int $_y): String
-    {
-    	$rowString = implode("", $this->borderSymbolGrid[$_y]);
-	    return $rowString;
-    }
-
-	/**
-	 * Returns the string for a cell symbol row including the vertical borders between the cells.
-	 *
-	 * @param int $_y The Y-Coordinate of the cell symbol row
-	 * @param int $_highestColumnId The highest column id of all rows
-	 *
-	 * @return String The cell symbol row string
-	 */
-    private function getCellSymbolRowString(int $_y, int $_highestColumnId): String
-    {
-	    $borderSymbolRowIndex = $_y * 2 + 1;
-	    $borderSymbolColumnIndex = 0;
-
-	    $cellSymbolRow = $this->boardFieldSymbolGrid[$_y];
-
-	    if (isset($this->borderSymbolGrid[$borderSymbolRowIndex])) $borderSymbolRow = $this->borderSymbolGrid[$borderSymbolRowIndex];
-	    else $borderSymbolRow = null;
-
-	    $rowString = "";
-	    for ($x = 0; $x < $_highestColumnId; $x++)
-	    {
-		    // Add borders between columns
-		    if ($borderSymbolRow && isset($borderSymbolRow[$borderSymbolColumnIndex]))
+		    if (isset($this->boardFieldSymbolRows[$y]) || isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1]))
 		    {
-			    $rowString .= $borderSymbolRow[$borderSymbolColumnIndex];
+		    	$totalGridRow = array();
+
+		    	$boardFieldSymbolRow = array();
+		    	if (isset($this->boardFieldSymbolRows[$y]))
+			    {
+				    $boardFieldSymbolRow = $this->boardFieldSymbolRows[$y];
+			    }
+
+		    	$borderSymbolRow = array();
+		    	if (isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1]))
+			    {
+			    	$borderSymbolRow = $this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1];
+			    }
+
+		    	for ($x = 0; $x <= $highestColumnId; $x++)
+			    {
+			    	$borderSymbolColumnIndex = $x * 2;
+
+				    // Add borders to the left
+				    if (isset($borderSymbolRow[$borderSymbolColumnIndex]))
+				    {
+				    	$totalGridRow[] = $borderSymbolRow[$borderSymbolColumnIndex];
+				    }
+
+				    // Add cell symbol
+				    if (isset($boardFieldSymbolRow[$x])) $totalGridRow[] = $boardFieldSymbolRow[$x];
+				    else $totalGridRow[] = " ";
+			    }
+
+			    $totalGridRows[] = $totalGridRow;
 		    }
-
-		    // Add the cell symbol
-		    if (isset($cellSymbolRow[$x])) $rowString .= $cellSymbolRow[$x];
-
-		    $borderSymbolColumnIndex += 2;
 	    }
 
-	    return $rowString;
+	    return $totalGridRows;
+    }
+
+	/**
+	 * Returns the highest row id from the board field and border grids.
+	 *
+	 * @return mixed|null The highest row id or null if there are no rows
+	 */
+    private function getHighestRowId()
+    {
+	    // Find the highest board field row id
+	    $boardFieldRowIds = array_keys($this->boardFieldSymbolRows);
+	    natsort($boardFieldRowIds);
+	    $highestBoardFieldRowId = array_pop($boardFieldRowIds);
+
+	    // TODO: Does this work??
+	    $highestBorderSymbolRowId = $this->borderGrid->getHighestRowId();
+
+	    $highestRowId = null;
+	    if ($highestBoardFieldRowId) $highestRowId = $highestBoardFieldRowId;
+	    if ($highestBorderSymbolRowId)
+	    {
+	    	if (! $highestRowId || $highestBorderSymbolRowId > $highestRowId)
+		    {
+		    	$highestRowId = $highestBorderSymbolRowId;
+		    }
+	    }
+
+	    return $highestRowId;
+    }
+
+	/**
+	 * Returns the highest column id from the board field and border grids.
+	 *
+	 * @return mixed|null The highest column id or null if there are no columns
+	 */
+    private function getHighestColumnId()
+    {
+	    $columnIds = array();
+	    foreach ($this->boardFieldSymbolRows as $boardFieldSymbolRow)
+	    {
+		    $columnIds = array_merge($columnIds, array_keys($boardFieldSymbolRow));
+	    }
+	    natsort($columnIds);
+	    $highestBoardFieldColumnId = array_pop($columnIds);
+
+	    // TODO: Does this work??
+	    $highestBorderSymbolColumnId = $this->borderGrid->getHighestColumnId();
+
+	    $highestColumnId = null;
+	    if ($highestBoardFieldColumnId) $highestColumnId = $highestBoardFieldColumnId;
+	    if ($highestBorderSymbolColumnId)
+	    {
+		    if (! $highestColumnId || $highestBorderSymbolColumnId > $highestColumnId)
+		    {
+			    $highestColumnId = $highestBorderSymbolColumnId;
+		    }
+	    }
+
+	    return $highestColumnId;
     }
 }

@@ -62,10 +62,13 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 	/**
 	 * Creates and returns the rendered parent border part.
 	 *
+	 * @param int $_fieldSize The field size in symbols
+	 *
 	 * @return TextRenderedBorderPart The rendered parent border part
 	 */
-    public function getRawRenderedBorderPart()
+    public function getRawRenderedBorderPart(int $_fieldSize)
     {
+    	// TODO: Do something with field size
         $borderSymbols = $this->parentBorderPart->getBorderSymbols();
 
 	    // Using unset instead of array_shift here because array_shift changes the indexes of the array

@@ -51,7 +51,7 @@ abstract class BaseBorder
 	 * @param BaseBorder $_parentBorder The parent border of this border
      * @param BaseBorderShape $_shape The shape of this border
 	 */
-	protected function __construct(BaseBorder $_parentBorder = null, $_shape)
+	public function __construct(BaseBorder $_parentBorder = null, $_shape)
 	{
 		$this->innerBorders = array();
 		$this->parentBorder = $_parentBorder;

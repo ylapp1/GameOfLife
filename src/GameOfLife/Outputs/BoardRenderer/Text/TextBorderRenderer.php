@@ -8,102 +8,35 @@
 
 namespace BoardRenderer\Text;
 
-use GameOfLife\Coordinate;
-use BoardRenderer\Base\BaseBorderRenderer;
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\TextBackgroundGridBorder;
+use GameOfLife\Board;
+use BoardRenderer\Base\BaseBorderRenderer;
 
 /**
  * Renders a border and its inner borders and adds them to a canvas.
  */
 class TextBorderRenderer extends BaseBorderRenderer
 {
+	// Magic Methods
+
 	/**
-	 * Renders a border and adds it to a canvas.
+	 * ImageBorderRenderer constructor.
 	 *
+	 * @param Board $_board The board for which the border will be rendered
 	 * @param BaseBorder $_border The border
-	 * @param TextCanvas $_canvas The canvas
+	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
 	 */
-	public function renderBorder($_border, $_canvas)
+	public function __construct(Board $_board, BaseBorder $_border, Bool $_hasBackgroundGrid = true)
 	{
-		parent::renderBorder($_border, $_canvas);
-		$this->autoCompleteBorderSymbolGrid($_canvas->borderSymbolGrid(), $_border);
-	}
+		$borderGrid = new TextBorderGrid($_board);
 
-	/**
-	 * Fills the gaps in the border symbol grid that exist because of vertical borders.
-	 *
-	 * @param String[][] $_borderSymbolGrid The border symbol grid
-	 * @param BaseBorder $_border The border
-	 */
-	private function autoCompleteBorderSymbolGrid(array $_borderSymbolGrid, $_border)
-	{
-		// Find the lowest and highest column ids
-		$columnIds = array();
-		foreach ($_borderSymbolGrid as $borderSymbolRow)
+		if ($_hasBackgroundGrid)
 		{
-			$columnIds = array_merge($columnIds, array_keys($borderSymbolRow));
-		}
-		natsort($columnIds);
-		$lowestColumnId = array_shift($columnIds);
-		$highestColumnId = array_pop($columnIds);
-
-		for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
-		{
-			// TODO: Fix this, determine which stuff is outer border
-			$columnContainsBorderSymbol = $this->columnContainsBorderSymbol($_borderSymbolGrid, $x);
-			$isBorderColumn = ($x % 2 == 0);
-
-			if ($isBorderColumn && ! $columnContainsBorderSymbol) continue;
-
-
-			$borderSymbol = " ";
-
-			if ($isBorderColumn) $borderCollisionCheckCoordinateX = $x / 2;
-			else $borderCollisionCheckCoordinateX = ($x - 1) / 2;
-
-			foreach ($_borderSymbolGrid as $y => $borderSymbolRow)
-			{
-				$isBorderRow = ($y % 2 == 0);
-
-				if ($isBorderRow)
-				{
-					$borderCollisionCheckCoordinate = new Coordinate($borderCollisionCheckCoordinateX, $y);
-
-					/** @var TextBorderPart $borderPart */
-					foreach ($_border->getBorderParts() as $borderPart)
-					{
-						if ($borderPart->containsCoordinate($borderCollisionCheckCoordinate))
-						{
-							$borderSymbol = $borderPart->borderSymbolDefinition()->centerSymbol();
-							break;
-						}
-					}
-
-
-					$_borderSymbolGrid[$y][$x] = $borderSymbol;
-				}
-
-				ksort($_borderSymbolGrid[$y]);
-			}
-		}
-	}
-
-	/**
-	 * Returns whether a specific column contains any border symbols.
-	 *
-	 * @param String[][] $_borderSymbolGrid The border symbol grid
-	 * @param int $_x The X-Position of the column
-	 *
-	 * @return Bool True if the column contains a border symbol, false otherwise
-	 */
-	private function columnContainsBorderSymbol(array $_borderSymbolGrid, int $_x): Bool
-	{
-		foreach ($_borderSymbolGrid as $y => $borderSymbolRow)
-		{
-			if (isset($borderSymbolRow[$_x])) return true;
+			$backgroundGridBorder = new TextBackgroundGridBorder($_border);
+			$_border->addInnerBorder($backgroundGridBorder);
 		}
 
-		return false;
+		parent::__construct($_board, $_border, $borderGrid, $_hasBackgroundGrid);
 	}
 }
