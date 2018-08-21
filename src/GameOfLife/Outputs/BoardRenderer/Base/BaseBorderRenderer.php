@@ -9,7 +9,6 @@
 namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Image\Border\ImageBorder;
 use GameOfLife\Board;
 

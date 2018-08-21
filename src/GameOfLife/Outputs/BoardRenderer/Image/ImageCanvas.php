@@ -24,28 +24,6 @@ class ImageCanvas extends BaseCanvas
 	 */
 	private $image;
 
-	/**
-	 * The field size in pixels
-	 *
-	 * @var int $fieldSize
-	 */
-	private $fieldSize;
-
-
-	// Magic Methods
-
-	/**
-	 * ImageCanvas constructor.
-	 *
-	 * @param Bool $_cachesBorderGrid Indicates whether this canvas caches the rendered border grid
-	 * @param int $_fieldSize The field size in pixels
-	 */
-	public function __construct(Bool $_cachesBorderGrid = false, int $_fieldSize)
-	{
-		parent::__construct($_cachesBorderGrid);
-		$this->fieldSize = $_fieldSize;
-	}
-
 
 	// Class Methods
 
@@ -61,8 +39,9 @@ class ImageCanvas extends BaseCanvas
 	 * Adds the rendered board fields to the total image.
 	 *
 	 * @param resource[][] $_renderedBoardFields The list of rendered board fields
+	 * @param int $_fieldSize The height/width of a single field in pixels
 	 */
-	public function addRenderedBoardFields(array $_renderedBoardFields)
+	public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize)
 	{
 		$renderedBorderGridWidth = imagesx($this->cachedRenderedBorderGrid);
 		$renderedBorderGridHeight = imagesy($this->cachedRenderedBorderGrid);
@@ -77,12 +56,12 @@ class ImageCanvas extends BaseCanvas
 				$imageWidth = imagesx($renderedBoardField);
 				$imageHeight = imagesy($renderedBoardField);
 
-				$fieldStartX = $x * $this->fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
-				$fieldStartY = $y * $this->fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
+				$fieldStartX = $x * $_fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
+				$fieldStartY = $y * $_fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
 
 				// Center the cell image
-				$cellStartX = $fieldStartX + ($this->fieldSize - $imageWidth) / 2;
-				$cellStartY = $fieldStartY + ($this->fieldSize - $imageHeight) / 2;
+				$cellStartX = $fieldStartX + ($_fieldSize - $imageWidth) / 2;
+				$cellStartY = $fieldStartY + ($_fieldSize - $imageHeight) / 2;
 
 				imagecopy($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight);
 			}

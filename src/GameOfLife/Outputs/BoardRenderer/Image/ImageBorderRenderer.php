@@ -25,20 +25,15 @@ class ImageBorderRenderer extends BaseBorderRenderer
 	 * @param Board $_board The board for which the border will be rendered
 	 * @param ImageBorder $_border The border
 	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
-	 * @param int $_fieldSize The height and width of a single field
 	 * @param ImageColor $_backgroundColor The background color
 	 */
-	public function __construct(Board $_board, ImageBorder $_border, Bool $_hasBackgroundGrid = true, int $_fieldSize, ImageColor $_backgroundColor)
+	public function __construct(Board $_board, ImageBorder $_border, Bool $_hasBackgroundGrid = true, ImageColor $_backgroundColor)
 	{
-		$borderGrid = new ImageBorderGrid(
-			$_board,
-			$_fieldSize,
-			$_backgroundColor
-		);
+		$borderGrid = new ImageBorderGrid($_board, $_backgroundColor);
 
 		if ($_hasBackgroundGrid)
 		{
-			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->color(), $_fieldSize);
+			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->color());
 			$_border->addInnerBorder($backgroundGridBorder);
 		}
 

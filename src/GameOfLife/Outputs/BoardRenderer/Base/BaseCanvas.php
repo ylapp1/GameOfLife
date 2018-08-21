@@ -72,13 +72,14 @@ abstract class BaseCanvas
      * Adds the rendered border grid to the canvas.
      *
      * @param BaseBorderGrid $_borderGrid The border grid
+     * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
      */
-    public function addBorderGrid($_borderGrid)
+    public function addBorderGrid($_borderGrid, int $_fieldSize)
     {
 	    if (! $this->cachedRenderedBorderGrid || ! $this->cachesBorderGrid)
 	    {
 		    $this->borderGrid = $_borderGrid;
-		    $this->cachedRenderedBorderGrid = $_borderGrid->renderBorderGrid();
+		    $this->cachedRenderedBorderGrid = $_borderGrid->renderBorderGrid($_fieldSize);
 	    }
     }
 
@@ -86,8 +87,9 @@ abstract class BaseCanvas
      * Adds the rendered board fields to the canvas.
      *
      * @param mixed[][] $_renderedBoardFields The list of rendered board fields
+     * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
      */
-    abstract public function addRenderedBoardFields(array $_renderedBoardFields);
+    abstract public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize);
 
     /**
      * Returns the content of the canvas.

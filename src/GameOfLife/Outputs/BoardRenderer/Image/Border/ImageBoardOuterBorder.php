@@ -27,9 +27,8 @@ class ImageBoardOuterBorder extends ImageBorder
 	 *
 	 * @param Board $_board The board for which the outer border will be created
 	 * @param ImageColor $_gridColor The color of the grid (and the borders)
-	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(Board $_board, ImageColor $_gridColor, int $_fieldSize)
+	public function __construct(Board $_board, ImageColor $_gridColor)
 	{
 		$topLeftCornerCoordinate = new Coordinate(0, 0);
 		$bottomRightCornerCoordinate = new Coordinate($_board->width() - 1, $_board->height() - 1);
@@ -43,7 +42,6 @@ class ImageBoardOuterBorder extends ImageBorder
 				new BorderPartThickness(1, 15),
 				new BorderPartThickness(15, 1)
 			),
-			$_fieldSize,
 			$_gridColor
 		);
 	}

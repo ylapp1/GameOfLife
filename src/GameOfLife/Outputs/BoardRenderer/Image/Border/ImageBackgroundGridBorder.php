@@ -23,14 +23,12 @@ class ImageBackgroundGridBorder extends ImageBorder
 	 *
 	 * @param ImageBorder $_parentBorder The parent border in which the background grid will be created
 	 * @param ImageColor $_gridColor The color of the grid (and the borders)
-	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(ImageBorder $_parentBorder, ImageColor $_gridColor, int $_fieldSize)
+	public function __construct(ImageBorder $_parentBorder, ImageColor $_gridColor)
 	{
 		parent::__construct(
 			$_parentBorder,
 			new ImageGridBorderShape($this),
-			$_fieldSize,
 			$_gridColor
 		);
 	}

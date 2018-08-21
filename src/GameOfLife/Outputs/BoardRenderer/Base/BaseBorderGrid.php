@@ -49,13 +49,6 @@ abstract class BaseBorderGrid
 	 */
 	protected $board;
 
-	/**
-	 * The height/width of a single field
-	 *
-	 * @var int $fieldSize
-	 */
-	protected $fieldSize;
-
 
 	// Magic Methods
 
@@ -63,12 +56,10 @@ abstract class BaseBorderGrid
 	 * BaseBorderGrid constructor.
 	 *
 	 * @param Board $_board The board for which the border grid is created
-	 * @param int $_fieldSize The height/width of a single field
 	 */
-	public function __construct(Board $_board, int $_fieldSize)
+	public function __construct(Board $_board)
 	{
 		$this->board = $_board;
-		$this->fieldSize = $_fieldSize;
 		$this->borderParts = array();
 		$this->borderPositionsGrid = array();
 		$this->renderedBorderParts = array();
@@ -127,21 +118,25 @@ abstract class BaseBorderGrid
 	/**
 	 * Creates and returns a rendered border grid from the currently added rendered border parts.
 	 *
+	 * @param int $_fieldSize The field size in pixels/symbols/etc
+	 *
 	 * @return mixed The rendered border grid
 	 */
-	abstract public function renderBorderGrid();
+	abstract public function renderBorderGrid(int $_fieldSize);
 
 	/**
 	 * Renders all border parts.
 	 * Must be called in renderBorderGrid() implementations.
+	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
 	 */
-	protected function renderBorderParts()
+	protected function renderBorderParts(int $_fieldSize)
 	{
 		if (! $this->renderedBorderParts)
 		{
 			foreach ($this->borderParts as $borderPart)
 			{
-				$renderedBorderPart = $borderPart->getRenderedBorderPart();
+				$renderedBorderPart = $borderPart->getRenderedBorderPart($_fieldSize);
 
 				$this->renderedBorderParts[] = $renderedBorderPart;
 				$this->updateBorderPositionsGrid($renderedBorderPart);

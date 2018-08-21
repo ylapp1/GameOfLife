@@ -48,12 +48,14 @@ abstract class BaseBorderPartShape
 	/**
 	 * Builds and returns a rendered border part of the parent border part.
 	 *
+	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 *
 	 * @return RenderedBorderPart The rendered border part
 	 */
-	public function getRenderedBorderPart(): RenderedBorderPart
+	public function getRenderedBorderPart(int $_fieldSize): RenderedBorderPart
 	{
 		return new RenderedBorderPart(
-			$this->getRawRenderedBorderPart(),
+			$this->getRawRenderedBorderPart($_fieldSize),
 			$this->getBorderPartGridPositions(),
 			$this->parentBorderPart
 		);
@@ -62,9 +64,11 @@ abstract class BaseBorderPartShape
 	/**
 	 * Creates and returns the rendered parent border part.
 	 *
+	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 *
 	 * @return mixed The rendered parent border part
 	 */
-    abstract protected function getRawRenderedBorderPart();
+    abstract protected function getRawRenderedBorderPart(int $_fieldSize);
 
 	/**
 	 * Calculates and returns the border part grid positions.

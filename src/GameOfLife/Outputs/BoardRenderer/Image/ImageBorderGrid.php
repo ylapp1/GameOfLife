@@ -33,12 +33,11 @@ class ImageBorderGrid extends BaseBorderGrid
 	 * ImageBorderGrid constructor.
 	 *
 	 * @param Board $_board The board for which the border grid is created
-	 * @param int $_fieldSize The height/width of a single field
 	 * @param ImageColor $_backgroundColor The background color of the border grid
 	 */
-	public function __construct(Board $_board, int $_fieldSize, ImageColor $_backgroundColor)
+	public function __construct(Board $_board, ImageColor $_backgroundColor)
 	{
-		parent::__construct($_board, $_fieldSize);
+		parent::__construct($_board);
 		$this->backgroundColor = $_backgroundColor;
 	}
 
@@ -48,14 +47,16 @@ class ImageBorderGrid extends BaseBorderGrid
 	/**
 	 * Creates and returns the rendered border grid.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels
+	 *
 	 * @return resource The rendered border grid
 	 */
-	public function renderBorderGrid()
+	public function renderBorderGrid(int $_fieldSize)
 	{
-		$this->renderBorderParts();
+		$this->renderBorderParts($_fieldSize);
 
 		// Create the background image
-		$image = $this->initializeImage();
+		$image = $this->initializeImage($_fieldSize);
 
 		// Render the border parts
 		foreach ($this->renderedBorderParts as $renderedBorderPart)
@@ -63,8 +64,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $this->getMaximumBorderWidthInColumn($startX);
-			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $this->getMaximumBorderHeightInRow($startY);
+			$imageStartX = $startX * $_fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $this->getMaximumBorderWidthInColumn($startX);
+			$imageStartY = $startY * $_fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $this->getMaximumBorderHeightInRow($startY);
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));
@@ -76,12 +77,14 @@ class ImageBorderGrid extends BaseBorderGrid
 	/**
 	 * Initializes the background image of the border grid.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels
+	 *
 	 * @return resource The background image
 	 */
-	private function initializeImage()
+	private function initializeImage(int $_fieldSize)
 	{
-		$imageWidth = $this->board->width() * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($this->getHighestColumnId());
-		$imageHeight = $this->board->height() * $this->fieldSize + $this->getTotalBorderHeightUntilRow($this->getHighestRowId());
+		$imageWidth = $this->board->width() * $_fieldSize + $this->getTotalBorderWidthUntilColumn($this->getHighestColumnId());
+		$imageHeight = $this->board->height() * $_fieldSize + $this->getTotalBorderHeightUntilRow($this->getHighestRowId());
 
 		$image = imagecreate($imageWidth, $imageHeight);
 		imagefill($image, 0, 0, $this->backgroundColor->getColor($image));

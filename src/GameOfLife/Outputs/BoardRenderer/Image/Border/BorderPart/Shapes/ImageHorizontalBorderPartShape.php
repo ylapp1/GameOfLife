@@ -21,9 +21,11 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 	/**
 	 * Creates and returns the rendered parent border part image.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels
+	 *
 	 * @return resource The rendered parent border part image
 	 */
-	protected function getRawRenderedBorderPart()
+	protected function getRawRenderedBorderPart(int $_fieldSize)
 	{
 		$xEnd = $this->parentBorderPart->endsAt()->x();
 		$maximumAllowedXCoordinate = $this->parentBorderPart->parentBorder()->shape()->getMaximumAllowedXCoordinate($this->parentBorderPart->startsAt()->y());
@@ -33,8 +35,6 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorder();
-
-		$fieldSize = $parentBorder->fieldSize();
 		$thickness = $this->parentBorderPart->thickness();
 
 		$additionalPixels = 0;
@@ -43,7 +43,7 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 			$additionalPixels += $collisionThickness->width();
 		}
 
-		$imageWidth = $borderPartWidth * $fieldSize * $thickness->width() + $additionalPixels;
+		$imageWidth = $borderPartWidth * $_fieldSize * $thickness->width() + $additionalPixels;
 		$imageHeight = $thickness->height();
 
 		$image = imagecreate($imageWidth, $imageHeight);

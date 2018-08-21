@@ -35,11 +35,10 @@ abstract class ImageBorder extends BaseBorder
 	 * @param ImageBorder|null $_parentBorder The parent border
 	 * @param BaseBorderShape $_shape The border shape
 	 * @param ImageColor $_gridColor The grid color (and border color)
-	 * @param int $_fieldSize The height and width of each field
 	 */
-	public function __construct(ImageBorder $_parentBorder = null, BaseBorderShape $_shape, int $_fieldSize, ImageColor $_gridColor)
+	public function __construct(ImageBorder $_parentBorder = null, BaseBorderShape $_shape, ImageColor $_gridColor)
 	{
-		parent::__construct($_parentBorder, $_shape, $_fieldSize);
+		parent::__construct($_parentBorder, $_shape);
 		$this->color = $_gridColor;
 	}
 

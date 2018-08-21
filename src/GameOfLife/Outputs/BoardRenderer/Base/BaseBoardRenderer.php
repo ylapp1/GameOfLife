@@ -49,6 +49,13 @@ abstract class BaseBoardRenderer
      */
     protected $canvas;
 
+	/**
+	 * The height/width of a single field
+	 *
+	 * @var int $fieldSize
+	 */
+	protected $fieldSize;
+
 
     // Magic Methods
 
@@ -59,14 +66,16 @@ abstract class BaseBoardRenderer
      * @param BaseBorderRenderer $_borderRenderer The border renderer
      * @param BaseBoardFieldRenderer $_boardFieldRenderer The board field renderer
      * @param BaseCanvas $_canvas The canvas
+     * @param int $_fieldSize The height/width of a field in pixels/symbols/etc
      */
-    protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas)
+    protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas, int $_fieldSize = 1)
     {
 	    // TODO: Move this class to BoardRenderer folder
         $this->border = $_border;
         $this->borderRenderer = $_borderRenderer;
         $this->boardFieldRenderer = $_boardFieldRenderer;
         $this->canvas = $_canvas;
+        $this->fieldSize = $_fieldSize;
     }
 
 
@@ -86,12 +95,12 @@ abstract class BaseBoardRenderer
         // Render the borders
 	    if (! $this->canvas->hasCachedBorderGrid())
 	    {
-	    	$this->canvas->addBorderGrid($this->borderRenderer->getBorderGrid());
+	    	$this->canvas->addBorderGrid($this->borderRenderer->getBorderGrid(), $this->fieldSize);
 	    }
 
         // Render the board fields
 	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());
-	    $this->canvas->addRenderedBoardFields($renderedBoardFields);
+	    $this->canvas->addRenderedBoardFields($renderedBoardFields, $this->fieldSize);
 
 	    return $this->canvas->getContent();
     }

@@ -21,9 +21,11 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 	/**
 	 * Creates and returns the rendered parent border part image.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels
+	 *
 	 * @return resource The rendered parent border part image
 	 */
-	protected function getRawRenderedBorderPart()
+	protected function getRawRenderedBorderPart(int $_fieldSize)
 	{
 		$yEnd = $this->parentBorderPart->endsAt()->y();
 		$maximumAllowedYCoordinate = $this->parentBorderPart->parentBorder()->shape()->getMaximumAllowedYCoordinate($this->parentBorderPart->startsAt()->x());
@@ -33,8 +35,6 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorder();
-
-		$fieldSize = $parentBorder->fieldSize();
 		$thickness = $this->parentBorderPart->thickness();
 
 		$additionalPixels = 0;
@@ -44,7 +44,7 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 		}
 
 		$imageWidth = $thickness->width();
-		$imageHeight = $borderPartHeight * $fieldSize * $thickness->height() + $additionalPixels;
+		$imageHeight = $borderPartHeight * $_fieldSize * $thickness->height() + $additionalPixels;
 
 		$image = imagecreate($imageWidth, $imageHeight);
 		imagefill($image, 0, 0, $parentBorder->color()->getColor($image));

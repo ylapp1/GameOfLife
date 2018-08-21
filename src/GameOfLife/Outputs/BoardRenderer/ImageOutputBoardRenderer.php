@@ -36,13 +36,14 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 	 */
 	public function __construct(Board $_board, Bool $_hasBackgroundGrid, int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_foregroundColor, ImageColor $_gridColor)
 	{
-		$mainBorder = new ImageBoardOuterBorder($_board, $_gridColor, $_fieldSize);
+		$mainBorder = new ImageBoardOuterBorder($_board, $_gridColor);
 
 		parent::__construct(
 			$mainBorder,
-			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid, $_fieldSize, $_backgroundColor),
+			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid, $_backgroundColor),
 			$this->initializeBoardFieldRenderer($_fieldSize, $_backgroundColor, $_foregroundColor),
-			new ImageCanvas(true, $_fieldSize)
+			new ImageCanvas(),
+			$_fieldSize
 		);
 	}
 

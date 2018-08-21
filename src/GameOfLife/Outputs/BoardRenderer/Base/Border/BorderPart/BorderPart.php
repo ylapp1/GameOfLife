@@ -157,11 +157,13 @@ class BorderPart
 	/**
 	 * Creates and returns the rendered border part.
 	 *
+	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 *
 	 * @return RenderedBorderPart The rendered border part
 	 */
-	public function getRenderedBorderPart()
+	public function getRenderedBorderPart(int $_fieldSize)
     {
-    	return $this->shape->getRenderedBorderPart();
+    	return $this->shape->getRenderedBorderPart($_fieldSize);
     }
 
 	/**

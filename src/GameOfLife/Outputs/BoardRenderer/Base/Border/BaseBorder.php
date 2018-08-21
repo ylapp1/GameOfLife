@@ -42,13 +42,6 @@ abstract class BaseBorder
 	 */
 	protected $shape;
 
-	/**
-	 * The height/width of a single field in pixels/symbols/etc.
-	 *
-	 * @var int $fieldSize
-	 */
-	protected $fieldSize;
-
 
 	// Magic Methods
 
@@ -57,14 +50,12 @@ abstract class BaseBorder
 	 *
 	 * @param BaseBorder $_parentBorder The parent border of this border
      * @param BaseBorderShape $_shape The shape of this border
-	 * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc.
 	 */
-	protected function __construct(BaseBorder $_parentBorder = null, $_shape, int $_fieldSize = 1)
+	protected function __construct(BaseBorder $_parentBorder = null, $_shape)
 	{
 		$this->innerBorders = array();
 		$this->parentBorder = $_parentBorder;
 		$this->shape = $_shape;
-		$this->fieldSize = $_fieldSize;
 	}
 
 
@@ -98,16 +89,6 @@ abstract class BaseBorder
 	public function shape()
 	{
 		return $this->shape;
-	}
-
-	/**
-	 * Returns the height and width of each field.
-	 *
-	 * @return int The height and width of each field
-	 */
-	public function fieldSize(): int
-	{
-		return $this->fieldSize;
 	}
 
 
