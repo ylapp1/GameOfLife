@@ -63,10 +63,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			$parentBorderShape = $renderedBorderPart->parentBorderPart()->parentBorder()->shape();
-
-			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $parentBorderShape->getBorderWidthInColumn($startX);
-			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $parentBorderShape->getBorderHeightInRow($startY);
+			$imageStartX = $startX * $this->fieldSize + $this->getTotalBorderWidthUntilColumn($startX) - $this->getMaximumBorderWidthInColumn($startX);
+			$imageStartY = $startY * $this->fieldSize + $this->getTotalBorderHeightUntilRow($startY) - $this->getMaximumBorderHeightInRow($startY);
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));
