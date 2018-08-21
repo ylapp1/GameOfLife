@@ -8,8 +8,6 @@
 
 namespace BoardRenderer\Text;
 
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
 use BoardRenderer\Base\BaseBoardFieldRenderer;
 
 /**
@@ -27,23 +25,8 @@ class TextBoardFieldRenderer extends BaseBoardFieldRenderer
      * @param String $_cellAliveSymbol The symbol that is used to print a living cell
      * @param String $_cellDeadSymbol The symbol that is used to print a dead cell
      */
-    public function __construct(String $_cellAliveSymbol, String $_cellDeadSymbol)
+    public function __construct(String $_cellAliveSymbol = null, String $_cellDeadSymbol = null)
     {
     	parent::__construct($_cellAliveSymbol, $_cellDeadSymbol);
-    }
-
-
-    // Class Methods
-
-    /**
-     * Calculates and returns the position of the board field on the canvas.
-     *
-     * @param Field $_field The field
-     *
-     * @return Coordinate The position of the board field on the canvas
-     */
-    protected function getBoardFieldCanvasPosition(Field $_field): Coordinate
-    {
-        return $_field->coordinate();
     }
 }

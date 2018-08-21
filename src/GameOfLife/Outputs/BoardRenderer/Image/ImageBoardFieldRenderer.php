@@ -9,28 +9,22 @@
 namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseBoardFieldRenderer;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
 
 /**
  * Renders the board fields for images.
  */
 class ImageBoardFieldRenderer extends BaseBoardFieldRenderer
 {
-	// Class Methods
+	// Magic Methods
 
 	/**
-	 * Calculates and returns the position of the board field on the canvas.
+	 * BaseBoardFieldRenderer constructor.
 	 *
-	 * @param Field $_field The field
-	 *
-	 * @return Coordinate The position of the board field on the canvas
+	 * @param resource $_renderedCellAlive The rendered cell for alive cells
+	 * @param resource $_renderedCellDead The rendered cell for dead cells
 	 */
-	public function getBoardFieldCanvasPosition(Field $_field): Coordinate
+	public function __construct($_renderedCellAlive = null, $_renderedCellDead = null)
 	{
-		return new Coordinate(
-			$_field->coordinate()->x(),
-			$_field->coordinate()->y()
-		);
+		parent::__construct($_renderedCellAlive, $_renderedCellDead);
 	}
 }

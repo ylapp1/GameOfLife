@@ -71,8 +71,7 @@ abstract class BaseBoardFieldRenderer
 
                 if ($renderedField)
                 {
-	                $renderedFieldPosition = $this->getBoardFieldCanvasPosition($boardField);
-	                $renderedBoardFields[$renderedFieldPosition->y()][$renderedFieldPosition->x()] = $renderedField;
+	                $renderedBoardFields[$boardField->coordinate()->y()][$boardField->coordinate()->x()] = $renderedField;
                 }
             }
         }
@@ -92,13 +91,4 @@ abstract class BaseBoardFieldRenderer
     	if ($_field->isAlive()) return $this->renderedCellAlive;
     	else return $this->renderedCellDead;
     }
-
-    /**
-     * Calculates and returns the position of the board field on the canvas.
-     *
-     * @param Field $_field The field
-     *
-     * @return Coordinate The position of the board field on the canvas
-     */
-    abstract protected function getBoardFieldCanvasPosition(Field $_field): Coordinate;
 }
