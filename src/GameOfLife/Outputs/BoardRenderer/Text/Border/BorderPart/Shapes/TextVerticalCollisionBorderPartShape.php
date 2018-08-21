@@ -11,7 +11,7 @@ namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseVerticalBorderPartShape;
 use GameOfLife\Coordinate;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
 
 /**
  * Shape for vertical text border parts.
@@ -62,7 +62,7 @@ class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape i
 	 * Creates and returns the rendered parent border part.
 	 *
 	 * @param int $_fieldSize The field size in symbols
-	 * @return TextRenderedBorderPart The rendered parent border part
+	 * @return TextRawRenderedBorderPart The rendered parent border part
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
     {
@@ -75,7 +75,7 @@ class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape i
 	    $borderSymbolEnd = array_pop($borderSymbols);
 
 	    // Create the rendered border part
-	    $renderedBorderPart = new TextRenderedBorderPart();
+	    $renderedBorderPart = new TextRawRenderedBorderPart();
 
 	    $renderedBorderPart->addBorderSymbol($borderSymbolStart, new Coordinate(0, 0), false, false);
 	    foreach ($borderSymbols as $y => $borderSymbol)

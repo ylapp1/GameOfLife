@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
 use GameOfLife\Coordinate;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use BoardRenderer\Text\Border\BorderPart\TextRenderedBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
 
 /**
  * Shape for horizontal text border parts.
@@ -64,20 +64,20 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 	 *
 	 * @param int $_fieldSize The field size in symbols
 	 *
-	 * @return TextRenderedBorderPart The rendered parent border part
+	 * @return TextRawRenderedBorderPart The rendered parent border part
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
     {
     	// TODO: Do something with field size
-        $borderSymbols = $this->parentBorderPart->getBorderSymbols();
+	    $borderSymbols = $this->parentBorderPart->getBorderSymbols();
 
 	    // Using unset instead of array_shift here because array_shift changes the indexes of the array
 	    $borderSymbolStart = $borderSymbols[0];
-        unset($borderSymbols[0]);
-        $borderSymbolEnd = array_pop($borderSymbols);
+	    unset($borderSymbols[0]);
+	    $borderSymbolEnd = array_pop($borderSymbols);
 
 	    // Create the rendered border part
-	    $renderedBorderPart = new TextRenderedBorderPart();
+	    $renderedBorderPart = new TextRawRenderedBorderPart();
 
 	    $renderedBorderPart->addBorderSymbol($borderSymbolStart, new Coordinate(0, 0), false, false);
 	    foreach ($borderSymbols as $x => $borderSymbol)

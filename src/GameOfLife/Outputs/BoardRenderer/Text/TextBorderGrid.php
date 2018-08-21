@@ -10,6 +10,7 @@ namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
 
 /**
  * Border grid for the TextBoardRenderer classes.
@@ -49,16 +50,15 @@ class TextBorderGrid extends BaseBorderGrid
 	 */
 	public function addRenderedBorderPart($_renderedBorder)
 	{
-		$borderSymbols = $_renderedBorder->rawRenderedBorderPart()->borderSymbols();
+		/** @var TextRawRenderedBorderPart $rawRenderedBorderPart */
+		$rawRenderedBorderPart = $_renderedBorder->rawRenderedBorderPart();
+		$borderSymbols = $rawRenderedBorderPart->borderSymbols();
+		$borderSymbolPositions = $rawRenderedBorderPart->borderSymbolPositions();
 
-		// TODO: This won't work
-		foreach ($_renderedBorder->borderPartGridPositions() as $symbolId => $borderPartGridPosition)
+		foreach ($borderSymbolPositions as $symbolId => $at)
 		{
-			$xPosition = $borderPartGridPosition->x() * 2;
-			$yPosition = $borderPartGridPosition->y() * 2;
-
-			if (! isset($this->borderSymbolGrid[$yPosition])) $this->borderSymbolGrid[$yPosition] = array();
-			$this->borderSymbolGrid[$yPosition][$xPosition] = $borderSymbols[$symbolId];
+			if (! isset($this->borderSymbolGrid[$at->y()])) $this->borderSymbolGrid[$at->y()] = array();
+			$this->borderSymbolGrid[$at->y()][$at->x()] = $borderSymbols[$symbolId];
 		}
 	}
 

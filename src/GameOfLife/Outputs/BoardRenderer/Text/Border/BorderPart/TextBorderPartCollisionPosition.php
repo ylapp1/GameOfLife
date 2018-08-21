@@ -59,7 +59,7 @@ class TextBorderPartCollisionPosition extends Coordinate
 		return $this->isCenterPosition;
 	}
 
-	public function isCollisionDirection(): CollisionDirection
+	public function collisionDirection(): CollisionDirection
 	{
 		return $this->collisionDirection;
 	}

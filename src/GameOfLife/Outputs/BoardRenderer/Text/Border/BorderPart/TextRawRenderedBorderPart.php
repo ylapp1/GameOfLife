@@ -10,36 +10,37 @@ namespace BoardRenderer\Text\Border\BorderPart;
 
 use GameOfLife\Coordinate;
 
-// TODO: Rename to text raw rendered border part
-
 /**
- * Stores the symbols and their relative positions for a rendered border part.
+ * Stores the border symbols and the start/end symbol positions for a rendered border part.
  */
-class TextRenderedBorderPart
+class TextRawRenderedBorderPart
 {
 	// Attributes
 
 	/**
 	 * Stores the border symbols of this rendered border part
 	 *
-	 * The structure of this array is array( array(Coordinate $_position, String $_symbol) )
-	 *
-	 * Horizontal borders are added in extra lines between the cell symbol rows
-	 * Vertical borders are added in extra columns inside the cell symbol rows
-	 *
 	 * @var array $borderSymbols
 	 */
 	private $borderSymbols;
+
+	/**
+	 * The positions of the border symbols on the border symbol grid
+	 *
+	 * @var Coordinate[] $borderSymbolPositions
+	 */
+	private $borderSymbolPositions;
 
 
 	// Magic Methods
 
 	/**
-	 * TextRenderedBorderPart constructor.
+	 * TextRawRenderedBorderPart constructor.
 	 */
 	public function __construct()
 	{
 		$this->borderSymbols = array();
+		$this->borderSymbolPositions = array();
 	}
 
 
@@ -53,6 +54,16 @@ class TextRenderedBorderPart
 	public function borderSymbols(): array
 	{
 		return $this->borderSymbols;
+	}
+
+	/**
+	 * Returns the border symbol position of this rendered border part.
+	 *
+	 * @return Coordinate[] The start symbol position
+	 */
+	public function borderSymbolPositions(): array
+	{
+		return $this->borderSymbolPositions;
 	}
 
 
@@ -74,6 +85,7 @@ class TextRenderedBorderPart
 		$yPosition = $_at->y() * 2;
 		if ($_isInCellSymbolRow) $yPosition += 1;
 
-		$this->borderSymbols[] = array(new Coordinate($xPosition, $yPosition), $_symbol);
+		$this->borderSymbols[] = $_symbol;
+		$this->borderSymbolPositions[] = new Coordinate($xPosition, $yPosition);
 	}
 }
