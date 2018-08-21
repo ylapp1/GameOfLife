@@ -14,6 +14,7 @@ use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use GameOfLife\Coordinate;
 
 /**
@@ -21,6 +22,44 @@ use GameOfLife\Coordinate;
  */
 class TextGridBorderShape extends BaseGridBorderShape
 {
+	// Attributes
+
+	/**
+	 * The border symbol definition for the horizontal border parts
+	 *
+	 * @var BorderSymbolDefinition $borderHorizontalSymbolDefinition
+	 */
+	private $borderHorizontalSymbolDefinition;
+
+	/**
+	 * The border symbol definition for the vertical border parts
+	 *
+	 * @var BorderSymbolDefinition $borderVerticalSymbolDefinition
+	 */
+	private $borderVerticalSymbolDefinition;
+
+
+	// Magic Methods
+
+	/**
+	 * TextGridBorderShape constructor.
+	 *
+	 * @param BaseBorder $_parentBorder
+	 * @param BorderPartThickness $_horizontalThickness
+	 * @param BorderPartThickness $_verticalThickness
+	 * @param BorderSymbolDefinition $_borderHorizontalSymbolDefinition
+	 * @param BorderSymbolDefinition $_borderVerticalSymbolDefinition
+	 */
+	public function __construct(BaseBorder $_parentBorder, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness, BorderSymbolDefinition $_borderHorizontalSymbolDefinition, BorderSymbolDefinition $_borderVerticalSymbolDefinition)
+	{
+		parent::__construct($_parentBorder, $_horizontalThickness, $_verticalThickness);
+		$this->borderHorizontalSymbolDefinition = $_borderHorizontalSymbolDefinition;
+		$this->borderVerticalSymbolDefinition = $_borderVerticalSymbolDefinition;
+	}
+
+
+	// Class Methods
+
 	/**
 	 * Returns a horizontal border part for the background grid.
 	 *
@@ -32,15 +71,13 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 */
 	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
 	{
-		// TODO: Add border symbol definitions
-
 		return new TextBorderPart(
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new TextHorizontalBorderPartShape(),
-			new BorderPartThickness(1, 1),
-			""
+			$this->horizontalThickness,
+			$this->borderHorizontalSymbolDefinition
 		);
 	}
 
@@ -55,15 +92,13 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 */
 	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
 	{
-		// TODO: Add border symbol definitions
-
 		return new TextBorderPart(
 			$_parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new TextVerticalCollisionBorderPartShape(),
-			new BorderPartThickness(1, 1),
-			""
+			$this->verticalThickness,
+			$this->borderVerticalSymbolDefinition
 		);
 	}
 }

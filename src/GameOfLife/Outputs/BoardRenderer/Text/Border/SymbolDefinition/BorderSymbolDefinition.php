@@ -36,6 +36,13 @@ class BorderSymbolDefinition
 	 */
 	private $endSymbol;
 
+	/**
+	 * The collision symbol definitions
+	 *
+	 * @var CollisionSymbolDefinition[] $collisionSymbolDefinitions
+	 */
+	private $collisionSymbolDefinitions;
+
 
 	// Magic Methods
 
@@ -45,12 +52,14 @@ class BorderSymbolDefinition
 	 * @param String $_startSymbol The symbol for the start of the border
 	 * @param String $_centerSymbol The symbol for the center parts of the border
 	 * @param String $_endSymbol The symbol for the end of the border
+	 * @param CollisionSymbolDefinition[] $_collisionSymbolDefinitions The collision symbol definitions
 	 */
-	public function __construct(String $_startSymbol, String $_centerSymbol, String $_endSymbol)
+	public function __construct(String $_startSymbol, String $_centerSymbol, String $_endSymbol, array $_collisionSymbolDefinitions)
 	{
 		$this->startSymbol = $_startSymbol;
 		$this->centerSymbol = $_centerSymbol;
 		$this->endSymbol = $_endSymbol;
+		$this->collisionSymbolDefinitions = $_collisionSymbolDefinitions;
 	}
 
 
@@ -84,5 +93,10 @@ class BorderSymbolDefinition
 	public function endSymbol(): String
 	{
 		return $this->endSymbol;
+	}
+
+	public function collisionSymbolDefinitions(): array
+	{
+		return $this->collisionSymbolDefinitions;
 	}
 }

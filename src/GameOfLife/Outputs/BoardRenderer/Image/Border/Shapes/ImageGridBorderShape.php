@@ -9,7 +9,6 @@
 namespace BoardRenderer\Image\Border\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPart;
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
@@ -37,7 +36,7 @@ class ImageGridBorderShape extends BaseGridBorderShape
 			$_startsAt,
 			$_endsAt,
 			new ImageHorizontalBorderPartShape(),
-			new BorderPartThickness(1, 1)
+			$this->horizontalThickness
 		);
 	}
 
@@ -57,7 +56,7 @@ class ImageGridBorderShape extends BaseGridBorderShape
 			$_startsAt,
 			$_endsAt,
 			new ImageVerticalBorderPartShape(),
-			new BorderPartThickness(1, 1)
+			$this->verticalThickness
 		);
 	}
 }

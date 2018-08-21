@@ -8,58 +8,37 @@
 
 namespace BoardRenderer\Text\Border\SymbolDefinition;
 
+use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
+
 /**
- * Defines the collision symbols for one border symbol position (start, center and end) of a text border part.
+ * Defines one collision symbol for one border symbol position (start, center and end) of a text border part.
+ *
+ * There are 40320 possible combinations of collision directions, so only a few should be defined that are known to occur.
+ * When the border part is rendered the border part checks whether it has a collision symbol definition for the specific collision
  */
 class CollisionSymbolDefinition
 {
 	// Attributes
 
 	/**
-	 * The symbol to render border part collisions with border parts above the border symbol position
+	 * The collision symbol
 	 *
-	 * @var String $collisionFromTopSymbol
+	 * @var Bool $collisionSymbol
 	 */
-	protected $collisionFromTopSymbol;
+	private $collisionSymbol;
 
 	/**
-	 * The symbol to render border part collisions with border parts below the border symbol position
+	 * The collision direction for which the collision symbol can be used
 	 *
-	 * @var String $collisionFromBottomSymbol
+	 * @var CollisionDirection $collisionDirection
 	 */
-	protected $collisionFromBottomSymbol;
+	private $collisionDirection;
 
-	/**
-	 * The symbol to render border part collisions with border parts left from the border symbol position
-	 *
-	 * @var String $collisionFromLeftSymbol
-	 */
-	protected $collisionFromLeftSymbol;
+	private $isStartPosition;
 
-	/**
-	 * The symbol to render border part collisions with border parts right from the border symbol position
-	 *
-	 * @var String $collisionFromRightSymbol
-	 */
-	protected $collisionFromRightSymbol;
+	private $isCenterPosition;
 
-	/**
-	 * The symbol to render border part collisions with border parts that collide with the border symbol position from the top and the bottom
-	 * Must be set when collisions from the top and bottom are possible for the border symbol position
-	 *
-	 * @var $collisionTopAndBottomSymbol
-	 */
-	protected $collisionTopAndBottomSymbol;
-
-	/**
-	 * The symbol to render border part collisions with border parts that collide with the border symbol position on the left and right side
-	 * Must be set when collisions from the left and right are possible for the border symbol position
-	 *
-	 * @var $collisionLeftAndRightSymbol
-	 */
-	protected $collisionLeftAndRightSymbol;
-
-	// TODO: Add diagonal collision symbols
+	private $isEndPosition;
 
 
 	// Magic Methods
@@ -67,83 +46,77 @@ class CollisionSymbolDefinition
 	/**
 	 * CollisionSymbolDefinition constructor.
 	 *
-	 * @param String $_collisionFromTopSymbol The symbol to render border part collisions with border parts above the border symbol position
-	 * @param String $_collisionFromBottomSymbol The symbol to render border part collisions with border parts below the border symbol position
-	 * @param String $_collisionFromLeftSymbol The symbol to render border part collisions with border parts left from the border symbol position
-	 * @param String $_collisionFromRightSymbol The symbol to render border part collisions with border parts right from the border symbol position
-	 * @param String $_collisionTopAndBottomSymbol The symbol to render border part collisions with border parts that collide with the border symbol position from the top and the bottom
-	 * @param String $_collisionLeftAndRightSymbol The symbol to render border part collisions with border parts that collide with the border symbol position on the left and right side
+	 * @param String $_collisionSymbol The collision symbol
+	 * @param CollisionDirection $_collisionDirection
+	 * @param String $_position The position inside the border ("start", "center", "end")
 	 */
-	public function __construct(String $_collisionFromTopSymbol = "", String $_collisionFromBottomSymbol = "", String $_collisionFromLeftSymbol = "", String $_collisionFromRightSymbol = "", String $_collisionTopAndBottomSymbol = "", String $_collisionLeftAndRightSymbol = "")
+	public function __construct(String $_collisionSymbol, CollisionDirection $_collisionDirection, String $_position)
 	{
-		$this->collisionFromTopSymbol = $_collisionFromTopSymbol;
-		$this->collisionFromBottomSymbol = $_collisionFromBottomSymbol;
-		$this->collisionFromLeftSymbol = $_collisionFromLeftSymbol;
-		$this->collisionFromRightSymbol = $_collisionFromRightSymbol;
-		$this->collisionTopAndBottomSymbol = $_collisionTopAndBottomSymbol;
-		$this->collisionLeftAndRightSymbol = $_collisionLeftAndRightSymbol;
+		$this->collisionSymbol = $_collisionSymbol;
+		$this->collisionDirection = $_collisionDirection;
+
+		$this->isStartPosition = true;
+		$this->isCenterPosition = true;
+		$this->isEndPosition = true;
+
+		switch ($_position)
+		{
+			case "start":
+				$this->isStartPosition = true;
+				break;
+			case "center":
+				$this->isCenterPosition = true;
+				break;
+			case "end":
+				$this->isEndPosition = true;
+				break;
+		}
 	}
 
 
 	// Getters and Setters
 
 	/**
-	 * Returns the symbol to render border part collisions with border parts above the border symbol position.
+	 * Returns the collision symbol.
 	 *
-	 * @return String The symbol to render border part collisions with border parts above the border symbol position
+	 * @return String The collision symbol
 	 */
-	public function collisionFromTopSymbol(): String
+	public function collisionSymbol(): String
 	{
-		return $this->collisionFromTopSymbol;
+		return $this->collisionSymbol;
 	}
 
 	/**
-	 * Returns the symbol to render border part collisions with border parts below the border symbol position.
+	 * Returns the collision direction for which this collision symbol may be used.
 	 *
-	 * @return String The symbol to render border part collisions with border parts below the border symbol position
+	 * @return CollisionDirection
 	 */
-	public function collisionFromBottomSymbol(): String
+	public function collisionDirection(): CollisionDirection
 	{
-		return $this->collisionFromBottomSymbol;
+		return $this->collisionDirection;
 	}
 
 	/**
-	 * Returns the symbol to render border part collisions with border parts left from the border symbol position.
-	 *
-	 * @return String The symbol to render border part collisions with border parts left from the border symbol position
+	 * @return bool
 	 */
-	public function collisionFromLeftSymbol(): String
+	public function isStartPosition(): bool
 	{
-		return $this->collisionFromLeftSymbol;
+		return $this->isStartPosition;
 	}
 
 	/**
-	 * Returns the symbol to render border part collisions with border parts right from the border symbol position.
-	 *
-	 * @return String The symbol to render border part collisions with border parts right from the border symbol position
+	 * @return bool
 	 */
-	public function collisionFromRightSymbol(): String
+	public function isCenterPosition(): bool
 	{
-		return $this->collisionFromRightSymbol;
+		return $this->isCenterPosition;
 	}
 
 	/**
-	 * Returns the symbol to render border part collisions with border parts that collide with the border symbol position from the top and the bottom.
-	 *
-	 * @return String The symbol to render border part collisions with border parts that collide with the border symbol position from the top and the bottom
+	 * @return bool
 	 */
-	public function collisionTopAndBottomSymbol(): String
+	public function isEndPosition(): bool
 	{
-		return $this->collisionTopAndBottomSymbol;
-	}
-
-	/**
-	 * Returns the symbol to render border part collisions with border parts that collide with the border symbol position on the left and right side.
-	 *
-	 * @return String The symbol to render border part collisions with border parts that collide with the border symbol position on the left and right side
-	 */
-	public function collisionLeftAndRightSymbol(): String
-	{
-		return $this->collisionLeftAndRightSymbol;
+		return $this->isEndPosition;
 	}
 }

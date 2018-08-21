@@ -30,69 +30,41 @@ class TextRectangleBorderShape extends RectangleBorderShape
 	 *
 	 * @var String $borderSymbolTopLeft
 	 */
-	protected $borderSymbolTopLeft;
+	protected $borderTopSymbolDefinition;
+
+	protected $borderBottomSymbolDefinition;
+
+	protected $borderLeftSymbolDefinition;
 
 	/**
 	 * The symbol for the top right corner of the border
 	 *
 	 * @var String $borderSymbolTopRight
 	 */
-	protected $borderSymbolTopRight;
-
-	/**
-	 * The symbol for the bottom left corner of the border
-	 *
-	 * @var String $borderSymbolBottomLeft
-	 */
-	protected $borderSymbolBottomLeft;
-
-	/**
-	 * The symbol for the bottom right corner of the border
-	 *
-	 * @var String $borderSymbolBottomRight
-	 */
-	protected $borderSymbolBottomRight;
-
-	/**
-	 * The symbol for the top and bottom border
-	 *
-	 * @var String $borderSymbolTopBottom
-	 */
-	protected $borderSymbolTopBottom;
-
-	/**
-	 * The symbol for the left an right border
-	 *
-	 * @var String $borderSymbolLeftRight
-	 */
-	protected $borderSymbolLeftRight;
+	protected $borderRightSymbolDefinition;
 
 
 	// Magic Methods
 
-    /**
-     * BaseBorderPrinter constructor.
-     *
-     * @param BaseBorder $_parentBorder The parent border
-     * @param Rectangle $_rectangle The rectangle
-     * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
-     * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
-     * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
-     * @param String $_borderSymbolBottomRight The symbol for the bottom right corner of the border
-     * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
-     * @param String $_borderSymbolLeftRight The symbol for the left an right border
-     */
-	public function __construct($_parentBorder, Rectangle $_rectangle, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+	/**
+	 * BaseBorderPrinter constructor.
+	 *
+	 * @param BaseBorder $_parentBorder The parent border
+	 * @param Rectangle $_rectangle The rectangle
+	 * @param BorderPartThickness $_horizontalThickness
+	 * @param BorderPartThickness $_verticalThickness
+	 * @param BorderSymbolDefinition $_borderTopSymbolDefinition
+	 * @param BorderSymbolDefinition $_borderBottomSymbolDefinition
+	 * @param BorderSymbolDefinition $_borderLeftSymbolDefinition
+	 * @param BorderSymbolDefinition $_borderRightSymbolDefinition
+	 */
+	public function __construct($_parentBorder, Rectangle $_rectangle, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness, BorderSymbolDefinition $_borderTopSymbolDefinition, BorderSymbolDefinition $_borderBottomSymbolDefinition, BorderSymbolDefinition $_borderLeftSymbolDefinition, BorderSymbolDefinition $_borderRightSymbolDefinition)
 	{
-	    parent::__construct($_parentBorder, $_rectangle);
-		$this->borderSymbolTopLeft = $_borderSymbolTopLeft;
-		$this->borderSymbolTopRight = $_borderSymbolTopRight;
-		$this->borderSymbolBottomLeft = $_borderSymbolBottomLeft;
-		$this->borderSymbolBottomRight = $_borderSymbolBottomRight;
-		$this->borderSymbolTopBottom = $_borderSymbolTopBottom;
-		$this->borderSymbolLeftRight = $_borderSymbolLeftRight;
-
-		// TODO: Add collision symbols for all border parts to this class
+	    parent::__construct($_parentBorder, $_rectangle, $_horizontalThickness, $_verticalThickness);
+		$this->borderTopSymbolDefinition = $_borderTopSymbolDefinition;
+		$this->borderBottomSymbolDefinition = $_borderBottomSymbolDefinition;
+		$this->borderLeftSymbolDefinition = $_borderLeftSymbolDefinition;
+		$this->borderRightSymbolDefinition = $_borderRightSymbolDefinition;
 	}
 
 
@@ -116,8 +88,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-	        new BorderPartThickness(1, 1),
-	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolTopBottom, $this->borderSymbolTopRight)
+	        $this->horizontalThickness,
+	        $this->borderTopSymbolDefinition
         );
     }
 
@@ -142,8 +114,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-	        new BorderPartThickness(1, 1),
-	        new BorderSymbolDefinition($this->borderSymbolBottomLeft, $this->borderSymbolTopBottom, $this->borderSymbolBottomRight)
+	        $this->horizontalThickness,
+	        $this->borderBottomSymbolDefinition
         );
     }
 
@@ -165,8 +137,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-	        new BorderPartThickness(1, 1),
-	        new BorderSymbolDefinition($this->borderSymbolTopLeft, $this->borderSymbolLeftRight, $this->borderSymbolBottomLeft)
+	        $this->verticalThickness,
+            $this->borderLeftSymbolDefinition
         );
     }
 
@@ -191,8 +163,8 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-	        new BorderPartThickness(1, 1),
-	        new BorderSymbolDefinition($this->borderSymbolTopRight, $this->borderSymbolLeftRight, $this->borderSymbolBottomRight)
+	        $this->verticalThickness,
+	        $this->borderRightSymbolDefinition
         );
     }
 }

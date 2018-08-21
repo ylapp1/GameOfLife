@@ -10,6 +10,7 @@ namespace BoardRenderer\Base\Border\Shapes;
 
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use GameOfLife\Coordinate;
 
 /**
@@ -17,11 +18,47 @@ use GameOfLife\Coordinate;
  */
 abstract class BaseGridBorderShape extends BaseBorderShape
 {
-	public function __construct(BaseBorder $_parentBorder)
+	// Attributes
+
+	/**
+	 * Defines the thickness of horizontal parts of this border
+	 *
+	 * @var BorderPartThickness $horizontalThickness
+	 */
+	protected $horizontalThickness;
+
+	/**
+	 * Defines the thickness of vertical parts of this border
+	 *
+	 * @var BorderPartThickness $verticalThickness
+	 */
+	protected $verticalThickness;
+
+
+	// Magic Methods
+
+	/**
+	 * BaseGridBorderShape constructor.
+	 *
+	 * @param BaseBorder $_parentBorder
+	 * @param BorderPartThickness $_horizontalThickness
+	 * @param BorderPartThickness $_verticalThickness
+	 */
+	public function __construct(BaseBorder $_parentBorder, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness)
 	{
 		parent::__construct($_parentBorder);
+		$this->horizontalThickness = $_horizontalThickness;
+		$this->verticalThickness = $_verticalThickness;
 	}
 
+
+	// Class Methods
+
+	/**
+	 * Returns the border parts for the background grid
+	 *
+	 * @return BorderPart[] The border parts for the background grid
+	 */
 	public function getBorderParts()
 	{
 		$parentBorderShape = $this->parentBorder->parentBorder()->shape();

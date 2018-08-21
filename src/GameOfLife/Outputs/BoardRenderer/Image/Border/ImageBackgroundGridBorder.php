@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Image\Border;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageGridBorderShape;
 use Output\Helpers\ImageColor;
 
@@ -28,7 +29,11 @@ class ImageBackgroundGridBorder extends ImageBorder
 	{
 		parent::__construct(
 			$_parentBorder,
-			new ImageGridBorderShape($this),
+			new ImageGridBorderShape(
+				$this,
+				new BorderPartThickness(1, 1),
+				new BorderPartThickness(1, 1)
+			),
 			$_gridColor
 		);
 	}
