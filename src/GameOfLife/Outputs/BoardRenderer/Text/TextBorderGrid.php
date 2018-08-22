@@ -57,8 +57,11 @@ class TextBorderGrid extends BaseBorderGrid
 
 		foreach ($borderSymbolPositions as $symbolId => $at)
 		{
-			if (! isset($this->borderSymbolGrid[$at->y()])) $this->borderSymbolGrid[$at->y()] = array();
-			$this->borderSymbolGrid[$at->y()][$at->x()] = $borderSymbols[$symbolId];
+			$gridX = $_renderedBorder->parentBorderPart()->startsAt()->x() * 2 + $at->x();
+			$gridY = $_renderedBorder->parentBorderPart()->startsAt()->y() * 2 + $at->y();
+
+			if (! isset($this->borderSymbolGrid[$gridY])) $this->borderSymbolGrid[$gridY] = array();
+			$this->borderSymbolGrid[$gridY][$gridX] = $borderSymbols[$symbolId];
 		}
 	}
 
@@ -68,21 +71,32 @@ class TextBorderGrid extends BaseBorderGrid
 	private function autoCompleteBorderSymbolGrid()
 	{
 		// Auto complete the grid
-		for ($y = $this->getLowestRowId(); $y <= $this->getHighestRowId(); $y++)
+		// TODO: Adjust border positions grid for text ...
+		for ($y = $this->getLowestRowId(); $y <= $this->getHighestRowId() * 2; $y++)
 		{
 			$isBorderRow = ($y % 2 == 0);
 
-			for ($x = $this->getLowestColumnId(); $x <= $this->getHighestColumnId(); $x++)
+			for ($x = $this->getLowestColumnId(); $x <= $this->getHighestColumnId() * 2; $x++)
 			{
-				if (!isset($this->borderSymbolGrid[$y][$x]))
+				if (! isset($this->borderSymbolGrid[$y][$x]))
 				{
 					$isBorderColumn = ($x % 2 == 0);
 
-					if ($isBorderRow && $this->rowContainsBorderSymbol($y) ||
-						$isBorderColumn && $this->columnContainsBorderSymbol($x))
-					{
-						$this->borderSymbolGrid[$y][$x] = " ";
-					}
+					/*
+					 * If the current row is a border row and the row already contains a border symbol and
+					 * a) The column in question is not a border column or
+					 * b) The column in question is a border column and that column contains a border symbol
+					 */
+					$isBorderRowGap = ($isBorderRow && $this->rowContainsBorderSymbol($y) && (! $isBorderColumn || $this->columnContainsBorderSymbol($x)));
+
+					/*
+					 * If the current column is a border column and the border column already contains a border symbol and
+					 * a) The row in question is not a border row or
+					 * b) The row in question is a border row and that row contains a border symbol
+					 */
+					$isBorderColumnGap = ($isBorderColumn && $this->columnContainsBorderSymbol($x) && (! $isBorderRow || $this->rowContainsBorderSymbol($y)));
+
+					if ($isBorderRowGap || $isBorderColumnGap) $this->borderSymbolGrid[$y][$x] = " ";
 				}
 			}
 		}
