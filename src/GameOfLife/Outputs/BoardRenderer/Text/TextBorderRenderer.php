@@ -27,7 +27,7 @@ class TextBorderRenderer extends BaseBorderRenderer
 	 * @param BaseBorder $_border The border
 	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
 	 */
-	public function __construct(Board $_board, BaseBorder $_border, Bool $_hasBackgroundGrid = true)
+	public function __construct(Board $_board, BaseBorder $_border, Bool $_hasBackgroundGrid = false)
 	{
 		$borderGrid = new TextBorderGrid($_board);
 

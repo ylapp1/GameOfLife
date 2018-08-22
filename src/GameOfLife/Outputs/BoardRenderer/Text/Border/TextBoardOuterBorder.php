@@ -21,7 +21,7 @@ use GameOfLife\Rectangle;
 /**
  * Generates border strings for boards.
  */
-class BoardOuterBorder extends BaseBorder
+class TextBoardOuterBorder extends BaseBorder
 {
 	/**
 	 * The symbol for the top left corner of the border
@@ -69,7 +69,7 @@ class BoardOuterBorder extends BaseBorder
     // Magic Methods
 
     /**
-     * BoardOuterBorder constructor.
+     * TextBoardOuterBorder constructor.
      *
      * @param Board $_board The board for which the outer border will be created
      */

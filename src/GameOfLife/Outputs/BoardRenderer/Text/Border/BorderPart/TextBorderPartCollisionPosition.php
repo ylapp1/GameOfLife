@@ -17,6 +17,8 @@ class TextBorderPartCollisionPosition extends Coordinate
 {
 	// Attributes
 
+	protected $isStartPosition;
+
 	/**
 	 * Indicates whether this is a center position.
 	 * This distinction is necessary for the border start and end symbols
@@ -24,6 +26,8 @@ class TextBorderPartCollisionPosition extends Coordinate
 	 * @var Bool $isCenterPosition
 	 */
 	protected $isCenterPosition;
+
+	protected $isEndPosition;
 
 	/**
 	 * The direction from which the other border part collides
@@ -40,23 +44,49 @@ class TextBorderPartCollisionPosition extends Coordinate
 	 *
 	 * @param int $_x
 	 * @param int $_y
-	 * @param bool $_isCenterPosition
+	 * @param String $_collisionPosition
 	 * @param CollisionDirection $_collisionDirection
 	 */
-	public function __construct(int $_x, int $_y, Bool $_isCenterPosition = false, CollisionDirection $_collisionDirection)
+	public function __construct(int $_x, int $_y, String $_collisionPosition, CollisionDirection $_collisionDirection)
 	{
 		parent::__construct($_x, $_y);
 
-		$this->isCenterPosition = $_isCenterPosition;
 		$this->collisionDirection = $_collisionDirection;
+
+		$this->isStartPosition = false;
+		$this->isCenterPosition = false;
+		$this->isEndPosition = false;
+
+		switch ($_collisionPosition)
+		{
+			case "start":
+				$this->isStartPosition = true;
+				break;
+			case "center":
+				$this->isCenterPosition = true;
+				break;
+			case "end":
+				$this->isEndPosition = true;
+				break;
+		}
 	}
 
 
 	// Getters and Setters
 
+	public function isStartPosition(): Bool
+	{
+		return $this->isStartPosition;
+	}
+
 	public function isCenterPosition(): Bool
 	{
 		return $this->isCenterPosition;
+	}
+
+	public function isEndPosition(): Bool
+	{
+		return $this->isEndPosition;
 	}
 
 	public function collisionDirection(): CollisionDirection

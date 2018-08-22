@@ -21,6 +21,7 @@ use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 /**
  * Container that stores the information about a part of a border.
  * This class uses text symbols to render the border part.
+ * TODO: Fix this class
  */
 class TextBorderPart extends BorderPart
 {
@@ -40,27 +41,6 @@ class TextBorderPart extends BorderPart
 	 */
 	protected $borderSymbolDefinition;
 
-	/**
-	 * The collision symbol definition for the start symbol position
-	 *
-	 * @var CollisionSymbolDefinition $startCollisionSymbolDefinition
-	 */
-	protected $startCollisionSymbolDefinition;
-
-	/**
-	 * The collision symbol definition for a center symbol position
-	 *
-	 * @var CollisionSymbolDefinition $centerCollisionSymbolDefinition
-	 */
-	protected $centerCollisionSymbolDefinition;
-
-	/**
-	 * The collision symbol definition for the end symbol position
-	 *
-	 * @var CollisionSymbolDefinition $endCollisionSymbolDefinition
-	 */
-	protected $endCollisionSymbolDefinition;
-
 
     // Magic Methods
 
@@ -73,24 +53,12 @@ class TextBorderPart extends BorderPart
      * @param BaseBorderPartShape $_shape The shape of this border part
      * @param BorderPartThickness $_thickness The thickness of this border part
      * @param BorderSymbolDefinition $_borderSymbolDefinition The border symbol definition
-     * @param CollisionSymbolDefinition $_startCollisionSymbolDefinition The collision symbol definition for the start symbol position
-     * @param CollisionSymbolDefinition $_centerCollisionSymbolDefinition The collision symbol definition for a center symbol position
-     * @param CollisionSymbolDefinition $_endCollisionSymbolDefinition The collision symbol definition for the end symbol position
      */
-    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness, BorderSymbolDefinition $_borderSymbolDefinition, CollisionSymbolDefinition $_startCollisionSymbolDefinition = null, CollisionSymbolDefinition $_centerCollisionSymbolDefinition = null, CollisionSymbolDefinition $_endCollisionSymbolDefinition = null)
+    public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness, BorderSymbolDefinition $_borderSymbolDefinition)
     {
         parent::__construct($_parentBorder, $_startsAt, $_endsAt, $_shape, $_thickness);
 
         $this->borderSymbolDefinition = $_borderSymbolDefinition;
-
-        if ($_startCollisionSymbolDefinition) $this->startCollisionSymbolDefinition = $_startCollisionSymbolDefinition;
-        else $this->startCollisionSymbolDefinition = new CollisionSymbolDefinition();
-
-        if ($_centerCollisionSymbolDefinition) $this->centerCollisionSymbolDefinition = $_centerCollisionSymbolDefinition;
-        else $this->centerCollisionSymbolDefinition = new CollisionSymbolDefinition();
-
-        if ($_endCollisionSymbolDefinition) $this->endCollisionSymbolDefinition = $_endCollisionSymbolDefinition;
-        else $this->endCollisionSymbolDefinition = new CollisionSymbolDefinition();
     }
 
 
@@ -105,36 +73,6 @@ class TextBorderPart extends BorderPart
 	{
 		return $this->borderSymbolDefinition;
 	}
-
-	/**
-	 * Returns the collision symbol definition for the start symbol position.
-	 *
-	 * @return CollisionSymbolDefinition The collision symbol definition for the start symbol position
-	 */
-    public function startCollisionSymbolDefinition(): CollisionSymbolDefinition
-    {
-        return $this->startCollisionSymbolDefinition;
-    }
-
-	/**
-	 * Returns the collision symbol definition for a center symbol position.
-	 *
-	 * @return CollisionSymbolDefinition The collision symbol definition for a center symbol position
-	 */
-    public function centerCollisionSymbolDefinition(): CollisionSymbolDefinition
-    {
-        return $this->centerCollisionSymbolDefinition;
-    }
-
-	/**
-	 * Returns the collision symbol definition for the end symbol position.
-	 *
-	 * @return CollisionSymbolDefinition The collision symbol definition for the end symbol position
-	 */
-    public function endCollisionSymbolDefinition(): CollisionSymbolDefinition
-    {
-        return $this->endCollisionSymbolDefinition;
-    }
 
 
     // Class Methods
@@ -181,8 +119,7 @@ class TextBorderPart extends BorderPart
     private function renderCollisions(array $_borderSymbols): array
     {
 	    // TODO: Fix collision position edge and first/last symbol
-
-	    foreach ($this->collisions as $collision)
+	    foreach ($this->ownCollisions as $collision)
         {
         	// Find dominating border
             if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();

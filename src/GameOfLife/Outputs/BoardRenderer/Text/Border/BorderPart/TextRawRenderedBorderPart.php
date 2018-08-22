@@ -86,6 +86,8 @@ class TextRawRenderedBorderPart
 		if ($_isInCellSymbolRow) $yPosition += 1;
 
 		$this->borderSymbols[] = $_symbol;
+
+		// TODO: Remove code duplication here and in border positions grid
 		$this->borderSymbolPositions[] = new Coordinate($xPosition, $yPosition);
 	}
 }

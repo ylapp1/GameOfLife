@@ -9,6 +9,7 @@
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use GameOfLife\Coordinate;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
@@ -91,23 +92,25 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 
     public function getCollisionPositionWith($_borderPart)
     {
-    	$collisionPosition = parent::getCollisionPositionWith($_borderPart);
-    	// TODO: Add necessary information
+    	$at = parent::getCollisionPositionWith($_borderPart);
 
-	    $textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
-	    	$collisionPosition->x(),
-		    $collisionPosition->y(),
-		    "",
-		    "",
-		    "",
-		    "",
-		    "",
-		    "",
-		    "",
-		    "",
-		    ""
-	    );
+    	if ($at)
+	    {
+		    // TODO: Add necessary information
 
-	    return $textBorderPartCollisionPosition;
+		    // TODO: Fetch the real information
+		    $collisionPosition = "center";
+		    $collisionDirection = new CollisionDirection(array("top", "bottom"));
+
+		    $textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
+			    $at->x(),
+			    $at->y(),
+			    $collisionPosition,
+			    $collisionDirection
+		    );
+
+		    return $textBorderPartCollisionPosition;
+	    }
+	    else return null;
     }
 }

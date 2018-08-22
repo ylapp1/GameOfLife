@@ -10,7 +10,7 @@ namespace BoardRenderer;
 
 use GameOfLife\Board;
 use BoardRenderer\Base\BaseBoardRenderer;
-use BoardRenderer\Text\Border\BoardOuterBorder;
+use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\TextBoardFieldRenderer;
 use BoardRenderer\Text\TextBorderRenderer;
 use BoardRenderer\Text\TextCanvas;
@@ -29,10 +29,10 @@ class ConsoleOutputBoardRenderer extends BaseBoardRenderer
      */
     public function __construct(Board $_board)
     {
-    	$border = new BoardOuterBorder($_board);
+    	$border = new TextBoardOuterBorder($_board);
 
         parent::__construct(
-        	new BoardOuterBorder($_board),
+        	new TextBoardOuterBorder($_board),
         	new TextBorderRenderer($_board, $border),
         	new TextBoardFieldRenderer("☻", " "),
 	        new TextCanvas()
