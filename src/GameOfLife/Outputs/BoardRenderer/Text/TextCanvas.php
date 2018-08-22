@@ -128,7 +128,6 @@ class TextCanvas extends BaseCanvas
 
 				    // Add cell symbol
 				    if (isset($boardFieldSymbolRow[$x])) $totalGridRow[] = $boardFieldSymbolRow[$x];
-				    else $totalGridRow[] = " ";
 			    }
 
 			    $totalGridRows[] = $totalGridRow;
