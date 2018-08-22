@@ -95,6 +95,11 @@ class BorderSymbolDefinition
 		return $this->endSymbol;
 	}
 
+	/**
+	 * Returns the collision symbol definitions.
+	 *
+	 * @return CollisionSymbolDefinition[] $collisionSymbolDefinitions
+	 */
 	public function collisionSymbolDefinitions(): array
 	{
 		return $this->collisionSymbolDefinitions;

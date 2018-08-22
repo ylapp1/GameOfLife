@@ -9,17 +9,17 @@
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseVerticalBorderPartShape;
-use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
-use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use GameOfLife\Coordinate;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
+use GameOfLife\Coordinate;
 
 /**
  * Shape for vertical text border parts.
  */
 class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape implements TextBorderPartShapeInterface
 {
+	use TextBorderPartShapeTrait;
+
 	// Attributes
 
 	/**
@@ -64,6 +64,7 @@ class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape i
 	 * Creates and returns the rendered parent border part.
 	 *
 	 * @param int $_fieldSize The field size in symbols
+	 *
 	 * @return TextRawRenderedBorderPart The rendered parent border part
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
@@ -93,23 +94,7 @@ class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape i
 	{
 		$at = parent::getCollisionPositionWith($_borderPart);
 
-		if ($at)
-		{
-			// TODO: Add necessary information
-
-			// TODO: Fetch the real information
-			$collisionPosition = "center";
-			$collisionDirection = new CollisionDirection(array("left", "right"));
-
-			$textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
-				$at->x(),
-				$at->y(),
-				$collisionPosition,
-				$collisionDirection
-			);
-
-			return $textBorderPartCollisionPosition;
-		}
+		if ($at) return $this->getTextBorderPartCollisionPosition($at, $_borderPart);
 		else return null;
 	}
 }

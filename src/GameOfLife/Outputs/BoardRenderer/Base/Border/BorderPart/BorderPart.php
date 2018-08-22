@@ -187,8 +187,7 @@ class BorderPart
     public function isOuterBorderPart($_borderPart): Bool
     {
 	    // Check whether the other border part is a inner or outer border part
-	    if ($this->parentBorder() === $_borderPart->parentBorder() ||
-		    $this->parentBorder()->containsBorder($_borderPart->parentBorder()))
+	    if ($this->parentBorder()->containsBorder($_borderPart->parentBorder()))
 	    {
 		    return false;
 	    }

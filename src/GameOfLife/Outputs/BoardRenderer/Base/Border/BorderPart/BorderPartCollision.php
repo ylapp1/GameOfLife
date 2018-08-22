@@ -38,6 +38,8 @@ class BorderPartCollision
 	 */
 	private $isOuterBorderPartCollision;
 
+	// TODO: Add dominating border attribute
+
 
 	// Magic Methods
 

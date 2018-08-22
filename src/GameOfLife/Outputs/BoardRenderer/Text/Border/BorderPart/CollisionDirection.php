@@ -140,6 +140,21 @@ class CollisionDirection
 		}
 	}
 
+	public function equals(CollisionDirection $_collisionDirection): Bool
+	{
+		if ($this->isCollisionFromTop == $_collisionDirection->isCollisionFromTop() &&
+		    $this->isCollisionFromBottom == $_collisionDirection->isCollisionFromBottom() &&
+		    $this->isCollisionFromLeft == $_collisionDirection->isCollisionFromLeft() &&
+		    $this->isCollisionFromRight == $_collisionDirection->isCollisionFromRight() &&
+		    $this->isCollisionFromTopLeft == $_collisionDirection->isCollisionFromTopLeft() &&
+		    $this->isCollisionFromTopRight == $_collisionDirection->isCollisionFromTopRight() &&
+		    $this->isCollisionFromBottomLeft == $_collisionDirection->isCollisionFromBottomLeft() &&
+		    $this->isCollisionFromBottomRight == $_collisionDirection->isCollisionFromBottomRight())
+		{
+			return true;
+		}
+		else return false;
+	}
 
 
 	// Getters and setters

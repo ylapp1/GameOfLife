@@ -16,12 +16,10 @@ use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 
 /**
  * Container that stores the information about a part of a border.
  * This class uses text symbols to render the border part.
- * TODO: Fix this class
  */
 class TextBorderPart extends BorderPart
 {
@@ -118,41 +116,45 @@ class TextBorderPart extends BorderPart
      */
     private function renderCollisions(array $_borderSymbols): array
     {
-	    // TODO: Fix collision position edge and first/last symbol
 	    foreach ($this->ownCollisions as $collision)
         {
         	// Find dominating border
             if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();
             else $dominatingBorderPart = $this;
 
-            // Find collision symbol definition
-	        $collisionSymbolDefinition = null;
-	        $defaultCollisionSymbol = null;
+	        // Find collision symbol definition
+	        $borderSymbolDefinition = $dominatingBorderPart->borderSymbolDefinition();
+	        $collisionSymbol = null;
 
-            if ($collision->position()->equals($dominatingBorderPart->startsAt()))
-            {
-            	$collisionSymbolDefinition = $dominatingBorderPart->startCollisionSymbolDefinition();
-	            $defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->startSymbol();
-            }
-            elseif ($collision->position()->equals($dominatingBorderPart->endsAt()))
-            {
-            	$collisionSymbolDefinition = $dominatingBorderPart->endCollisionSymbolDefinition();
-            	$defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->endSymbol();
-            }
-            else
-            {
-            	$collisionSymbolDefinition = $dominatingBorderPart->centerCollisionSymbolDefinition();
-            	$defaultCollisionSymbol = $dominatingBorderPart->borderSymbolDefinition()->centerSymbol();
-            }
+	        /** @var TextBorderPartCollisionPosition $collisionPosition */
+	        $collisionPosition = $collision->position();
 
-            // Find collision symbol
-	        // TODO: Find the real symbol
-	        $collisionSymbol = $collisionSymbolDefinition->collisionFromTopSymbol();
+	        // Find default collision symbol
+	        $defaultCollisionSymbol = " ";
+	        if ($collisionPosition->isStartPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->startSymbol();
+	        elseif ($collisionPosition->isCenterPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->centerSymbol();
+	        elseif ($collisionPosition->isEndPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->endSymbol();
+
+	        // Find direction specific collision symbol
+	        foreach ($borderSymbolDefinition->collisionSymbolDefinitions() as $collisionSymbolDefinition)
+	        {
+	        	if ($collisionPosition->isStartPosition() && $collisionSymbolDefinition->isStartPosition() ||
+			        $collisionPosition->isCenterPosition() && $collisionSymbolDefinition->isCenterPosition() ||
+			        $collisionPosition->isEndPosition() && $collisionSymbolDefinition->isEndPosition())
+		        { // The collision position matches
+
+			        if ($collisionPosition->collisionDirection()->equals($collisionSymbolDefinition->collisionDirection()))
+			        { // The collision direction matches
+				        $collisionSymbol = $collisionSymbolDefinition->collisionSymbol();
+				        break;
+			        }
+		        }
+	        }
+
             if (! $collisionSymbol) $collisionSymbol = $defaultCollisionSymbol;
 
             $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
             $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;
-
         }
 
         return $_borderSymbols;
