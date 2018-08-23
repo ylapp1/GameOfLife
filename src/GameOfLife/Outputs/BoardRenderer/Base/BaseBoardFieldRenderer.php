@@ -8,7 +8,6 @@
 
 namespace BoardRenderer\Base;
 
-use GameOfLife\Coordinate;
 use GameOfLife\Field;
 
 /**

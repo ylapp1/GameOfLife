@@ -6,10 +6,13 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace BoardRenderer\Base;
+namespace BoardRenderer;
 
-use GameOfLife\Board;
+use BoardRenderer\Base\BaseBoardFieldRenderer;
+use BoardRenderer\Base\BaseBorderRenderer;
+use BoardRenderer\Base\BaseCanvas;
 use BoardRenderer\Base\Border\BaseBorder;
+use GameOfLife\Board;
 
 /**
  * Renders a board.
@@ -70,7 +73,6 @@ abstract class BaseBoardRenderer
      */
     protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas, int $_fieldSize = 1)
     {
-	    // TODO: Move this class to BoardRenderer folder
         $this->border = $_border;
         $this->borderRenderer = $_borderRenderer;
         $this->boardFieldRenderer = $_boardFieldRenderer;

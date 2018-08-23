@@ -9,7 +9,7 @@
 namespace Output;
 
 use GameOfLife\Board;
-use Output\BoardRenderer\ImageOutputBoardRenderer;
+use BoardRenderer\ImageOutputBoardRenderer;
 use Output\Helpers\ColorSelector;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemReader;

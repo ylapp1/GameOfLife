@@ -9,7 +9,6 @@
 namespace BoardRenderer;
 
 use GameOfLife\Board;
-use BoardRenderer\Base\BaseBoardRenderer;
 use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\TextBoardFieldRenderer;
 use BoardRenderer\Text\TextBorderRenderer;

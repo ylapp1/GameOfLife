@@ -12,7 +12,6 @@ use BoardEditor\SelectionArea;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Field;
-use BoardRenderer\Base\BaseBoardRenderer;
 
 /**
  * BoardRenderer for the BoardEditorOutput.

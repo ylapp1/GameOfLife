@@ -6,11 +6,10 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Output\BoardRenderer;
+namespace BoardRenderer;
 
 use BoardRenderer\Image\Border\ImageBoardOuterBorder;
 use GameOfLife\Board;
-use BoardRenderer\Base\BaseBoardRenderer;
 use BoardRenderer\Image\CellImage\SmileyCellImage;
 use BoardRenderer\Image\ImageBoardFieldRenderer;
 use BoardRenderer\Image\ImageBorderRenderer;
