@@ -9,18 +9,32 @@
 namespace BoardRenderer\Base;
 
 /**
- * Canvas on which borders and cells can be drawn.
+ * Stores and combines the rendered border grid and the rendered board fields.
  */
 abstract class BaseCanvas
 {
 	// Attributes
 
 	/**
-	 * The border grid that was created by the border renderer
+	 * The border grid
 	 *
 	 * @var BaseBorderGrid $borderGrid
 	 */
 	protected $borderGrid;
+
+	/**
+	 * The list of rendered board fields
+	 *
+	 * @var mixed[][] $renderedBoardFields
+	 */
+	protected $renderedBoardFields;
+
+	/**
+	 * Indicates whether this canvas caches the border grid
+	 *
+	 * @var Bool $cachesBorderGrid
+	 */
+	protected $cachesBorderGrid;
 
 	/**
 	 * The cached rendered border grid
@@ -30,11 +44,11 @@ abstract class BaseCanvas
 	protected $cachedRenderedBorderGrid;
 
 	/**
-	 * Indicates whether this canvas caches the border grid
+	 * The field size of the currently cached rendered border grid
 	 *
-	 * @var Bool $cachesBorderGrid
+	 * @var int $cachedRenderedBorderGridFieldSize
 	 */
-	protected $cachesBorderGrid;
+	protected $cachedRenderedBorderGridFieldSize;
 
 
 	// Magic Methods
@@ -50,51 +64,69 @@ abstract class BaseCanvas
 	}
 
 
+	// Getters and Setters
+
+	/**
+	 * Sets the border grid of the canvas.
+	 *
+	 * @param BaseBorderGrid $_borderGrid The border grid
+	 */
+	public function setBorderGrid($_borderGrid)
+	{
+		$this->borderGrid = $_borderGrid;
+	}
+
+	/**
+	 * Sets the rendered board fields of the canvas.
+	 *
+	 * @param mixed[][] $_renderedBoardFields The list of rendered board fields
+	 */
+	public function setRenderedBoardFields(array $_renderedBoardFields)
+	{
+		$this->renderedBoardFields = $_renderedBoardFields;
+	}
+
+
 	// Class Methods
 
 	/**
-	 * Returns whether this canvas caches the border grid.
+	 * Returns whether this canvas has a cached border grid.
 	 *
-	 * @return Bool Indicates whether this canvas caches the border grid
+	 * @return Bool True if the canvas has a cached border grid, false otherwise
 	 */
 	public function hasCachedBorderGrid(): Bool
 	{
-		if ($this->cachesBorderGrid && $this->cachedRenderedBorderGrid) return true;
+		if ($this->cachesBorderGrid && $this->borderGrid) return true;
 		else return false;
 	}
 
-    /**
-     * Resets the content of the canvas.
-     */
-    abstract public function reset();
+	/**
+	 * Returns the rendered border grid for a specific field size.
+	 *
+	 * @param int $_fieldSize The height/width of a field in pixels/symbols/etc
+	 *
+	 * @return mixed The rendered border grid
+	 */
+	protected function getRenderedBorderGrid(int $_fieldSize)
+	{
+		if (! $this->cachesBorderGrid ||
+			! $this->cachedRenderedBorderGrid ||
+			! ($this->cachedRenderedBorderGridFieldSize && $this->cachedRenderedBorderGridFieldSize == $_fieldSize))
+		{
+			$this->cachedRenderedBorderGrid = $this->borderGrid->renderBorderGrid($_fieldSize);
+			$this->cachedRenderedBorderGridFieldSize = $_fieldSize;
+		}
 
-    /**
-     * Adds the rendered border grid to the canvas.
-     *
-     * @param BaseBorderGrid $_borderGrid The border grid
-     * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
-     */
-    public function addBorderGrid($_borderGrid, int $_fieldSize)
-    {
-	    if (! $this->cachedRenderedBorderGrid || ! $this->cachesBorderGrid)
-	    {
-		    $this->borderGrid = $_borderGrid;
-		    $this->cachedRenderedBorderGrid = $_borderGrid->renderBorderGrid($_fieldSize);
-	    }
-    }
+		return $this->cachedRenderedBorderGrid;
+	}
 
-    /**
-     * Adds the rendered board fields to the canvas.
-     *
-     * @param mixed[][] $_renderedBoardFields The list of rendered board fields
-     * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
-     */
-    abstract public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize);
-
-    /**
-     * Returns the content of the canvas.
-     *
-     * @return mixed The content of the canvas
-     */
-    abstract public function getContent();
+	/**
+	 * Renders the total board (combines board fields and border grid).
+	 * This method must be called after setBorderGrid() and setRenderedBoardFields() were called
+	 *
+	 * @param int $_fieldSize The height/width of a single field in pixels/symbols/etc
+	 *
+	 * @return mixed The total rendered board
+	 */
+    abstract public function render(int $_fieldSize);
 }

@@ -92,28 +92,16 @@ abstract class BaseBoardRenderer
      */
     public function renderBoard(Board $_board)
     {
-        $this->canvas->reset();
-
         // Render the borders
 	    if (! $this->canvas->hasCachedBorderGrid())
 	    {
-	    	$this->canvas->addBorderGrid($this->borderRenderer->getBorderGrid(), $this->fieldSize);
+	    	$this->canvas->setBorderGrid($this->borderRenderer->getBorderGrid());
 	    }
 
         // Render the board fields
 	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());
-	    $this->canvas->addRenderedBoardFields($renderedBoardFields, $this->fieldSize);
+	    $this->canvas->setRenderedBoardFields($renderedBoardFields);
 
-	    return $this->canvas->getContent();
-    }
-
-    /**
-     * Returns the rendered board content.
-     *
-     * @return mixed The rendered board content
-     */
-    public function getContent()
-    {
-        return $this->canvas->getContent();
+	    return $this->canvas->render($this->fieldSize);
     }
 }

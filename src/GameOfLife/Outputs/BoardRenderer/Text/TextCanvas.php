@@ -11,68 +11,22 @@ namespace BoardRenderer\Text;
 use BoardRenderer\Base\BaseCanvas;
 
 /**
- * Canvas on which borders and cells can be drawn.
- * This class uses text symbols to draw borders and cells.
+ * Combines arrays of symbols to a string.
  */
 class TextCanvas extends BaseCanvas
 {
-	// Attributes
-
-	/**
-	 * The board field symbol rows
-	 *
-	 * @var String[][] $boardFieldSymbolRows
-	 */
-    private $boardFieldSymbolRows;
-
-
-    // Magic Methods
-
-	/**
-	 * TextCanvas constructor.
-	 *
-	 * @param Bool $_cachesBorderGrid Indicates whether this canvas caches the border grid
-	 */
-    public function __construct(Bool $_cachesBorderGrid = true)
-    {
-    	$this->boardFieldSymbolRows = array();
-    	parent::__construct($_cachesBorderGrid);
-    }
-
-
-	// Class Methods
-
-	/**
-	 * Resets the cached board field symbols.
-	 */
-	public function reset()
-	{
-		$this->boardFieldSymbolRows = array();
-	}
-
-	/**
-	 * Adds the rendered board fields to the canvas.
-	 *
-	 * @param String[][] $_renderedBoardFields The list of rendered board fields
-	 * @param int $_fieldSize The height/width of a single field in symbols
-	 */
-	public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize)
-	{
-		$this->boardFieldSymbolRows = $_renderedBoardFields;
-
-		// TODO: Do something with field size
-	}
-
 	/**
 	 * Returns the output string that represents the drawn borders and cell symbols.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in symbols
+	 *
 	 * @return String The output string
 	 */
-    public function getContent()
+    public function render(int $_fieldSize)
     {
-	    $totalGridRows = $this->getTotalGrid();
-	    $totalGridString = "\n";
+	    $totalGridRows = $this->getTotalGrid($_fieldSize);
 
+	    $totalGridString = "\n";
 	    foreach ($totalGridRows as $totalGridRow)
 	    {
 	    	$totalGridString .= implode("", $totalGridRow) . "\n";
@@ -84,10 +38,17 @@ class TextCanvas extends BaseCanvas
 	/**
 	 * Generates and returns the total grid from the border and board field symbol grids.
 	 *
+	 * @param int $_fieldSize The height/width of a single field in symbols
+	 *
 	 * @return String[][] The total grid
 	 */
-    private function getTotalGrid()
+    private function getTotalGrid(int $_fieldSize)
     {
+    	// TODO: Apply field size to rendered board fields
+
+    	// Render the border grid
+	    $renderedBorderGrid = $this->getRenderedBorderGrid($_fieldSize);
+
     	$highestRowId = $this->getHighestRowId();
 	    $highestColumnId = $this->getHighestColumnId();
 
@@ -97,23 +58,23 @@ class TextCanvas extends BaseCanvas
 	    	$borderSymbolRowIndex = $y * 2;
 
 		    // Add borders between rows
-		    if (isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex])) $totalGridRows[] = $this->cachedRenderedBorderGrid[$borderSymbolRowIndex];
+		    if (isset($renderedBorderGrid[$borderSymbolRowIndex])) $totalGridRows[] = $renderedBorderGrid[$borderSymbolRowIndex];
 
 		    // Add cell symbol rows
-		    if (isset($this->boardFieldSymbolRows[$y]) || isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1]))
+		    if (isset($this->renderedBoardFields[$y]) || isset($renderedBorderGrid[$borderSymbolRowIndex + 1]))
 		    {
 		    	$totalGridRow = array();
 
 		    	$boardFieldSymbolRow = array();
-		    	if (isset($this->boardFieldSymbolRows[$y]))
+		    	if (isset($this->renderedBoardFields[$y]))
 			    {
-				    $boardFieldSymbolRow = $this->boardFieldSymbolRows[$y];
+				    $boardFieldSymbolRow = $this->renderedBoardFields[$y];
 			    }
 
 		    	$borderSymbolRow = array();
-		    	if (isset($this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1]))
+		    	if (isset($renderedBorderGrid[$borderSymbolRowIndex + 1]))
 			    {
-			    	$borderSymbolRow = $this->cachedRenderedBorderGrid[$borderSymbolRowIndex + 1];
+			    	$borderSymbolRow = $renderedBorderGrid[$borderSymbolRowIndex + 1];
 			    }
 
 		    	for ($x = 0; $x <= $highestColumnId; $x++)
@@ -145,7 +106,7 @@ class TextCanvas extends BaseCanvas
     private function getHighestRowId()
     {
 	    // Find the highest board field row id
-	    $boardFieldRowIds = array_keys($this->boardFieldSymbolRows);
+	    $boardFieldRowIds = array_keys($this->renderedBoardFields);
 	    natsort($boardFieldRowIds);
 	    $highestBoardFieldRowId = array_pop($boardFieldRowIds);
 
@@ -173,7 +134,7 @@ class TextCanvas extends BaseCanvas
     private function getHighestColumnId()
     {
 	    $columnIds = array();
-	    foreach ($this->boardFieldSymbolRows as $boardFieldSymbolRow)
+	    foreach ($this->renderedBoardFields as $boardFieldSymbolRow)
 	    {
 		    $columnIds = array_merge($columnIds, array_keys($boardFieldSymbolRow));
 	    }

@@ -84,8 +84,7 @@ class ConsoleOutput extends BaseOutput
         $this->printTitle();
 
         $gameStepString = "Game step: " . $_gameStep . "\n";
-        $this->boardRenderer->renderBoard($_board);
-        $boardContentString = $this->boardRenderer->getContent();
+        $boardContentString = $this->boardRenderer->renderBoard($_board);
         $this->shellOutputHelper->printCenteredOutputString($gameStepString);
         $this->shellOutputHelper->printCenteredOutputString($boardContentString);
 

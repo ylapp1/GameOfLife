@@ -11,45 +11,31 @@ namespace BoardRenderer\Image;
 use BoardRenderer\Base\BaseCanvas;
 
 /**
- * Draws images onto a resource.
+ * Combines resources to an total image.
  */
 class ImageCanvas extends BaseCanvas
 {
-	// Attributes
-
-	/**
-	 * The total image (border and cell images combined)
-	 *
-	 * @var resource $image
-	 */
-	private $image;
-
-
 	// Class Methods
 
 	/**
-	 * Resets the total image.
-	 */
-	public function reset()
-	{
-		$this->image = null;
-	}
-
-	/**
-	 * Adds the rendered board fields to the total image.
+	 * Renders the total board (combines board fields and border grid).
+	 * This method must be called after setBorderGrid() and setRenderedBoardFields() were called
 	 *
-	 * @param resource[][] $_renderedBoardFields The list of rendered board fields
 	 * @param int $_fieldSize The height/width of a single field in pixels
+	 *
+	 * @return mixed The total rendered board
 	 */
-	public function addRenderedBoardFields(array $_renderedBoardFields, int $_fieldSize)
+	public function render(int $_fieldSize)
 	{
-		$renderedBorderGridWidth = imagesx($this->cachedRenderedBorderGrid);
-		$renderedBorderGridHeight = imagesy($this->cachedRenderedBorderGrid);
+		$renderedBorderGrid = $this->getRenderedBorderGrid($_fieldSize);
 
-		$this->image = imagecreate($renderedBorderGridWidth, $renderedBorderGridHeight);
-		imagecopy($this->image, $this->cachedRenderedBorderGrid, 0, 0, 0, 0, $renderedBorderGridWidth, $renderedBorderGridHeight);
+		$renderedBorderGridWidth = imagesx($renderedBorderGrid);
+		$renderedBorderGridHeight = imagesy($renderedBorderGrid);
 
-		foreach ($_renderedBoardFields as $y => $renderedBoardFieldRow)
+		$totalBoardImage = imagecreate($renderedBorderGridWidth, $renderedBorderGridHeight);
+		imagecopy($totalBoardImage, $renderedBorderGrid, 0, 0, 0, 0, $renderedBorderGridWidth, $renderedBorderGridHeight);
+
+		foreach ($this->renderedBoardFields as $y => $renderedBoardFieldRow)
 		{
 			foreach ($renderedBoardFieldRow as $x => $renderedBoardField)
 			{
@@ -63,18 +49,10 @@ class ImageCanvas extends BaseCanvas
 				$cellStartX = $fieldStartX + ($_fieldSize - $imageWidth) / 2;
 				$cellStartY = $fieldStartY + ($_fieldSize - $imageHeight) / 2;
 
-				imagecopy($this->image, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight);
+				imagecopy($totalBoardImage, $renderedBoardField, $cellStartX, $cellStartY, 0, 0, $imageWidth, $imageHeight);
 			}
 		}
-	}
 
-	/**
-	 * Returns the content of the canvas.
-	 *
-	 * @return resource The content of the canvas
-	 */
-	public function getContent()
-	{
-		return $this->image;
+		return $totalBoardImage;
 	}
 }
