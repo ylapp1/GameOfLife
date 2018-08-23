@@ -9,8 +9,9 @@
 namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseBorderGrid;
+use BoardRenderer\Image\Utils\ImageColor;
+use BoardRenderer\Image\Utils\TransparentImageUtils;
 use GameOfLife\Board;
-use Output\Helpers\ImageColor;
 
 /**
  * Rendered border grid for the image board renderer.
@@ -20,11 +21,18 @@ class ImageBorderGrid extends BaseBorderGrid
 	// Attributes
 
 	/**
-	 * The background color of the border grid
+	 * The transparent image utils
 	 *
-	 * @var ImageColor $backgroundColor
+	 * @var TransparentImageUtils $transparentImageUtils
 	 */
-	private $backgroundColor;
+	private $transparentImageUtils;
+
+	/**
+	 * The list of border colors
+	 *
+	 * @var ImageColor[] $borderColors
+	 */
+	private $borderColors;
 
 
 	// Magic Methods
@@ -33,12 +41,13 @@ class ImageBorderGrid extends BaseBorderGrid
 	 * ImageBorderGrid constructor.
 	 *
 	 * @param Board $_board The board for which the border grid is created
-	 * @param ImageColor $_backgroundColor The background color of the border grid
+	 * @param ImageColor[] $_borderColors The list of border colors
 	 */
-	public function __construct(Board $_board, ImageColor $_backgroundColor)
+	public function __construct(Board $_board, array $_borderColors)
 	{
 		parent::__construct($_board);
-		$this->backgroundColor = $_backgroundColor;
+		$this->transparentImageUtils = new TransparentImageUtils();
+		$this->borderColors = $_borderColors;
 	}
 
 
@@ -56,7 +65,8 @@ class ImageBorderGrid extends BaseBorderGrid
 		$this->renderBorderParts($_fieldSize);
 
 		// Create the background image
-		$image = $this->initializeImage($_fieldSize);
+		$unusedColor = $this->transparentImageUtils->getUnusedColor($this->borderColors);
+		$image = $this->initializeImage($_fieldSize, $unusedColor);
 
 		// Render the border parts
 		foreach ($this->renderedBorderParts as $renderedBorderPart)
@@ -71,6 +81,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));
 		}
 
+		imagecolortransparent($image, $unusedColor->getColor($image));
+
 		return $image;
 	}
 
@@ -78,16 +90,17 @@ class ImageBorderGrid extends BaseBorderGrid
 	 * Initializes the background image of the border grid.
 	 *
 	 * @param int $_fieldSize The height/width of a single field in pixels
+	 * @param ImageColor $_backgroundColor The background color of the initial image
 	 *
 	 * @return resource The background image
 	 */
-	private function initializeImage(int $_fieldSize)
+	private function initializeImage(int $_fieldSize, ImageColor $_backgroundColor)
 	{
 		$imageWidth = $this->board->width() * $_fieldSize + $this->getTotalBorderWidthUntilColumn($this->getHighestColumnId());
 		$imageHeight = $this->board->height() * $_fieldSize + $this->getTotalBorderHeightUntilRow($this->getHighestRowId());
 
-		$image = imagecreate($imageWidth, $imageHeight);
-		imagefill($image, 0, 0, $this->backgroundColor->getColor($image));
+		$image = imagecreatetruecolor($imageWidth, $imageHeight);
+		imagefill($image, 0, 0, $_backgroundColor->getColor($image));
 
 		return $image;
 	}

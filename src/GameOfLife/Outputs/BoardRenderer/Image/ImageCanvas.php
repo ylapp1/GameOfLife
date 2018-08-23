@@ -9,12 +9,38 @@
 namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseCanvas;
+use BoardRenderer\Image\Utils\ImageColor;
 
 /**
  * Combines resources to an total image.
  */
 class ImageCanvas extends BaseCanvas
 {
+	// Attributes
+
+	/**
+	 * The background color of the image
+	 *
+	 * @var ImageColor $backgroundColor
+	 */
+	private $backgroundColor;
+
+
+	// Magic Methods
+
+	/**
+	 * ImageBorderGrid constructor.
+	 *
+	 * @param ImageColor $_backgroundColor The background color of the border grid
+	 * @param Bool $_cachesBorderGrid The board for which the border grid is created
+	 */
+	public function __construct(ImageColor $_backgroundColor, Bool $_cachesBorderGrid = true)
+	{
+		parent::__construct($_cachesBorderGrid);
+		$this->backgroundColor = $_backgroundColor;
+	}
+
+
 	// Class Methods
 
 	/**
@@ -33,6 +59,7 @@ class ImageCanvas extends BaseCanvas
 		$renderedBorderGridHeight = imagesy($renderedBorderGrid);
 
 		$totalBoardImage = imagecreate($renderedBorderGridWidth, $renderedBorderGridHeight);
+		imagefill($totalBoardImage, 0, 0, $this->backgroundColor->getColor($totalBoardImage));
 		imagecopy($totalBoardImage, $renderedBorderGrid, 0, 0, 0, 0, $renderedBorderGridWidth, $renderedBorderGridHeight);
 
 		foreach ($this->renderedBoardFields as $y => $renderedBoardFieldRow)

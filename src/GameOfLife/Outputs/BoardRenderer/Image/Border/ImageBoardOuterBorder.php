@@ -10,10 +10,10 @@ namespace BoardRenderer\Image\Border;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageRectangleBorderShape;
+use BoardRenderer\Image\Utils\ImageColor;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
 use GameOfLife\Rectangle;
-use Output\Helpers\ImageColor;
 
 /**
  * The outer border of the board for images.

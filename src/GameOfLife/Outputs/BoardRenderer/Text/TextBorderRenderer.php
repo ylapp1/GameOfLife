@@ -14,7 +14,7 @@ use GameOfLife\Board;
 use BoardRenderer\Base\BaseBorderRenderer;
 
 /**
- * Renders a border and its inner borders and adds them to a canvas.
+ * Fills and returns a border grid for TextTBoardRenderer classes.
  */
 class TextBorderRenderer extends BaseBorderRenderer
 {
@@ -24,19 +24,23 @@ class TextBorderRenderer extends BaseBorderRenderer
 	 * ImageBorderRenderer constructor.
 	 *
 	 * @param Board $_board The board for which the border will be rendered
-	 * @param BaseBorder $_border The border
-	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
+	 * @param BaseBorder $_mainBorder The main border
+	 * @param Bool $_hasBackgroundGrid If true the border grid will contain a background grid
 	 */
-	public function __construct(Board $_board, BaseBorder $_border, Bool $_hasBackgroundGrid = false)
+	public function __construct(Board $_board, BaseBorder $_mainBorder, Bool $_hasBackgroundGrid = false)
 	{
 		$borderGrid = new TextBorderGrid($_board);
+		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
+	}
 
-		if ($_hasBackgroundGrid)
-		{
-			$backgroundGridBorder = new TextBackgroundGridBorder($_border);
-			$_border->addInnerBorder($backgroundGridBorder);
-		}
-
-		parent::__construct($_board, $_border, $borderGrid, $_hasBackgroundGrid);
+	/**
+	 * Adds a background grid to a border.
+	 *
+	 * @param BaseBorder $_parentBorder The parent border of the background grid
+	 */
+	protected function addBackgroundBorderGrid($_parentBorder)
+	{
+		$backgroundGridBorder = new TextBackgroundGridBorder($_parentBorder);
+		$_parentBorder->addInnerBorder($backgroundGridBorder);
 	}
 }

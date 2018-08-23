@@ -10,7 +10,7 @@ namespace BoardRenderer\Image\Border;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageGridBorderShape;
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
 
 /**
  * The background grid border for images.

@@ -11,11 +11,11 @@ namespace BoardRenderer\Image;
 use BoardRenderer\Base\BaseBorderRenderer;
 use BoardRenderer\Image\Border\ImageBackgroundGridBorder;
 use BoardRenderer\Image\Border\ImageBorder;
+use BoardRenderer\Image\Utils\ImageColor;
 use GameOfLife\Board;
-use Output\Helpers\ImageColor;
 
 /**
- * Renders the borders as images.
+ * Fills and returns a border grid for ImageBoardRenderer classes.
  */
 class ImageBorderRenderer extends BaseBorderRenderer
 {
@@ -23,20 +23,56 @@ class ImageBorderRenderer extends BaseBorderRenderer
 	 * ImageBorderRenderer constructor.
 	 *
 	 * @param Board $_board The board for which the border will be rendered
-	 * @param ImageBorder $_border The border
-	 * @param Bool $_hasBackgroundGrid If set to true there will be a background grid that can be overwritten by borders
-	 * @param ImageColor $_backgroundColor The background color
+	 * @param ImageBorder $_mainBorder The main border
+	 * @param Bool $_hasBackgroundGrid If true the border grid will contain a background grid
 	 */
-	public function __construct(Board $_board, ImageBorder $_border, Bool $_hasBackgroundGrid = true, ImageColor $_backgroundColor)
+	public function __construct(Board $_board, ImageBorder $_mainBorder, Bool $_hasBackgroundGrid)
 	{
-		$borderGrid = new ImageBorderGrid($_board, $_backgroundColor);
+		$borderGrid = new ImageBorderGrid($_board, $this->getBorderColors($_mainBorder));
+		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
+	}
 
-		if ($_hasBackgroundGrid)
+	/**
+	 * Adds a background grid to a border.
+	 *
+	 * @param ImageBorder $_parentBorder The parent border of the background grid
+	 */
+	protected function addBackgroundBorderGrid($_parentBorder)
+	{
+		$backgroundGridBorder = new ImageBackgroundGridBorder($_parentBorder, $_parentBorder->color());
+		$_parentBorder->addInnerBorder($backgroundGridBorder);
+	}
+
+	/**
+	 * Returns a list of all colors that are used in the main border and its inner borders.
+	 *
+	 * @param ImageBorder $_mainBorder The main border
+	 *
+	 * @return ImageColor[] The list of border colors
+	 */
+	private function getBorderColors(ImageBorder $_mainBorder): array
+	{
+		/** @var ImageColor[] $borderColors */
+		$borderColors = array($_mainBorder->color());
+
+		/** @var ImageBorder $innerBorder */
+		foreach ($_mainBorder->getInnerBorders() as $innerBorder)
 		{
-			$backgroundGridBorder = new ImageBackgroundGridBorder($_border, $_border->color());
-			$_border->addInnerBorder($backgroundGridBorder);
+			$innerBorderColor = $innerBorder->color();
+
+			$colorExists = false;
+			foreach ($borderColors as $borderColor)
+			{
+				if ($borderColor->equals($innerBorderColor))
+				{
+					$colorExists = true;
+					break;
+				}
+			}
+
+			if (! $colorExists) $borderColors[] = $innerBorderColor;
 		}
 
-		parent::__construct($_board, $_border, $borderGrid, $_hasBackgroundGrid);
+		return $borderColors;
 	}
 }

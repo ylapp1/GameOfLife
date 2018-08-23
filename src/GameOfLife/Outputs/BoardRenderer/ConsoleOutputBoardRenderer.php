@@ -32,7 +32,7 @@ class ConsoleOutputBoardRenderer extends BaseBoardRenderer
 
         parent::__construct(
         	new TextBoardOuterBorder($_board),
-        	new TextBorderRenderer($_board, $border),
+        	new TextBorderRenderer($_board, $border, false),
         	new TextBoardFieldRenderer("☻", " "),
 	        new TextCanvas()
         );

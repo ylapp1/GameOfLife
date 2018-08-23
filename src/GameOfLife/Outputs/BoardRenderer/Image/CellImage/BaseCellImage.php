@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Image\CellImage;
 
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
 
 /**
  * Parent class for cell images.

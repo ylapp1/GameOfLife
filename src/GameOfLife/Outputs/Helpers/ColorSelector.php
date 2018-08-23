@@ -8,6 +8,8 @@
 
 namespace Output\Helpers;
 
+use BoardRenderer\Image\Utils\ImageColor;
+
 /**
  * Parses color selections.
  *

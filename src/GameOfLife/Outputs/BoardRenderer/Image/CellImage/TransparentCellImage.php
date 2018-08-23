@@ -8,29 +8,37 @@
 
 namespace BoardRenderer\Image\CellImage;
 
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
+use BoardRenderer\Image\Utils\TransparentImageUtils;
 
 /**
- * Base class for cell images that use a transparent background.
+ * Base class for cell images that are partially transparent.
  */
 abstract class TransparentCellImage extends BaseCellImage
 {
+	// Attributes
+
 	/**
-	 * Returns a color that is not used elsewhere in the image.
-	 * This color can then be used for the imagecolortransparent() function.
+	 * The transparent image utils
 	 *
-	 * @return ImageColor The unique color that is not used elsewhere in the cell image
+	 * @var TransparentImageUtils $transparentImageUtils
 	 */
-	protected function getUnusedColor(): ImageColor
+	protected $transparentImageUtils;
+
+
+	// Magic Methods
+
+	/**
+	 * TransparentCellImage constructor.
+	 *
+	 * @param ImageColor $_backgroundColor The background color of the cell image
+	 * @param ImageColor $_foreGroundColor The foreground color of the cell image
+	 * @param int $_height The height of the image
+	 * @param int $_width The width of the image
+	 */
+	public function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
 	{
-		$unusedColorRed = 0;
-		while ($unusedColorRed == $this->backgroundColor->red() || $unusedColorRed == $this->foreGroundColor->red())
-		{
-			$unusedColorRed++;
-		}
-
-		$transparentColor = new ImageColor($unusedColorRed, 0, 0);
-
-		return $transparentColor;
+		parent::__construct($_backgroundColor, $_foreGroundColor, $_height, $_width);
+		$this->transparentImageUtils = new TransparentImageUtils();
 	}
 }

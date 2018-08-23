@@ -9,12 +9,12 @@
 namespace BoardRenderer;
 
 use BoardRenderer\Image\Border\ImageBoardOuterBorder;
-use GameOfLife\Board;
 use BoardRenderer\Image\CellImage\SmileyCellImage;
 use BoardRenderer\Image\ImageBoardFieldRenderer;
 use BoardRenderer\Image\ImageBorderRenderer;
 use BoardRenderer\Image\ImageCanvas;
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
+use GameOfLife\Board;
 
 /**
  * Renders boards as images.
@@ -39,9 +39,9 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 
 		parent::__construct(
 			$mainBorder,
-			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid, $_backgroundColor),
+			new ImageBorderRenderer($_board, $mainBorder, $_hasBackgroundGrid),
 			$this->initializeBoardFieldRenderer($_fieldSize, $_backgroundColor, $_foregroundColor),
-			new ImageCanvas(),
+			new ImageCanvas($_backgroundColor, true),
 			$_fieldSize
 		);
 	}

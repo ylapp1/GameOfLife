@@ -9,27 +9,25 @@
 namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Image\Border\ImageBorder;
-use GameOfLife\Board;
 
 /**
- * Renders a border and its inner borders and adds them to a canvas.
+ * Fills and returns a border grid.
  */
 abstract class BaseBorderRenderer
 {
 	// Attributes
 
 	/**
-	 * The rendered border grid
+	 * The border grid
 	 *
-	 * @var BaseBorderGrid $renderedBorderGrid
+	 * @var BaseBorderGrid $borderGrid
 	 */
 	protected $borderGrid;
 
 	/**
-	 * The main border
+	 * The border
 	 *
-	 * @var ImageBorder $border
+	 * @var BaseBorder $border
 	 */
 	protected $border;
 
@@ -39,24 +37,32 @@ abstract class BaseBorderRenderer
 	/**
 	 * BaseBorderRenderer constructor.
 	 *
-	 * @param Board $_board The board
-	 * @param BaseBorder $_border The main border
+	 * @param BaseBorder $_mainBorder The main border
 	 * @param BaseBorderGrid $_borderGrid The border grid
-	 * @param Bool $_hasBackgroundGrid If true, the border grid will have a background grid
+	 * @param Bool $_hasBackgroundGrid If true the border grid will contain a background grid
 	 */
-	public function __construct(Board $_board, $_border, $_borderGrid, Bool $_hasBackgroundGrid)
+	public function __construct($_mainBorder, $_borderGrid, Bool $_hasBackgroundGrid)
 	{
-		$this->border = $_border;
+		$this->border = $_mainBorder;
 		$this->borderGrid = $_borderGrid;
+
+		if ($_hasBackgroundGrid) $this->addBackgroundBorderGrid($_mainBorder);
 	}
+
+	/**
+	 * Adds a background grid to a border.
+	 *
+	 * @param BaseBorder $_parentBorder The parent border of the background grid
+	 */
+	abstract protected function addBackgroundBorderGrid($_parentBorder);
 
 
 	// Class Methods
 
 	/**
-	 * Adds all border parts to the border grid and returns the updated border grid.
+	 * Adds all border parts to the border grid and returns the filled border grid.
 	 *
-	 * @return BaseBorderGrid The border grid
+	 * @return BaseBorderGrid The filled border grid
 	 */
 	public function getBorderGrid()
 	{

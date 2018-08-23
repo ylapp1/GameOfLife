@@ -106,6 +106,23 @@ abstract class BaseBorder
 	}
 
 	/**
+	 * Returns all inner borders of this border.
+	 *
+	 * @return BaseBorder[] The list of inner borders
+	 */
+	public function getInnerBorders(): array
+	{
+		$borders = array();
+		foreach ($this->innerBorders as $innerBorder)
+		{
+			$innerBorders = $innerBorder->getInnerBorders();
+			$borders = array_merge($borders, $innerBorders);
+		}
+
+		return $borders;
+	}
+
+	/**
 	 * Resets the list of inner borders to an empty array.
 	 */
 	public function resetInnerBorders()

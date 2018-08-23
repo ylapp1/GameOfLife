@@ -10,7 +10,7 @@ namespace BoardRenderer\Image\Border;
 
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
 
 /**
  * Renders borders as images.
