@@ -10,7 +10,6 @@ namespace BoardRenderer\Image;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
-use BoardRenderer\Base\BorderPositionsGrid;
 use BoardRenderer\Image\Utils\ImageColor;
 use BoardRenderer\Image\Utils\TransparentImageUtils;
 use GameOfLife\Board;
@@ -21,13 +20,6 @@ use GameOfLife\Board;
 class ImageBorderGrid extends BaseBorderGrid
 {
 	// Attributes
-
-	/**
-	 * The board for which the border grid is created
-	 *
-	 * @var Board $board
-	 */
-	private $board;
 
 	/**
 	 * The transparent image utils
@@ -54,8 +46,7 @@ class ImageBorderGrid extends BaseBorderGrid
 	 */
 	public function __construct(Board $_board, array $_borderColors)
 	{
-		parent::__construct(new BorderPositionsGrid($_board));
-		$this->board = $_board;
+		parent::__construct(new ImageBorderPositionsGrid($_board));
 		$this->transparentImageUtils = new TransparentImageUtils();
 		$this->borderColors = $_borderColors;
 	}
@@ -83,8 +74,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			$imageStartX = $startX * $_fieldSize + $this->borderPositionsGrid->getTotalBorderWidthUntilColumn($startX) - $this->borderPositionsGrid->getMaximumBorderWidthInColumn($startX);
-			$imageStartY = $startY * $_fieldSize + $this->borderPositionsGrid->getTotalBorderHeightUntilRow($startY) - $this->borderPositionsGrid->getMaximumBorderHeightInRow($startY);
+			$imageStartX = $startX * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderWidthUntilColumn($startX) - $this->borderPositionsGrid->getMaximumBorderWidthInColumn($startX);
+			$imageStartY = $startY * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderHeightUntilRow($startY) - $this->borderPositionsGrid->getMaximumBorderHeightInRow($startY);
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));
@@ -108,9 +99,8 @@ class ImageBorderGrid extends BaseBorderGrid
 		$highestColumnId = $this->borderPositionsGrid->getHighestColumnId();
 		$highestRowId = $this->borderPositionsGrid->getHighestRowId();
 
-		// TODO: Find way to omit board width here
-		$imageWidth = $this->board->width() * $_fieldSize + $this->borderPositionsGrid->getTotalBorderWidthUntilColumn($highestColumnId);
-		$imageHeight = $this->board->height() * $_fieldSize + $this->borderPositionsGrid->getTotalBorderHeightUntilRow($highestRowId);
+		$imageWidth = $this->borderPositionsGrid->getMaximumNumberOfCoveredHorizontalBoardFields() * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderWidthUntilColumn($highestColumnId);
+		$imageHeight = $this->borderPositionsGrid->getMaximumNumberOfCoveredVerticalBoardFields() * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderHeightUntilRow($highestRowId);
 
 		$image = imagecreatetruecolor($imageWidth, $imageHeight);
 		imagefill($image, 0, 0, $_backgroundColor->getColor($image));

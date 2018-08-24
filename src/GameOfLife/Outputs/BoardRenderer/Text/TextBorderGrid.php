@@ -10,13 +10,35 @@ namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
+use GameOfLife\Board;
 
 /**
  * Border grid for the TextBoardRenderer classes.
  */
 class TextBorderGrid extends BaseBorderGrid
 {
+	// Attributes
+
+	/**
+	 * Stores the list of border symbols
+	 *
+	 * @var String[][] The list of border symbols
+	 */
 	private $borderSymbolGrid;
+
+
+	// Magic Methods
+
+	/**
+	 * TextBorderGrid constructor.
+	 *
+	 * @param Board $_board The board for which this text border grid will be used
+	 */
+	public function __construct(Board $_board)
+	{
+		parent::__construct(new TextBorderPositionsGrid($_board));
+		$this->borderSymbolGrid = array();
+	}
 
 	// Class Methods
 

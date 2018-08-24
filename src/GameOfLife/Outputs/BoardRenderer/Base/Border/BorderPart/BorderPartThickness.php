@@ -10,6 +10,7 @@ namespace BoardRenderer\Base\Border\BorderPart;
 
 /**
  * Defines the border part thickness (height and width of each fraction of the border part).
+ * TODO: Find better name for this class
  */
 class BorderPartThickness
 {

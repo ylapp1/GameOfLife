@@ -32,7 +32,7 @@ abstract class BaseBorderGrid
 	/**
 	 * The border positions grid
 	 *
-	 * @param BorderPositionsGrid $borderPositionsGrid
+	 * @param BaseBorderPositionsGrid $borderPositionsGrid
 	 */
 	protected $borderPositionsGrid;
 
@@ -42,9 +42,9 @@ abstract class BaseBorderGrid
 	/**
 	 * BaseBorderGrid constructor.
 	 *
-	 * @param BorderPositionsGrid $_borderPositionsGrid The border positions grid
+	 * @param BaseBorderPositionsGrid $_borderPositionsGrid The border positions grid
 	 */
-	public function __construct(BorderPositionsGrid $_borderPositionsGrid)
+	public function __construct(BaseBorderPositionsGrid $_borderPositionsGrid)
 	{
 		$this->borderPositionsGrid = $_borderPositionsGrid;
 		$this->borderParts = array();
@@ -56,9 +56,9 @@ abstract class BaseBorderGrid
 	/**
 	 * Returns the border positions grid.
 	 *
-	 * @return BorderPositionsGrid The border positions grid
+	 * @return BaseBorderPositionsGrid The border positions grid
 	 */
-	public function borderPositionsGrid(): BorderPositionsGrid
+	public function borderPositionsGrid(): BaseBorderPositionsGrid
 	{
 		return $this->borderPositionsGrid;
 	}

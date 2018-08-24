@@ -9,7 +9,6 @@
 namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\BorderPositionsGrid;
 use BoardRenderer\Text\Border\TextBackgroundGridBorder;
 use BoardRenderer\Base\BaseBorderGridBuilder;
 use GameOfLife\Board;
@@ -30,7 +29,7 @@ class TextBorderGridBuilder extends BaseBorderGridBuilder
 	 */
 	public function __construct(Board $_board, BaseBorder $_mainBorder, Bool $_hasBackgroundGrid = false)
 	{
-		$borderGrid = new TextBorderGrid(new BorderPositionsGrid($_board));
+		$borderGrid = new TextBorderGrid($_board);
 		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
 	}
 
