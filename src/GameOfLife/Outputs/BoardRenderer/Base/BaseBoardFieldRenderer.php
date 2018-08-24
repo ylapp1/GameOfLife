@@ -11,23 +11,23 @@ namespace BoardRenderer\Base;
 use GameOfLife\Field;
 
 /**
- * Renders a list of board fields and adds them to a canvas.
+ * Renders a list of board fields.
  *
- * Call renderBoardFields() to render a list of board fields and add them to a canvas
+ * Call getRenderedBoardFields() to render a list of board fields
  */
 abstract class BaseBoardFieldRenderer
 {
 	// Attributes
 
 	/**
-	 * The rendered cell for alive cells
+	 * The image/symbol/etc that will be used to render alive cells
 	 *
 	 * @var mixed $renderedCellAlive
 	 */
 	private $renderedCellAlive;
 
 	/**
-	 * The rendered cell for dead cells
+	 * The image/symbol/etc that will be used to render dead cells
 	 *
 	 * @var mixed $renderedCellDead
 	 */
@@ -39,8 +39,8 @@ abstract class BaseBoardFieldRenderer
 	/**
 	 * BaseBoardFieldRenderer constructor.
 	 *
-	 * @param mixed $_renderedCellAlive The rendered cell for alive cells
-	 * @param mixed $_renderedCellDead The rendered cell for dead cells
+	 * @param mixed $_renderedCellAlive The image/symbol/etc that will be used to render alive cells
+	 * @param mixed $_renderedCellDead The image/symbol/etc that will be used to render dead cells
 	 */
 	public function __construct($_renderedCellAlive = null, $_renderedCellDead = null)
 	{
@@ -66,7 +66,8 @@ abstract class BaseBoardFieldRenderer
         {
             foreach ($boardFieldRow as $boardField)
             {
-                $renderedField = $this->renderBoardField($boardField);
+	            if ($boardField->isAlive()) $renderedField = $this->renderedCellAlive;
+	            else $renderedField = $this->renderedCellDead;
 
                 if ($renderedField)
                 {
@@ -76,18 +77,5 @@ abstract class BaseBoardFieldRenderer
         }
 
         return $renderedBoardFields;
-    }
-
-    /**
-     * Renders a board field.
-     *
-     * @param Field $_field The board field
-     *
-     * @return mixed The rendered board field
-     */
-    protected function renderBoardField(Field $_field)
-    {
-    	if ($_field->isAlive()) return $this->renderedCellAlive;
-    	else return $this->renderedCellDead;
     }
 }
