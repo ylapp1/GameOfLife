@@ -10,7 +10,6 @@ namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseVerticalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
 use GameOfLife\Coordinate;
 
 /**
@@ -60,34 +59,32 @@ class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape i
 		else return null;
 	}
 
+	public function getBorderPartGridPositions(): array
+	{
+		$coordinates = parent::getBorderPartGridPositions();
+		$borderPartGridPositions = array();
+
+		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->startsAt(), false, false);
+		foreach ($coordinates as $coordinate)
+		{
+			$borderPartGridPositions[] = new TextBorderPartGridPosition($coordinate, true, false);
+		}
+		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->endsAt(), false, false);
+
+		return $borderPartGridPositions;
+	}
+
 	/**
 	 * Creates and returns the rendered parent border part.
 	 *
 	 * @param int $_fieldSize The field size in symbols
 	 *
-	 * @return TextRawRenderedBorderPart The rendered parent border part
+	 * @return String[] The border symbols of the parent border part
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
     {
     	// TODO: Do something with field size
-        $borderSymbols = $this->parentBorderPart->getBorderSymbols();
-
-	    // Using unset instead of array_shift here because array_shift changes the indexes of the array
-	    $borderSymbolStart = $borderSymbols[0];
-	    unset($borderSymbols[0]);
-	    $borderSymbolEnd = array_pop($borderSymbols);
-
-	    // Create the rendered border part
-	    $renderedBorderPart = new TextRawRenderedBorderPart();
-
-	    $renderedBorderPart->addBorderSymbol($borderSymbolStart, new Coordinate(0, 0), false, false);
-	    foreach ($borderSymbols as $y => $borderSymbol)
-	    {
-		    $renderedBorderPart->addBorderSymbol($borderSymbol, new Coordinate(0, $y - 1), true, false);
-	    }
-	    $renderedBorderPart->addBorderSymbol($borderSymbolEnd, new Coordinate(0, $this->getNumberOfBorderSymbols()), false, false);
-
-        return $renderedBorderPart;
+        return $this->parentBorderPart->getBorderSymbols();
     }
 
 	public function getCollisionPositionWith($_borderPart)

@@ -10,7 +10,6 @@ namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
-use BoardRenderer\Text\Border\BorderPart\TextRawRenderedBorderPart;
 
 /**
  * Border grid for the TextBoardRenderer classes.
@@ -49,18 +48,13 @@ class TextBorderGrid extends BaseBorderGrid
 	 */
 	public function addRenderedBorderPart($_renderedBorder)
 	{
-		/** @var TextRawRenderedBorderPart $rawRenderedBorderPart */
 		$rawRenderedBorderPart = $_renderedBorder->rawRenderedBorderPart();
-		$borderSymbols = $rawRenderedBorderPart->borderSymbols();
-		$borderSymbolPositions = $rawRenderedBorderPart->borderSymbolPositions();
+		$borderSymbols = $rawRenderedBorderPart;
 
-		foreach ($borderSymbolPositions as $symbolId => $at)
+		foreach ($_renderedBorder->borderPartGridPositions() as $symbolId => $at)
 		{
-			$gridX = $_renderedBorder->parentBorderPart()->startsAt()->x() * 2 + $at->x();
-			$gridY = $_renderedBorder->parentBorderPart()->startsAt()->y() * 2 + $at->y();
-
-			if (! isset($this->borderSymbolGrid[$gridY])) $this->borderSymbolGrid[$gridY] = array();
-			$this->borderSymbolGrid[$gridY][$gridX] = $borderSymbols[$symbolId];
+			if (! isset($this->borderSymbolGrid[$at->y()])) $this->borderSymbolGrid[$at->y()] = array();
+			$this->borderSymbolGrid[$at->y()][$at->x()] = $borderSymbols[$symbolId];
 		}
 	}
 
@@ -70,30 +64,32 @@ class TextBorderGrid extends BaseBorderGrid
 	private function autoCompleteBorderSymbolGrid()
 	{
 		// Auto complete the grid
-		// TODO: Adjust border positions grid for text ...
-		for ($y = $this->borderPositionsGrid->getLowestRowId(); $y <= $this->borderPositionsGrid->getHighestRowId() * 2; $y++)
+		for ($y = $this->borderPositionsGrid->getLowestRowId(); $y <= $this->borderPositionsGrid->getHighestRowId(); $y++)
 		{
 			$isBorderRow = ($y % 2 == 0);
 
-			for ($x = $this->borderPositionsGrid->getLowestColumnId(); $x <= $this->borderPositionsGrid->getHighestColumnId() * 2; $x++)
+			for ($x = $this->borderPositionsGrid->getLowestColumnId(); $x <= $this->borderPositionsGrid->getHighestColumnId(); $x++)
 			{
 				if (! isset($this->borderSymbolGrid[$y][$x]))
 				{
 					$isBorderColumn = ($x % 2 == 0);
+
+					$rowContainsBorderSymbol = ($this->borderPositionsGrid->getMaximumBorderHeightInRow($y) > 0);
+					$columnContainsBorderSymbol = ($this->borderPositionsGrid->getMaximumBorderWidthInColumn($x) > 0);
 
 					/*
 					 * If the current row is a border row and the row already contains a border symbol and
 					 * a) The column in question is not a border column or
 					 * b) The column in question is a border column and that column contains a border symbol
 					 */
-					$isBorderRowGap = ($isBorderRow && $this->rowContainsBorderSymbol($y) && (! $isBorderColumn || $this->columnContainsBorderSymbol($x)));
+					$isBorderRowGap = ($isBorderRow && $rowContainsBorderSymbol && (! $isBorderColumn || $columnContainsBorderSymbol));
 
 					/*
 					 * If the current column is a border column and the border column already contains a border symbol and
 					 * a) The row in question is not a border row or
 					 * b) The row in question is a border row and that row contains a border symbol
 					 */
-					$isBorderColumnGap = ($isBorderColumn && $this->columnContainsBorderSymbol($x) && (! $isBorderRow || $this->rowContainsBorderSymbol($y)));
+					$isBorderColumnGap = ($isBorderColumn && $columnContainsBorderSymbol && (! $isBorderRow || $rowContainsBorderSymbol));
 
 					if ($isBorderRowGap || $isBorderColumnGap) $this->borderSymbolGrid[$y][$x] = " ";
 				}
@@ -105,35 +101,5 @@ class TextBorderGrid extends BaseBorderGrid
 		{
 			ksort($borderSymbolRow);
 		}
-	}
-
-	/**
-	 * Returns whether a specific column contains any border symbols.
-	 *
-	 * @param int $_x The X-Position of the column
-	 *
-	 * @return Bool True if the column contains a border symbol, false otherwise
-	 */
-	private function columnContainsBorderSymbol(int $_x): Bool
-	{
-		foreach ($this->borderSymbolGrid as $y => $borderSymbolRow)
-		{
-			if (isset($borderSymbolRow[$_x])) return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Returns whether a specific row contains any border symbols.
-	 *
-	 * @param int $_y The Y-Position of the row
-	 *
-	 * @return Bool True if the row contains a border symbol, false otherwise
-	 */
-	private function rowContainsBorderSymbol(int $_y): Bool
-	{
-		if (isset($this->borderSymbolGrid[$_y])) return true;
-		else return false;
 	}
 }

@@ -26,7 +26,7 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 		$borderPartGridPositions = array();
 
 		$startX = $this->parentBorderPart->startsAt()->x();
-		for ($y = $this->parentBorderPart->startsAt()->y() + 1; $y <= $this->parentBorderPart->endsAt()->y(); $y++)
+		for ($y = $this->parentBorderPart->startsAt()->y(); $y < $this->parentBorderPart->endsAt()->y(); $y++)
 		{
 			$borderPartGridPositions[] = new Coordinate($startX, $y);
 		}
