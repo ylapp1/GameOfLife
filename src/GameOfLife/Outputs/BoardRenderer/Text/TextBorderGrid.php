@@ -22,18 +22,17 @@ class TextBorderGrid extends BaseBorderGrid
 	// Class Methods
 
 	/**
-	 * Creates and returns the rendered border grid.
+	 * Creates and returns a rendered border grid from a list of rendered border parts.
 	 *
-	 * @param int $_fieldSize The height/width of a single field in pixels
+	 * @param RenderedBorderPart[] $_renderedBorderParts The list of rendered border parts
+	 * @param int $_fieldSize The height/width of a field in symbols
 	 *
 	 * @return String[][] The rendered border grid
 	 */
-	public function renderBorderGrid(int $_fieldSize)
+	public function renderTotalBorderGrid(array $_renderedBorderParts, int $_fieldSize)
 	{
-		$this->renderBorderParts($_fieldSize);
-
 		// Add the rendered border parts
-		foreach ($this->renderedBorderParts as $renderedBorderPart)
+		foreach ($_renderedBorderParts as $renderedBorderPart)
 		{
 			$this->addRenderedBorderPart($renderedBorderPart);
 		}
@@ -72,11 +71,11 @@ class TextBorderGrid extends BaseBorderGrid
 	{
 		// Auto complete the grid
 		// TODO: Adjust border positions grid for text ...
-		for ($y = $this->getLowestRowId(); $y <= $this->getHighestRowId() * 2; $y++)
+		for ($y = $this->borderPositionsGrid->getLowestRowId(); $y <= $this->borderPositionsGrid->getHighestRowId() * 2; $y++)
 		{
 			$isBorderRow = ($y % 2 == 0);
 
-			for ($x = $this->getLowestColumnId(); $x <= $this->getHighestColumnId() * 2; $x++)
+			for ($x = $this->borderPositionsGrid->getLowestColumnId(); $x <= $this->borderPositionsGrid->getHighestColumnId() * 2; $x++)
 			{
 				if (! isset($this->borderSymbolGrid[$y][$x]))
 				{

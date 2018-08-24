@@ -9,27 +9,28 @@
 namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\BorderPositionsGrid;
 use BoardRenderer\Text\Border\TextBackgroundGridBorder;
+use BoardRenderer\Base\BaseBorderGridBuilder;
 use GameOfLife\Board;
-use BoardRenderer\Base\BaseBorderRenderer;
 
 /**
  * Fills and returns a border grid for TextTBoardRenderer classes.
  */
-class TextBorderRenderer extends BaseBorderRenderer
+class TextBorderGridBuilder extends BaseBorderGridBuilder
 {
 	// Magic Methods
 
 	/**
-	 * ImageBorderRenderer constructor.
+	 * ImageBorderGridBuilder constructor.
 	 *
-	 * @param Board $_board The board for which the border will be rendered
+	 * @param Board $_board The board for which this BorderGridBuilder will be used
 	 * @param BaseBorder $_mainBorder The main border
 	 * @param Bool $_hasBackgroundGrid If true the border grid will contain a background grid
 	 */
 	public function __construct(Board $_board, BaseBorder $_mainBorder, Bool $_hasBackgroundGrid = false)
 	{
-		$borderGrid = new TextBorderGrid($_board);
+		$borderGrid = new TextBorderGrid(new BorderPositionsGrid($_board));
 		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
 	}
 

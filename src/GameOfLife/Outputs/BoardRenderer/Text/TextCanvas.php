@@ -111,7 +111,7 @@ class TextCanvas extends BaseCanvas
 	    $highestBoardFieldRowId = array_pop($boardFieldRowIds);
 
 	    // TODO: Does this work??
-	    $highestBorderSymbolRowId = $this->borderGrid->getHighestRowId();
+	    $highestBorderSymbolRowId = $this->borderGrid->borderPositionsGrid()->getHighestRowId();
 
 	    $highestRowId = null;
 	    if ($highestBoardFieldRowId) $highestRowId = $highestBoardFieldRowId;
@@ -142,7 +142,7 @@ class TextCanvas extends BaseCanvas
 	    $highestBoardFieldColumnId = array_pop($columnIds);
 
 	    // TODO: Does this work??
-	    $highestBorderSymbolColumnId = $this->borderGrid->getHighestColumnId();
+	    $highestBorderSymbolColumnId = $this->borderGrid->borderPositionsGrid()->getHighestColumnId();
 
 	    $highestColumnId = null;
 	    if ($highestBoardFieldColumnId) $highestColumnId = $highestBoardFieldColumnId;

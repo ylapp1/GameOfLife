@@ -13,12 +13,12 @@ use BoardRenderer\Base\Border\BaseBorder;
 /**
  * Fills and returns a border grid.
  */
-abstract class BaseBorderRenderer
+abstract class BaseBorderGridBuilder
 {
 	// Attributes
 
 	/**
-	 * The border grid
+	 * The border grid object that will be filled
 	 *
 	 * @var BaseBorderGrid $borderGrid
 	 */
@@ -35,7 +35,7 @@ abstract class BaseBorderRenderer
 	// Magic Methods
 
 	/**
-	 * BaseBorderRenderer constructor.
+	 * BaseBorderGridBuilder constructor.
 	 *
 	 * @param BaseBorder $_mainBorder The main border
 	 * @param BaseBorderGrid $_borderGrid The border grid
@@ -67,7 +67,6 @@ abstract class BaseBorderRenderer
 	public function getBorderGrid()
 	{
 		$this->borderGrid->reset();
-
 		foreach ($this->border->getBorderParts() as $borderPart)
 		{
 			$this->borderGrid->addBorderPart($borderPart);

@@ -9,7 +9,7 @@
 namespace BoardRenderer;
 
 use BoardRenderer\Base\BaseBoardFieldRenderer;
-use BoardRenderer\Base\BaseBorderRenderer;
+use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Base\BaseCanvas;
 use BoardRenderer\Base\Border\BaseBorder;
 use GameOfLife\Board;
@@ -34,7 +34,7 @@ abstract class BaseBoardRenderer
     /**
      * The border renderer
      *
-     * @var BaseBorderRenderer $borderRenderer
+     * @var BaseBorderGridBuilder $borderRenderer
      */
     protected $borderRenderer;
 
@@ -66,7 +66,7 @@ abstract class BaseBoardRenderer
      * BaseBoardRenderer constructor.
      *
      * @param BaseBorder $_border The border
-     * @param BaseBorderRenderer $_borderRenderer The border renderer
+     * @param BaseBorderGridBuilder $_borderRenderer The border renderer
      * @param BaseBoardFieldRenderer $_boardFieldRenderer The board field renderer
      * @param BaseCanvas $_canvas The canvas
      * @param int $_fieldSize The height/width of a field in pixels/symbols/etc

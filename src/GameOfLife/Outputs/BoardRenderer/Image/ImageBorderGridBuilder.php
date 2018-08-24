@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Image;
 
-use BoardRenderer\Base\BaseBorderRenderer;
+use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Image\Border\ImageBackgroundGridBorder;
 use BoardRenderer\Image\Border\ImageBorder;
 use BoardRenderer\Image\Utils\ImageColor;
@@ -17,10 +17,10 @@ use GameOfLife\Board;
 /**
  * Fills and returns a border grid for ImageBoardRenderer classes.
  */
-class ImageBorderRenderer extends BaseBorderRenderer
+class ImageBorderGridBuilder extends BaseBorderGridBuilder
 {
 	/**
-	 * ImageBorderRenderer constructor.
+	 * ImageBorderGridBuilder constructor.
 	 *
 	 * @param Board $_board The board for which the border will be rendered
 	 * @param ImageBorder $_mainBorder The main border

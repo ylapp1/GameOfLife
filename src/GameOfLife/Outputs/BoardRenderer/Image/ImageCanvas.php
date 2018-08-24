@@ -69,8 +69,8 @@ class ImageCanvas extends BaseCanvas
 				$imageWidth = imagesx($renderedBoardField);
 				$imageHeight = imagesy($renderedBoardField);
 
-				$fieldStartX = $x * $_fieldSize + $this->borderGrid->getTotalBorderWidthUntilColumn($x);
-				$fieldStartY = $y * $_fieldSize + $this->borderGrid->getTotalBorderHeightUntilRow($y);
+				$fieldStartX = $x * $_fieldSize + $this->borderGrid->borderPositionsGrid()->getTotalBorderWidthUntilColumn($x);
+				$fieldStartY = $y * $_fieldSize + $this->borderGrid->borderPositionsGrid()->getTotalBorderHeightUntilRow($y);
 
 				// Center the cell image
 				$cellStartX = $fieldStartX + ($_fieldSize - $imageWidth) / 2;

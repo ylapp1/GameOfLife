@@ -113,7 +113,7 @@ abstract class BaseCanvas
 			! $this->cachedRenderedBorderGrid ||
 			! ($this->cachedRenderedBorderGridFieldSize && $this->cachedRenderedBorderGridFieldSize == $_fieldSize))
 		{
-			$this->cachedRenderedBorderGrid = $this->borderGrid->renderBorderGrid($_fieldSize);
+			$this->cachedRenderedBorderGrid = $this->borderGrid->render($_fieldSize);
 			$this->cachedRenderedBorderGridFieldSize = $_fieldSize;
 		}
 

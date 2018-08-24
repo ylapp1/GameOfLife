@@ -23,6 +23,7 @@ class SmileyCellImage extends TransparentCellImage
 	 */
 	public function getImage()
 	{
+		// TODO: Background should be transparent of smileys
 		$transparentColor = $this->transparentImageUtils->getUnusedColor(array($this->backgroundColor, $this->foreGroundColor));
 
 		$cellImage = imagecreatetruecolor($this->width, $this->height);
