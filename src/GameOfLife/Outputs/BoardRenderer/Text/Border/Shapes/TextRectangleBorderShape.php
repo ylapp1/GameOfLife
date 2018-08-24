@@ -88,7 +88,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-	        $this->horizontalThickness,
+	        $this->horizontalBorderPartsThickness,
 	        $this->borderTopSymbolDefinition
         );
     }
@@ -114,7 +114,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextHorizontalBorderPartShape(),
-	        $this->horizontalThickness,
+	        $this->horizontalBorderPartsThickness,
 	        $this->borderBottomSymbolDefinition
         );
     }
@@ -137,7 +137,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-	        $this->verticalThickness,
+	        $this->verticalBorderPartsThickness,
             $this->borderLeftSymbolDefinition
         );
     }
@@ -163,7 +163,7 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $startsAt,
             $endsAt,
             new TextVerticalCollisionBorderPartShape(),
-	        $this->verticalThickness,
+	        $this->verticalBorderPartsThickness,
 	        $this->borderRightSymbolDefinition
         );
     }

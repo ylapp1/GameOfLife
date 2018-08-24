@@ -65,18 +65,17 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
 	 *
 	 * @return TextBorderPart The horizontal border part
 	 */
-	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
+	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt)
 	{
 		return new TextBorderPart(
-			$_parentBorder,
+			$this->parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new TextHorizontalBorderPartShape(),
-			$this->horizontalThickness,
+			$this->horizontalBorderPartsThickness,
 			$this->borderHorizontalSymbolDefinition
 		);
 	}
@@ -86,18 +85,17 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
 	 *
 	 * @return TextBorderPart The vertical border part
 	 */
-	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder)
+	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt)
 	{
 		return new TextBorderPart(
-			$_parentBorder,
+			$this->parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new TextVerticalCollisionBorderPartShape(),
-			$this->verticalThickness,
+			$this->verticalBorderPartsThickness,
 			$this->borderVerticalSymbolDefinition
 		);
 	}

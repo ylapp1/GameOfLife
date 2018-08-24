@@ -12,13 +12,15 @@ use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BorderPart;
 
 /**
- * Creates border parts that form a specific shape.
+ * Creates and returns border parts that form a specific shape.
  */
 abstract class BaseBorderShape
 {
     // Attributes
 
     /**
+     * The parent border
+     *
      * @var BaseBorder $parentBorder
      */
     protected $parentBorder;
@@ -60,38 +62,20 @@ abstract class BaseBorderShape
     abstract public function getBorderParts();
 
 	/**
-	 * Calculates and returns the total border width until a specific column.
+	 * Returns the maximum allowed Y-Coordinate for a specific column.
 	 *
 	 * @param int $_x The X-Coordinate of the column
 	 *
-	 * @return int The total column width of this border shape until that column
+	 * @return int The maximum allowed Y-Coordinate
 	 */
-    abstract public function getBorderWidthInColumn(int $_x): int;
+    abstract public function getMaximumAllowedYCoordinate(int $_x): int;
 
 	/**
-	 * Calculates and returns the total border height until a specific row.
+	 * Returns the maximum allowed X-Coordinate for a specific row.
 	 *
 	 * @param int $_y The Y-Coordinate of the row
 	 *
-	 * @return int The total border height of this border shape until that row
+	 * @return int The maximum allowed X-Coordinate
 	 */
-    abstract public function getBorderHeightInRow(int $_y): int;
-
-	/**
-	 * Returns the maximum allowed width for a specific row.
-	 *
-	 * @param int $_y The Y-Coordinate of the row
-	 *
-	 * @return int The maximum allowed width for that row
-	 */
-    abstract public function getMaximumAllowedYCoordinate(int $_y): int;
-
-	/**
-	 * Returns the maximum allowed height for a specific column.
-	 *
-	 * @param int $_x The X-Coordinate of the column
-	 *
-	 * @return int The maximum allowed height for that column
-	 */
-    abstract public function getMaximumAllowedXCoordinate(int $_x): int;
+    abstract public function getMaximumAllowedXCoordinate(int $_y): int;
 }

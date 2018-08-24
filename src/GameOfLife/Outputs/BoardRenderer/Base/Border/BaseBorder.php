@@ -12,10 +12,9 @@ use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
- * Parent class for border printers.
+ * Parent class for borders.
  *
- * Call getBorderTopString() and getBorderBottomString() to get the top/bottom border strings
- * Call addBordersToRowString() to add the left/right borders to a single row
+ * Call getBorderParts() to get a list of border parts that form the border
  */
 abstract class BaseBorder
 {
@@ -112,7 +111,7 @@ abstract class BaseBorder
 	 */
 	public function getInnerBorders(): array
 	{
-		$borders = array();
+		$borders = $this->innerBorders;
 		foreach ($this->innerBorders as $innerBorder)
 		{
 			$innerBorders = $innerBorder->getInnerBorders();
@@ -131,7 +130,7 @@ abstract class BaseBorder
 	}
 
 	/**
-	 * Adds all borders of this border part builder to an output board.
+	 * Returns all border parts of this border and its inner borders.
      *
      * @return BorderPart[] The list of border parts
 	 */

@@ -42,7 +42,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageHorizontalBorderPartShape(),
-			$this->horizontalThickness
+			$this->horizontalBorderPartsThickness
 		);
 	}
 
@@ -67,7 +67,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageHorizontalBorderPartShape(),
-			$this->horizontalThickness
+			$this->horizontalBorderPartsThickness
 		);
 	}
 
@@ -92,7 +92,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageVerticalBorderPartShape(),
-			$this->verticalThickness
+			$this->verticalBorderPartsThickness
 		);
 	}
 
@@ -117,7 +117,7 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$startsAt,
 			$endsAt,
 			new ImageVerticalBorderPartShape(),
-			$this->verticalThickness
+			$this->verticalBorderPartsThickness
 		);
 	}
 }

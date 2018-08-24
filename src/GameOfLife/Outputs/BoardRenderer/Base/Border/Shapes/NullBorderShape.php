@@ -29,7 +29,7 @@ class NullBorderShape extends BaseBorderShape
 	// Class Methods
 
 	/**
-	 * Returns a empty list of border parts.
+	 * Returns an empty list of border parts.
 	 *
 	 * @return BorderPart[] The empty list of border parts
 	 */
@@ -38,22 +38,26 @@ class NullBorderShape extends BaseBorderShape
 		return array();
 	}
 
-	public function getBorderWidthInColumn(int $_x): int
+	/**
+	 * Returns the maximum allowed Y-Coordinate for a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int The maximum allowed Y-Coordinate
+	 */
+	public function getMaximumAllowedYCoordinate(int $_x): int
 	{
 		return 0;
 	}
 
-	public function getBorderHeightInRow(int $_y): int
-	{
-		return 0;
-	}
-
-	public function getMaximumAllowedYCoordinate(int $_y): int
-	{
-		return 0;
-	}
-
-	public function getMaximumAllowedXCoordinate(int $_x): int
+	/**
+	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The maximum allowed X-Coordinate
+	 */
+	public function getMaximumAllowedXCoordinate(int $_y): int
 	{
 		return 0;
 	}

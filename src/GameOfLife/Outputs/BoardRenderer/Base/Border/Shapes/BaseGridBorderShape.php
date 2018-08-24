@@ -21,18 +21,18 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	// Attributes
 
 	/**
-	 * Defines the thickness of horizontal parts of this border
+	 * Defines the thickness for horizontal border parts of this border
 	 *
-	 * @var BorderPartThickness $horizontalThickness
+	 * @var BorderPartThickness $horizontalBorderPartsThickness
 	 */
-	protected $horizontalThickness;
+	protected $horizontalBorderPartsThickness;
 
 	/**
-	 * Defines the thickness of vertical parts of this border
+	 * Defines the thickness for vertical border parts of this border
 	 *
-	 * @var BorderPartThickness $verticalThickness
+	 * @var BorderPartThickness $verticalBorderPartsThickness
 	 */
-	protected $verticalThickness;
+	protected $verticalBorderPartsThickness;
 
 
 	// Magic Methods
@@ -40,15 +40,15 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	/**
 	 * BaseGridBorderShape constructor.
 	 *
-	 * @param BaseBorder $_parentBorder
-	 * @param BorderPartThickness $_horizontalThickness
-	 * @param BorderPartThickness $_verticalThickness
+	 * @param BaseBorder $_parentBorder The parent border of this border shape
+	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal border parts of this border
+	 * @param BorderPartThickness $_verticalThickness The thickness for vertical border parts of this border
 	 */
 	public function __construct(BaseBorder $_parentBorder, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness)
 	{
 		parent::__construct($_parentBorder);
-		$this->horizontalThickness = $_horizontalThickness;
-		$this->verticalThickness = $_verticalThickness;
+		$this->horizontalBorderPartsThickness = $_horizontalThickness;
+		$this->verticalBorderPartsThickness = $_verticalThickness;
 	}
 
 
@@ -62,12 +62,9 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	public function getBorderParts()
 	{
 		$parentBorderShape = $this->parentBorder->parentBorder()->shape();
-
 		if (! $parentBorderShape instanceof RectangleBorderShape)
 		{
-			echo "No is not";
-
-			// TODO: Currently the background grid can only be applied to rectangle border shapes
+			// TODO: Make background grid work with all border shapes
 			return array();
 		}
 
@@ -84,8 +81,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		{
 			$borderPart = $this->getHorizontalBackgroundGridBorderPart(
 				new Coordinate(0, $y),
-				new Coordinate($width, $y),
-				$this->parentBorder
+				new Coordinate($width, $y)
 			);
 			$backgroundGridBorderParts[] = $borderPart;
 		}
@@ -95,8 +91,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 		{
 			$borderPart = $this->getVerticalBackgroundGridBorderPart(
 				new Coordinate($x, 0),
-				new Coordinate($x, $height),
-				$this->parentBorder
+				new Coordinate($x, $height)
 			);
 			$backgroundGridBorderParts[] = $borderPart;
 		}
@@ -109,65 +104,42 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
 	 *
 	 * @return BorderPart The horizontal border part
 	 */
-	abstract protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder);
+	abstract protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt);
 
 	/**
 	 * Returns a vertical border part for the background grid.
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param BaseBorder $_parentBorder The main border
 	 *
 	 * @return BorderPart The vertical border part
 	 */
-	abstract protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder);
+	abstract protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt);
 
-
-	public function getBorderWidthInColumn(int $_x): int
+	/**
+	 * Returns the maximum allowed Y-Coordinate for a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int The maximum allowed Y-Coordinate
+	 */
+	public function getMaximumAllowedYCoordinate(int $_x): int
 	{
-		$parentBorderShape = $this->parentBorder->parentBorder()->shape();
-		if (! $parentBorderShape instanceof RectangleBorderShape)
-		{
-			// TODO: Currently the background grid can only be applied to rectangle border shapes
-			return 0;
-		}
-
-		$startsAt = $parentBorderShape->rectangle()->topLeftCornerCoordinate();
-		$endsAt = $parentBorderShape->rectangle()->bottomRightCornerCoordinate();
-
-		// TODO: Fix fixed number ...
-		if ($_x > $startsAt->x() && $_x <= $endsAt->x()) return 1;
-		else return 0;
+		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedYCoordinate($_x);
 	}
 
-	public function getBorderHeightInRow(int $_y): int
+	/**
+	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The maximum allowed X-Coordinate
+	 */
+	public function getMaximumAllowedXCoordinate(int $_y): int
 	{
-		$parentBorderShape = $this->parentBorder->parentBorder()->shape();
-		if (! $parentBorderShape instanceof RectangleBorderShape)
-		{
-			// TODO: Currently the background grid can only be applied to rectangle border shapes
-			return 0;
-		}
-
-		$startsAt = $parentBorderShape->rectangle()->topLeftCornerCoordinate();
-		$endsAt = $parentBorderShape->rectangle()->bottomRightCornerCoordinate();
-
-		// TODO: Fix fixed number ...
-		if ($_y > $startsAt->y() && $_y <= $endsAt->y()) return 1;
-		else return 0;
-	}
-
-	public function getMaximumAllowedYCoordinate(int $_y): int
-	{
-		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedYCoordinate($_y);
-	}
-
-	public function getMaximumAllowedXCoordinate(int $_x): int
-	{
-		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedXCoordinate($_x);
+		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedXCoordinate($_y);
 	}
 }

@@ -25,18 +25,17 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The outer border
 	 *
 	 * @return BorderPart The horizontal border part
 	 */
-	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder): BorderPart
+	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): BorderPart
 	{
 		return new BorderPart(
-			$_parentBorder,
+			$this->parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new ImageHorizontalBorderPartShape(),
-			$this->horizontalThickness
+			$this->horizontalBorderPartsThickness
 		);
 	}
 
@@ -45,18 +44,17 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
-	 * @param ImageBorder $_parentBorder The outer border
 	 *
 	 * @return BorderPart The vertical border part
 	 */
-	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt, $_parentBorder): BorderPart
+	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): BorderPart
 	{
 		return new BorderPart(
-			$_parentBorder,
+			$this->parentBorder,
 			$_startsAt,
 			$_endsAt,
 			new ImageVerticalBorderPartShape(),
-			$this->verticalThickness
+			$this->verticalBorderPartsThickness
 		);
 	}
 }

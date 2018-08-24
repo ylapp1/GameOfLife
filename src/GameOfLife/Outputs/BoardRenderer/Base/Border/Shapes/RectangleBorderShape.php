@@ -28,18 +28,18 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	protected $rectangle;
 
 	/**
-	 * Defines the thickness of horizontal parts of this border
+	 * Defines the thickness for horizontal border parts of this border
 	 *
-	 * @var BorderPartThickness $horizontalThickness
+	 * @var BorderPartThickness $horizontalBorderPartsThickness
 	 */
-	protected $horizontalThickness;
+	protected $horizontalBorderPartsThickness;
 
 	/**
-	 * Defines the thickness of vertical parts of this border
+	 * Defines the thickness for vertical border parts of this border
 	 *
-	 * @var BorderPartThickness $verticalThickness
+	 * @var BorderPartThickness $verticalBorderPartsThickness
 	 */
-	protected $verticalThickness;
+	protected $verticalBorderPartsThickness;
 
 
 	// Magic Methods
@@ -49,20 +49,21 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	 *
 	 * @param BaseBorder $_parentBorder The parent border of this border shape
 	 * @param Rectangle $_rectangle The rectangle
-	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal parts of this border
-	 * @param BorderPartThickness $_verticalThickness The thickness for vertical parts of this border
+	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal border parts of this border
+	 * @param BorderPartThickness $_verticalThickness The thickness for vertical border parts of this border
 	 */
 	public function __construct($_parentBorder, Rectangle $_rectangle, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness)
 	{
 	    parent::__construct($_parentBorder);
 		$this->rectangle = $_rectangle;
-		$this->horizontalThickness = $_horizontalThickness;
-		$this->verticalThickness = $_verticalThickness;
+		$this->horizontalBorderPartsThickness = $_horizontalThickness;
+		$this->verticalBorderPartsThickness = $_verticalThickness;
 	}
 
 
 	// Getters and Setters
 
+	// TODO: This can be removed when border grid shape is independent of this shape
 	public function rectangle(): Rectangle
 	{
 		return $this->rectangle;
@@ -119,57 +120,25 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	abstract protected function getRightBorderPart();
 
 	/**
-	 * Calculates and returns the total border width until a specific column.
+	 * Returns the maximum allowed Y-Coordinate for a specific column.
 	 *
 	 * @param int $_x The X-Coordinate of the column
 	 *
-	 * @return int The total column width of this border shape until that column
+	 * @return int The maximum allowed Y-Coordinate
 	 */
-	public function getBorderWidthInColumn(int $_x): int
-	{
-		$borderWidth = 0;
-
-		if ($_x == $this->rectangle->topLeftCornerCoordinate()->x())
-		{
-			$borderWidth += $this->verticalThickness->width();
-		}
-		if ($_x == $this->rectangle->bottomRightCornerCoordinate()->x() + 1)
-		{
-			$borderWidth += $this->verticalThickness->width();
-		}
-
-		return $borderWidth;
-	}
-
-	/**
-	 * Calculates and returns the total border height until a specific row.
-	 *
-	 * @param int $_y The Y-Coordinate of the row
-	 *
-	 * @return int The total border height of this border shape until that row
-	 */
-	public function getBorderHeightInRow(int $_y): int
-	{
-		$borderHeight = 0;
-
-		if ($_y == $this->rectangle->topLeftCornerCoordinate()->y())
-		{
-			$borderHeight += $this->horizontalThickness->height();
-		}
-		if ($_y == $this->rectangle->bottomRightCornerCoordinate()->y() + 1)
-		{
-			$borderHeight += $this->horizontalThickness->height();
-		}
-
-		return $borderHeight;
-	}
-
-	public function getMaximumAllowedYCoordinate(int $_y): int
+	public function getMaximumAllowedYCoordinate(int $_x): int
 	{
 		return $this->rectangle->bottomRightCornerCoordinate()->y();
 	}
 
-	public function getMaximumAllowedXCoordinate(int $_x): int
+	/**
+	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int The maximum allowed X-Coordinate
+	 */
+	public function getMaximumAllowedXCoordinate(int $_y): int
 	{
 		return $this->rectangle->bottomRightCornerCoordinate()->x();
 	}
