@@ -64,9 +64,9 @@ class ImageColor
 	 */
     public function equals(ImageColor $_imageColor): Bool
     {
-    	if ($this->red() == $_imageColor->red() &&
-	        $this->green() == $_imageColor->green() &&
-	        $this->blue() == $_imageColor->blue())
+    	if ($this->red == $_imageColor->red() &&
+	        $this->green == $_imageColor->green() &&
+	        $this->blue == $_imageColor->blue())
 	    {
 	    	return true;
 	    }
@@ -122,12 +122,22 @@ class ImageColor
     }
 
 	/**
-	 * Increases the red color amount by one if the color is not equal to 255|255|255.
+	 * Increases the red color amount by one.
+	 * If the color is 255, 255, 255 it will be reset to 0, 0, 0.
 	 */
     public function increase()
     {
     	if ($this->red < 255) $this->red++;
-    	elseif ($this->green < 255) $this->green++;
-    	elseif ($this->blue < 255) $this->blue++;
+    	else
+	    {
+	    	$this->red = 0;
+		    if ($this->green < 255) $this->green++;
+		    else
+		    {
+		    	$this->green = 0;
+			    if ($this->blue < 255) $this->blue++;
+			    else $this->blue = 0;
+		    }
+	    }
     }
 }

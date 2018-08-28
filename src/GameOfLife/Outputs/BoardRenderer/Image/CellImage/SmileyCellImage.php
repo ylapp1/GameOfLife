@@ -23,22 +23,21 @@ class SmileyCellImage extends TransparentCellImage
 	 */
 	public function getImage()
 	{
-		// TODO: Background should be transparent of smileys
-		$transparentColor = $this->transparentImageUtils->getUnusedColor(array($this->backgroundColor, $this->foreGroundColor));
+		$transparentColor = $this->transparentImageUtils->getUnusedColor(array($this->color));
 
 		$cellImage = imagecreatetruecolor($this->width, $this->height);
 		imagefill($cellImage, 0, 0, $transparentColor->getColor($cellImage));
 
 		// Head
-		imagefilledellipse($cellImage, $this->width * 0.5, $this->height * 0.5, $this->width - 1, $this->height - 1, $this->foreGroundColor->getColor($cellImage));
+		imagefilledellipse($cellImage, $this->width * 0.5, $this->height * 0.5, $this->width - 1, $this->height - 1, $this->color->getColor($cellImage));
 
 		// Eyes
-		imagefilledellipse($cellImage, $this->width * 0.25, $this->height * 3/8, $this->width * 0.2, $this->height * 0.2, $this->backgroundColor->getColor($cellImage));
-		imagefilledellipse($cellImage, $this->width * 0.75, $this->height * 3/8, $this->width * 0.2, $this->height * 0.2, $this->backgroundColor->getColor($cellImage));
+		imagefilledellipse($cellImage, $this->width * 0.25, $this->height * 3/8, $this->width * 0.2, $this->height * 0.2, $transparentColor->getColor($cellImage));
+		imagefilledellipse($cellImage, $this->width * 0.75, $this->height * 3/8, $this->width * 0.2, $this->height * 0.2, $transparentColor->getColor($cellImage));
 
 		// Mouth
 		imagesetthickness($cellImage, 5);
-		imagearc($cellImage, $this->width * 0.5, $this->height * 5/8, $this->width * 0.6,$this->height * 0.5, 10, 170, $this->backgroundColor->getColor($cellImage));
+		imagearc($cellImage, $this->width * 0.5, $this->height * 5/8, $this->width * 0.6,$this->height * 0.5, 10, 170, $transparentColor->getColor($cellImage));
 
 		imagecolortransparent($cellImage, $transparentColor->getColor($cellImage));
 

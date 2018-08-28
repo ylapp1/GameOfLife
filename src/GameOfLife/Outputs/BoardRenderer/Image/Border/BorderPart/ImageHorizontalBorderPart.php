@@ -19,6 +19,8 @@ use GameOfLife\Coordinate;
  */
 class ImageHorizontalBorderPart extends BaseBorderPart
 {
+	// Magic Methods
+
 	/**
 	 * ImageHorizontalBaseBorderPart constructor.
 	 *

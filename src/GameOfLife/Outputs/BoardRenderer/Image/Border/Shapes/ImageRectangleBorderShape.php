@@ -8,7 +8,6 @@
 
 namespace BoardRenderer\Image\Border\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use BoardRenderer\Image\Border\BorderPart\ImageHorizontalBorderPart;
 use BoardRenderer\Image\Border\BorderPart\ImageVerticalBorderPart;
@@ -24,14 +23,11 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the top border part.
 	 *
-	 * @return BaseBorderPart The top border part
+	 * @return ImageHorizontalBorderPart The top border part
 	 */
-	protected function getTopBorderPart(): BaseBorderPart
+	protected function getTopBorderPart(): ImageHorizontalBorderPart
 	{
-		$startsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x(),
-			$this->rectangle->topLeftCornerCoordinate()->y()
-		);
+		$startsAt = clone $this->rectangle->topLeftCornerCoordinate();
 		$endsAt = new Coordinate(
 			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
 			$this->rectangle->topLeftCornerCoordinate()->y()
@@ -48,9 +44,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the bottom border part.
 	 *
-	 * @return BaseBorderPart The bottom border part
+	 * @return ImageHorizontalBorderPart The bottom border part
 	 */
-	protected function getBottomBorderPart(): BaseBorderPart
+	protected function getBottomBorderPart(): ImageHorizontalBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->topLeftCornerCoordinate()->x(),
@@ -72,14 +68,11 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the left border part.
 	 *
-	 * @return BaseBorderPart The left border part
+	 * @return ImageVerticalBorderPart The left border part
 	 */
-	protected function getLeftBorderPart(): BaseBorderPart
+	protected function getLeftBorderPart(): ImageVerticalBorderPart
 	{
-		$startsAt = new Coordinate(
-			$this->rectangle->topLeftCornerCoordinate()->x(),
-			$this->rectangle->topLeftCornerCoordinate()->y()
-		);
+		$startsAt = clone $this->rectangle->topLeftCornerCoordinate();
 		$endsAt = new Coordinate(
 			$this->rectangle->topLeftCornerCoordinate()->x(),
 			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
@@ -96,9 +89,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the right border part.
 	 *
-	 * @return BaseBorderPart The right border part
+	 * @return ImageVerticalBorderPart The right border part
 	 */
-	protected function getRightBorderPart(): BaseBorderPart
+	protected function getRightBorderPart(): ImageVerticalBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,

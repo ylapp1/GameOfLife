@@ -40,7 +40,7 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 		parent::__construct(
 			$mainBorder,
 			new ImageBorderGridBuilder($_board, $mainBorder, $_hasBackgroundGrid),
-			$this->initializeBoardFieldRenderer($_fieldSize, $_backgroundColor, $_foregroundColor),
+			$this->initializeBoardFieldRenderer($_fieldSize, $_foregroundColor),
 			new ImageCanvas($_backgroundColor, true),
 			$_fieldSize
 		);
@@ -53,18 +53,16 @@ class ImageOutputBoardRenderer extends BaseBoardRenderer
 	 * Creates and returns a board field renderer for this board renderer.
 	 *
 	 * @param int $_fieldSize The size of a field in pixels
-	 * @param ImageColor $_backgroundColor The background color
-	 * @param ImageColor $_foreGroundColor The foreground color
+	 * @param ImageColor $_foregroundColor The foreground color
 	 *
 	 * @return ImageBoardFieldRenderer The board field renderer
 	 */
-	private function initializeBoardFieldRenderer(int $_fieldSize, ImageColor $_backgroundColor, ImageColor $_foreGroundColor): ImageBoardFieldRenderer
+	private function initializeBoardFieldRenderer(int $_fieldSize, ImageColor $_foregroundColor): ImageBoardFieldRenderer
 	{
 		$headSize = $_fieldSize * 4/5;
 
 		$smileyCellImage = new SmileyCellImage(
-			$_backgroundColor,
-			$_foreGroundColor,
+			$_foregroundColor,
 			$headSize,
 			$headSize
 		);

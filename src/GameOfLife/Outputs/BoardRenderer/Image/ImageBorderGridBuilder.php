@@ -19,6 +19,8 @@ use GameOfLife\Board;
  */
 class ImageBorderGridBuilder extends BaseBorderGridBuilder
 {
+	// Magic Methods
+
 	/**
 	 * ImageBorderGridBuilder constructor.
 	 *
@@ -31,6 +33,9 @@ class ImageBorderGridBuilder extends BaseBorderGridBuilder
 		$borderGrid = new ImageBorderGrid($_board, $this->getBorderColors($_mainBorder));
 		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
 	}
+
+
+	// Class Methods
 
 	/**
 	 * Adds a background grid to a border.
@@ -58,19 +63,17 @@ class ImageBorderGridBuilder extends BaseBorderGridBuilder
 		/** @var ImageBorder $innerBorder */
 		foreach ($_mainBorder->getInnerBorders() as $innerBorder)
 		{
-			$innerBorderColor = $innerBorder->color();
-
 			$colorExists = false;
 			foreach ($borderColors as $borderColor)
 			{
-				if ($borderColor->equals($innerBorderColor))
+				if ($borderColor->equals($innerBorder->color()))
 				{
 					$colorExists = true;
 					break;
 				}
 			}
 
-			if (! $colorExists) $borderColors[] = $innerBorderColor;
+			if (! $colorExists) $borderColors[] = $innerBorder->color();
 		}
 
 		return $borderColors;

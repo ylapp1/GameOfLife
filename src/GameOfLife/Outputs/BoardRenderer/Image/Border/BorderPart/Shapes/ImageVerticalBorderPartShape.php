@@ -27,24 +27,24 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 	 */
 	protected function getRawRenderedBorderPart(int $_fieldSize)
 	{
-		$yEnd = $this->parentBorderPart->endsAt()->y();
-		$maximumAllowedYCoordinate = $this->parentBorderPart->parentBorderShape()->getEndY($this->parentBorderPart->startsAt()->x());
-		if ($yEnd > $maximumAllowedYCoordinate) $yEnd = $maximumAllowedYCoordinate;
+		$endY = $this->parentBorderPart->endsAt()->y();
+		$parentBorderShapeEndY = $this->parentBorderPart->parentBorderShape()->getEndY($this->parentBorderPart->startsAt()->x());
+		if ($endY > $parentBorderShapeEndY) $endY = $parentBorderShapeEndY;
 
-		$borderPartHeight = $yEnd - $this->parentBorderPart->startsAt()->y() + 1;
+		$borderPartHeight = $endY - $this->parentBorderPart->startsAt()->y() + 1;
 
 		/** @var ImageBorder $parentBorder */
 		$parentBorder = $this->parentBorderPart->parentBorderShape()->parentBorder();
 		$thickness = $this->parentBorderPart->thickness();
 
-		$additionalPixels = 0;
+		$numberOfAdditionalPixels = 0;
 		foreach ($this->parentBorderPart->getCollisionThicknesses() as $collisionThickness)
 		{
-			$additionalPixels += $collisionThickness->height();
+			$numberOfAdditionalPixels += $collisionThickness->height();
 		}
 
 		$imageWidth = $thickness->width();
-		$imageHeight = $borderPartHeight * $_fieldSize * $thickness->height() + $additionalPixels;
+		$imageHeight = $borderPartHeight * $_fieldSize * $thickness->height() + $numberOfAdditionalPixels;
 
 		$image = imagecreate($imageWidth, $imageHeight);
 		imagefill($image, 0, 0, $parentBorder->color()->getColor($image));

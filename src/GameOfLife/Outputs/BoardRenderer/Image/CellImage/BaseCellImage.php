@@ -18,18 +18,11 @@ abstract class BaseCellImage
 	// Attributes
 
 	/**
-	 * The background color of the cell image
+	 * The color of the cell image
 	 *
 	 * @var ImageColor $backgroundColor
 	 */
-	protected $backgroundColor;
-
-	/**
-	 * The foreground color of the cell image
-	 *
-	 * @var ImageColor $foreGroundColor
-	 */
-	protected $foreGroundColor;
+	protected $color;
 
 	/**
 	 * The height of the image
@@ -51,15 +44,13 @@ abstract class BaseCellImage
 	/**
 	 * BaseCellImage constructor.
 	 *
-	 * @param ImageColor $_backgroundColor The background color of the cell image
-	 * @param ImageColor $_foreGroundColor The foreground color of the cell image
+	 * @param ImageColor $_color The color of the cell image
 	 * @param int $_height The height of the image
 	 * @param int $_width The width of the image
 	 */
-	public function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
+	public function __construct(ImageColor $_color, int $_height, int $_width)
 	{
-		$this->backgroundColor = $_backgroundColor;
-		$this->foreGroundColor = $_foreGroundColor;
+		$this->color = $_color;
 		$this->height = $_height;
 		$this->width = $_width;
 	}

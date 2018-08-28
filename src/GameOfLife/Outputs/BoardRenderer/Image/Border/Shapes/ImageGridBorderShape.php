@@ -18,13 +18,15 @@ use GameOfLife\Coordinate;
  */
 class ImageGridBorderShape extends BaseGridBorderShape
 {
+	// Class Methods
+
 	/**
 	 * Returns a horizontal border part for the background grid.
 	 *
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return ImageHorizontalBorderPart
+	 * @return ImageHorizontalBorderPart The horizontal border part
 	 */
 	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): ImageHorizontalBorderPart
 	{
@@ -42,7 +44,7 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return ImageVerticalBorderPart
+	 * @return ImageVerticalBorderPart The vertical border part
 	 */
 	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): ImageVerticalBorderPart
 	{

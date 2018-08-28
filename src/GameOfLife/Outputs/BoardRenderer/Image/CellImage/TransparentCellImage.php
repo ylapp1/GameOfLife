@@ -31,14 +31,13 @@ abstract class TransparentCellImage extends BaseCellImage
 	/**
 	 * TransparentCellImage constructor.
 	 *
-	 * @param ImageColor $_backgroundColor The background color of the cell image
-	 * @param ImageColor $_foreGroundColor The foreground color of the cell image
+	 * @param ImageColor $_color The color of the cell image
 	 * @param int $_height The height of the image
 	 * @param int $_width The width of the image
 	 */
-	public function __construct(ImageColor $_backgroundColor, ImageColor $_foreGroundColor, int $_height, int $_width)
+	public function __construct(ImageColor $_color, int $_height, int $_width)
 	{
-		parent::__construct($_backgroundColor, $_foreGroundColor, $_height, $_width);
+		parent::__construct($_color, $_height, $_width);
 		$this->transparentImageUtils = new TransparentImageUtils();
 	}
 }

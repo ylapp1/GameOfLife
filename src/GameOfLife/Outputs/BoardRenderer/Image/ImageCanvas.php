@@ -61,7 +61,6 @@ class ImageCanvas extends BaseCanvas
 		$totalBoardImage = imagecreate($renderedBorderGridWidth, $renderedBorderGridHeight);
 		imagefill($totalBoardImage, 0, 0, $this->backgroundColor->getColor($totalBoardImage));
 
-		// TODO: Not just 0|0, check starts at of border .
 		imagecopy($totalBoardImage, $renderedBorderGrid, 0, 0, 0, 0, $renderedBorderGridWidth, $renderedBorderGridHeight);
 
 		foreach ($this->renderedBoardFields as $y => $renderedBoardFieldRow)

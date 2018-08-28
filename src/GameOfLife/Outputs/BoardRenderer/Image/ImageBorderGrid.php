@@ -58,7 +58,7 @@ class ImageBorderGrid extends BaseBorderGrid
 	 * Creates and returns the rendered border grid.
 	 *
 	 * @param RenderedBorderPart[] $_renderedBorderParts
-	 * @param int $_fieldSize The size of a field in pixels
+	 * @param int $_fieldSize The height/width of each field in pixels
 	 *
 	 * @return resource The rendered border grid
 	 */
@@ -74,8 +74,8 @@ class ImageBorderGrid extends BaseBorderGrid
 			$startX = $renderedBorderPart->parentBorderPart()->startsAt()->x();
 			$startY = $renderedBorderPart->parentBorderPart()->startsAt()->y();
 
-			$imageStartX = $startX * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderWidthUntilColumn($startX) - $this->borderPositionsGrid->getMaximumBorderWidthInColumn($startX);
-			$imageStartY = $startY * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderHeightUntilRow($startY) - $this->borderPositionsGrid->getMaximumBorderHeightInRow($startY);
+			$imageStartX = $startX * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderWidthUntilColumn($startX - 1);
+			$imageStartY = $startY * $_fieldSize + $this->borderPositionsGrid->getTotalMaximumBorderHeightUntilRow($startY - 1);
 
 			$rawRenderedBorderPart = $renderedBorderPart->rawRenderedBorderPart();
 			imagecopy($image, $rawRenderedBorderPart, $imageStartX, $imageStartY, 0, 0, imagesx($rawRenderedBorderPart), imagesy($rawRenderedBorderPart));

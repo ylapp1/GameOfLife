@@ -13,6 +13,8 @@ namespace BoardRenderer\Image\Utils;
  */
 class TransparentImageUtils
 {
+	// Class Methods
+
 	/**
 	 * Returns a color that is not used elsewhere in the image.
 	 * This color can then be used for the imagecolortransparent() function.

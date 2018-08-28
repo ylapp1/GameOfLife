@@ -8,11 +8,11 @@
 
 namespace BoardRenderer;
 
-use GameOfLife\Board;
 use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\TextBoardFieldRenderer;
 use BoardRenderer\Text\TextBorderGridBuilder;
 use BoardRenderer\Text\TextCanvas;
+use GameOfLife\Board;
 
 /**
  * The BoardRenderer for the ConsoleOutput.

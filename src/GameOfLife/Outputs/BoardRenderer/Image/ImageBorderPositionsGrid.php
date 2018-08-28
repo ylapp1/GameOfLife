@@ -20,6 +20,8 @@ use BoardRenderer\Base\BaseBorderPositionsGrid;
  */
 class ImageBorderPositionsGrid extends BaseBorderPositionsGrid
 {
+	// Class Methods
+
 	/**
 	 * Calculates and returns the number of covered horizontal board fields based on a start and end column id.
 	 *
