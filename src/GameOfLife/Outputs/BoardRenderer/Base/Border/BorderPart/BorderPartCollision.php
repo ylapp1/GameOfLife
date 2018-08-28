@@ -27,7 +27,7 @@ class BorderPartCollision
 	/**
 	 * The colliding border part
 	 *
-	 * @var BorderPart $with
+	 * @var BaseBorderPart $with
 	 */
 	private $with;
 
@@ -47,7 +47,7 @@ class BorderPartCollision
 	 * BorderPartCollision constructor.
 	 *
 	 * @param Coordinate $_position The position of the collision inside the border relative from the start position of the border
-	 * @param BorderPart $_with The reference to the border that collides
+	 * @param BaseBorderPart $_with The reference to the border that collides
 	 * @param bool $_isOuterBorderCollision Indicates whether the colliding border is an outer border
 	 */
 	public function __construct(Coordinate $_position, $_with, Bool $_isOuterBorderCollision)
@@ -73,7 +73,7 @@ class BorderPartCollision
     /**
      * Returns the colliding border part.
      *
-     * @return BorderPart The colliding border part
+     * @return BaseBorderPart The colliding border part
      */
     public function with()
     {

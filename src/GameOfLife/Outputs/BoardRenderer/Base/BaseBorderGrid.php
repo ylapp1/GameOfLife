@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 
 /**
@@ -25,7 +25,7 @@ abstract class BaseBorderGrid
 	/**
 	 * The list of border parts
 	 *
-	 * @var BorderPart[] $borderParts
+	 * @var BaseBorderPart[] $borderParts
 	 */
 	protected $borderParts;
 
@@ -69,7 +69,7 @@ abstract class BaseBorderGrid
 	/**
 	 * Adds a border part to this border grid.
 	 *
-	 * @param BorderPart $_borderPart The border part
+	 * @param BaseBorderPart $_borderPart The border part
 	 */
 	public function addBorderPart($_borderPart)
 	{

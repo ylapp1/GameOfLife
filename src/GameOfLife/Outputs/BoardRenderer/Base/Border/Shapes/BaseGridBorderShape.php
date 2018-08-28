@@ -9,7 +9,7 @@
 namespace BoardRenderer\Base\Border\Shapes;
 
 use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use GameOfLife\Coordinate;
 
@@ -57,7 +57,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	/**
 	 * Returns the border parts for the background grid
 	 *
-	 * @return BorderPart[] The border parts for the background grid
+	 * @return BaseBorderPart[] The border parts for the background grid
 	 */
 	public function getBorderParts()
 	{
@@ -107,7 +107,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return BorderPart The horizontal border part
+	 * @return BaseBorderPart The horizontal border part
 	 */
 	abstract protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt);
 
@@ -117,7 +117,7 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return BorderPart The vertical border part
+	 * @return BaseBorderPart The vertical border part
 	 */
 	abstract protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt);
 

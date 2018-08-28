@@ -28,13 +28,13 @@ class ImageHorizontalBorderPartShape extends BaseHorizontalBorderPartShape
 	protected function getRawRenderedBorderPart(int $_fieldSize)
 	{
 		$xEnd = $this->parentBorderPart->endsAt()->x();
-		$maximumAllowedXCoordinate = $this->parentBorderPart->parentBorder()->shape()->getEndX($this->parentBorderPart->startsAt()->y());
+		$maximumAllowedXCoordinate = $this->parentBorderPart->parentBorderShape()->getEndX($this->parentBorderPart->startsAt()->y());
 		if ($xEnd > $maximumAllowedXCoordinate) $xEnd = $maximumAllowedXCoordinate;
 
 		$borderPartWidth = $xEnd - $this->parentBorderPart->startsAt()->x() + 1;
 
 		/** @var ImageBorder $parentBorder */
-		$parentBorder = $this->parentBorderPart->parentBorder();
+		$parentBorder = $this->parentBorderPart->parentBorderShape()->parentBorder();
 		$thickness = $this->parentBorderPart->thickness();
 
 		$additionalPixels = 0;

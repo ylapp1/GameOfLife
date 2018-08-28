@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use GameOfLife\Coordinate;
 
 /**
@@ -53,7 +53,7 @@ abstract class BaseHorizontalBorderPartShape extends BaseBorderPartShape
 	/**
 	 * Returns the position at which the parent border part collides with another border part or null if there is no collision.
 	 *
-	 * @param BorderPart $_borderPart The other border part
+	 * @param BaseBorderPart $_borderPart The other border part
 	 *
 	 * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
 	 */

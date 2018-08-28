@@ -11,9 +11,9 @@ namespace BoardRenderer\Text\Border\Shapes;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
-use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use GameOfLife\Coordinate;
 
@@ -70,11 +70,10 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 */
 	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt)
 	{
-		return new TextBorderPart(
-			$this->parentBorder,
+		return new TextHorizontalBorderPart(
+			$this,
 			$_startsAt,
 			$_endsAt,
-			new TextHorizontalBorderPartShape(),
 			$this->horizontalBorderPartsThickness,
 			$this->borderHorizontalSymbolDefinition
 		);
@@ -90,11 +89,10 @@ class TextGridBorderShape extends BaseGridBorderShape
 	 */
 	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt)
 	{
-		return new TextBorderPart(
-			$this->parentBorder,
+		return new TextVerticalBorderPart(
+			$this,
 			$_startsAt,
 			$_endsAt,
-			new TextVerticalCollisionBorderPartShape(),
 			$this->verticalBorderPartsThickness,
 			$this->borderVerticalSymbolDefinition
 		);

@@ -9,12 +9,12 @@
 namespace BoardRenderer\Text\Border\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
+use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use GameOfLife\Coordinate;
 use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
-use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
-use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalCollisionBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 
@@ -83,11 +83,10 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $this->rectangle->topLeftCornerCoordinate()->y()
         );
 
-        return new TextBorderPart(
-            $this->parentBorder,
+        return new TextHorizontalBorderPart(
+            $this,
             $startsAt,
             $endsAt,
-            new TextHorizontalBorderPartShape(),
 	        $this->horizontalBorderPartsThickness,
 	        $this->borderTopSymbolDefinition
         );
@@ -109,11 +108,10 @@ class TextRectangleBorderShape extends RectangleBorderShape
 	        $this->rectangle->bottomRightCornerCoordinate()->y() + 1
         );
 
-        return new TextBorderPart(
-            $this->parentBorder,
+        return new TextHorizontalBorderPart(
+            $this,
             $startsAt,
             $endsAt,
-            new TextHorizontalBorderPartShape(),
 	        $this->horizontalBorderPartsThickness,
 	        $this->borderBottomSymbolDefinition
         );
@@ -132,11 +130,10 @@ class TextRectangleBorderShape extends RectangleBorderShape
             $this->rectangle->bottomRightCornerCoordinate()->y() + 1
         );
 
-        return new TextBorderPart(
-            $this->parentBorder,
+        return new TextVerticalBorderPart(
+            $this,
             $startsAt,
             $endsAt,
-            new TextVerticalCollisionBorderPartShape(),
 	        $this->verticalBorderPartsThickness,
             $this->borderLeftSymbolDefinition
         );
@@ -158,11 +155,10 @@ class TextRectangleBorderShape extends RectangleBorderShape
 		    $this->rectangle->bottomRightCornerCoordinate()->y() + 1
 	    );
 
-        return new TextBorderPart(
-            $this->parentBorder,
+        return new TextVerticalBorderPart(
+            $this,
             $startsAt,
             $endsAt,
-            new TextVerticalCollisionBorderPartShape(),
 	        $this->verticalBorderPartsThickness,
 	        $this->borderRightSymbolDefinition
         );

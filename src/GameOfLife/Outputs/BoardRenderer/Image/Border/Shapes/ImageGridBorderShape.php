@@ -8,11 +8,9 @@
 
 namespace BoardRenderer\Image\Border\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
 use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
-use BoardRenderer\Image\Border\ImageBorder;
+use BoardRenderer\Image\Border\BorderPart\ImageHorizontalBorderPart;
+use BoardRenderer\Image\Border\BorderPart\ImageVerticalBorderPart;
 use GameOfLife\Coordinate;
 
 /**
@@ -26,15 +24,14 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return BorderPart The horizontal border part
+	 * @return ImageHorizontalBorderPart
 	 */
-	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): BorderPart
+	protected function getHorizontalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): ImageHorizontalBorderPart
 	{
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageHorizontalBorderPart(
+			$this,
 			$_startsAt,
 			$_endsAt,
-			new ImageHorizontalBorderPartShape(),
 			$this->horizontalBorderPartsThickness
 		);
 	}
@@ -45,15 +42,14 @@ class ImageGridBorderShape extends BaseGridBorderShape
 	 * @param Coordinate $_startsAt The start position
 	 * @param Coordinate $_endsAt The end position
 	 *
-	 * @return BorderPart The vertical border part
+	 * @return ImageVerticalBorderPart
 	 */
-	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): BorderPart
+	protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt): ImageVerticalBorderPart
 	{
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageVerticalBorderPart(
+			$this,
 			$_startsAt,
 			$_endsAt,
-			new ImageVerticalBorderPartShape(),
 			$this->verticalBorderPartsThickness
 		);
 	}

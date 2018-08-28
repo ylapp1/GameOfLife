@@ -8,10 +8,10 @@
 
 namespace BoardRenderer\Image\Border\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
-use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
+use BoardRenderer\Image\Border\BorderPart\ImageHorizontalBorderPart;
+use BoardRenderer\Image\Border\BorderPart\ImageVerticalBorderPart;
 use GameOfLife\Coordinate;
 
 /**
@@ -24,9 +24,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the top border part.
 	 *
-	 * @return BorderPart The top border part
+	 * @return BaseBorderPart The top border part
 	 */
-	protected function getTopBorderPart(): BorderPart
+	protected function getTopBorderPart(): BaseBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->topLeftCornerCoordinate()->x(),
@@ -37,11 +37,10 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$this->rectangle->topLeftCornerCoordinate()->y()
 		);
 
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageHorizontalBorderPart(
+			$this,
 			$startsAt,
 			$endsAt,
-			new ImageHorizontalBorderPartShape(),
 			$this->horizontalBorderPartsThickness
 		);
 	}
@@ -49,9 +48,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the bottom border part.
 	 *
-	 * @return BorderPart The bottom border part
+	 * @return BaseBorderPart The bottom border part
 	 */
-	protected function getBottomBorderPart(): BorderPart
+	protected function getBottomBorderPart(): BaseBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->topLeftCornerCoordinate()->x(),
@@ -62,11 +61,10 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageHorizontalBorderPart(
+			$this,
 			$startsAt,
 			$endsAt,
-			new ImageHorizontalBorderPartShape(),
 			$this->horizontalBorderPartsThickness
 		);
 	}
@@ -74,9 +72,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the left border part.
 	 *
-	 * @return BorderPart The left border part
+	 * @return BaseBorderPart The left border part
 	 */
-	protected function getLeftBorderPart(): BorderPart
+	protected function getLeftBorderPart(): BaseBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->topLeftCornerCoordinate()->x(),
@@ -87,11 +85,10 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageVerticalBorderPart(
+			$this,
 			$startsAt,
 			$endsAt,
-			new ImageVerticalBorderPartShape(),
 			$this->verticalBorderPartsThickness
 		);
 	}
@@ -99,9 +96,9 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 	/**
 	 * Creates and returns the right border part.
 	 *
-	 * @return BorderPart The right border part
+	 * @return BaseBorderPart The right border part
 	 */
-	protected function getRightBorderPart(): BorderPart
+	protected function getRightBorderPart(): BaseBorderPart
 	{
 		$startsAt = new Coordinate(
 			$this->rectangle->bottomRightCornerCoordinate()->x() + 1,
@@ -112,11 +109,10 @@ class ImageRectangleBorderShape extends RectangleBorderShape
 			$this->rectangle->bottomRightCornerCoordinate()->y() + 1
 		);
 
-		return new BorderPart(
-			$this->parentBorder,
+		return new ImageVerticalBorderPart(
+			$this,
 			$startsAt,
 			$endsAt,
-			new ImageVerticalBorderPartShape(),
 			$this->verticalBorderPartsThickness
 		);
 	}

@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
@@ -23,7 +23,7 @@ trait TextBorderPartShapeTrait
 	 * Returns the text border part collision position for a border part collision.
 	 *
 	 * @param Coordinate $_at The coordinate at which the border parts collide
-	 * @param BorderPart $_with The colliding border part
+	 * @param BaseBorderPart $_with The colliding border part
 	 *
 	 * @return TextBorderPartCollisionPosition The text border part collision position
 	 */
@@ -57,7 +57,7 @@ trait TextBorderPartShapeTrait
 	 * Returns the directions from which a collision occurs.
 	 *
 	 * @param Coordinate $_at The coordinate at which the border parts collide
-	 * @param BorderPart $_with The colliding border part
+	 * @param BaseBorderPart $_with The colliding border part
 	 *
 	 * @return String[] The collision direction names
 	 */

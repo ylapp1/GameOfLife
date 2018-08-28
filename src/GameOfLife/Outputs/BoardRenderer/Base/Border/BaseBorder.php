@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base\Border;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPart;
+use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 
 /**
@@ -132,7 +132,7 @@ abstract class BaseBorder
 	/**
 	 * Returns all border parts of this border and its inner borders.
      *
-     * @return BorderPart[] The list of border parts
+     * @return BaseBorderPart[] The list of border parts
 	 */
 	public function getBorderParts()
 	{

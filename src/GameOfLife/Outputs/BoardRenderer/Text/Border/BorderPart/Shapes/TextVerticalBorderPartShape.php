@@ -15,7 +15,7 @@ use GameOfLife\Coordinate;
 /**
  * Shape for vertical text border parts.
  */
-class TextVerticalCollisionBorderPartShape extends BaseVerticalBorderPartShape implements TextBorderPartShapeInterface
+class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements TextBorderPartShapeInterface
 {
 	use TextBorderPartShapeTrait;
 

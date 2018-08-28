@@ -28,13 +28,13 @@ class ImageVerticalBorderPartShape extends BaseVerticalBorderPartShape
 	protected function getRawRenderedBorderPart(int $_fieldSize)
 	{
 		$yEnd = $this->parentBorderPart->endsAt()->y();
-		$maximumAllowedYCoordinate = $this->parentBorderPart->parentBorder()->shape()->getEndY($this->parentBorderPart->startsAt()->x());
+		$maximumAllowedYCoordinate = $this->parentBorderPart->parentBorderShape()->getEndY($this->parentBorderPart->startsAt()->x());
 		if ($yEnd > $maximumAllowedYCoordinate) $yEnd = $maximumAllowedYCoordinate;
 
 		$borderPartHeight = $yEnd - $this->parentBorderPart->startsAt()->y() + 1;
 
 		/** @var ImageBorder $parentBorder */
-		$parentBorder = $this->parentBorderPart->parentBorder();
+		$parentBorder = $this->parentBorderPart->parentBorderShape()->parentBorder();
 		$thickness = $this->parentBorderPart->thickness();
 
 		$additionalPixels = 0;

@@ -34,7 +34,7 @@ class RenderedBorderPart
 	/**
 	 * The parent border part of this rendered border part
 	 *
-	 * @var BorderPart $parentBorderPart
+	 * @var BaseBorderPart $parentBorderPart
 	 */
 	private $parentBorderPart;
 
@@ -46,7 +46,7 @@ class RenderedBorderPart
 	 *
 	 * @param mixed $_rawRenderedBorderPart The raw rendered border part
 	 * @param Coordinate[] $_borderPartGridPositions The positions on the border grid that this rendered border part fills
-	 * @param BorderPart $_parentBorderPart The parent border part of this rendered border part
+	 * @param BaseBorderPart $_parentBorderPart The parent border part of this rendered border part
 	 */
 	public function __construct($_rawRenderedBorderPart, array $_borderPartGridPositions, $_parentBorderPart)
 	{
@@ -81,7 +81,7 @@ class RenderedBorderPart
 	/**
 	 * Returns the parent border part of this rendered border part.
 	 *
-	 * @return BorderPart The parent border part of this rendered border part
+	 * @return BaseBorderPart The parent border part of this rendered border part
 	 */
 	public function parentBorderPart()
 	{

@@ -8,8 +8,8 @@
 
 namespace BoardRenderer\Base\Border\BorderPart;
 
+use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use GameOfLife\Coordinate;
-use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 /**
@@ -17,7 +17,7 @@ use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
  * A border part is a single line of the total border with a fixed start and end point, for example horizontal, vertical,
  * diagonal or curved lines.
  */
-class BorderPart
+abstract class BaseBorderPart
 {
 	// Attributes
 
@@ -43,13 +43,11 @@ class BorderPart
 	protected $shape;
 
     /**
-     * The parent border
+     * The parent border shape
      *
-     * @var BaseBorder $parentBorder
-     *
-     * TODO: Change this to parent border shape!
+     * @var BaseBorderShape $parentBorderShape
      */
-	protected $parentBorder;
+	protected $parentBorderShape;
 
 	/**
 	 * The list of own collisions with other border parts
@@ -60,7 +58,7 @@ class BorderPart
 	protected $ownCollisions;
 
 	/**
-	 * The list of other borders collisions with this border
+	 * The list of other border parts collisions with this border part
 	 * These are the collisions with border parts that were added after this border part
 	 *
 	 * @var BorderPartCollision[] $otherBorderPartCollisions
@@ -80,19 +78,18 @@ class BorderPart
 	/**
 	 * BaseBorderPart constructor.
 	 *
-     * @param BaseBorder $_parentBorder The parent border
-	 * @param Coordinate $_startsAt The start coordinate of this border part
-	 * @param Coordinate $_endsAt The end coordinate of this border part
+     * @param BaseBorderShape $_parentBorderShape The parent border shape
+	 * @param Coordinate $_startsAt The start coordinate
+	 * @param Coordinate $_endsAt The end coordinate
      * @param BaseBorderPartShape $_shape The shape of this border part
 	 * @param BorderPartThickness $_thickness The thickness of the border part in symbols, pixels, etc.
 	 */
-	public function __construct($_parentBorder, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness)
+	public function __construct($_parentBorderShape, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness)
     {
-        $this->parentBorder = $_parentBorder;
+        $this->parentBorderShape = $_parentBorderShape;
     	$this->startsAt = $_startsAt;
     	$this->endsAt = $_endsAt;
     	$this->shape = $_shape;
-    	$this->shape->setParentBorderPart($this);
     	$this->thickness = $_thickness;
 	    $this->ownCollisions = array();
 	    $this->otherBorderPartCollisions = array();
@@ -121,15 +118,15 @@ class BorderPart
 		return $this->endsAt;
 	}
 
-    /**
-     * Returns the parent border.
-     *
-     * @return BaseBorder The parent border
-     */
-	public function parentBorder()
-    {
-        return $this->parentBorder;
-    }
+	/**
+	 * Returns the parent border shape.
+	 *
+	 * @return BaseBorderShape The parent border shape
+	 */
+	public function parentBorderShape()
+	{
+		return $this->parentBorderShape;
+	}
 
 	/**
 	 * Returns the border part shape.
@@ -157,20 +154,20 @@ class BorderPart
 	/**
 	 * Creates and returns the rendered border part.
 	 *
-	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 * @param int $_fieldSize The size of a single field in pixels, symbols, etc.
 	 *
 	 * @return RenderedBorderPart The rendered border part
 	 */
-	public function getRenderedBorderPart(int $_fieldSize)
+	public function getRenderedBorderPart(int $_fieldSize): RenderedBorderPart
     {
     	return $this->shape->getRenderedBorderPart($_fieldSize);
     }
 
 	/**
-	 * Adds a border part collision of an other border part with this border part.
+	 * Adds a border part collision of another border part with this border part.
 	 *
 	 * @param Coordinate $_at The collision position
-	 * @param BorderPart $_otherBorderPart The other border part
+	 * @param BaseBorderPart $_otherBorderPart The other border part
 	 */
     public function addOtherBorderPartCollision(Coordinate $_at, $_otherBorderPart)
     {
@@ -179,15 +176,15 @@ class BorderPart
 
 	/**
 	 * Returns whether another border part is an outer border part relative to this border part.
+	 * This is done by checking whether the parent border contains the parent border of the other border part.
 	 *
-	 * @param BorderPart $_borderPart The other border part
+	 * @param BaseBorderPart $_borderPart The other border part
 	 *
 	 * @return Bool True if the other border part is an outer border part, false otherwise
 	 */
     public function isOuterBorderPart($_borderPart): Bool
     {
-	    // Check whether the other border part is a inner or outer border part
-	    if ($this->parentBorder()->containsBorder($_borderPart->parentBorder()))
+	    if ($this->parentBorderShape->parentBorder()->containsBorder($_borderPart->parentBorderShape()->parentBorder()))
 	    {
 		    return false;
 	    }
@@ -196,9 +193,9 @@ class BorderPart
 
 	/**
 	 * Checks whether this border part collides with another border part and adds a border part collision to this border
-	 * part if a collision was detected.
+	 * part and the other border part if a collision was detected.
 	 *
-	 * @param BorderPart $_borderPart The other border part
+	 * @param BaseBorderPart $_borderPart The other border part
 	 */
 	public function checkCollisionWith($_borderPart)
 	{
@@ -211,7 +208,7 @@ class BorderPart
 	}
 
 	/**
-	 * Returns all collision positions of this border part.
+	 * Returns the maximum collision thicknesses at each collision position of this border part.
 	 *
 	 * @return BorderPartThickness[] The collision positions
 	 */
@@ -226,7 +223,7 @@ class BorderPart
 
 		foreach ($allCollisions as $collision)
 		{
-			$isExistingPosition = false;
+			$isExistingCollisionPosition = false;
 			foreach ($processedCollisionPositions as $index => $collisionPosition)
 			{
 				if ($collisionPosition->equals($collision->position()))
@@ -239,12 +236,12 @@ class BorderPart
 					{
 						$collisionThicknesses[$index]->setWidth($collision->with()->thickness()->width());
 					}
-					$isExistingPosition = true;
+					$isExistingCollisionPosition = true;
 					break;
 				}
 			}
 
-			if (! $isExistingPosition)
+			if (! $isExistingCollisionPosition)
 			{
 				$collisionThicknesses[] = clone $collision->with()->thickness();
 				$processedCollisionPositions[] = $collision->position();
