@@ -10,6 +10,7 @@ namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseVerticalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
 use GameOfLife\Coordinate;
 
 /**
@@ -52,9 +53,7 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
 	{
 		if ($this->containsCoordinate($_coordinate))
 		{
-			if ($_coordinate->equals($this->parentBorderPart->startsAt())) return 0;
-			elseif ($_coordinate->equals($this->parentBorderPart->endsAt())) return $this->getNumberOfBorderSymbols() + 1;
-			else return $_coordinate->y() - $this->parentBorderPart->startsAt()->y();
+			return ($_coordinate->y() - $this->parentBorderPart->startsAt()->y()) * 2;
 		}
 		else return null;
 	}
@@ -64,12 +63,27 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
 		$coordinates = parent::getBorderPartGridPositions();
 		$borderPartGridPositions = array();
 
+		// Add border positions
 		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->startsAt(), false, false);
 		foreach ($coordinates as $coordinate)
 		{
 			$borderPartGridPositions[] = new TextBorderPartGridPosition($coordinate, true, false);
 		}
 		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->endsAt(), false, false);
+
+		// Add collision positions
+		$borderPartGridPositions = array_merge(
+			$borderPartGridPositions,
+			$this->getCollisionGridPositions($borderPartGridPositions, $this->parentBorderPart->collisions())
+		);
+
+		usort($borderPartGridPositions,
+			function (TextBorderPartGridPosition $_a, TextBorderPartGridPosition $_b)
+			{
+				if ($_a->y() > $_b->y()) return true;
+				else return false;
+			}
+		);
 
 		return $borderPartGridPositions;
 	}
@@ -87,6 +101,13 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
         return $this->parentBorderPart->getBorderSymbols();
     }
 
+	/**
+	 * Returns the position inside the border grid where the parent border collides with another border part.
+	 *
+	 * @param TextBorderPart $_borderPart The other border part
+	 *
+	 * @return TextBorderPartCollisionPosition|null The position or null if there is no collision
+	 */
 	public function getCollisionPositionWith($_borderPart)
 	{
 		$at = parent::getCollisionPositionWith($_borderPart);

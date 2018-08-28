@@ -20,33 +20,51 @@ use GameOfLife\Coordinate;
 trait TextBorderPartShapeTrait
 {
 	/**
+	 * Returns the positions of the collision positions on the border grid.
+	 *
+	 * @param TextBorderPartGridPosition[] $_borderSymbolPositions The border symbol grid positions
+	 * @param Coordinate[] $_collisions The collision coordinates
+	 *
+	 * @return TextBorderPartGridPosition[] The collision grid positions
+	 */
+	public function getCollisionGridPositions(array $_borderSymbolPositions, array $_collisions): array
+	{
+		$collisionGridPositions = array();
+
+		foreach ($_collisions as $collision)
+		{
+			$collisionPosition = new TextBorderPartGridPosition($collision->position(), false, false);
+
+			$positionExists = false;
+			foreach ($_borderSymbolPositions as $borderSymbolPosition)
+			{
+				if ($borderSymbolPosition->equals($collisionPosition))
+				{
+					$positionExists = true;
+					break;
+				}
+			}
+
+			if (! $positionExists) $collisionGridPositions[] = $collisionPosition;
+		}
+
+		return $collisionGridPositions;
+	}
+
+	/**
 	 * Returns the text border part collision position for a border part collision.
 	 *
 	 * @param Coordinate $_at The coordinate at which the border parts collide
-	 * @param BaseBorderPart $_with The colliding border part
+	 * @param TextBorderPart $_with The colliding border part
 	 *
 	 * @return TextBorderPartCollisionPosition The text border part collision position
 	 */
 	protected function getTextBorderPartCollisionPosition(Coordinate $_at, $_with): TextBorderPartCollisionPosition
 	{
-		/** @var TextBorderPart $parentBorderPart */
-		$parentBorderPart = $this->parentBorderPart;
-
-		if ($parentBorderPart->isOuterBorderPart($_with)) $dominatingBorderPart = $_with;
-		else $dominatingBorderPart = $parentBorderPart;
-
 		$collisionDirection = new CollisionDirection($this->getCollisionDirections($_at, $_with));
 
-		// TODO: Fix border symbol start and end positions instead of startsat and endsat
-		// TODO: Fix collision position edge and first/last symbol
-		if ($_at->equals($dominatingBorderPart->startsAt())) $collisionPosition = "start";
-		elseif ($_at->equals($dominatingBorderPart->endsAt())) $collisionPosition = "end";
-		else $collisionPosition = "center";
-
 		$textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
-			$_at->x(),
-			$_at->y(),
-			$collisionPosition,
+			$_at,
 			$collisionDirection
 		);
 

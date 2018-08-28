@@ -148,6 +148,16 @@ abstract class BaseBorderPart
     	return $this->thickness;
     }
 
+	/**
+	 * Returns all collisions of this border part.
+	 *
+	 * @return BorderPartCollision[] The list of border part collisions
+	 */
+    public function collisions(): array
+    {
+    	return array_merge($this->ownCollisions, $this->otherBorderPartCollisions);
+    }
+
 
 	// Class Methods
 
@@ -216,12 +226,9 @@ abstract class BaseBorderPart
 	{
 		/** @var BorderPartThickness[] $collisionThicknesses */
 		$collisionThicknesses = array();
-
-		/** @var BorderPartCollision[] $allCollisions */
-		$allCollisions = array_merge($this->ownCollisions, $this->otherBorderPartCollisions);
 		$processedCollisionPositions = array();
 
-		foreach ($allCollisions as $collision)
+		foreach ($this->collisions() as $collision)
 		{
 			$isExistingCollisionPosition = false;
 			foreach ($processedCollisionPositions as $index => $collisionPosition)

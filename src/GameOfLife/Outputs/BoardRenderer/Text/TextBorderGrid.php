@@ -73,15 +73,15 @@ class TextBorderGrid extends BaseBorderGrid
 		$rawRenderedBorderPart = $_renderedBorder->rawRenderedBorderPart();
 		$borderSymbols = $rawRenderedBorderPart;
 
-		foreach ($_renderedBorder->borderPartGridPositions() as $symbolId => $at)
+		foreach ($_renderedBorder->borderPartGridPositions() as $at)
 		{
 			if (! isset($this->borderSymbolGrid[$at->y()])) $this->borderSymbolGrid[$at->y()] = array();
-			$this->borderSymbolGrid[$at->y()][$at->x()] = $borderSymbols[$symbolId];
+			$this->borderSymbolGrid[$at->y()][$at->x()] = array_shift($borderSymbols);
 		}
 	}
 
 	/**
-	 * Fills the gaps in the border symbol grid that exist because of vertical borders.
+	 * Fills the gaps in the border symbol grid that exist because of the horizontal border rows and vertical borders columns.
 	 */
 	private function autoCompleteBorderSymbolGrid()
 	{

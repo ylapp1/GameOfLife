@@ -98,9 +98,9 @@ abstract class TextBorderPart extends BaseBorderPart
         $borderSymbols = array();
 
         $borderSymbols[] = $this->borderSymbolDefinition->startSymbol();
-        for ($i = 1; $i <= $this->shape->getNumberOfBorderSymbols(); $i++)
+        for ($i = 0; $i < $this->shape->getNumberOfBorderSymbols(); $i++)
         {
-            $borderSymbols[$i] = $this->borderSymbolDefinition->centerSymbol();
+            $borderSymbols[$i * 2 + 1] = $this->borderSymbolDefinition->centerSymbol();
         }
         $borderSymbols[] = $this->borderSymbolDefinition->endSymbol();
 
@@ -116,6 +116,8 @@ abstract class TextBorderPart extends BaseBorderPart
      */
     private function renderCollisions(array $_borderSymbols): array
     {
+    	$borderSymbols = $_borderSymbols;
+
 	    foreach ($this->ownCollisions as $collision)
         {
         	// Find dominating border
@@ -130,17 +132,20 @@ abstract class TextBorderPart extends BaseBorderPart
 	        $collisionPosition = $collision->position();
 
 	        // Find default collision symbol
-	        $defaultCollisionSymbol = " ";
-	        if ($collisionPosition->isStartPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->startSymbol();
-	        elseif ($collisionPosition->isCenterPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->centerSymbol();
-	        elseif ($collisionPosition->isEndPosition()) $defaultCollisionSymbol = $borderSymbolDefinition->endSymbol();
+	        $isStartPosition = $dominatingBorderPart->startsAt()->equals($collisionPosition);
+	        $isEndPosition = $dominatingBorderPart->endsAt()->equals($collisionPosition);
+	        $isCenterPosition = (! $isStartPosition && ! $isEndPosition);
+
+	        if ($isStartPosition) $defaultCollisionSymbol = $borderSymbolDefinition->startSymbol();
+	        elseif ($isEndPosition) $defaultCollisionSymbol = $borderSymbolDefinition->endSymbol();
+	        else $defaultCollisionSymbol = $borderSymbolDefinition->centerSymbol();
 
 	        // Find direction specific collision symbol
 	        foreach ($borderSymbolDefinition->collisionSymbolDefinitions() as $collisionSymbolDefinition)
 	        {
-	        	if ($collisionPosition->isStartPosition() && $collisionSymbolDefinition->isStartPosition() ||
-			        $collisionPosition->isCenterPosition() && $collisionSymbolDefinition->isCenterPosition() ||
-			        $collisionPosition->isEndPosition() && $collisionSymbolDefinition->isEndPosition())
+	        	if ($isStartPosition && $collisionSymbolDefinition->isStartPosition() ||
+			        $isCenterPosition && $collisionSymbolDefinition->isCenterPosition() ||
+			        $isEndPosition && $collisionSymbolDefinition->isEndPosition())
 		        { // The collision position matches
 
 			        if ($collisionPosition->collisionDirection()->equals($collisionSymbolDefinition->collisionDirection()))
@@ -154,9 +159,9 @@ abstract class TextBorderPart extends BaseBorderPart
             if (! $collisionSymbol) $collisionSymbol = $defaultCollisionSymbol;
 
             $borderSymbolPosition = $this->shape->getBorderSymbolPositionOf($collision->position());
-            $_borderSymbols[$borderSymbolPosition] = $collisionSymbol;
+            $borderSymbols[$borderSymbolPosition] = $collisionSymbol;
         }
 
-        return $_borderSymbols;
+        return $borderSymbols;
     }
 }
