@@ -32,11 +32,11 @@ abstract class BaseBoardRenderer
     protected $border;
 
     /**
-     * The border renderer
+     * The border grid builder
      *
-     * @var BaseBorderGridBuilder $borderRenderer
+     * @var BaseBorderGridBuilder $borderGridBuilder
      */
-    protected $borderRenderer;
+    protected $borderGridBuilder;
 
     /**
      * The board field renderer
@@ -53,7 +53,7 @@ abstract class BaseBoardRenderer
     protected $canvas;
 
 	/**
-	 * The height/width of a single field
+	 * The height/width of a single field in pixels, symbols, etc.
 	 *
 	 * @var int $fieldSize
 	 */
@@ -66,15 +66,15 @@ abstract class BaseBoardRenderer
      * BaseBoardRenderer constructor.
      *
      * @param BaseBorder $_border The border
-     * @param BaseBorderGridBuilder $_borderRenderer The border renderer
+     * @param BaseBorderGridBuilder $_borderGridBuilder The border grid builder
      * @param BaseBoardFieldRenderer $_boardFieldRenderer The board field renderer
      * @param BaseCanvas $_canvas The canvas
-     * @param int $_fieldSize The height/width of a field in pixels/symbols/etc
+     * @param int $_fieldSize The height/width of a field in pixels, symbols, etc.
      */
-    protected function __construct($_border, $_borderRenderer, $_boardFieldRenderer, $_canvas, int $_fieldSize = 1)
+    protected function __construct($_border, $_borderGridBuilder, $_boardFieldRenderer, $_canvas, int $_fieldSize = 1)
     {
         $this->border = $_border;
-        $this->borderRenderer = $_borderRenderer;
+        $this->borderGridBuilder = $_borderGridBuilder;
         $this->boardFieldRenderer = $_boardFieldRenderer;
         $this->canvas = $_canvas;
         $this->fieldSize = $_fieldSize;
@@ -84,7 +84,7 @@ abstract class BaseBoardRenderer
     // Class Methods
 
     /**
-     * Renders a board to the canvas of this board renderer.
+     * Creates and returns a rendered board.
      *
      * @param Board $_board The board
      *
@@ -95,7 +95,7 @@ abstract class BaseBoardRenderer
         // Render the borders
 	    if (! $this->canvas->hasCachedBorderGrid())
 	    {
-	    	$this->canvas->setBorderGrid($this->borderRenderer->getBorderGrid());
+	    	$this->canvas->setBorderGrid($this->borderGridBuilder->getBorderGrid());
 	    }
 
         // Render the board fields
