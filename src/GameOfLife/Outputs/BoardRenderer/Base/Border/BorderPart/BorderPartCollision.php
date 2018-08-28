@@ -32,13 +32,11 @@ class BorderPartCollision
 	private $with;
 
 	/**
-	 * Indicates whether the colliding border part is a outer border
+	 * Indicates whether the colliding border part is an outer border
 	 *
 	 * @var Bool $isOuterBorderPartCollision
 	 */
 	private $isOuterBorderPartCollision;
-
-	// TODO: Add dominating border attribute
 
 
 	// Magic Methods
@@ -46,9 +44,9 @@ class BorderPartCollision
 	/**
 	 * BorderPartCollision constructor.
 	 *
-	 * @param Coordinate $_position The position of the collision inside the border relative from the start position of the border
-	 * @param BaseBorderPart $_with The reference to the border that collides
-	 * @param bool $_isOuterBorderCollision Indicates whether the colliding border is an outer border
+	 * @param Coordinate $_position The position of the collision inside the border grid
+	 * @param BaseBorderPart $_with The colliding border part
+	 * @param bool $_isOuterBorderCollision Indicates whether the colliding border part is an outer border
 	 */
 	public function __construct(Coordinate $_position, $_with, Bool $_isOuterBorderCollision)
 	{
@@ -61,9 +59,9 @@ class BorderPartCollision
 	// Getters and Setters
 
     /**
-     * Returns the position of the collision inside the border relative from the start position of the border.
+     * Returns the position of the collision inside the border grid.
      *
-     * @return Coordinate The position of the collision inside the border relative from the start position of the border
+     * @return Coordinate The position of the collision inside the border grid
      */
 	public function position()
     {

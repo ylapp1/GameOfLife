@@ -16,6 +16,13 @@ use GameOfLife\Coordinate;
  */
 abstract class BaseHorizontalBorderPartShape extends BaseBorderPartShape
 {
+	// Class Methods
+
+	/**
+	 * Calculates and returns the border part grid positions.
+	 *
+	 * @return Coordinate[] The border part grid positions
+	 */
 	protected function getBorderPartGridPositions(): array
 	{
 		$borderPartGridPositions = array();

@@ -8,9 +8,9 @@
 
 namespace BoardRenderer\Base\Border\BorderPart;
 
+use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use GameOfLife\Coordinate;
-use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 
 /**
  * Container class that stores information about a border part.

@@ -8,8 +8,8 @@
 
 namespace BoardRenderer\Base;
 
-use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
+use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use GameOfLife\Board;
 
 /**

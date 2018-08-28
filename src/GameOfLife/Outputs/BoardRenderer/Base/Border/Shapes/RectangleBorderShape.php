@@ -8,10 +8,10 @@
 
 namespace BoardRenderer\Base\Border\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
-use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
+use GameOfLife\Rectangle;
 
 /**
  * Creates border parts that form a rectangle.

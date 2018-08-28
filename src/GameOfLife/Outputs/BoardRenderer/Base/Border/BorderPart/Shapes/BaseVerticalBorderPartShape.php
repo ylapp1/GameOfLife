@@ -16,6 +16,8 @@ use GameOfLife\Coordinate;
  */
 abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 {
+	// Class Methods
+
 	/**
 	 * Returns the border part grid positions for the parent border part.
 	 *

@@ -9,22 +9,21 @@
 namespace BoardRenderer\Base\Border\BorderPart;
 
 /**
- * Defines the border part thickness (height and width of each fraction of the border part).
- * TODO: Find better name for this class
+ * Defines the border part thickness (height and width of each border grid position of the border part).
  */
 class BorderPartThickness
 {
 	// Attributes
 
 	/**
-	 * The width of each fraction of the border part
+	 * The width of each border grid position of the border part
 	 *
 	 * @var int $width
 	 */
 	private $width;
 
 	/**
-	 * The height of each fraction of the border part
+	 * The height of each border grid position of the border part
 	 *
 	 * @var int $height
 	 */

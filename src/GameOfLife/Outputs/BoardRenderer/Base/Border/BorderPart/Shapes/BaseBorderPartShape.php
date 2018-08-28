@@ -15,7 +15,6 @@ use GameOfLife\Coordinate;
 /**
  * Defines the shape of a border part.
  *
- * Call setParentBorderPart() before using other methods of this class
  * Call getRenderedBorderPart() to get the rendered parent border part
  */
 abstract class BaseBorderPartShape
@@ -46,9 +45,9 @@ abstract class BaseBorderPartShape
     // Class Methods
 
 	/**
-	 * Builds and returns a rendered border part of the parent border part.
+	 * Builds and returns a rendered border part from the parent border part.
 	 *
-	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 * @param int $_fieldSize The size of a single field in pixels, symbols, etc.
 	 *
 	 * @return RenderedBorderPart The rendered border part
 	 */
@@ -64,9 +63,9 @@ abstract class BaseBorderPartShape
 	/**
 	 * Creates and returns the rendered parent border part.
 	 *
-	 * @param int $_fieldSize The size of a single field in pixels/symbols/etc
+	 * @param int $_fieldSize The size of a single field in pixels, symbols, etc.
 	 *
-	 * @return mixed The rendered parent border part
+	 * @return mixed The raw rendered parent border part
 	 */
     abstract protected function getRawRenderedBorderPart(int $_fieldSize);
 
