@@ -61,15 +61,6 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	}
 
 
-	// Getters and Setters
-
-	// TODO: This can be removed when border grid shape is independent of this shape
-	public function rectangle(): Rectangle
-	{
-		return $this->rectangle;
-	}
-
-
 	// Class Methods
 
 	/**
@@ -120,26 +111,98 @@ abstract class RectangleBorderShape extends BaseBorderShape
 	abstract protected function getRightBorderPart();
 
 	/**
-	 * Returns the maximum allowed Y-Coordinate for a specific column.
+	 * Calculates and returns the start Y-Coordinate in a specific column.
 	 *
 	 * @param int $_x The X-Coordinate of the column
 	 *
-	 * @return int The maximum allowed Y-Coordinate
+	 * @return int|null The start Y-Coordinate
 	 */
-	public function getMaximumAllowedYCoordinate(int $_x): int
+	public function getStartY(int $_x)
 	{
-		return $this->rectangle->bottomRightCornerCoordinate()->y();
+		if ($this->rectangle->topLeftCornerCoordinate()->x() <= $_x && $this->rectangle->bottomRightCornerCoordinate()->x() + 1 >= $_x)
+		{
+			return $this->rectangle->topLeftCornerCoordinate()->y();
+		}
+		else return null;
 	}
 
 	/**
-	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 * Calculates and returns the end Y-Coordinate in a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int|null The end Y-Coordinate
+	 */
+	public function getEndY(int $_x)
+	{
+		if ($this->rectangle->topLeftCornerCoordinate()->x() <= $_x && $this->rectangle->bottomRightCornerCoordinate()->x() + 1 >= $_x)
+		{
+			return $this->rectangle->bottomRightCornerCoordinate()->y() + 1;
+		}
+		else return null;
+	}
+
+	/**
+	 * Calculates and returns the start X-Coordinate in a specific row.
 	 *
 	 * @param int $_y The Y-Coordinate of the row
 	 *
-	 * @return int The maximum allowed X-Coordinate
+	 * @return int|null The start X-Coordinate
 	 */
-	public function getMaximumAllowedXCoordinate(int $_y): int
+	public function getStartX(int $_y)
 	{
-		return $this->rectangle->bottomRightCornerCoordinate()->x();
+		if ($this->rectangle->topLeftCornerCoordinate()->y() <= $_y && $this->rectangle->bottomRightCornerCoordinate()->y() + 1 >= $_y)
+		{
+			return $this->rectangle->topLeftCornerCoordinate()->x();
+		}
+		else return null;
+	}
+
+	/**
+	 * Calculates and returns the end X-Coordinate in a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int|null The start X-Coordinate
+	 */
+	public function getEndX(int $_y)
+	{
+		if ($this->rectangle->topLeftCornerCoordinate()->y() <= $_y && $this->rectangle->bottomRightCornerCoordinate()->y() + 1 >= $_y)
+		{
+			return $this->rectangle->bottomRightCornerCoordinate()->x() + 1;
+		}
+		else return null;
+	}
+
+	/**
+	 * Returns the row ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of row ids
+	 */
+	public function getRowIds(): array
+	{
+		$rowIds = array();
+		for ($y = $this->rectangle->topLeftCornerCoordinate()->y(); $y <= $this->rectangle->bottomRightCornerCoordinate()->y(); $y++)
+		{
+			$rowIds[] = $y;
+		}
+
+		return $rowIds;
+	}
+
+	/**
+	 * Returns the column ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of column ids
+	 */
+	public function getColumnIds(): array
+	{
+		$columnIds = array();
+		for ($x = $this->rectangle->topLeftCornerCoordinate()->x(); $x <= $this->rectangle->bottomRightCornerCoordinate()->x(); $x++)
+		{
+			$columnIds[] = $x;
+		}
+
+		return $columnIds;
 	}
 }

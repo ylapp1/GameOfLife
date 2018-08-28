@@ -62,20 +62,52 @@ abstract class BaseBorderShape
     abstract public function getBorderParts();
 
 	/**
-	 * Returns the maximum allowed Y-Coordinate for a specific column.
+	 * Calculates and returns the start Y-Coordinate in a specific column.
 	 *
 	 * @param int $_x The X-Coordinate of the column
 	 *
-	 * @return int The maximum allowed Y-Coordinate
+	 * @return int|null The start Y-Coordinate
 	 */
-    abstract public function getMaximumAllowedYCoordinate(int $_x): int;
+    abstract public function getStartY(int $_x);
 
 	/**
-	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 * Calculates and returns the end Y-Coordinate in a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int|null The end Y-Coordinate
+	 */
+    abstract public function getEndY(int $_x);
+
+	/**
+	 * Calculates and returns the start X-Coordinate in a specific row.
 	 *
 	 * @param int $_y The Y-Coordinate of the row
 	 *
-	 * @return int The maximum allowed X-Coordinate
+	 * @return int|null The start X-Coordinate
 	 */
-    abstract public function getMaximumAllowedXCoordinate(int $_y): int;
+    abstract public function getStartX(int $_y);
+
+	/**
+	 * Calculates and returns the end X-Coordinate in a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int|null The start X-Coordinate
+	 */
+    abstract public function getEndX(int $_y);
+
+	/**
+	 * Returns the row ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of row ids
+	 */
+    abstract public function getRowIds(): array;
+
+	/**
+	 * Returns the column ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of column ids
+	 */
+    abstract public function getColumnIds(): array;
 }

@@ -62,36 +62,38 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	public function getBorderParts()
 	{
 		$parentBorderShape = $this->parentBorder->parentBorder()->shape();
-		if (! $parentBorderShape instanceof RectangleBorderShape)
-		{
-			// TODO: Make background grid work with all border shapes
-			return array();
-		}
-
 		$backgroundGridBorderParts = array();
 
-		$startsAt = $parentBorderShape->rectangle()->topLeftCornerCoordinate();
-		$endsAt = $parentBorderShape->rectangle()->bottomRightCornerCoordinate();
-
-		$width = $endsAt->x() - $startsAt->x() + 1;
-		$height = $endsAt->y() - $startsAt->y() + 1;
 
 		// Add horizontal border parts
-		for ($y = $startsAt->y() + 1; $y <= $endsAt->y(); $y++)
+		$rowIds = $parentBorderShape->getRowIds();
+		unset($rowIds[0]);
+
+		foreach ($rowIds as $y)
 		{
+			$startX = $parentBorderShape->getStartX($y);
+			$endX = $parentBorderShape->getEndX($y);
+
 			$borderPart = $this->getHorizontalBackgroundGridBorderPart(
-				new Coordinate(0, $y),
-				new Coordinate($width, $y)
+				new Coordinate($startX, $y),
+				new Coordinate($endX, $y)
 			);
 			$backgroundGridBorderParts[] = $borderPart;
 		}
 
+
 		// Add vertical border parts
-		for ($x = $startsAt->x() + 1; $x <= $endsAt->x(); $x++)
+		$columnIds = $parentBorderShape->getColumnIds();
+		unset($columnIds[0]);
+
+		foreach ($columnIds as $x)
 		{
+			$startY = $parentBorderShape->getStartY($x);
+			$endY = $parentBorderShape->getEndY($x);
+
 			$borderPart = $this->getVerticalBackgroundGridBorderPart(
-				new Coordinate($x, 0),
-				new Coordinate($x, $height)
+				new Coordinate($x, $startY),
+				new Coordinate($x, $endY)
 			);
 			$backgroundGridBorderParts[] = $borderPart;
 		}
@@ -120,26 +122,70 @@ abstract class BaseGridBorderShape extends BaseBorderShape
 	abstract protected function getVerticalBackgroundGridBorderPart(Coordinate $_startsAt, Coordinate $_endsAt);
 
 	/**
-	 * Returns the maximum allowed Y-Coordinate for a specific column.
+	 * Calculates and returns the start Y-Coordinate in a specific column.
 	 *
 	 * @param int $_x The X-Coordinate of the column
 	 *
-	 * @return int The maximum allowed Y-Coordinate
+	 * @return int|null The start Y-Coordinate
 	 */
-	public function getMaximumAllowedYCoordinate(int $_x): int
+	public function getStartY(int $_x)
 	{
-		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedYCoordinate($_x);
+		return $this->parentBorder->parentBorder()->shape()->getStartY($_x);
 	}
 
 	/**
-	 * Returns the maximum allowed X-Coordinate for a specific row.
+	 * Calculates and returns the end Y-Coordinate in a specific column.
+	 *
+	 * @param int $_x The X-Coordinate of the column
+	 *
+	 * @return int|null The end Y-Coordinate
+	 */
+	public function getEndY(int $_x)
+	{
+		return $this->parentBorder->parentBorder()->shape()->getEndY($_x);
+	}
+
+	/**
+	 * Calculates and returns the start X-Coordinate in a specific row.
 	 *
 	 * @param int $_y The Y-Coordinate of the row
 	 *
-	 * @return int The maximum allowed X-Coordinate
+	 * @return int|null The start X-Coordinate
 	 */
-	public function getMaximumAllowedXCoordinate(int $_y): int
+	public function getStartX(int $_y)
 	{
-		return $this->parentBorder->parentBorder()->shape()->getMaximumAllowedXCoordinate($_y);
+		return $this->parentBorder->parentBorder()->shape()->getStartX($_y);
+	}
+
+	/**
+	 * Calculates and returns the end X-Coordinate in a specific row.
+	 *
+	 * @param int $_y The Y-Coordinate of the row
+	 *
+	 * @return int|null The start X-Coordinate
+	 */
+	public function getEndX(int $_y)
+	{
+		return $this->parentBorder->parentBorder()->shape()->getEndX($_y);
+	}
+
+	/**
+	 * Returns the row ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of row ids
+	 */
+	public function getRowIds(): array
+	{
+		return $this->parentBorder->parentBorder()->shape()->getRowIds();
+	}
+
+	/**
+	 * Returns the column ids that are covered by this border shape.
+	 *
+	 * @return int[] The list of column ids
+	 */
+	public function getColumnIds(): array
+	{
+		return $this->parentBorder->parentBorder()->shape()->getColumnIds();
 	}
 }
