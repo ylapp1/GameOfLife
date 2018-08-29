@@ -119,9 +119,9 @@ class TextBorderGrid extends BaseBorderGrid
 		}
 
 		// Sort the rows by array keys
-		foreach ($this->borderSymbolGrid as $borderSymbolRow)
+		foreach ($this->borderSymbolGrid as $y => $borderSymbolRow)
 		{
-			ksort($borderSymbolRow);
+			ksort($this->borderSymbolGrid[$y]);
 		}
 	}
 }

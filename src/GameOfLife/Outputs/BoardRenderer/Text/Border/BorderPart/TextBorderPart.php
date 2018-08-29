@@ -84,6 +84,7 @@ abstract class TextBorderPart extends BaseBorderPart
     {
         $borderSymbols = $this->renderBorderPart();
 	    $borderSymbols = $this->renderCollisions($borderSymbols);
+	    ksort($borderSymbols);
 
 	    return $borderSymbols;
     }
@@ -118,7 +119,8 @@ abstract class TextBorderPart extends BaseBorderPart
     {
     	$borderSymbols = $_borderSymbols;
 
-	    foreach ($this->ownCollisions as $collision)
+    	// TODO: Is own collisions enough?
+	    foreach ($this->collisions() as $collision)
         {
         	// Find dominating border
             if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();

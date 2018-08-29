@@ -112,7 +112,13 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
 	{
 		$at = parent::getCollisionPositionWith($_borderPart);
 
-		if ($at) return $this->getTextBorderPartCollisionPosition($at, $_borderPart);
+		if ($at)
+		{
+			if ($this->parentBorderPart->isOuterBorderPart($_borderPart)) $inferiorBorderPart = $this->parentBorderPart;
+			else $inferiorBorderPart = $_borderPart;
+
+			return $this->getTextBorderPartCollisionPosition($at, $inferiorBorderPart);
+		}
 		else return null;
 	}
 }

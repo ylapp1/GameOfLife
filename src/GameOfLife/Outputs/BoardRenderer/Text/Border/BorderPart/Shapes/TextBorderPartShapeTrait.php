@@ -8,7 +8,6 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
@@ -55,13 +54,13 @@ trait TextBorderPartShapeTrait
 	 * Returns the text border part collision position for a border part collision.
 	 *
 	 * @param Coordinate $_at The coordinate at which the border parts collide
-	 * @param TextBorderPart $_with The colliding border part
+	 * @param TextBorderPart $_inferiorBorderPart The inferior border part (The border part whose collision symbols will be ignored)
 	 *
 	 * @return TextBorderPartCollisionPosition The text border part collision position
 	 */
-	protected function getTextBorderPartCollisionPosition(Coordinate $_at, $_with): TextBorderPartCollisionPosition
+	protected function getTextBorderPartCollisionPosition(Coordinate $_at, TextBorderPart $_inferiorBorderPart): TextBorderPartCollisionPosition
 	{
-		$collisionDirection = new CollisionDirection($this->getCollisionDirections($_at, $_with));
+		$collisionDirection = new CollisionDirection($this->getCollisionDirections($_at, $_inferiorBorderPart));
 
 		$textBorderPartCollisionPosition = new TextBorderPartCollisionPosition(
 			$_at,
@@ -75,11 +74,11 @@ trait TextBorderPartShapeTrait
 	 * Returns the directions from which a collision occurs.
 	 *
 	 * @param Coordinate $_at The coordinate at which the border parts collide
-	 * @param BaseBorderPart $_with The colliding border part
+	 * @param TextBorderPart $_inferiorBorderPart The inferior border part (The border part whose collision symbols will be ignored)
 	 *
 	 * @return String[] The collision direction names
 	 */
-	protected function getCollisionDirections(Coordinate $_at, $_with): array
+	protected function getCollisionDirections(Coordinate $_at, TextBorderPart $_inferiorBorderPart): array
 	{
 		$collisionDirections = array();
 
@@ -88,28 +87,28 @@ trait TextBorderPartShapeTrait
 			$_at->x() - 1,
 			$_at->y() - 1
 		);
-		if ($_with->containsCoordinate($topLeftCoordinate)) $collisionDirections[] = "top-left";
+		if ($_inferiorBorderPart->containsCoordinate($topLeftCoordinate)) $collisionDirections[] = "top-left";
 
 		// Top
 		$topCoordinate = new Coordinate(
 			$_at->x(),
 			$_at->y() - 1
 		);
-		if ($_with->containsCoordinate($topCoordinate)) $collisionDirections[] = "top";
+		if ($_inferiorBorderPart->containsCoordinate($topCoordinate)) $collisionDirections[] = "top";
 
 		// Top right
 		$topRightCoordinate = new Coordinate(
 			$_at->x() + 1,
 			$_at->y() - 1
 		);
-		if ($_with->containsCoordinate($topRightCoordinate)) $collisionDirections[] = "top-right";
+		if ($_inferiorBorderPart->containsCoordinate($topRightCoordinate)) $collisionDirections[] = "top-right";
 
 		// Left
 		$leftCoordinate = new Coordinate(
 			$_at->x() - 1,
 			$_at->y()
 		);
-		if ($_with->containsCoordinate($leftCoordinate)) $collisionDirections[] = "left";
+		if ($_inferiorBorderPart->containsCoordinate($leftCoordinate)) $collisionDirections[] = "left";
 
 
 		// Right
@@ -117,28 +116,28 @@ trait TextBorderPartShapeTrait
 			$_at->x() + 1,
 			$_at->y()
 		);
-		if ($_with->containsCoordinate($rightCoordinate)) $collisionDirections[] = "right";
+		if ($_inferiorBorderPart->containsCoordinate($rightCoordinate)) $collisionDirections[] = "right";
 
 		// Bottom Left
 		$bottomLeftCoordinate = new Coordinate(
 			$_at->x() - 1,
 			$_at->y() + 1
 		);
-		if ($_with->containsCoordinate($bottomLeftCoordinate)) $collisionDirections[] = "bottom-left";
+		if ($_inferiorBorderPart->containsCoordinate($bottomLeftCoordinate)) $collisionDirections[] = "bottom-left";
 
 		// Bottom
 		$bottomCoordinate = new Coordinate(
 			$_at->x(),
 			$_at->y() + 1
 		);
-		if ($_with->containsCoordinate($bottomCoordinate)) $collisionDirections[] = "bottom";
+		if ($_inferiorBorderPart->containsCoordinate($bottomCoordinate)) $collisionDirections[] = "bottom";
 
 		// Bottom Right
 		$bottomRightCoordinate = new Coordinate(
 			$_at->x() + 1,
 			$_at->y() + 1
 		);
-		if ($_with->containsCoordinate($bottomRightCoordinate)) $collisionDirections[] = "bottom-right";
+		if ($_inferiorBorderPart->containsCoordinate($bottomRightCoordinate)) $collisionDirections[] = "bottom-right";
 
 		return $collisionDirections;
 	}

@@ -63,9 +63,9 @@ abstract class BaseBorder
 	/**
 	 * Returns the parent border of this border.
 	 *
-	 * @return BaseBorder The parent border of this border
+	 * @return BaseBorder|null The parent border of this border
 	 */
-	public function parentBorder(): BaseBorder
+	public function parentBorder()
 	{
 		return $this->parentBorder;
 	}
@@ -157,14 +157,17 @@ abstract class BaseBorder
 	public function containsBorder($_border)
 	{
 		$containsBorder = false;
+		$parentBorder = $_border->parentBorder();
 
-		foreach ($this->innerBorders as $innerBorder)
+		while ($parentBorder)
 		{
-			if ($innerBorder === $_border || $innerBorder->containsBorder($_border))
+			if ($parentBorder === $this)
 			{
 				$containsBorder = true;
 				break;
 			}
+
+			$parentBorder = $parentBorder->parentBorder();
 		}
 
 		return $containsBorder;

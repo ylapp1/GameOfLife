@@ -55,9 +55,9 @@ class CollisionSymbolDefinition
 		$this->collisionSymbol = $_collisionSymbol;
 		$this->collisionDirection = $_collisionDirection;
 
-		$this->isStartPosition = true;
-		$this->isCenterPosition = true;
-		$this->isEndPosition = true;
+		$this->isStartPosition = false;
+		$this->isCenterPosition = false;
+		$this->isEndPosition = false;
 
 		switch ($_position)
 		{
