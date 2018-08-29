@@ -90,7 +90,7 @@ class TextBorderGrid extends BaseBorderGrid
 		{
 			$isBorderRow = ($y % 2 == 0);
 
-			for ($x = $this->borderPositionsGrid->getLowestColumnId(); $x <= $this->borderPositionsGrid->getHighestColumnId(); $x++)
+			for ($x = $this->borderPositionsGrid->getLowestColumnIdInRow($y); $x <= $this->borderPositionsGrid->getHighestColumnIdInRow($y); $x++)
 			{
 				if (! isset($this->borderSymbolGrid[$y][$x]))
 				{

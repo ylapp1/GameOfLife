@@ -149,6 +149,16 @@ abstract class BaseBorderPart
     }
 
 	/**
+	 * Returns the collisions of this border part with other border parts that existed before this border part was added.
+	 *
+	 * @return BorderPartCollision[] The list of own border part collisions
+	 */
+    public function ownCollisions(): array
+    {
+    	return $this->ownCollisions;
+    }
+
+	/**
 	 * Returns all collisions of this border part.
 	 *
 	 * @return BorderPartCollision[] The list of border part collisions

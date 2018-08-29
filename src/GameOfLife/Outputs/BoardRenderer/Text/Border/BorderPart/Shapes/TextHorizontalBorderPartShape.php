@@ -74,7 +74,7 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 		// Add collision positions
 		$borderPartGridPositions = array_merge(
 			$borderPartGridPositions,
-			$this->getCollisionGridPositions($borderPartGridPositions, $this->parentBorderPart->collisions())
+			$this->getCollisionGridPositions($borderPartGridPositions, $this->parentBorderPart->ownCollisions())
 		);
 
 
