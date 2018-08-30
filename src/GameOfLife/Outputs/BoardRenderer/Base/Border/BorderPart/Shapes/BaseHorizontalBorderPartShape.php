@@ -66,6 +66,18 @@ abstract class BaseHorizontalBorderPartShape extends BaseBorderPartShape
 	 */
 	public function getCollisionPositionsWith($_borderPart): array
 	{
+		if ($_borderPart->shape() instanceof BaseHorizontalBorderPartShape &&
+			! $_borderPart->startsAt()->y() != $this->parentBorderPart->startsAt()->y())
+		{ // Other horizontal border parts must be in the same row as this parent border part
+			return array();
+		}
+		elseif ($_borderPart->shape() instanceof BaseVerticalBorderPartShape &&
+			     ($_borderPart->startsAt()->y() > $this->parentBorderPart->startsAt()->y() ||
+				$_borderPart->endsAt()->y() < $this->parentBorderPart->startsAt()->y()))
+		{
+			return array();
+		}
+
 		$collisionPositions = array();
 		$checkCoordinate = clone $this->parentBorderPart->startsAt();
 
