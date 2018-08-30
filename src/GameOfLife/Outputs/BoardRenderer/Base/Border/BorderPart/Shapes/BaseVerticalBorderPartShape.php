@@ -67,7 +67,7 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 	public function getCollisionPositionsWith($_borderPart): array
 	{
 		if ($_borderPart->shape() instanceof BaseVerticalBorderPartShape &&
-			! $_borderPart->startsAt()->x() != $this->parentBorderPart->startsAt()->x())
+			$_borderPart->startsAt()->x() != $this->parentBorderPart->startsAt()->x())
 		{ // Other vertical border parts must be in the same column as this parent border part
 			return array();
 		}
