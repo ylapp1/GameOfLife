@@ -103,23 +103,30 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
     }
 
 	/**
-	 * Returns the position inside the border grid where the parent border collides with another border part.
+	 * Returns the positions inside the border grid where the parent border collides with another border part.
 	 *
 	 * @param TextBorderPart $_borderPart The other border part
 	 *
-	 * @return TextBorderPartCollisionPosition|null The position or null if there is no collision
+	 * @return TextBorderPartCollisionPosition[] The positions
 	 */
-    public function getCollisionPositionWith($_borderPart)
+    public function getCollisionPositionsWith($_borderPart): array
     {
-    	$at = parent::getCollisionPositionWith($_borderPart);
+    	$collisionPositions = parent::getCollisionPositionsWith($_borderPart);
 
-    	if ($at)
+    	if ($collisionPositions)
 	    {
-	    	if ($this->parentBorderPart->isOuterBorderPart($_borderPart)) $inferiorBorderPart = $this->parentBorderPart;
-		    else $inferiorBorderPart = $_borderPart;
+		    $textBorderPartCollisionPositions = array();
 
-	    	return $this->getTextBorderPartCollisionPosition($at, $inferiorBorderPart);
+		    foreach ($collisionPositions as $collisionPosition)
+		    {
+			    if ($this->parentBorderPart->isOuterBorderPart($_borderPart)) $inferiorBorderPart = $this->parentBorderPart;
+			    else $inferiorBorderPart = $_borderPart;
+
+			    $textBorderPartCollisionPositions[] = $this->getTextBorderPartCollisionPosition($collisionPosition, $inferiorBorderPart);
+		    }
+
+		    return $textBorderPartCollisionPositions;
 	    }
-	    else return null;
+	    else return array();
     }
 }

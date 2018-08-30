@@ -345,7 +345,7 @@ abstract class BaseBorderPositionsGrid
 	 * @param int $_startRowId The id of the start row
 	 * @param int $_endRowId The id of the end row
 	 *
-	 * @return int The number of covered horizontal board fields
+	 * @return int The number of covered vertical board fields
 	 */
 	abstract protected function calculateNumberOfCoveredVerticalBoardFields(int $_startRowId, int $_endRowId): int;
 

@@ -186,12 +186,12 @@ abstract class BaseBorderPart
 	/**
 	 * Adds a border part collision of another border part with this border part.
 	 *
-	 * @param Coordinate $_at The collision position
+	 * @param Coordinate[] $_collisionPositions The collision positions
 	 * @param BaseBorderPart $_otherBorderPart The other border part
 	 */
-    public function addOtherBorderPartCollision(Coordinate $_at, $_otherBorderPart)
+    public function addOtherBorderPartCollision(array $_collisionPositions, $_otherBorderPart)
     {
-    	$this->otherBorderPartCollisions[] = new BorderPartCollision($_at, $_otherBorderPart, $this->isOuterBorderPart($_otherBorderPart));
+    	$this->otherBorderPartCollisions[] = new BorderPartCollision($_collisionPositions, $_otherBorderPart, $this->isOuterBorderPart($_otherBorderPart));
     }
 
 	/**
@@ -219,11 +219,11 @@ abstract class BaseBorderPart
 	 */
 	public function checkCollisionWith($_borderPart)
 	{
-		$collisionPosition = $this->shape->getCollisionPositionWith($_borderPart);
-		if ($collisionPosition !== null)
+		$collisionPositions = $this->shape->getCollisionPositionsWith($_borderPart);
+		if ($collisionPositions)
 		{
-			$this->ownCollisions[] = new BorderPartCollision($collisionPosition, $_borderPart, $this->isOuterBorderPart($_borderPart));
-			$_borderPart->addOtherBorderPartCollision($collisionPosition, $this);
+			$this->ownCollisions[] = new BorderPartCollision($collisionPositions, $_borderPart, $this->isOuterBorderPart($_borderPart));
+			$_borderPart->addOtherBorderPartCollision($collisionPositions, $this);
 		}
 	}
 
@@ -240,28 +240,31 @@ abstract class BaseBorderPart
 
 		foreach ($this->collisions() as $collision)
 		{
-			$isExistingCollisionPosition = false;
-			foreach ($processedCollisionPositions as $index => $collisionPosition)
+			foreach ($collision->positions() as $collisionPosition)
 			{
-				if ($collisionPosition->equals($collision->position()))
+				$isExistingCollisionPosition = false;
+				foreach ($processedCollisionPositions as $index => $processedCollisionPosition)
 				{
-					if ($collisionThicknesses[$index]->height() < $collision->with()->thickness()->height())
+					if ($processedCollisionPosition->equals($collisionPosition))
 					{
-						$collisionThicknesses[$index]->setHeight($collision->with()->thickness()->height());
+						if ($collisionThicknesses[$index]->height() < $collision->with()->thickness()->height())
+						{
+							$collisionThicknesses[$index]->setHeight($collision->with()->thickness()->height());
+						}
+						if ($collisionThicknesses[$index]->width() < $collision->with()->thickness()->width())
+						{
+							$collisionThicknesses[$index]->setWidth($collision->with()->thickness()->width());
+						}
+						$isExistingCollisionPosition = true;
+						break;
 					}
-					if ($collisionThicknesses[$index]->width() < $collision->with()->thickness()->width())
-					{
-						$collisionThicknesses[$index]->setWidth($collision->with()->thickness()->width());
-					}
-					$isExistingCollisionPosition = true;
-					break;
 				}
-			}
 
-			if (! $isExistingCollisionPosition)
-			{
-				$collisionThicknesses[] = clone $collision->with()->thickness();
-				$processedCollisionPositions[] = $collision->position();
+				if (! $isExistingCollisionPosition)
+				{
+					$collisionThicknesses[] = clone $collision->with()->thickness();
+					$processedCollisionPositions[] = $collisionPosition;
+				}
 			}
 		}
 

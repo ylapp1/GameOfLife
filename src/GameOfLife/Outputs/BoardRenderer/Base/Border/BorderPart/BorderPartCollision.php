@@ -18,11 +18,11 @@ class BorderPartCollision
     // Attributes
 
 	/**
-	 * The position of the border part collision inside the border grid
+	 * The positions of the border part collision inside the border grid
 	 *
-	 * @var Coordinate $position
+	 * @var Coordinate[] $position
 	 */
-	private $position;
+	private $positions;
 
 	/**
 	 * The colliding border part
@@ -44,13 +44,13 @@ class BorderPartCollision
 	/**
 	 * BorderPartCollision constructor.
 	 *
-	 * @param Coordinate $_position The position of the collision inside the border grid
+	 * @param Coordinate[] $_positions The positions of the collision inside the border grid
 	 * @param BaseBorderPart $_with The colliding border part
 	 * @param bool $_isOuterBorderCollision Indicates whether the colliding border part is an outer border
 	 */
-	public function __construct(Coordinate $_position, $_with, Bool $_isOuterBorderCollision)
+	public function __construct(array $_positions, $_with, Bool $_isOuterBorderCollision)
 	{
-		$this->position = $_position;
+		$this->positions = $_positions;
 		$this->with = $_with;
 		$this->isOuterBorderPartCollision = $_isOuterBorderCollision;
 	}
@@ -59,13 +59,13 @@ class BorderPartCollision
 	// Getters and Setters
 
     /**
-     * Returns the position of the collision inside the border grid.
+     * Returns the positions of the collision inside the border grid.
      *
-     * @return Coordinate The position of the collision inside the border grid
+     * @return Coordinate[] The positions of the collision inside the border grid
      */
-	public function position()
+	public function positions(): array
     {
-        return $this->position;
+        return $this->positions;
     }
 
     /**

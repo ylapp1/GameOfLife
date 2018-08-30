@@ -99,8 +99,9 @@ abstract class BaseBoardRenderer
 	    }
 
         // Render the board fields
-	    $renderedBoardFields = $this->boardFieldRenderer->getRenderedBoardFields($_board->fields());
-	    $this->canvas->setRenderedBoardFields($renderedBoardFields);
+	    $this->canvas->setRenderedBoardFields(
+		    $this->boardFieldRenderer->getRenderedBoardFields($_board->fields())
+	    );
 
 	    return $this->canvas->render($this->fieldSize);
     }

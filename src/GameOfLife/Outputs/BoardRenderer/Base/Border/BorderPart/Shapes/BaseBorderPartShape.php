@@ -86,11 +86,11 @@ abstract class BaseBorderPartShape
 	abstract public function containsCoordinate(Coordinate $_coordinate): Bool;
 
 	/**
-	 * Returns the position at which the parent border part collides with another border part or null if there is no collision.
+	 * Returns the positions at which the parent border part collides with another border part.
 	 *
 	 * @param BaseBorderPart $_borderPart The other border part
 	 *
-	 * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
+	 * @return Coordinate[] The positions at which the parent border part collides with the other border part
 	 */
-	abstract public function getCollisionPositionWith($_borderPart);
+	abstract public function getCollisionPositionsWith($_borderPart): array;
 }

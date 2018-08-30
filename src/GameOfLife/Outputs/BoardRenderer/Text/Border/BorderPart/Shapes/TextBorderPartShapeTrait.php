@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartCollision;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
@@ -22,7 +23,7 @@ trait TextBorderPartShapeTrait
 	 * Returns the positions of the collision positions on the border grid.
 	 *
 	 * @param TextBorderPartGridPosition[] $_borderSymbolPositions The border symbol grid positions
-	 * @param Coordinate[] $_collisions The collision coordinates
+	 * @param BorderPartCollision[] $_collisions The collisions
 	 *
 	 * @return TextBorderPartGridPosition[] The collision grid positions
 	 */
@@ -32,19 +33,22 @@ trait TextBorderPartShapeTrait
 
 		foreach ($_collisions as $collision)
 		{
-			$collisionPosition = new TextBorderPartGridPosition($collision->position(), false, false);
-
-			$positionExists = false;
-			foreach ($_borderSymbolPositions as $borderSymbolPosition)
+			foreach ($collision->positions() as $collisionPosition)
 			{
-				if ($borderSymbolPosition->equals($collisionPosition))
-				{
-					$positionExists = true;
-					break;
-				}
-			}
+				$collisionPosition = new TextBorderPartGridPosition($collisionPosition, false, false);
 
-			if (! $positionExists) $collisionGridPositions[] = $collisionPosition;
+				$positionExists = false;
+				foreach ($_borderSymbolPositions as $borderSymbolPosition)
+				{
+					if ($borderSymbolPosition->equals($collisionPosition))
+					{
+						$positionExists = true;
+						break;
+					}
+				}
+
+				if (! $positionExists) $collisionGridPositions[] = $collisionPosition;
+			}
 		}
 
 		return $collisionGridPositions;

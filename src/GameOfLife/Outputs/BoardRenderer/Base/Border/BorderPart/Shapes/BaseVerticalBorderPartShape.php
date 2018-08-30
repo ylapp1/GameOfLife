@@ -58,14 +58,15 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 	}
 
 	/**
-	 * Returns the position at which the parent border part collides with another border part or null if there is no collision.
+	 * Returns the position sat which the parent border part collides with another border part.
 	 *
 	 * @param BaseBorderPart $_borderPart The other border part
 	 *
-	 * @return Coordinate|null The position at which the parent border part collides with the other border part or null if there is no collision
+	 * @return Coordinate[] The positions at which the parent border part collides with the other border part
 	 */
-	public function getCollisionPositionWith($_borderPart)
+	public function getCollisionPositionsWith($_borderPart): array
 	{
+		$collisionPositions = array();
 		$checkCoordinate = clone $this->parentBorderPart->startsAt();
 
 		for ($y = $this->parentBorderPart->startsAt()->y(); $y <= $this->parentBorderPart->endsAt()->y(); $y++)
@@ -73,10 +74,10 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 			$checkCoordinate->setY($y);
 			if ($_borderPart->containsCoordinate($checkCoordinate))
 			{
-				return $checkCoordinate;
+				$collisionPositions[] = clone $checkCoordinate;
 			}
 		}
 
-		return null;
+		return $collisionPositions;
 	}
 }
