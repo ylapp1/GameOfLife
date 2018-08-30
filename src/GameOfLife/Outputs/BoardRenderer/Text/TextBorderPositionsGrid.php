@@ -20,6 +20,8 @@ use BoardRenderer\Base\BaseBorderPositionsGrid;
  */
 class TextBorderPositionsGrid extends BaseBorderPositionsGrid
 {
+	// Class Methods
+
 	/**
 	 * Calculates and returns the number of covered horizontal board fields based on a start and end column id.
 	 *
@@ -30,16 +32,16 @@ class TextBorderPositionsGrid extends BaseBorderPositionsGrid
 	 */
 	protected function calculateNumberOfCoveredHorizontalBoardFields(int $_startColumnId, int $_endColumnId): int
 	{
-		$startColumnId =$_startColumnId;
+		$startColumnId = $_startColumnId;
 		$endColumnId = $_endColumnId;
 
 		if ($startColumnId % 2 == 0)
-		{ // The column id is a border column id so it must be increased by one to get the id of the board field column right to it
+		{ // The start column id is a border column id so it must be increased by one to get the id of the board field column right to it
 			$startColumnId += 1;
 		}
 
 		if ($endColumnId % 2 == 0)
-		{ // The column id is a border column id so it must be decreased by one to get the id of the board field column left from it
+		{ // The end column id is a border column id so it must be decreased by one to get the id of the board field column left from it
 			$endColumnId -= 1;
 		}
 
@@ -55,7 +57,7 @@ class TextBorderPositionsGrid extends BaseBorderPositionsGrid
 	 * @param int $_startRowId The id of the start row
 	 * @param int $_endRowId The id of the end row
 	 *
-	 * @return int The number of covered horizontal board fields
+	 * @return int The number of covered vertical board fields
 	 */
 	protected function calculateNumberOfCoveredVerticalBoardFields(int $_startRowId, int $_endRowId): int
 	{
@@ -63,12 +65,12 @@ class TextBorderPositionsGrid extends BaseBorderPositionsGrid
 		$endRowId = $_endRowId;
 
 		if ($startRowId % 2 == 0)
-		{ // The row id is a border row id so it must be increased by one to get the id of the board field row below it
+		{ // The start row id is a border row id so it must be increased by one to get the id of the board field row below it
 			$startRowId += 1;
 		}
 
 		if ($endRowId % 2 == 0)
-		{  // The row id is a border row id so it must be decreased by one to get the id of the board field row above it
+		{  // The end row id is a border row id so it must be decreased by one to get the id of the board field row above it
 			$endRowId -= 1;
 		}
 

@@ -30,9 +30,9 @@ class CollisionSymbolDefinition
 	/**
 	 * The collision direction for which the collision symbol can be used
 	 *
-	 * @var CollisionDirection $collisionDirection
+	 * @var CollisionDirection[] $collisionDirection
 	 */
-	private $collisionDirection;
+	private $collisionDirections;
 
 	private $isStartPosition;
 
@@ -47,13 +47,13 @@ class CollisionSymbolDefinition
 	 * CollisionSymbolDefinition constructor.
 	 *
 	 * @param String $_collisionSymbol The collision symbol
-	 * @param CollisionDirection $_collisionDirection
+	 * @param CollisionDirection[] $_collisionDirections
 	 * @param String $_position The position inside the border ("start", "center", "end")
 	 */
-	public function __construct(String $_collisionSymbol, CollisionDirection $_collisionDirection, String $_position)
+	public function __construct(String $_collisionSymbol, array $_collisionDirections, String $_position)
 	{
 		$this->collisionSymbol = $_collisionSymbol;
-		$this->collisionDirection = $_collisionDirection;
+		$this->collisionDirections = $_collisionDirections;
 
 		$this->isStartPosition = false;
 		$this->isCenterPosition = false;
@@ -89,11 +89,11 @@ class CollisionSymbolDefinition
 	/**
 	 * Returns the collision direction for which this collision symbol may be used.
 	 *
-	 * @return CollisionDirection
+	 * @return CollisionDirection[] The collision directions
 	 */
-	public function collisionDirection(): CollisionDirection
+	public function collisionDirections(): array
 	{
-		return $this->collisionDirection;
+		return $this->collisionDirections;
 	}
 
 	/**

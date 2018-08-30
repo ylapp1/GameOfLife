@@ -10,7 +10,9 @@ namespace BoardRenderer\Text;
 
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 
 /**
  * Border grid for the TextBoardRenderer classes.
@@ -52,7 +54,12 @@ class TextBorderGrid extends BaseBorderGrid
 	 */
 	public function renderTotalBorderGrid(array $_renderedBorderParts, int $_fieldSize)
 	{
-		// Add the rendered border parts
+		/*
+		 * The rendered border parts are added in the reverse order to make the border parts that existed first overwrite
+		 * the border symbols of the border parts that were added later
+		 *
+		 * TODO: Fix this, this should work no matter which order
+		 */
 		foreach ($_renderedBorderParts as $renderedBorderPart)
 		{
 			$this->addRenderedBorderPart($renderedBorderPart);
@@ -85,13 +92,16 @@ class TextBorderGrid extends BaseBorderGrid
 	 */
 	private function autoCompleteBorderSymbolGrid()
 	{
+		$lowestColumnId = $this->borderPositionsGrid->getLowestColumnId();
+		$highestColumnId = $this->borderPositionsGrid->getHighestColumnId();
+
 		// Auto complete the grid
 		for ($y = $this->borderPositionsGrid->getLowestRowId(); $y <= $this->borderPositionsGrid->getHighestRowId(); $y++)
 		{
 			$isBorderRow = ($y % 2 == 0);
 			if (! $isBorderRow || isset($this->borderSymbolGrid[$y]))
 			{
-				for ($x = $this->borderPositionsGrid->getLowestColumnIdInRow($y); $x <= $this->borderPositionsGrid->getHighestColumnIdInRow($y); $x++)
+				for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 				{
 					if (! isset($this->borderSymbolGrid[$y][$x]))
 					{
@@ -114,7 +124,27 @@ class TextBorderGrid extends BaseBorderGrid
 						 */
 						$isBorderColumnGap = ($isBorderColumn && $columnContainsBorderSymbol && (! $isBorderRow || $rowContainsBorderSymbol));
 
-						if ($isBorderRowGap || $isBorderColumnGap) $this->borderSymbolGrid[$y][$x] = " ";
+						if ($isBorderRowGap || $isBorderColumnGap)
+						{
+							$gapSymbol = " ";
+
+							if ($isBorderRowGap && $isBorderColumnGap)
+							{
+								$gapCoordinate = new Coordinate($x / 2, $y / 2);
+
+								/** @var TextBorderPart $borderPart */
+								foreach ($this->borderParts as $borderPart)
+								{
+									if ($borderPart->containsCoordinate($gapCoordinate))
+									{
+										$gapSymbol = $borderPart->borderSymbolDefinition()->centerSymbol();
+										break;
+									}
+								}
+							}
+
+							$this->borderSymbolGrid[$y][$x] = $gapSymbol;
+						}
 					}
 				}
 			}

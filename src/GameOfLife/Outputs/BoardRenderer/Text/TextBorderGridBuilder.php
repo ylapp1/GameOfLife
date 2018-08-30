@@ -8,20 +8,20 @@
 
 namespace BoardRenderer\Text;
 
+use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Text\Border\TextBackgroundGridBorder;
-use BoardRenderer\Base\BaseBorderGridBuilder;
 use GameOfLife\Board;
 
 /**
- * Fills and returns a border grid for TextTBoardRenderer classes.
+ * Fills and returns a border grid for TextBoardRenderer classes.
  */
 class TextBorderGridBuilder extends BaseBorderGridBuilder
 {
 	// Magic Methods
 
 	/**
-	 * ImageBorderGridBuilder constructor.
+	 * TextBorderGridBuilder constructor.
 	 *
 	 * @param Board $_board The board for which this BorderGridBuilder will be used
 	 * @param BaseBorder $_mainBorder The main border
@@ -32,6 +32,9 @@ class TextBorderGridBuilder extends BaseBorderGridBuilder
 		$borderGrid = new TextBorderGrid($_board);
 		parent::__construct($_mainBorder, $borderGrid, $_hasBackgroundGrid);
 	}
+
+
+	// Class Methods
 
 	/**
 	 * Adds a background grid to a border.

@@ -8,47 +8,22 @@
 
 namespace BoardRenderer;
 
-use BoardEditor\SelectionArea;
+use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Text\Border\SelectionAreaBorder;
+use BoardRenderer\Text\Border\TextBoardOuterBorder;
+use BoardRenderer\Text\Border\TextHighLightFieldBorder;
+use BoardRenderer\Text\TextBoardFieldRenderer;
+use BoardRenderer\Text\TextBorderGridBuilder;
+use BoardRenderer\Text\TextCanvas;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use GameOfLife\Rectangle;
 
 /**
  * BoardRenderer for the BoardEditorOutput.
  */
 class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 {
-	// Attributes
-
-    /**
-     * The coordinate of the currently highlighted field
-     *
-     * @var Coordinate $highLightFieldCoordinate
-     */
-    private $highLightFieldCoordinate;
-
-    /**
-     * The currently selected area
-     *
-     * @var SelectionArea $selectionArea
-     */
-    private $selectionArea;
-
-	/**
-	 * The high light field border printer
-	 *
-	 * @var HighLightFieldBorderPartBuilder $highLightFieldBorderPrinter
-	 */
-	private $highLightFieldBorderPrinter;
-
-	/**
-	 * The selection area border printer
-	 *
-	 * @var SelectionAreaBorderPartBuilder $selectionAreaBorderPrinter
-	 */
-	private $selectionAreaBorderPrinter;
-
-
     // Magic Methods
 
     /**
@@ -58,10 +33,28 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
      */
     public function __construct(Board $_board)
     {
-        parent::__construct("o", " ", new BoardOuterBorderPartBuilder($_board));
-        $this->highLightFieldBorderPrinter = new HighLightFieldBorderPartBuilder();
-        $this->selectionAreaBorderPrinter = new SelectionAreaBorderPartBuilder();
+    	$border = new TextBoardOuterBorder($_board);
+
+	    parent::__construct(
+		    $border,
+		    new TextBorderGridBuilder($_board, $border, true),
+		    new TextBoardFieldRenderer("o", " "),
+		    new TextCanvas()
+	    );
     }
+
+
+    // Getters and Setters
+
+	/**
+	 * Returns the border of this board renderer.
+	 *
+	 * @return BaseBorder The border of this board renderer
+	 */
+	public function border()
+	{
+		return $this->border;
+	}
 
 
     // Class Methods
@@ -71,50 +64,40 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	 *
 	 * @param Board $_board The board
 	 * @param Coordinate $_highLightFieldCoordinate The coordinate of the currently highlighted field
-	 * @param SelectionArea $_selectionArea The currently selected area
+	 * @param Rectangle $_selectionAreaRectangle The currently selected area rectangle
 	 *
 	 * @return String The board output string
 	 */
-    public function getBoardContentString(Board $_board, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null): String
-    {
-        $this->highLightFieldCoordinate = $_highLightFieldCoordinate;
-        $this->selectionArea = $_selectionArea;
-        $this->border->resetInnerBorders();
+	public function renderBoard(Board $_board, Coordinate $_highLightFieldCoordinate = null, Rectangle $_selectionAreaRectangle = null): String
+	{
+		$this->border->resetInnerBorders();
 
-        if ($_highLightFieldCoordinate)
-        {
-            $this->highLightFieldBorderPrinter->initialize($_board, $this->highLightFieldCoordinate);
-            $this->border->addInnerBorder($this->highLightFieldBorderPrinter);
-        }
-        elseif ($_selectionArea)
-        {
-            $this->selectionAreaBorderPrinter->initialize($_board, $this->selectionArea);
-            $this->border->addInnerBorder($this->selectionAreaBorderPrinter);
-        }
+		if ($_highLightFieldCoordinate)
+		{
+			$highLightFieldBorder = new TextHighLightFieldBorder($this->border, $_highLightFieldCoordinate);
+			$this->border->addInnerBorder($highLightFieldBorder);
+		}
+		elseif ($_selectionAreaRectangle)
+		{
+			$selectionAreaBorder = new SelectionAreaBorder($this->border, $_selectionAreaRectangle);
+			$this->border->addInnerBorder($selectionAreaBorder);
+		}
 
-	    return parent::getBoardContentString($_board);
-    }
+		$renderedBoard = parent::renderBoard($_board);
 
-	/**
-	 * Returns the symbol for a cell in a field.
-	 *
-	 * @param Field $_field The field
-	 *
-	 * @return String The symbol for the cell in the field
-	 */
-    protected function getCellSymbol(Field $_field): String
-    {
-        $cellSymbol = parent::getCellSymbol($_field);
+		if ($_highLightFieldCoordinate)
+		{
+			// TODO: Fix double render canvas
+			if ($_board->getFieldState($_highLightFieldCoordinate->x(), $_highLightFieldCoordinate->y()) == true)
+			{
+				$renderedBoardFields = $this->canvas->renderedBoardFields();
+				$renderedBoardFields[$_highLightFieldCoordinate->y()][$_highLightFieldCoordinate->x()] = "X";
+				$this->canvas->setRenderedBoardFields($renderedBoardFields);
+			}
 
-        if ($this->highLightFieldCoordinate)
-        {
-            if ($_field->coordinate()->y() == $this->highLightFieldCoordinate->y() &&
-                $_field->coordinate()->x() == $this->highLightFieldCoordinate->x())
-            {
-                if ($_field->isAlive()) $cellSymbol = "X";
-            }
-        }
+			$renderedBoard = parent::renderBoard($_board);
+		}
 
-        return $cellSymbol;
-    }
+		return $renderedBoard;
+	}
 }

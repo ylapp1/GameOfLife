@@ -8,64 +8,17 @@
 
 namespace BoardRenderer\Text\Border;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
-use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
-use BoardRenderer\Base\Border\BaseBorder;
-use BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
 use GameOfLife\Rectangle;
 
 /**
  * Generates border strings for boards.
  */
-class TextBoardOuterBorder extends BaseBorder
+class TextBoardOuterBorder extends TextRectangleBorder
 {
-	/**
-	 * The symbol for the top left corner of the border
-	 *
-	 * @var String $borderSymbolTopLeft
-	 */
-	private $borderSymbolTopLeft = "╔";
-
-	/**
-	 * The symbol for the top right corner of the border
-	 *
-	 * @var String $borderSymbolTopRight
-	 */
-	private $borderSymbolTopRight = "╗";
-
-	/**
-	 * The symbol for the bottom left corner of the border
-	 *
-	 * @var String $borderSymbolBottomLeft
-	 */
-	protected $borderSymbolBottomLeft = "╚";
-
-	/**
-	 * The symbol for the bottom right corner of the border
-	 *
-	 * @var String $borderSymbolBottomRight
-	 */
-	protected $borderSymbolBottomRight = "╝";
-
-	/**
-	 * The symbol for the top and bottom border
-	 *
-	 * @var String $borderSymbolTopBottom
-	 */
-	protected $borderSymbolTopBottom = "═";
-
-	/**
-	 * The symbol for the left an right border
-	 *
-	 * @var String $borderSymbolLeftRight
-	 */
-	protected $borderSymbolLeftRight = "║";
-
-
     // Magic Methods
 
     /**
@@ -80,17 +33,14 @@ class TextBoardOuterBorder extends BaseBorder
         $rectangle = new Rectangle($topLeftCornerCoordinate, $bottomRightCornerCoordinate);
 
         parent::__construct(
-            null,
-            new TextRectangleBorderShape(
-                $this,
-	            $rectangle,
-                new BorderPartThickness(1, 1),
-                new BorderPartThickness(1, 1),
-                $this->getBorderTopSymbolDefinition(),
-                $this->getBorderBottomSymbolDefinition(),
-                $this->getBorderLeftSymbolDefinition(),
-                $this->getBorderRightSymbolDefinition()
-            )
+        	null,
+	        $rectangle,
+	        "╔",
+	        "╗",
+	        "╚",
+	        "╝",
+	        "═",
+	        "║"
         );
     }
 
@@ -98,145 +48,194 @@ class TextBoardOuterBorder extends BaseBorder
     // Class Methods
 
 	/**
-	 * Returns the border symbol definition for the top border.
+	 * Returns the collision symbol definitions for the top border.
 	 *
-	 * @return BorderSymbolDefinition The border symbol definition for the top border
+	 * @return CollisionSymbolDefinition[] The collision symbol definitions for the top border
 	 */
-    private function getBorderTopSymbolDefinition(): BorderSymbolDefinition
-    {
-    	return new BorderSymbolDefinition(
-    		$this->borderSymbolTopLeft,
-    		$this->borderSymbolTopBottom,
-    		$this->borderSymbolTopRight,
-    		array(
-	            // Bottom start
-	            new CollisionSymbolDefinition(
-	                $this->borderSymbolTopLeft,
-				    new CollisionDirection(array("bottom")),
-				    "start"
-			    ),
-
-			    // Bottom center
-			    new CollisionSymbolDefinition(
-			        "╤",
-			        new CollisionDirection(array("bottom")),
-				    "center"
-			    ),
-
-			    // Bottom end
-			    new CollisionSymbolDefinition(
-			        $this->borderSymbolTopRight,
-				    new CollisionDirection(array("bottom")),
-				    "end"
-		        )
-	        )
-	    );
-    }
-
-	/**
-	 * Returns the border symbol definition for the bottom border.
-	 *
-	 * @return BorderSymbolDefinition The border symbol definition for the bottom border
-	 */
-    private function getBorderBottomSymbolDefinition(): BorderSymbolDefinition
-    {
-	    return new BorderSymbolDefinition(
-	    	$this->borderSymbolBottomLeft,
-	    	$this->borderSymbolTopBottom,
-	    	$this->borderSymbolBottomRight,
-	    	array(
-			    // Top start
-			    new CollisionSymbolDefinition(
-				    $this->borderSymbolBottomLeft,
-				    new CollisionDirection(array("top")),
-				    "start"
-			    ),
-
-			    // Top center
-			    new CollisionSymbolDefinition(
-				    "╧",
-				    new CollisionDirection(array("top")),
-				    "center"
-			    ),
-
-			    // Top end
-			    new CollisionSymbolDefinition(
-				    $this->borderSymbolBottomRight,
-				    new CollisionDirection(array("top")),
-				    "end"
-			    )
-		    )
-	    );
-    }
-
-	/**
-	 * Returns the border symbol definition for the left border.
-	 *
-	 * @return BorderSymbolDefinition The border symbol definition for the left border
-	 */
-	private function getBorderLeftSymbolDefinition(): BorderSymbolDefinition
+	protected function getBorderTopCollisionSymbolDefinitions(): array
 	{
-		return new BorderSymbolDefinition(
-			$this->borderSymbolTopLeft,
-			$this->borderSymbolLeftRight,
-			$this->borderSymbolBottomLeft,
-			array(
-				// Right start
-				new CollisionSymbolDefinition(
-					$this->borderSymbolTopLeft,
-					new CollisionDirection(array("right")),
-					"start"
+		return array(
+			// Start
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopLeft,
+				array(
+					new CollisionDirection(array("bottom")),
+					new CollisionDirection(array("right"))
 				),
+				"start"
+			),
 
-				// Right center
-				new CollisionSymbolDefinition(
-					"╟",
-					new CollisionDirection(array("right")),
-					"center"
+			// Center
+			new CollisionSymbolDefinition(
+				"╤",
+				array(
+					new CollisionDirection(array("bottom")),
+
 				),
-
-				// Right end
-				new CollisionSymbolDefinition(
-					$this->borderSymbolBottomLeft,
+				"center"
+			),
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopBottom,
+				array(
+					new CollisionDirection(array("left")),
 					new CollisionDirection(array("right")),
-					"end"
-				)
+					new CollisionDirection(array("left", "right"))
+				),
+				"center"
+			),
+
+			// End
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopRight,
+				array(
+					new CollisionDirection(array("bottom")),
+					new CollisionDirection(array("left"))
+				),
+				"end"
 			)
 		);
 	}
 
 	/**
-	 * Returns the border symbol definition for the right border.
+	 * Returns the collision symbol definitions for the bottom border.
 	 *
-	 * @return BorderSymbolDefinition The border symbol definition for the right border
+	 * @return CollisionSymbolDefinition[] The collision symbol definitions for the bottom border
 	 */
-	private function getBorderRightSymbolDefinition(): BorderSymbolDefinition
+	protected function getBorderBottomCollisionSymbolDefinitions(): array
 	{
-		return new BorderSymbolDefinition(
-			$this->borderSymbolTopRight,
-			$this->borderSymbolLeftRight,
-			$this->borderSymbolBottomRight,
-			array(
-				// Left start
-				new CollisionSymbolDefinition(
-					$this->borderSymbolTopRight,
-					new CollisionDirection(array("left")),
-					"start"
+		return array(
+			// Start
+			new CollisionSymbolDefinition(
+				$this->borderSymbolBottomLeft,
+				array(
+					new CollisionDirection(array("top")),
+					new CollisionDirection(array("right"))
 				),
+				"start"
+			),
 
-				// Left center
-				new CollisionSymbolDefinition(
-					"╢",
-					new CollisionDirection(array("left")),
-					"center"
+			// Center
+			new CollisionSymbolDefinition(
+				"╧",
+				array(
+					new CollisionDirection(array("top")),
 				),
-
-				// Left end
-				new CollisionSymbolDefinition(
-					$this->borderSymbolBottomRight,
+				"center"
+			),
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopBottom,
+				array(
 					new CollisionDirection(array("left")),
-					"end"
-				)
+					new CollisionDirection(array("right")),
+					new CollisionDirection(array("left", "right"))
+				),
+				"center"
+			),
+
+			// End
+			new CollisionSymbolDefinition(
+				$this->borderSymbolBottomRight,
+				array(
+					new CollisionDirection(array("top")),
+					new CollisionDirection(array("left"))
+				),
+				"end"
+			)
+		);
+	}
+
+	/**
+	 * Returns the collision symbol definitions for the left border.
+	 *
+	 * @return CollisionSymbolDefinition[] The collision symbol definitions for the left border
+	 */
+	protected function getBorderLeftCollisionSymbolDefinitions(): array
+	{
+		return array(
+			// Right start
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopLeft,
+				array(
+					new CollisionDirection(array("right")),
+					new CollisionDirection(array("bottom"))
+				),
+				"start"
+			),
+
+			// Right center
+			new CollisionSymbolDefinition(
+				"╟",
+				array(
+					new CollisionDirection(array("right"))
+				),
+				"center"
+			),
+			new CollisionSymbolDefinition(
+				$this->borderSymbolLeftRight,
+				array(
+					new CollisionDirection(array("top")),
+					new CollisionDirection(array("bottom")),
+					new CollisionDirection(array("top", "bottom"))
+				),
+				"center"
+			),
+
+			// Right end
+			new CollisionSymbolDefinition(
+				$this->borderSymbolBottomLeft,
+				array(
+					new CollisionDirection(array("right")),
+					new CollisionDirection(array("top"))
+				),
+				"end"
+			)
+		);
+	}
+
+	/**
+	 * Returns the collision symbol definitions for the right border.
+	 *
+	 * @return CollisionSymbolDefinition[] The collision symbol definitions for the right border
+	 */
+	protected function getBorderRightCollisionSymbolDefinitions(): array
+	{
+		return array(
+			// Left start
+			new CollisionSymbolDefinition(
+				$this->borderSymbolTopRight,
+				array(
+					new CollisionDirection(array("left")),
+					new CollisionDirection(array("bottom"))
+				),
+				"start"
+			),
+
+			// Left center
+			new CollisionSymbolDefinition(
+				"╢",
+				array(
+					new CollisionDirection(array("left"))
+				),
+				"center"
+			),
+			new CollisionSymbolDefinition(
+				$this->borderSymbolLeftRight,
+				array(
+					new CollisionDirection(array("top")),
+					new CollisionDirection(array("bottom")),
+					new CollisionDirection(array("top", "bottom"))
+				),
+				"center"
+			),
+
+			// Left end
+			new CollisionSymbolDefinition(
+				$this->borderSymbolBottomRight,
+				array(
+					new CollisionDirection(array("left")),
+					new CollisionDirection(array("top"))
+				),
+				"end"
 			)
 		);
 	}

@@ -77,6 +77,16 @@ abstract class BaseCanvas
 	}
 
 	/**
+	 * Returns the rendered board fields.
+	 *
+	 * @return mixed[][] The rendered board fields
+	 */
+	public function renderedBoardFields(): array
+	{
+		return $this->renderedBoardFields;
+	}
+
+	/**
 	 * Sets the rendered board fields of the canvas.
 	 *
 	 * @param mixed[][] $_renderedBoardFields The list of rendered board fields

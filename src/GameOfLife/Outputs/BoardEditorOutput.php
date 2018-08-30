@@ -9,8 +9,10 @@
 namespace Output;
 
 use BoardEditor\SelectionArea;
+use BoardRenderer\BoardEditorOutputBoardRenderer;
 use GameOfLife\Board;
 use GameOfLife\Coordinate;
+use GameOfLife\Rectangle;
 use Ulrichsg\Getopt;
 
 /**
@@ -18,6 +20,14 @@ use Ulrichsg\Getopt;
  */
 class BoardEditorOutput extends BaseOutput
 {
+	/**
+	 * The board renderer
+	 *
+	 * @var BoardEditorOutputBoardRenderer $boardRenderer
+	 */
+	protected $boardRenderer;
+
+
     // Magic Methods
 
 	/**
@@ -49,7 +59,7 @@ class BoardEditorOutput extends BaseOutput
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
-	    $this->boardRenderer = new BoardEditorOutputBoardPrinter($_board);
+	    $this->boardRenderer = new BoardEditorOutputBoardRenderer($_board);
     }
 
     /**
@@ -62,8 +72,13 @@ class BoardEditorOutput extends BaseOutput
      */
     public function outputBoard(Board $_board, int $_gameStep, Coordinate $_highLightFieldCoordinate = null, SelectionArea $_selectionArea = null)
     {
-        $this->boardRenderer->renderBoard($_board, $_highLightFieldCoordinate, $_selectionArea);
-        $boardContentString = $this->boardRenderer->getContent();
+    	$selectionAreaRectangle = null;
+    	if ($_selectionArea)
+	    {
+		    $selectionAreaRectangle = new Rectangle($_selectionArea->topLeftCornerCoordinate(), $_selectionArea->bottomRightCornerCoordinate());
+	    }
+
+	    $boardContentString = $this->boardRenderer->renderBoard($_board, $_highLightFieldCoordinate, $selectionAreaRectangle);
         $this->shellOutputHelper->printCenteredOutputString($boardContentString);
     }
 }

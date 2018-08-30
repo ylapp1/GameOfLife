@@ -61,17 +61,12 @@ class TextCanvas extends BaseCanvas
 		    if (isset($renderedBorderGrid[$borderSymbolRowIndex])) $totalGridRows[] = $renderedBorderGrid[$borderSymbolRowIndex];
 
 		    // Add cell symbol rows
-		    if (isset($this->renderedBoardFields[$y]) || isset($renderedBorderGrid[$borderSymbolRowIndex + 1]))
+		    if (isset($this->renderedBoardFields[$y]))
 		    {
 		    	$totalGridRow = array();
-
-		    	$boardFieldSymbolRow = array();
-		    	if (isset($this->renderedBoardFields[$y]))
-			    {
-				    $boardFieldSymbolRow = $this->renderedBoardFields[$y];
-			    }
-
+		    	$boardFieldSymbolRow = $this->renderedBoardFields[$y];
 		    	$borderSymbolRow = array();
+
 		    	if (isset($renderedBorderGrid[$borderSymbolRowIndex + 1]))
 			    {
 			    	$borderSymbolRow = $renderedBorderGrid[$borderSymbolRowIndex + 1];
