@@ -9,10 +9,10 @@
 namespace BoardRenderer;
 
 use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Text\BoardEditorOutputBoardFieldRenderer;
 use BoardRenderer\Text\Border\SelectionAreaBorder;
 use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\Border\TextHighLightFieldBorder;
-use BoardRenderer\Text\TextBoardFieldRenderer;
 use BoardRenderer\Text\TextBorderGridBuilder;
 use BoardRenderer\Text\TextCanvas;
 use GameOfLife\Board;
@@ -24,6 +24,16 @@ use GameOfLife\Rectangle;
  */
 class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 {
+	// Attributes
+
+	/**
+	 * The board field renderer
+	 *
+	 * @var BoardEditorOutputBoardFieldRenderer $boardFieldRenderer
+	 */
+	protected $boardFieldRenderer;
+
+
     // Magic Methods
 
     /**
@@ -38,7 +48,7 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	    parent::__construct(
 		    $border,
 		    new TextBorderGridBuilder($_board, $border, true),
-		    new TextBoardFieldRenderer("o", " "),
+		    new BoardEditorOutputBoardFieldRenderer("o", " ", "X", " "),
 		    new TextCanvas()
 	    );
     }
@@ -71,9 +81,12 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	public function renderBoard(Board $_board, Coordinate $_highLightFieldCoordinate = null, Rectangle $_selectionAreaRectangle = null): String
 	{
 		$this->border->resetInnerBorders();
+		$this->boardFieldRenderer->reset();
 
 		if ($_highLightFieldCoordinate)
 		{
+			$this->boardFieldRenderer->setHighLightFieldCoordinate($_highLightFieldCoordinate);
+
 			$highLightFieldBorder = new TextHighLightFieldBorder($this->border, $_highLightFieldCoordinate);
 			$this->border->addInnerBorder($highLightFieldBorder);
 		}
@@ -83,21 +96,6 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 			$this->border->addInnerBorder($selectionAreaBorder);
 		}
 
-		$renderedBoard = parent::renderBoard($_board);
-
-		if ($_highLightFieldCoordinate)
-		{
-			// TODO: Fix double render canvas
-			if ($_board->getFieldState($_highLightFieldCoordinate->x(), $_highLightFieldCoordinate->y()) == true)
-			{
-				$renderedBoardFields = $this->canvas->renderedBoardFields();
-				$renderedBoardFields[$_highLightFieldCoordinate->y()][$_highLightFieldCoordinate->x()] = "X";
-				$this->canvas->setRenderedBoardFields($renderedBoardFields);
-			}
-
-			$renderedBoard = parent::renderBoard($_board);
-		}
-
-		return $renderedBoard;
+		return parent::renderBoard($_board);
 	}
 }

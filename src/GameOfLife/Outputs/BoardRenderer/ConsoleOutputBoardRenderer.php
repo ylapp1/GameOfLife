@@ -31,8 +31,8 @@ class ConsoleOutputBoardRenderer extends BaseBoardRenderer
     	$border = new TextBoardOuterBorder($_board);
 
         parent::__construct(
-        	new TextBorderGridBuilder($_board, $border, false),
 	        $border,
+        	new TextBorderGridBuilder($_board, $border, false),
         	new TextBoardFieldRenderer("☻", " "),
 	        new TextCanvas()
         );
