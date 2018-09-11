@@ -9,6 +9,7 @@
 namespace BoardRenderer\Text\Border;
 
 use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 use GameOfLife\Rectangle;
@@ -31,6 +32,8 @@ class SelectionAreaBorder extends TextRectangleBorder
 		parent::__construct(
 			$_parentBorder,
 			$_rectangle,
+			new BorderPartThickness(1, 1),
+			new BorderPartThickness(1, 1),
 			"┏",
 			"┓",
 			"┗",
@@ -59,7 +62,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("bottom"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Bottom center
@@ -68,7 +71,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("bottom"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Bottom end
@@ -77,7 +80,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("bottom"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -99,7 +102,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("top"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Top center
@@ -108,7 +111,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("top"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Top end
@@ -117,7 +120,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("top"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -139,7 +142,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("right"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Right center
@@ -148,7 +151,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("right"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Right end
@@ -157,7 +160,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("right"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -178,7 +181,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("left"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Left center
@@ -187,7 +190,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("left"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Left end
@@ -196,7 +199,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("left"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}

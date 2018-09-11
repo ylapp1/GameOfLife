@@ -14,7 +14,7 @@ use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
  * Defines one collision symbol for one border symbol position (start, center and end) of a text border part.
  *
  * There are 40320 possible combinations of collision directions, so only a few should be defined that are known to occur.
- * When the border part is rendered the border part checks whether it has a collision symbol definition for the specific collision
+ * When the border part is rendered the border part checks whether it has a collision symbol definition for the specific collision direction.
  */
 class CollisionSymbolDefinition
 {
@@ -28,16 +28,31 @@ class CollisionSymbolDefinition
 	private $collisionSymbol;
 
 	/**
-	 * The collision direction for which the collision symbol can be used
+	 * The collision directions for which the collision symbol may be used
 	 *
 	 * @var CollisionDirection[] $collisionDirection
 	 */
 	private $collisionDirections;
 
+	/**
+	 * Defines whether the collision symbol may be used for the start position of the border part
+	 *
+	 * @var Bool $isStartPosition
+	 */
 	private $isStartPosition;
 
+	/**
+	 * Defines whether the collision symbol may be used for a center position of the border part
+	 *
+	 * @var Bool $isCenterPosition
+	 */
 	private $isCenterPosition;
 
+	/**
+	 * Defines whether the collision symbol may be used for the end position of the border part
+	 *
+	 * @var Bool $isEndPosition
+	 */
 	private $isEndPosition;
 
 
@@ -47,10 +62,10 @@ class CollisionSymbolDefinition
 	 * CollisionSymbolDefinition constructor.
 	 *
 	 * @param String $_collisionSymbol The collision symbol
-	 * @param CollisionDirection[] $_collisionDirections
-	 * @param String $_position The position inside the border ("start", "center", "end")
+	 * @param CollisionDirection[] $_collisionDirections The collision directions for which the collision symbol may be used
+	 * @param array $_positions The positions inside the border for which the collision symbol may be used ("start", "center" and/or "end")
 	 */
-	public function __construct(String $_collisionSymbol, array $_collisionDirections, String $_position)
+	public function __construct(String $_collisionSymbol, array $_collisionDirections, array $_positions)
 	{
 		$this->collisionSymbol = $_collisionSymbol;
 		$this->collisionDirections = $_collisionDirections;
@@ -59,17 +74,20 @@ class CollisionSymbolDefinition
 		$this->isCenterPosition = false;
 		$this->isEndPosition = false;
 
-		switch ($_position)
+		foreach ($_positions as $position)
 		{
-			case "start":
-				$this->isStartPosition = true;
-				break;
-			case "center":
-				$this->isCenterPosition = true;
-				break;
-			case "end":
-				$this->isEndPosition = true;
-				break;
+			switch ($position)
+			{
+				case "start":
+					$this->isStartPosition = true;
+					break;
+				case "center":
+					$this->isCenterPosition = true;
+					break;
+				case "end":
+					$this->isEndPosition = true;
+					break;
+			}
 		}
 	}
 
@@ -97,25 +115,31 @@ class CollisionSymbolDefinition
 	}
 
 	/**
-	 * @return bool
+	 * Returns whether the collision symbol may be used for the start position of the border part.
+	 *
+	 * @return Bool True if the collision symbol may be used for the start position of the border part, false otherwise
 	 */
-	public function isStartPosition(): bool
+	public function isStartPosition(): Bool
 	{
 		return $this->isStartPosition;
 	}
 
 	/**
-	 * @return bool
+	 * Returns whether the collision symbol may be used for a center position of the border part.
+	 *
+	 * @return Bool True if the collision symbol may be used for a center position of the border part, false otherwise
 	 */
-	public function isCenterPosition(): bool
+	public function isCenterPosition(): Bool
 	{
 		return $this->isCenterPosition;
 	}
 
 	/**
-	 * @return bool
+	 * Returns whether the collision symbol may be used for the end position of the border part.
+	 *
+	 * @return Bool True if the collision symbol may be used for the end position of the border part, false otherwise
 	 */
-	public function isEndPosition(): bool
+	public function isEndPosition(): Bool
 	{
 		return $this->isEndPosition;
 	}

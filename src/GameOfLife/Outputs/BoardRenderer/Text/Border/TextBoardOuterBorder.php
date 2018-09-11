@@ -8,6 +8,7 @@
 
 namespace BoardRenderer\Text\Border;
 
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 use GameOfLife\Board;
@@ -35,6 +36,8 @@ class TextBoardOuterBorder extends TextRectangleBorder
         parent::__construct(
         	null,
 	        $rectangle,
+	        new BorderPartThickness(1, 1),
+	        new BorderPartThickness(1, 1),
 	        "╔",
 	        "╗",
 	        "╚",
@@ -62,7 +65,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("right"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Center
@@ -72,7 +75,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 
 				),
-				"center"
+				array("center")
 			),
 			new CollisionSymbolDefinition(
 				$this->borderSymbolTopBottom,
@@ -81,7 +84,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("left", "right"))
 				),
-				"center"
+				array("center")
 			),
 
 			// End
@@ -91,7 +94,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("left"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -111,7 +114,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("top")),
 					new CollisionDirection(array("right"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Center
@@ -120,7 +123,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("top")),
 				),
-				"center"
+				array("center")
 			),
 			new CollisionSymbolDefinition(
 				$this->borderSymbolTopBottom,
@@ -129,7 +132,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("left", "right"))
 				),
-				"center"
+				array("center")
 			),
 
 			// End
@@ -139,7 +142,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("top")),
 					new CollisionDirection(array("left"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -159,7 +162,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("bottom"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Right center
@@ -168,7 +171,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("right"))
 				),
-				"center"
+				array("center")
 			),
 			new CollisionSymbolDefinition(
 				$this->borderSymbolLeftRight,
@@ -177,7 +180,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("top", "bottom"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Right end
@@ -187,7 +190,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("top"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}
@@ -207,7 +210,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("left")),
 					new CollisionDirection(array("bottom"))
 				),
-				"start"
+				array("start")
 			),
 
 			// Left center
@@ -216,7 +219,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 				array(
 					new CollisionDirection(array("left"))
 				),
-				"center"
+				array("center")
 			),
 			new CollisionSymbolDefinition(
 				$this->borderSymbolLeftRight,
@@ -225,7 +228,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("top", "bottom"))
 				),
-				"center"
+				array("center")
 			),
 
 			// Left end
@@ -235,7 +238,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("left")),
 					new CollisionDirection(array("top"))
 				),
-				"end"
+				array("end")
 			)
 		);
 	}

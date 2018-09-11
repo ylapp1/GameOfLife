@@ -104,7 +104,7 @@ abstract class BaseBorderPositionsGrid
 	protected function getAllSortedRowIds(): array
 	{
 		$rowIds = array_keys($this->borderThicknessRows);
-		natsort($rowIds);
+		sort($rowIds);
 
 		return $rowIds;
 	}
@@ -150,7 +150,7 @@ abstract class BaseBorderPositionsGrid
 			if (isset($borderThicknessRow[$_x])) $rowIds[] = $y;
 		}
 
-		natsort($rowIds);
+		sort($rowIds);
 
 		return $rowIds;
 	}
@@ -198,8 +198,7 @@ abstract class BaseBorderPositionsGrid
 			$columnIds = array_merge($columnIds, array_keys($borderThicknessRow));
 		}
 
-		$columnIds = array_unique($columnIds);
-		natsort($columnIds);
+		sort($columnIds);
 
 		return $columnIds;
 	}
@@ -243,7 +242,7 @@ abstract class BaseBorderPositionsGrid
 		if (isset($this->borderThicknessRows[$_y]))
 		{
 			$columnIds = array_keys($this->borderThicknessRows[$_y]);
-			natsort($columnIds);
+			sort($columnIds);
 		}
 
 		return $columnIds;
@@ -256,7 +255,7 @@ abstract class BaseBorderPositionsGrid
 	 *
 	 * @return int|null The lowest column id or null if there are no columns in this row
 	 */
-	public function getLowestColumnIdInRow(int $_y)
+	protected function getLowestColumnIdInRow(int $_y)
 	{
 		$columnIds = $this->getAllSortedColumnIdsInRow($_y);
 		if ($columnIds) return $columnIds[0];
@@ -471,5 +470,42 @@ abstract class BaseBorderPositionsGrid
 		}
 
 		return $totalBorderHeight;
+	}
+
+
+	/**
+	 * Returns whether a specific border grid row is a board field row.
+	 *
+	 * @param int $_y The Y-Coordinate of the border grid row
+	 *
+	 * @return Bool True if the border grid row is a board field row, false otherwise
+	 */
+	public function isBoardFieldRow(int $_y): Bool
+	{
+		if ($_y % 2 != 0)
+		{
+			$boardFieldY = ($_y - 1) / 2;
+			if ($boardFieldY >= 0 && $boardFieldY < $this->board->height()) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns whether a specific border grid column is a board field column.
+	 *
+	 * @param int $_x The X-Coordinate of the border grid column
+	 *
+	 * @return Bool True if the border grid column is a board field column, false otherwise
+	 */
+	public function isBoardFieldColumn(int $_x): Bool
+	{
+		if ($_x % 2 != 0)
+		{
+			$boardFieldX = ($_x - 1) / 2;
+			if ($boardFieldX >= 0 && $boardFieldX < $this->board->width()) return true;
+		}
+
+		return false;
 	}
 }

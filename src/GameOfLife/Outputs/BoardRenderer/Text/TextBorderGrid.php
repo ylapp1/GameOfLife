@@ -54,12 +54,6 @@ class TextBorderGrid extends BaseBorderGrid
 	 */
 	public function renderTotalBorderGrid(array $_renderedBorderParts, int $_fieldSize)
 	{
-		/*
-		 * The rendered border parts are added in the reverse order to make the border parts that existed first overwrite
-		 * the border symbols of the border parts that were added later
-		 *
-		 * TODO: Fix this, this should work no matter which order
-		 */
 		foreach ($_renderedBorderParts as $renderedBorderPart)
 		{
 			$this->addRenderedBorderPart($renderedBorderPart);
@@ -71,14 +65,13 @@ class TextBorderGrid extends BaseBorderGrid
 	}
 
 	/**
-	 * Adds a rendered border part to the border symbol grid at a specific position.
+	 * Adds a rendered border part to the border symbol grid.
 	 *
 	 * @param RenderedBorderPart $_renderedBorder The rendered border part
 	 */
-	public function addRenderedBorderPart($_renderedBorder)
+	public function addRenderedBorderPart(RenderedBorderPart $_renderedBorder)
 	{
-		$rawRenderedBorderPart = $_renderedBorder->rawRenderedBorderPart();
-		$borderSymbols = $rawRenderedBorderPart;
+		$borderSymbols = $_renderedBorder->rawRenderedBorderPart();
 
 		foreach ($_renderedBorder->borderPartGridPositions() as $at)
 		{
@@ -110,26 +103,29 @@ class TextBorderGrid extends BaseBorderGrid
 						$rowContainsBorderSymbol = ($this->borderPositionsGrid->getMaximumBorderHeightInRow($y) > 0);
 						$columnContainsBorderSymbol = ($this->borderPositionsGrid->getMaximumBorderWidthInColumn($x) > 0);
 
+						$isBoardFieldRow = $this->borderPositionsGrid->isBoardFieldRow($y);
+						$isBoardFieldColumn = $this->borderPositionsGrid->isBoardFieldColumn($x);
+
 						/*
 						 * If the current row is a border row and the row already contains a border symbol and
 						 * a) The column in question is not a border column or
 						 * b) The column in question is a border column and that column contains a border symbol
 						 */
-						$isBorderRowGap = ($isBorderRow && $rowContainsBorderSymbol && (! $isBorderColumn || $columnContainsBorderSymbol));
+						$isBorderRowGap = ($isBorderRow && $rowContainsBorderSymbol && ($isBoardFieldColumn || ($isBorderColumn && $columnContainsBorderSymbol)));
 
 						/*
 						 * If the current column is a border column and the border column already contains a border symbol and
 						 * a) The row in question is not a border row or
 						 * b) The row in question is a border row and that row contains a border symbol
 						 */
-						$isBorderColumnGap = ($isBorderColumn && $columnContainsBorderSymbol && (! $isBorderRow || $rowContainsBorderSymbol));
+						$isBorderColumnGap = ($isBorderColumn && $columnContainsBorderSymbol && ($isBoardFieldRow || ($isBorderRow && $rowContainsBorderSymbol)));
 
 						if ($isBorderRowGap || $isBorderColumnGap)
 						{
-							$gapSymbol = " ";
-
+							// Find out whether a border part contains the gap
+							$borderPartContainingGap = null;
 							if ($isBorderRowGap && $isBorderColumnGap)
-							{
+							{ // The gap is in a border row and a border column, check whether it is inside a border
 								$gapCoordinate = new Coordinate($x / 2, $y / 2);
 
 								/** @var TextBorderPart $borderPart */
@@ -137,11 +133,14 @@ class TextBorderGrid extends BaseBorderGrid
 								{
 									if ($borderPart->containsCoordinate($gapCoordinate))
 									{
-										$gapSymbol = $borderPart->borderSymbolDefinition()->centerSymbol();
+										$borderPartContainingGap = $borderPart;
 										break;
 									}
 								}
 							}
+
+							if ($borderPartContainingGap) $gapSymbol = $borderPartContainingGap->borderSymbolDefinition()->centerSymbol();
+							else $gapSymbol = " ";
 
 							$this->borderSymbolGrid[$y][$x] = $gapSymbol;
 						}

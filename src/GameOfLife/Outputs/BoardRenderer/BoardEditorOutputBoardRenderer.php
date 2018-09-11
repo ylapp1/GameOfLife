@@ -48,7 +48,7 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	    parent::__construct(
 		    $border,
 		    new TextBorderGridBuilder($_board, $border, true),
-		    new BoardEditorOutputBoardFieldRenderer("o", " ", "X", " "),
+		    new BoardEditorOutputBoardFieldRenderer("o", " ", "x", " "),
 		    new TextCanvas()
 	    );
     }

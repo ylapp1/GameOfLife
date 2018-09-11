@@ -44,11 +44,11 @@ class TextGridBorderShape extends BaseGridBorderShape
 	/**
 	 * TextGridBorderShape constructor.
 	 *
-	 * @param BaseBorder $_parentBorder
-	 * @param BorderPartThickness $_horizontalThickness
-	 * @param BorderPartThickness $_verticalThickness
-	 * @param BorderSymbolDefinition $_borderHorizontalSymbolDefinition
-	 * @param BorderSymbolDefinition $_borderVerticalSymbolDefinition
+	 * @param BaseBorder $_parentBorder The parent border
+	 * @param BorderPartThickness $_horizontalThickness The thickness of horizontal border parts
+	 * @param BorderPartThickness $_verticalThickness The thickness of vertical border parts
+	 * @param BorderSymbolDefinition $_borderHorizontalSymbolDefinition The border symbol definition for horizontal border parts
+	 * @param BorderSymbolDefinition $_borderVerticalSymbolDefinition The border symbol definition for vertical border parts
 	 */
 	public function __construct(BaseBorder $_parentBorder, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness, BorderSymbolDefinition $_borderHorizontalSymbolDefinition, BorderSymbolDefinition $_borderVerticalSymbolDefinition)
 	{

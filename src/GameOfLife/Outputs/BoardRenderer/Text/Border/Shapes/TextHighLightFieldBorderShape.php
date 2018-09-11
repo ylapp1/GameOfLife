@@ -84,7 +84,13 @@ class TextHighLightFieldBorderShape extends BaseBorderShape
 			$this->getVerticalBorderPart($this->highLightFieldCoordinate->x()),
 
 			// Right
-			$this->getVerticalBorderPart($this->highLightFieldCoordinate->x() + 1)
+			$this->getVerticalBorderPart($this->highLightFieldCoordinate->x() + 1),
+
+			// Column id above the border
+			$this->getColumnIdBorderPart($this->highLightFieldCoordinate->x()),
+
+			// Row id right to the border
+			$this->getRowIdBorderPart($this->highLightFieldCoordinate->y())
 		);
 	}
 
@@ -141,6 +147,54 @@ class TextHighLightFieldBorderShape extends BaseBorderShape
 			$endsAt,
 			new BorderPartThickness(1, 1),
 			$this->borderLeftRightSymbolDefinition
+		);
+	}
+
+	/**
+	 * Returns the border part that shows the column id above the board.
+	 *
+	 * @param int $_x The X-Coordinate to show above the board
+	 *
+	 * @return TextHorizontalBorderPart The border part that shows the column id above the board
+	 */
+	private function getColumnIdBorderPart(int $_x): TextHorizontalBorderPart
+	{
+		// TODO: endY - borderthickness->y() instead of - 1
+		return new TextHorizontalBorderPart(
+			$this,
+			new Coordinate($_x, $this->getStartY($_x) - 1),
+			new Coordinate($_x + 1, $this->getStartY($_x) - 1),
+			new BorderPartThickness(1, 1),
+			new BorderSymbolDefinition(
+				" ",
+				$_x,
+				" ",
+				array()
+			)
+		);
+	}
+
+	/**
+	 * Returns the border part that shows the row id right to the board.
+	 *
+	 * @param int $_y The Y-Coordinate to show right to the board
+	 *
+	 * @return TextVerticalBorderPart The border part that shows the row id right to the board
+	 */
+	private function getRowIdBorderPart(int $_y): TextVerticalBorderPart
+	{
+		// TODO: endX + borderthickness->x() + 2 instead of + 1 + 1
+		return new TextVerticalBorderPart(
+			$this,
+			new Coordinate($this->getEndX($_y) + 1 , $_y),
+			new Coordinate($this->getEndX($_y) + 1, $_y + 1),
+			new BorderPartThickness(1, 1),
+			new BorderSymbolDefinition(
+				" ",
+				$_y,
+				" ",
+				array()
+			)
 		);
 	}
 

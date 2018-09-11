@@ -72,6 +72,8 @@ abstract class TextRectangleBorder extends BaseBorder
 	 *
 	 * @param BaseBorder $_parentBorder The parent border
 	 * @param Rectangle $_rectangle The rectangle of this border
+	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal border parts of this border
+	 * @param BorderPartThickness $_verticalThickness The thickness for vertical border parts of this border
 	 * @param String $_borderSymbolTopLeft The symbol for the top left corner of the border
 	 * @param String $_borderSymbolTopRight The symbol for the top right corner of the border
 	 * @param String $_borderSymbolBottomLeft The symbol for the bottom left corner of the border
@@ -79,7 +81,7 @@ abstract class TextRectangleBorder extends BaseBorder
 	 * @param String $_borderSymbolTopBottom The symbol for the top and bottom border
 	 * @param String $_borderSymbolLeftRight The symbol for the left an right border
 	 */
-	public function __construct($_parentBorder = null, Rectangle $_rectangle, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
+	public function __construct($_parentBorder = null, Rectangle $_rectangle, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness, String $_borderSymbolTopLeft, String $_borderSymbolTopRight, String $_borderSymbolBottomLeft, String $_borderSymbolBottomRight, String $_borderSymbolTopBottom, String $_borderSymbolLeftRight)
 	{
 		$this->borderSymbolTopLeft = $_borderSymbolTopLeft;
 		$this->borderSymbolTopRight = $_borderSymbolTopRight;
@@ -93,8 +95,8 @@ abstract class TextRectangleBorder extends BaseBorder
 			new TextRectangleBorderShape(
 				$this,
 				$_rectangle,
-				new BorderPartThickness(1, 1), // TODO: Make this not fixed
-				new BorderPartThickness(1, 1), // TODO: Make this not fixed
+				$_horizontalThickness,
+				$_verticalThickness,
 				$this->getBorderTopSymbolDefinition(),
 				$this->getBorderBottomSymbolDefinition(),
 				$this->getBorderLeftSymbolDefinition(),

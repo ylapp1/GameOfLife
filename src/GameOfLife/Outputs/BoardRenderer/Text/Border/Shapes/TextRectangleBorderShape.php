@@ -8,15 +8,15 @@
 
 namespace BoardRenderer\Text\Border\Shapes;
 
-use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
-use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
-use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
-use GameOfLife\Coordinate;
-use GameOfLife\Rectangle;
 use BoardRenderer\Base\Border\BaseBorder;
+use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
+use GameOfLife\Coordinate;
+use GameOfLife\Rectangle;
 
 /**
  * Creates border parts that form a rectangle.
@@ -26,20 +26,30 @@ class TextRectangleBorderShape extends RectangleBorderShape
 	// Attributes
 
 	/**
-	 * The symbol for the top left corner of the border
+	 * The border symbol definition for the top border
 	 *
-	 * @var String $borderSymbolTopLeft
+	 * @var BorderSymbolDefinition $borderTopSymbolDefinition
 	 */
 	protected $borderTopSymbolDefinition;
 
+	/**
+	 * The border symbol definition for the bottom border
+	 *
+	 * @var BorderSymbolDefinition $borderBottomSymbolDefinition
+	 */
 	protected $borderBottomSymbolDefinition;
 
+	/**
+	 * The border symbol definition for the left border
+	 *
+	 * @var BorderSymbolDefinition $borderLeftSymbolDefinition
+	 */
 	protected $borderLeftSymbolDefinition;
 
 	/**
-	 * The symbol for the top right corner of the border
+	 * The border symbol definition for the right border
 	 *
-	 * @var String $borderSymbolTopRight
+	 * @var BorderSymbolDefinition $borderRightSymbolDefinition
 	 */
 	protected $borderRightSymbolDefinition;
 
@@ -51,12 +61,12 @@ class TextRectangleBorderShape extends RectangleBorderShape
 	 *
 	 * @param BaseBorder $_parentBorder The parent border
 	 * @param Rectangle $_rectangle The rectangle
-	 * @param BorderPartThickness $_horizontalThickness
-	 * @param BorderPartThickness $_verticalThickness
-	 * @param BorderSymbolDefinition $_borderTopSymbolDefinition
-	 * @param BorderSymbolDefinition $_borderBottomSymbolDefinition
-	 * @param BorderSymbolDefinition $_borderLeftSymbolDefinition
-	 * @param BorderSymbolDefinition $_borderRightSymbolDefinition
+	 * @param BorderPartThickness $_horizontalThickness The thickness for horizontal border parts of this border
+	 * @param BorderPartThickness $_verticalThickness The thickness for vertical border parts of this border
+	 * @param BorderSymbolDefinition $_borderTopSymbolDefinition The border symbol definition for the top border
+	 * @param BorderSymbolDefinition $_borderBottomSymbolDefinition The border symbol definition for the bottom border
+	 * @param BorderSymbolDefinition $_borderLeftSymbolDefinition The border symbol definition for the left border
+	 * @param BorderSymbolDefinition $_borderRightSymbolDefinition The border symbol definition for the right border
 	 */
 	public function __construct($_parentBorder, Rectangle $_rectangle, BorderPartThickness $_horizontalThickness, BorderPartThickness $_verticalThickness, BorderSymbolDefinition $_borderTopSymbolDefinition, BorderSymbolDefinition $_borderBottomSymbolDefinition, BorderSymbolDefinition $_borderLeftSymbolDefinition, BorderSymbolDefinition $_borderRightSymbolDefinition)
 	{

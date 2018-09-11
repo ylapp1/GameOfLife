@@ -63,7 +63,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"start"
+					array("start")
 				),
 
 				// Left and right center
@@ -72,7 +72,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"center"
+					array("center")
 				),
 
 				// Left and right bottom
@@ -81,7 +81,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"bottom"
+					array("bottom")
 				)
 			)
 		);
@@ -106,7 +106,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"start"
+					array("start")
 				),
 
 				// Top and bottom center
@@ -115,7 +115,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"center"
+					array("center")
 				),
 
 				// Top and bottom bottom
@@ -124,7 +124,7 @@ class TextBackgroundGridBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"bottom"
+					array("bottom")
 				)
 			)
 		);

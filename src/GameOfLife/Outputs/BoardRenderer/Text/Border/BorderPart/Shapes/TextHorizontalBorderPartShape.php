@@ -58,6 +58,11 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 		else return null;
 	}
 
+	/**
+	 * Calculates and returns the border part grid positions.
+	 *
+	 * @return Coordinate[] The border part grid positions
+	 */
 	public function getBorderPartGridPositions(): array
 	{
 		$coordinates = parent::getBorderPartGridPositions();

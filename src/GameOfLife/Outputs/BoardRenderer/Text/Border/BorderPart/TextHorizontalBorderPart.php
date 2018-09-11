@@ -19,6 +19,8 @@ use GameOfLife\Coordinate;
  */
 class TextHorizontalBorderPart extends TextBorderPart
 {
+	// Magic Methods
+
 	/**
 	 * TextHorizontalBorderPart constructor.
 	 *

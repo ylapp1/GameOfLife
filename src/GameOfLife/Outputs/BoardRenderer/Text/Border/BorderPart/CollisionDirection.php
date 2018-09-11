@@ -15,7 +15,7 @@ class CollisionDirection
 {
 	// Attributes
 
-	// vertical collisions
+	// Vertical collisions
 
 	/**
 	 * Indicates whether this is a collision from the top of the border symbol position
@@ -32,7 +32,7 @@ class CollisionDirection
 	protected $isCollisionFromBottom;
 
 
-	// horizontal collisions
+	// Horizontal collisions
 
 	/**
 	 * Indicates whether this is a collision from the left of the border symbol position
@@ -49,7 +49,7 @@ class CollisionDirection
 	protected $isCollisionFromRight;
 
 
-	// diagonal collisions
+	// Diagonal collisions
 
 	/**
 	 * Indicates whether this is a collision from the top left of the border symbol position
@@ -105,6 +105,115 @@ class CollisionDirection
 	}
 
 	/**
+	 * Returns whether another collision direction equals this collision direction.
+	 *
+	 * @param CollisionDirection $_collisionDirection The other collision direction
+	 *
+	 * @return Bool True if the other collision direction equals this collision direction, false otherwise
+	 */
+	public function equals(CollisionDirection $_collisionDirection): Bool
+	{
+		if ($this->isCollisionFromTop == $_collisionDirection->isCollisionFromTop() &&
+		    $this->isCollisionFromBottom == $_collisionDirection->isCollisionFromBottom() &&
+		    $this->isCollisionFromLeft == $_collisionDirection->isCollisionFromLeft() &&
+		    $this->isCollisionFromRight == $_collisionDirection->isCollisionFromRight() &&
+		    $this->isCollisionFromTopLeft == $_collisionDirection->isCollisionFromTopLeft() &&
+		    $this->isCollisionFromTopRight == $_collisionDirection->isCollisionFromTopRight() &&
+		    $this->isCollisionFromBottomLeft == $_collisionDirection->isCollisionFromBottomLeft() &&
+		    $this->isCollisionFromBottomRight == $_collisionDirection->isCollisionFromBottomRight())
+		{
+			return true;
+		}
+		else return false;
+	}
+
+
+	// Getters and setters
+
+	/**
+	 * Returns whether this is a collision from the top of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the top of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromTop(): Bool
+	{
+		return $this->isCollisionFromTop;
+	}
+
+	/**
+	 * Returns whether this is a collision from the bottom of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the bottom of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromBottom(): Bool
+	{
+		return $this->isCollisionFromBottom;
+	}
+
+	/**
+	 * Returns whether this is a collision from the left of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the left of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromLeft(): Bool
+	{
+		return $this->isCollisionFromLeft;
+	}
+
+	/**
+	 * Returns whether this is a collision from the right of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the right of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromRight(): Bool
+	{
+		return $this->isCollisionFromRight;
+	}
+
+	/**
+	 * Returns whether this is a collision from the top left of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the top left of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromTopLeft(): Bool
+	{
+		return $this->isCollisionFromTopLeft;
+	}
+
+	/**
+	 * Returns whether this is a collision from the top right of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the top right of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromTopRight(): Bool
+	{
+		return $this->isCollisionFromTopRight;
+	}
+
+	/**
+	 * Returns whether this is a collision from the bottom left of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the bottom left of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromBottomLeft(): Bool
+	{
+		return $this->isCollisionFromBottomLeft;
+	}
+
+	/**
+	 * Returns whether this is a collision from the bottom right of the border symbol position.
+	 *
+	 * @return Bool True if this is a collision from the bottom right of the border symbol position, false otherwise
+	 */
+	public function isCollisionFromBottomRight(): Bool
+	{
+		return $this->isCollisionFromBottomRight;
+	}
+
+
+	// Class Methods
+
+	/**
 	 * Parses a collision direction string.
 	 *
 	 * @param String $_collisionDirection The collision direction string
@@ -138,90 +247,5 @@ class CollisionDirection
 				$this->isCollisionFromBottomRight = true;
 				break;
 		}
-	}
-
-	public function equals(CollisionDirection $_collisionDirection): Bool
-	{
-		if ($this->isCollisionFromTop == $_collisionDirection->isCollisionFromTop() &&
-		    $this->isCollisionFromBottom == $_collisionDirection->isCollisionFromBottom() &&
-		    $this->isCollisionFromLeft == $_collisionDirection->isCollisionFromLeft() &&
-		    $this->isCollisionFromRight == $_collisionDirection->isCollisionFromRight() &&
-		    $this->isCollisionFromTopLeft == $_collisionDirection->isCollisionFromTopLeft() &&
-		    $this->isCollisionFromTopRight == $_collisionDirection->isCollisionFromTopRight() &&
-		    $this->isCollisionFromBottomLeft == $_collisionDirection->isCollisionFromBottomLeft() &&
-		    $this->isCollisionFromBottomRight == $_collisionDirection->isCollisionFromBottomRight())
-		{
-			return true;
-		}
-		else return false;
-	}
-
-
-	// Getters and setters
-
-	/**
-	 * Returns whether this collision symbol is for a collision from the top.
-	 *
-	 * @return bool
-	 */
-	public function isCollisionFromTop(): bool
-	{
-		return $this->isCollisionFromTop;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromBottom(): bool
-	{
-		return $this->isCollisionFromBottom;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromLeft(): bool
-	{
-		return $this->isCollisionFromLeft;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromRight(): bool
-	{
-		return $this->isCollisionFromRight;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromTopLeft(): bool
-	{
-		return $this->isCollisionFromTopLeft;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromTopRight(): bool
-	{
-		return $this->isCollisionFromTopRight;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromBottomLeft(): bool
-	{
-		return $this->isCollisionFromBottomLeft;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function isCollisionFromBottomRight(): bool
-	{
-		return $this->isCollisionFromBottomRight;
 	}
 }

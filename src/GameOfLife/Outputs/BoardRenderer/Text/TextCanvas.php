@@ -11,7 +11,7 @@ namespace BoardRenderer\Text;
 use BoardRenderer\Base\BaseCanvas;
 
 /**
- * Combines arrays of symbols to a string.
+ * Combines the board field and border grid symbols to a string.
  */
 class TextCanvas extends BaseCanvas
 {
@@ -44,16 +44,14 @@ class TextCanvas extends BaseCanvas
 	 */
     private function getTotalGrid(int $_fieldSize)
     {
-    	// TODO: Apply field size to rendered board fields
-
     	// Render the border grid
 	    $renderedBorderGrid = $this->getRenderedBorderGrid($_fieldSize);
 
-    	$highestRowId = $this->getHighestRowId();
+	    $lowestColumnId = $this->getLowestColumnId();
 	    $highestColumnId = $this->getHighestColumnId();
 
 	    $totalGridRows = array();
-	    for ($y = 0; $y <= $highestRowId; $y++)
+	    for ($y = $this->getLowestRowId(); $y <= $this->getHighestRowId(); $y++)
 	    {
 	    	$borderSymbolRowIndex = $y * 2;
 
@@ -65,14 +63,15 @@ class TextCanvas extends BaseCanvas
 		    {
 		    	$totalGridRow = array();
 		    	$boardFieldSymbolRow = $this->renderedBoardFields[$y];
-		    	$borderSymbolRow = array();
 
+		    	// Fetch the border symbols that are inside the current row of board fields
+		    	$borderSymbolRow = array();
 		    	if (isset($renderedBorderGrid[$borderSymbolRowIndex + 1]))
 			    {
 			    	$borderSymbolRow = $renderedBorderGrid[$borderSymbolRowIndex + 1];
 			    }
 
-		    	for ($x = 0; $x <= $highestColumnId; $x++)
+		    	for ($x = $lowestColumnId; $x <= $highestColumnId; $x++)
 			    {
 			    	$borderSymbolColumnIndex = $x * 2;
 
@@ -94,27 +93,89 @@ class TextCanvas extends BaseCanvas
     }
 
 	/**
-	 * Returns the highest row id from the board field and border grids.
+	 * Returns the sorted board field row ids of the rendered board fields list.
 	 *
-	 * @return mixed|null The highest row id or null if there are no rows
+	 * @return int[] The board field row ids
+	 */
+    private function getSortedBoardFieldRowIds(): array
+    {
+	    $boardFieldRowIds = array_keys($this->renderedBoardFields);
+	    sort($boardFieldRowIds);
+
+	    return $boardFieldRowIds;
+    }
+
+	/**
+	 * Returns the sorted board field column ids of the rendered board fields list.
+	 *
+	 * @return int[] The sorted board field column ids
+	 */
+    private function getSortedBoardFieldColumnIds(): array
+    {
+	    $columnIds = array();
+	    foreach ($this->renderedBoardFields as $boardFieldSymbolRow)
+	    {
+		    $columnIds = array_merge($columnIds, array_keys($boardFieldSymbolRow));
+	    }
+	    sort($columnIds);
+
+	    return $columnIds;
+    }
+
+	/**
+	 * Returns the lowest board field row id from the board field and border grids.
+	 *
+	 * @return int|null The lowest row id or null if there are no rows
+	 */
+    private function getLowestRowId()
+    {
+    	// Find the lowest board field row id
+    	$sortedBoardFieldRowIds = $this->getSortedBoardFieldRowIds();
+
+    	$lowestBoardFieldRowId = null;
+    	if ($sortedBoardFieldRowIds) $lowestBoardFieldRowId = $sortedBoardFieldRowIds[0];
+
+    	// Find the lowest border grid row id
+	    $lowestBorderGridRowId = $this->borderGrid->borderPositionsGrid()->getLowestRowId();
+
+	    $lowestRowId = $lowestBoardFieldRowId;
+	    if (isset($lowestBorderGridRowId))
+	    {
+		    // The border grid has two rows per board field row, so the id must be divided by two
+		    $lowestBorderGridRowId = ceil($lowestBorderGridRowId / 2);
+
+		    if (! $lowestRowId || $lowestBorderGridRowId < $lowestRowId)
+		    {
+			    $lowestRowId = $lowestBorderGridRowId;
+		    }
+	    }
+
+	    return $lowestRowId;
+    }
+
+	/**
+	 * Returns the highest board field row id from the board field and border grids.
+	 *
+	 * @return int|null The highest row id or null if there are no rows
 	 */
     private function getHighestRowId()
     {
 	    // Find the highest board field row id
-	    $boardFieldRowIds = array_keys($this->renderedBoardFields);
-	    natsort($boardFieldRowIds);
-	    $highestBoardFieldRowId = array_pop($boardFieldRowIds);
+	    $sortedBoardFieldRowIds = $this->getSortedBoardFieldRowIds();
+	    $highestBoardFieldRowId = array_pop($sortedBoardFieldRowIds);
 
-	    // TODO: Does this work??
-	    $highestBorderSymbolRowId = $this->borderGrid->borderPositionsGrid()->getHighestRowId();
+	    // Find the highest border grid row id
+	    $highestBorderGridRowId = $this->borderGrid->borderPositionsGrid()->getHighestRowId();
 
-	    $highestRowId = null;
-	    if ($highestBoardFieldRowId) $highestRowId = $highestBoardFieldRowId;
-	    if ($highestBorderSymbolRowId)
+	    $highestRowId = $highestBoardFieldRowId;
+	    if (isset($highestBorderGridRowId))
 	    {
-	    	if (! $highestRowId || $highestBorderSymbolRowId > $highestRowId)
+	    	// The border grid has two rows per board field row, so the id must be divided by two
+	    	$highestBorderGridRowId = ceil($highestBorderGridRowId / 2);
+
+	    	if (! $highestRowId || $highestBorderGridRowId > $highestRowId)
 		    {
-		    	$highestRowId = $highestBorderSymbolRowId;
+		    	$highestRowId = $highestBorderGridRowId;
 		    }
 	    }
 
@@ -122,30 +183,60 @@ class TextCanvas extends BaseCanvas
     }
 
 	/**
-	 * Returns the highest column id from the board field and border grids.
+	 * Returns the lowest board field column id from the board field and border grids.
 	 *
-	 * @return mixed|null The highest column id or null if there are no columns
+	 * @return int|null The lowest column id or null if there are no rows
+	 */
+	private function getLowestColumnId()
+	{
+		// Find the lowest board field column id
+		$sortedBoardFieldColumnIds = $this->getSortedBoardFieldColumnIds();
+
+		$lowestBoardFieldColumnId = null;
+		if ($sortedBoardFieldColumnIds) $lowestBoardFieldColumnId = $sortedBoardFieldColumnIds[0];
+
+		// Find the lowest border grid row id
+		$lowestBorderGridColumnId = $this->borderGrid->borderPositionsGrid()->getLowestColumnId();
+
+		$lowestColumnId = $lowestBoardFieldColumnId;
+		if (isset($lowestBorderGridColumnId))
+		{
+			// The border grid has two rows per board field row, so the id must be divided by two
+			$lowestBorderGridColumnId = ceil($lowestBorderGridColumnId / 2);
+
+			if (! $lowestColumnId || $lowestBorderGridColumnId < $lowestColumnId)
+			{
+				$lowestColumnId = $lowestBorderGridColumnId;
+			}
+		}
+
+
+		return $lowestColumnId;
+	}
+
+	/**
+	 * Returns the highest board field column id from the board field and border grids.
+	 *
+	 * @return int|null The highest column id or null if there are no columns
 	 */
     private function getHighestColumnId()
     {
-	    $columnIds = array();
-	    foreach ($this->renderedBoardFields as $boardFieldSymbolRow)
-	    {
-		    $columnIds = array_merge($columnIds, array_keys($boardFieldSymbolRow));
-	    }
-	    natsort($columnIds);
-	    $highestBoardFieldColumnId = array_pop($columnIds);
+    	// Find the highest board field column id
+	    $sortedBoardFieldColumnIds = $this->getSortedBoardFieldColumnIds();
+	    $highestBoardFieldColumnId = array_pop($sortedBoardFieldColumnIds);
 
-	    // TODO: Does this work??
-	    $highestBorderSymbolColumnId = $this->borderGrid->borderPositionsGrid()->getHighestColumnId();
+	    // Find the highest border grid column id
+	    $highestBorderGridColumnId = $this->borderGrid->borderPositionsGrid()->getHighestColumnId();
 
-	    $highestColumnId = null;
-	    if ($highestBoardFieldColumnId) $highestColumnId = $highestBoardFieldColumnId;
-	    if ($highestBorderSymbolColumnId)
+	    $highestColumnId = $highestBoardFieldColumnId;
+	    if (isset($highestBorderGridColumnId))
 	    {
-		    if (! $highestColumnId || $highestBorderSymbolColumnId > $highestColumnId)
+	    	// The border grid has two columns per board column, so the id must be divided by two
+		    $highestBorderGridColumnId = ceil($highestBorderGridColumnId / 2);
+
+		    if (! $highestColumnId || $highestBorderGridColumnId > $highestColumnId)
 		    {
-			    $highestColumnId = $highestBorderSymbolColumnId;
+			    $highestColumnId = $highestBorderGridColumnId;
 		    }
 	    }
 

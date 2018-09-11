@@ -16,14 +16,14 @@ use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 use GameOfLife\Coordinate;
 
 /**
- * The border that is used to print a high light field.
+ * Creates border parts that highlight a single field.
  */
 class TextHighLightFieldBorder extends BaseBorder
 {
 	// Magic Methods
 
 	/**
-	 * TextBackgroundGridBorder constructor.
+	 * TextHighLightFieldBorder constructor.
 	 *
 	 * @param BaseBorder $_parentBorder The parent border of this border
 	 * @param Coordinate $_highLightFieldCoordinate The highlight field coordinate
@@ -63,7 +63,7 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"start"
+					array("start")
 				),
 
 				// Left and right center
@@ -72,7 +72,7 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"center"
+					array("center")
 				),
 
 				// Left and right bottom
@@ -81,7 +81,7 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
-					"bottom"
+					array("bottom")
 				)
 			)
 		);
@@ -106,7 +106,7 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"start"
+					array("start")
 				),
 
 				// Top and bottom center
@@ -115,7 +115,7 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"center"
+					array("center")
 				),
 
 				// Top and bottom bottom
@@ -124,42 +124,9 @@ class TextHighLightFieldBorder extends BaseBorder
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
-					"bottom"
+					array("bottom")
 				)
 			)
 		);
-	}
-
-	public function addBordersToRowString(String $_rowOutputString, int $_y): String
-	{
-		// TODO: This string must be added right to the outer border
-		// TODO: additionally two symbols must be added to the left of the board to move it back to the center
-		$rowOutputString = $_rowOutputString;
-
-		if ($this->highLightFieldCoordinate && $_y == $this->highLightFieldCoordinate->y())
-		{
-			$rowOutputString .= " " . $_y;
-		}
-
-		return parent::addBordersToRowString($rowOutputString, $_y);
-	}
-
-	private function getXCoordinateHighLightString(Board $_board)
-	{
-		// TODO: This string must be added above the outer border of the board
-		$hasInnerLeftBorder = $this->hasLeftBorder();
-		$hasInnerRightBorder = $this->hasRightBorder();
-
-		$paddingLeftLength = $this->highLightFieldCoordinate->x() + (int)$hasInnerLeftBorder;
-		$paddingTotalLength = $_board->width() + (int)$hasInnerLeftBorder + (int)$hasInnerRightBorder;
-
-		// Output the X-Coordinate of the highlighted cell above the board
-		$paddingLeftString = str_repeat(" ", $paddingLeftLength);
-		$xCoordinateHighLightString = str_pad(
-			$paddingLeftString . $this->highLightFieldCoordinate->x(),
-			$paddingTotalLength
-		);
-
-		return $xCoordinateHighLightString . "\n";
 	}
 }
