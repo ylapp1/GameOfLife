@@ -113,3 +113,5 @@ Additional ideas for future versions
 
 * Add other field shapes (Triangle, Pentagon, Hexagon, etc.) and field sizes
   - Also make different sizes/shapes usable in the same Board
+
+* Add other board shapes
