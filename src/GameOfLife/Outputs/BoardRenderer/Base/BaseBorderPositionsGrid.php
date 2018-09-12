@@ -150,6 +150,7 @@ abstract class BaseBorderPositionsGrid
 			if (isset($borderThicknessRow[$_x])) $rowIds[] = $y;
 		}
 
+		$rowIds = array_unique($rowIds);
 		sort($rowIds);
 
 		return $rowIds;
@@ -198,6 +199,7 @@ abstract class BaseBorderPositionsGrid
 			$columnIds = array_merge($columnIds, array_keys($borderThicknessRow));
 		}
 
+		$columnIds = array_unique($columnIds);
 		sort($columnIds);
 
 		return $columnIds;
