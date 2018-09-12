@@ -9,9 +9,9 @@
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
 use GameOfLife\Coordinate;
-use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 
 /**
  * Shape for horizontal text border parts.
@@ -103,7 +103,6 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
     {
-    	// TODO: Do something with field size
 	    return $this->parentBorderPart->getBorderSymbols();
     }
 

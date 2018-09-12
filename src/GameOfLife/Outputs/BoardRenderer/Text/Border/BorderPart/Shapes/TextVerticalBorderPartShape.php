@@ -102,7 +102,6 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
 	 */
     public function getRawRenderedBorderPart(int $_fieldSize)
     {
-    	// TODO: Do something with field size
         return $this->parentBorderPart->getBorderSymbols();
     }
 

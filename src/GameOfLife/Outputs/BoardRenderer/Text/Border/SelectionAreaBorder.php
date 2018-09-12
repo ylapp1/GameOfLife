@@ -54,7 +54,6 @@ class SelectionAreaBorder extends TextRectangleBorder
 	protected function getBorderTopCollisionSymbolDefinitions(): array
 	{
 		return array(
-			// TODO: Add the collision symbols for all situations (left-right) (top-bottom)
 
 			// Bottom start
 			new CollisionSymbolDefinition(
@@ -94,8 +93,6 @@ class SelectionAreaBorder extends TextRectangleBorder
 	{
 		return array(
 
-			// TODO: Add the collision symbols for all situations (left-right) (top-bottom)
-
 			// Top start
 			new CollisionSymbolDefinition(
 				$this->borderSymbolBottomLeft,
@@ -134,8 +131,6 @@ class SelectionAreaBorder extends TextRectangleBorder
 	{
 		return array(
 
-			// TODO: Add the collision symbols for all situations (left-right) (top-bottom)
-
 			// Right start
 			new CollisionSymbolDefinition(
 				$this->borderSymbolTopLeft,
@@ -172,9 +167,8 @@ class SelectionAreaBorder extends TextRectangleBorder
 	 */
 	protected function getBorderRightCollisionSymbolDefinitions(): array
 	{
-		// TODO: Add the collision symbols for all situations (left-right) (top-bottom)
-
 		return array(
+
 			// Left start
 			new CollisionSymbolDefinition(
 				$this->borderSymbolTopRight,
