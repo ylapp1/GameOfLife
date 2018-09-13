@@ -55,7 +55,7 @@ abstract class BaseBorderPartShape
 	{
 		return new RenderedBorderPart(
 			$this->getRawRenderedBorderPart($_fieldSize),
-			$this->getBorderPartGridPositions(),
+			$this->getRenderedBorderPartGridPositions(),
 			$this->parentBorderPart
 		);
 	}
@@ -77,6 +77,26 @@ abstract class BaseBorderPartShape
     abstract protected function getBorderPartGridPositions(): array;
 
 	/**
+	 * Returns the border part grid positions of the rendered border part.
+	 *
+	 * @return Coordinate[] The border part grid positions of the rendered border part
+	 */
+    protected function getRenderedBorderPartGridPositions(): array
+    {
+    	return $this->getBorderPartGridPositions();
+    }
+
+	/**
+	 * Calculates and returns the border part grid positions at which the parent border can collide with another border part.
+	 *
+	 * @return Coordinate[] The possible collision positions
+	 */
+	protected function getPossibleCollisionPositions(): array
+	{
+		return $this->getBorderPartGridPositions();
+	}
+
+	/**
 	 * Returns whether the parent border part contains a specific coordinate.
 	 *
 	 * @param Coordinate $_coordinate The coordinate
@@ -92,5 +112,17 @@ abstract class BaseBorderPartShape
 	 *
 	 * @return Coordinate[] The positions at which the parent border part collides with the other border part
 	 */
-	abstract public function getCollisionPositionsWith($_borderPart): array;
+	public function getCollisionPositionsWith($_borderPart): array
+	{
+		$collisionPositions = array();
+		foreach ($this->getPossibleCollisionPositions() as $possibleCollisionPosition)
+		{
+			if ($_borderPart->containsCoordinate($possibleCollisionPosition))
+			{
+				$collisionPositions[] = $possibleCollisionPosition;
+			}
+		}
+
+		return $collisionPositions;
+	}
 }

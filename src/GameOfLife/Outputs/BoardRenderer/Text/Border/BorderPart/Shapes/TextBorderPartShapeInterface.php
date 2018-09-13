@@ -28,9 +28,9 @@ interface TextBorderPartShapeInterface
 	/**
 	 * Returns the position of a coordinate inside the list of border symbols of the parent border part.
 	 *
-	 * @param Coordinate $_coordinate The coordinate
+	 * @param Coordinate $_gridPosition The grid position
 	 *
 	 * @return int|null The position of the coordinate inside the list of border symbols of the parent border part or null if the coordinate is not inside the parent border part
 	 */
-	public function getBorderSymbolPositionOf(Coordinate $_coordinate);
+	public function getBorderSymbolPositionOf(Coordinate $_gridPosition);
 }

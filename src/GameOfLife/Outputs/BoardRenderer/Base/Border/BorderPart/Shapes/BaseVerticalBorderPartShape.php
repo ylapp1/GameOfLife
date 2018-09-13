@@ -28,7 +28,7 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 		$borderPartGridPositions = array();
 
 		$startX = $this->parentBorderPart->startsAt()->x();
-		for ($y = $this->parentBorderPart->startsAt()->y(); $y < $this->parentBorderPart->endsAt()->y(); $y++)
+		for ($y = $this->parentBorderPart->startsAt()->y(); $y <= $this->parentBorderPart->endsAt()->y(); $y++)
 		{
 			$borderPartGridPositions[] = new Coordinate($startX, $y);
 		}
@@ -77,19 +77,6 @@ abstract class BaseVerticalBorderPartShape extends BaseBorderPartShape
 		{
 			return array();
 		}
-
-		$collisionPositions = array();
-		$checkCoordinate = clone $this->parentBorderPart->startsAt();
-
-		for ($y = $this->parentBorderPart->startsAt()->y(); $y <= $this->parentBorderPart->endsAt()->y(); $y++)
-		{
-			$checkCoordinate->setY($y);
-			if ($_borderPart->containsCoordinate($checkCoordinate))
-			{
-				$collisionPositions[] = clone $checkCoordinate;
-			}
-		}
-
-		return $collisionPositions;
+		else return parent::getCollisionPositionsWith($_borderPart);
 	}
 }

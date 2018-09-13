@@ -35,8 +35,6 @@ trait TextBorderPartShapeTrait
 		{
 			foreach ($collision->positions() as $collisionPosition)
 			{
-				$collisionPosition = new TextBorderPartGridPosition($collisionPosition, false, false);
-
 				$positionExists = false;
 				foreach ($_borderSymbolPositions as $borderSymbolPosition)
 				{

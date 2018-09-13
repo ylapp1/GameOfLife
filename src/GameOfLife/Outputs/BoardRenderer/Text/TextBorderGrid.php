@@ -67,15 +67,18 @@ class TextBorderGrid extends BaseBorderGrid
 	/**
 	 * Adds a rendered border part to the border symbol grid.
 	 *
-	 * @param RenderedBorderPart $_renderedBorder The rendered border part
+	 * @param RenderedBorderPart $_renderedBorderPart The rendered border part
 	 */
-	public function addRenderedBorderPart(RenderedBorderPart $_renderedBorder)
+	public function addRenderedBorderPart(RenderedBorderPart $_renderedBorderPart)
 	{
-		$borderSymbols = $_renderedBorder->rawRenderedBorderPart();
+		$borderSymbols = $_renderedBorderPart->rawRenderedBorderPart();
 
-		foreach ($_renderedBorder->borderPartGridPositions() as $at)
+		foreach ($_renderedBorderPart->borderPartGridPositions() as $at)
 		{
+			// Initialize the border row
 			if (! isset($this->borderSymbolGrid[$at->y()])) $this->borderSymbolGrid[$at->y()] = array();
+
+			// Add the border symbol
 			$this->borderSymbolGrid[$at->y()][$at->x()] = array_shift($borderSymbols);
 		}
 	}
@@ -126,7 +129,7 @@ class TextBorderGrid extends BaseBorderGrid
 							$borderPartContainingGap = null;
 							if ($isBorderRowGap && $isBorderColumnGap)
 							{ // The gap is in a border row and a border column, check whether it is inside a border
-								$gapCoordinate = new Coordinate($x / 2, $y / 2);
+								$gapCoordinate = new Coordinate($x, $y);
 
 								/** @var TextBorderPart $borderPart */
 								foreach ($this->borderParts as $borderPart)

@@ -12,6 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
+use BoardRenderer\Text\Border\BorderPart\Shapes\TextBorderPartGridPosition;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
@@ -54,7 +55,10 @@ abstract class TextBorderPart extends BaseBorderPart
      */
     public function __construct($_parentBorderShape, Coordinate $_startsAt, Coordinate $_endsAt, $_shape, BorderPartThickness $_thickness, BorderSymbolDefinition $_borderSymbolDefinition)
     {
-        parent::__construct($_parentBorderShape, $_startsAt, $_endsAt, $_shape, $_thickness);
+    	$startsAt = new TextBorderPartGridPosition($_startsAt, false, false);
+    	$endsAt = new TextBorderPartGridPosition($_endsAt, false, false);
+
+        parent::__construct($_parentBorderShape, $startsAt, $endsAt, $_shape, $_thickness);
 
         $this->borderSymbolDefinition = $_borderSymbolDefinition;
     }

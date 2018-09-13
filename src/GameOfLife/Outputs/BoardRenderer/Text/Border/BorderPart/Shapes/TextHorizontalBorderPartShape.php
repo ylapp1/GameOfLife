@@ -39,27 +39,24 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 	 */
 	public function getNumberOfBorderSymbols(): int
 	{
-		return $this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x();
+		return ($this->parentBorderPart->endsAt()->x() - $this->parentBorderPart->startsAt()->x()) / 2;
 	}
 
 	/**
 	 * Returns the position of a coordinate inside the list of border symbols of the parent border part.
 	 *
-	 * @param Coordinate $_coordinate The coordinate
+	 * @param Coordinate $_gridPosition The grid position
 	 *
 	 * @return int|null The position of the coordinate inside the list of border symbols of the parent border part or null if the coordinate is not inside the parent border part
 	 */
-	public function getBorderSymbolPositionOf(Coordinate $_coordinate)
+	public function getBorderSymbolPositionOf(Coordinate $_gridPosition)
 	{
-		if ($this->containsCoordinate($_coordinate))
-		{
-			return ($_coordinate->x() - $this->parentBorderPart->startsAt()->x()) * 2;
-		}
+		if ($this->containsCoordinate($_gridPosition)) return $_gridPosition->x();
 		else return null;
 	}
 
 	/**
-	 * Calculates and returns the border part grid positions.
+	 * Calculates and returns the border part grid positions without collision positions.
 	 *
 	 * @return Coordinate[] The border part grid positions
 	 */
@@ -69,12 +66,25 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 		$borderPartGridPositions = array();
 
 		// Add border positions
-		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->startsAt(), false, false);
+		$borderPartGridPositions[] = clone $this->parentBorderPart->startsAt();
 		foreach ($coordinates as $coordinate)
 		{
-			$borderPartGridPositions[] = new TextBorderPartGridPosition($coordinate, false, true);
+			// Add all coordinates that are inside board field columns
+			if ($coordinate->x() % 2 != 0) $borderPartGridPositions[] = $coordinate;
 		}
-		$borderPartGridPositions[] = new TextBorderPartGridPosition($this->parentBorderPart->endsAt(), false, false);
+		$borderPartGridPositions[] = clone $this->parentBorderPart->endsAt();
+
+		return $borderPartGridPositions;
+	}
+
+	/**
+	 * Returns the border part grid positions of the rendered border part with collision positions.
+	 *
+	 * @return Coordinate[] The border part grid positions of the rendered border part
+	 */
+	protected function getRenderedBorderPartGridPositions(): array
+	{
+		$borderPartGridPositions = $this->getBorderPartGridPositions();
 
 		// Add collision positions
 		$borderPartGridPositions = array_merge(
@@ -82,9 +92,9 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 			$this->getCollisionGridPositions($borderPartGridPositions, $this->parentBorderPart->ownCollisions())
 		);
 
-
+		// Sort the coordinates by X-Coordinate ascending
 		usort($borderPartGridPositions,
-			function (TextBorderPartGridPosition $_a, TextBorderPartGridPosition $_b)
+			function (Coordinate $_a, Coordinate $_b)
 			{
 				if ($_a->x() > $_b->x()) return true;
 				else return false;
@@ -92,6 +102,24 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 		);
 
 		return $borderPartGridPositions;
+	}
+
+	/**
+	 * Calculates and returns the border part grid positions at which the parent border can collide with another border part.
+	 *
+	 * @return Coordinate[] The possible collision positions
+	 */
+	public function getPossibleCollisionPositions(): array
+	{
+		/*
+		 * Returns:
+		 *
+		 * 1) All border part grid positions that are filled by the parent border part
+		 *    (These are possible collision positions for border parts that overlap the parent border part)
+		 * 2) The positions in between the border part grid positions coordinates
+		 *    (These are possible collision positions for border parts that collide at one point with the parent border part
+		 */
+		return parent::getBorderPartGridPositions();
 	}
 
 	/**
@@ -117,7 +145,7 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
     {
     	$collisionPositions = parent::getCollisionPositionsWith($_borderPart);
 
-    	if ($collisionPositions)
+	    if ($collisionPositions)
 	    {
 		    $textBorderPartCollisionPositions = array();
 
