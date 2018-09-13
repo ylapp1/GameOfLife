@@ -50,7 +50,7 @@ class BorderPartCollision
 	 */
 	public function __construct(array $_positions, $_with, Bool $_isOuterBorderCollision)
 	{
-		$this->positions = $_positions;
+		$this->positions = $this->summarizeCollisionPositions($_positions);
 		$this->with = $_with;
 		$this->isOuterBorderPartCollision = $_isOuterBorderCollision;
 	}
@@ -87,4 +87,54 @@ class BorderPartCollision
     {
         return $this->isOuterBorderPartCollision;
     }
+
+
+    // Class Methods
+
+	/**
+	 * Summarizes a list of collision positions.
+	 *
+	 * This is done with the following pattern:
+	 * 1) The first coordinate is kept if it is a border row and border column coordinate
+	 * 2) The last coordinate is kept if it is a border row and border column coordinate
+	 * 3) The middle border row/column coordinates are discarded
+	 *
+	 * @param Coordinate[] $_positions The collision positions
+	 *
+	 * @return Coordinate[] The summarized list of collision positions
+	 */
+	private function summarizeCollisionPositions(array $_positions): array
+	{
+		$summarizedCoordinates = array();
+		if ($_positions)
+		{
+			if ($_positions[0]->x() % 2 == 0 && $_positions[0]->y() % 2 == 0)
+			{ // First coordinate is a border row and border column coordinate
+				$summarizedCoordinates[] = array_shift($_positions);
+			}
+
+			if ($_positions)
+			{ // There are more positions left
+
+				// Check the last coordinate
+				$lastCoordinate = array_pop($_positions);
+				if ($lastCoordinate && $lastCoordinate->x() % 2 == 0 && $lastCoordinate->y() % 2 == 0)
+				{ // Last coordinate is a border row and border column coordinate
+					$summarizedCoordinates[] = $lastCoordinate;
+				}
+				else $_positions[] = $lastCoordinate;
+
+				// Summarize the middle positions
+				for ($i = 0; $i < count($_positions); $i++)
+				{
+					if ($_positions[$i]->x() % 2 != 0 || $_positions[$i]->y() % 2 != 0)
+					{ // The coordinate is either only a border column or only a border row coordinate
+						$summarizedCoordinates[] = $_positions[$i];
+					}
+				}
+			}
+		}
+
+		return $summarizedCoordinates;
+	}
 }
