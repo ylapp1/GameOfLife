@@ -9,6 +9,7 @@
 namespace BoardRenderer\Text\Border\BorderPart;
 
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
+use BoardRenderer\Base\Border\BorderPart\BorderPartCollision;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseBorderPartShape;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
@@ -123,7 +124,14 @@ abstract class TextBorderPart extends BaseBorderPart
     {
     	$borderSymbols = $_borderSymbols;
 
-	    foreach ($this->ownCollisions as $collision)
+        /*
+         * The collisions are rendered in reverse order to make border parts that existed
+         * first overwrite the collisions of border parts that were added later
+         */
+    	$borderPartCollisions = array_reverse($this->ownCollisions);
+
+        /** @var BorderPartCollision $collision */
+        foreach ($borderPartCollisions as $collision)
         {
         	// Find dominating border
             if ($collision->isOuterBorderPartCollision()) $dominatingBorderPart = $collision->with();

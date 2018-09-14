@@ -188,10 +188,11 @@ abstract class BaseBorderPart
 	 *
 	 * @param Coordinate[] $_collisionPositions The collision positions
 	 * @param BaseBorderPart $_otherBorderPart The other border part
+     * @param Bool $_isOuterBorderPart Defines whether the other border part is an outer border part relative to this border part
 	 */
-    public function addOtherBorderPartCollision(array $_collisionPositions, $_otherBorderPart)
+    public function addOtherBorderPartCollision(array $_collisionPositions, $_otherBorderPart, Bool $_isOuterBorderPart)
     {
-    	$this->otherBorderPartCollisions[] = new BorderPartCollision($_collisionPositions, $_otherBorderPart, $this->isOuterBorderPart($_otherBorderPart));
+    	$this->otherBorderPartCollisions[] = new BorderPartCollision($_collisionPositions, $_otherBorderPart, $_isOuterBorderPart);
     }
 
 	/**
@@ -222,8 +223,9 @@ abstract class BaseBorderPart
 		$collisionPositions = $this->shape->getCollisionPositionsWith($_borderPart);
 		if ($collisionPositions)
 		{
-			$this->ownCollisions[] = new BorderPartCollision($collisionPositions, $_borderPart, $this->isOuterBorderPart($_borderPart));
-			$_borderPart->addOtherBorderPartCollision($collisionPositions, $this);
+		    $isOuterBorderPart = $this->isOuterBorderPart($_borderPart);
+			$this->ownCollisions[] = new BorderPartCollision($collisionPositions, $_borderPart, $isOuterBorderPart);
+			$_borderPart->addOtherBorderPartCollision($collisionPositions, $this, ! $isOuterBorderPart);
 		}
 	}
 

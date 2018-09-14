@@ -72,8 +72,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 			new CollisionSymbolDefinition(
 				"╤",
 				array(
-					new CollisionDirection(array("bottom")),
-
+					new CollisionDirection(array("bottom"))
 				),
 				array("center")
 			),
@@ -121,7 +120,7 @@ class TextBoardOuterBorder extends TextRectangleBorder
 			new CollisionSymbolDefinition(
 				"╧",
 				array(
-					new CollisionDirection(array("top")),
+					new CollisionDirection(array("top"))
 				),
 				array("center")
 			),
