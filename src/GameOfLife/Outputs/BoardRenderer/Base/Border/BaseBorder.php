@@ -41,6 +41,13 @@ abstract class BaseBorder
 	 */
 	protected $shape;
 
+	/**
+	 * The border parts of this border
+	 *
+	 * @var BaseBorderPart[] $borderParts
+	 */
+	protected $borderParts;
+
 
 	// Magic Methods
 
@@ -55,6 +62,7 @@ abstract class BaseBorder
 		$this->innerBorders = array();
 		$this->parentBorder = $_parentBorder;
 		$this->shape = $_shape;
+		$this->borderParts = array();
 	}
 
 
@@ -88,6 +96,16 @@ abstract class BaseBorder
 	public function shape()
 	{
 		return $this->shape;
+	}
+
+	/**
+	 * Returns the border parts of this border.
+	 *
+	 * @return BaseBorderPart[] The border parts
+	 */
+	public function borderParts(): array
+	{
+		return $this->borderParts;
 	}
 
 
@@ -136,15 +154,19 @@ abstract class BaseBorder
 	 */
 	public function getBorderParts()
 	{
-	    $borderParts = $this->shape->getBorderParts();
+		if (! $this->borderParts)
+		{
+			$this->borderParts = $this->shape->getBorderParts();
+		}
+	    $allBorderParts = $this->borderParts;
 
 	    foreach ($this->innerBorders as $innerBorder)
         {
             $innerBorderParts = $innerBorder->getBorderParts();
-            $borderParts = array_merge($borderParts, $innerBorderParts);
+	        $allBorderParts = array_merge($allBorderParts, $innerBorderParts);
         }
 
-        return $borderParts;
+        return $allBorderParts;
 	}
 
 	/**

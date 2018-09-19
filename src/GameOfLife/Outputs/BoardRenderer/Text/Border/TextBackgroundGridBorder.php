@@ -56,32 +56,12 @@ class TextBackgroundGridBorder extends BaseBorder
 			"│",
 			"│",
 			array(
-
-				// Left and right start
-				new CollisionSymbolDefinition(
-					"╤",
-					array(
-						new CollisionDirection(array("left", "right"))
-					),
-					array("start")
-				),
-
-				// Left and right center
 				new CollisionSymbolDefinition(
 					"┼",
 					array(
 						new CollisionDirection(array("left", "right"))
 					),
 					array("center")
-				),
-
-				// Left and right bottom
-				new CollisionSymbolDefinition(
-					"╧",
-					array(
-						new CollisionDirection(array("left", "right"))
-					),
-					array("bottom")
 				)
 			)
 		);
@@ -99,32 +79,12 @@ class TextBackgroundGridBorder extends BaseBorder
 			"─",
 			"─",
 			array(
-
-				// Top and bottom start
-				new CollisionSymbolDefinition(
-					"╟",
-					array(
-						new CollisionDirection(array("top", "bottom"))
-					),
-					array("start")
-				),
-
-				// Top and bottom center
 				new CollisionSymbolDefinition(
 					"┼",
 					array(
 						new CollisionDirection(array("top", "bottom"))
 					),
 					array("center")
-				),
-
-				// Top and bottom bottom
-				new CollisionSymbolDefinition(
-					"╢",
-					array(
-						new CollisionDirection(array("top", "bottom"))
-					),
-					array("bottom")
 				)
 			)
 		);
