@@ -9,8 +9,6 @@
 use GameOfLife\Board;
 use Simulator\GameLogic;
 use Output\PngOutput;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemWriter;
@@ -77,20 +75,13 @@ class PNGOutputTest extends TestCase
     /**
      * @covers \Output\PngOutput::fileSystemHandler()
      * @covers \Output\PngOutput::setFileSystemHandler()
-     * @covers \Output\PngOutput::imageCreator()
-     * @covers \Output\PngOutput::setImageCreator()
      */
     public function testCanSetAttributes()
     {
         $fileSystemHandler = new FileSystemWriter();
-        $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
 
         $this->output->setFileSystemHandler($fileSystemHandler);
-        $this->output->setImageCreator($imageCreator);
-
         $this->assertEquals($fileSystemHandler,  $this->output->fileSystemHandler());
-        $this->assertEquals($imageCreator, $this->output->imageCreator());
     }
 
     /**
@@ -129,7 +120,7 @@ class PNGOutputTest extends TestCase
         }
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputRegex("/\n *GAME OF LIFE\n *PNG OUTPUT\n\nStarting PNG Output ...\n\n/");
+        $this->expectOutputRegex("/\n *GAME OF LIFE\n *PNG OUTPUT\n*Starting PNG Output ...\n\n/");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "PNG/Game_1"));
     }

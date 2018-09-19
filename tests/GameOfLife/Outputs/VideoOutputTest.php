@@ -9,8 +9,6 @@
 use GameOfLife\Board;
 use Simulator\GameLogic;
 use Output\Helpers\FfmpegHelper;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Output\VideoOutput;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
@@ -97,8 +95,6 @@ class VideoOutputTest extends TestCase
      * @covers \Output\VideoOutput::setFrames()
      * @covers \Output\VideoOutput::hasSound()
      * @covers \Output\VideoOutput::setHasSound()
-     * @covers \Output\VideoOutput::imageCreator()
-     * @covers \Output\VideoOutput::setImageCreator()
      * @covers \Output\VideoOutput::ffmpegHelper()
      * @covers \Output\VideoOutput::setFfmpegHelper()
      *
@@ -112,15 +108,12 @@ class VideoOutputTest extends TestCase
     public function testCanSetAttributes(array $_fillPercentages, int $_fps, array $_frames, bool $_hasSound)
     {
         $fileSystemHandler = new FileSystemWriter();
-        $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1, 2, 3, $colorBlack, $colorBlack, $colorBlack);
         $ffmpegHelper = new FfmpegHelper();
 
         $this->output->setFileSystemHandler($fileSystemHandler);
         $this->output->setFillPercentages($_fillPercentages);
         $this->output->setFps($_fps);
         $this->output->setFrames($_frames);
-        $this->output->setImageCreator($imageCreator);
         $this->output->setHasSound($_hasSound);
         $this->output->setFfmpegHelper($ffmpegHelper);
 
@@ -128,7 +121,6 @@ class VideoOutputTest extends TestCase
         $this->assertEquals($_fillPercentages, $this->output->fillPercentages());
         $this->assertEquals($_fps, $this->output->fps());
         $this->assertEquals($_frames, $this->output->frames());
-        $this->assertEquals($imageCreator, $this->output->imageCreator());
         $this->assertEquals($_hasSound, $this->output->hasSound());
         $this->assertEquals($ffmpegHelper, $this->output->ffmpegHelper());
     }

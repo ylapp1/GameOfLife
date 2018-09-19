@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Output\Helpers\ImageColor;
+use BoardRenderer\Image\Utils\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,10 +16,11 @@ class ImageColorTest extends TestCase
 {
     /**
      * @dataProvider colorsProvider
-     * @covers \Output\Helpers\ImageColor::__construct()
-     * @covers \Output\Helpers\ImageColor::red()
-     * @covers \Output\Helpers\ImageColor::green()
-     * @covers \Output\Helpers\ImageColor::blue()
+     *
+     * @covers BoardRenderer\Image\Utils\ImageColor::__construct()
+     * @covers BoardRenderer\Image\Utils\ImageColor::red()
+     * @covers BoardRenderer\Image\Utils\ImageColor::green()
+     * @covers BoardRenderer\Image\Utils\ImageColor::blue()
      *
      * @param int $_red     Amount red
      * @param int $_green   Amount green
@@ -36,28 +37,28 @@ class ImageColorTest extends TestCase
 
     /**
      * @dataProvider colorsProvider
-     * @covers \Output\Helpers\ImageColor::setRed()
-     * @covers \Output\Helpers\ImageColor::red()
-     * @covers \Output\Helpers\ImageColor::setGreen()
-     * @covers \Output\Helpers\ImageColor::green()
-     * @covers \Output\Helpers\ImageColor::setBlue()
-     * @covers \Output\Helpers\ImageColor::blue()
+     *
+     * @covers BoardRenderer\Image\Utils\ImageColor::red()
+     * @covers BoardRenderer\Image\Utils\ImageColor::green()
+     * @covers BoardRenderer\Image\Utils\ImageColor::blue()
      *
      * @param int $_red     Amount red
      * @param int $_green   Amount green
      * @param int $_blue    Amount blue
+     *
+     * @throws ReflectionException
      */
     public function testCanSetAttributes(int $_red, int $_green, int $_blue)
     {
         $color = new ImageColor (0,0,0);
 
-        $color->setRed($_red);
+        setPrivateAttribute($color, "red", $_red);
         $this->assertEquals($_red, $color->red());
 
-        $color->setGreen($_green);
+        setPrivateAttribute($color, "green", $_green);
         $this->assertEquals($_green, $color->green());
 
-        $color->setBlue($_blue);
+        setPrivateAttribute($color, "blue", $_blue);
         $this->assertEquals($_blue, $color->blue());
     }
 

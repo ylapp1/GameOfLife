@@ -313,7 +313,7 @@ class BoardTest extends TestCase
             {
                 if ($field instanceof Field)
                 {
-                    if ($y != $field->y() || $x != $field->x())
+                    if ($y != $field->coordinate()->y() || $x != $field->coordinate()->x())
                     {
                         $tmpField = new Field($x, $y, false, $board);
 

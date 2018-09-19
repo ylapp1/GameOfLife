@@ -152,7 +152,7 @@ class BoardEditorTest extends TestCase
                                     ->method("getNumberOfShellLines")
                                     ->willReturn(10);
 
-        $expectedOutputTitleRegex = "\n *GAME OF LIFE\n *BOARD EDITOR\n\n";
+        $expectedOutputTitleRegex = "\n *GAME OF LIFE\n *BOARD EDITOR\n\n*";
         $expectedOutputBoardRegex = " *╔═════╗\n"
                                   . " *║     ║\n"
                                   . " *║     ║\n"

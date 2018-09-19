@@ -9,8 +9,6 @@
 use GameOfLife\Board;
 use Simulator\GameLogic;
 use Output\GifOutput;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
 use Utils\FileSystem\FileSystemWriter;
@@ -85,8 +83,6 @@ class GIFOutputTest extends TestCase
      * @covers \Output\GifOutput::setFrameTime()
      * @covers \Output\GifOutput::fileSystemHandler()
      * @covers \Output\GifOutput::setFileSystemHandler()
-     * @covers \Output\GifOutput::imageCreator()
-     * @covers \Output\GifOutput::setImageCreator()
      *
      * @param array $_frames    Frame paths
      * @param int $_frameTime   Time per frame
@@ -94,18 +90,14 @@ class GIFOutputTest extends TestCase
     public function testCanSetAttributes(array $_frames, int $_frameTime)
     {
         $fileSystemHandler = new FileSystemWriter();
-        $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(2, 2, 2, $colorBlack, $colorBlack, $colorBlack);
 
         $this->output->setFrames($_frames);
         $this->output->setFrameTime($_frameTime);
         $this->output->setFileSystemHandler($fileSystemHandler);
-        $this->output->setImageCreator($imageCreator);
 
         $this->assertEquals($_frames, $this->output->frames());
         $this->assertEquals($_frameTime, $this->output->frameTime());
         $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
-        $this->assertEquals($imageCreator, $this->output->imageCreator());
     }
 
     public function setAttributesProvider()
@@ -150,7 +142,7 @@ class GIFOutputTest extends TestCase
     {
         $this->assertFalse(file_exists($this->outputDirectory));
 
-        $this->expectOutputRegex("/\n *GAME OF LIFE\n *GIF OUTPUT\n\nStarting GIF Output...\n\n/");
+        $this->expectOutputRegex("/\n *GAME OF LIFE\n *GIF OUTPUT\n*Starting GIF Output...\n\n/");
         $this->output->startOutput(new Getopt(), $this->board);
         $this->assertTrue(file_exists($this->outputDirectory . "Gif"));
         $this->assertTrue(file_exists($this->outputDirectory . "tmp/Frames"));

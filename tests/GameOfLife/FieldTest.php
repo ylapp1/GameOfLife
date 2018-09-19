@@ -7,6 +7,7 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use PHPUnit\Framework\TestCase;
 
@@ -33,8 +34,7 @@ class FieldTest extends TestCase
      *
      * @covers \GameOfLife\Field::__construct()
      * @covers \GameOfLife\Field::parentBoard()
-     * @covers \GameOfLife\Field::x()
-     * @covers \GameOfLife\Field::y()
+     * @covers \GameOfLife\Field::coordinate()
      * @covers \GameOfLife\Field::value()
      */
     public function testCanBeConstructed()
@@ -42,8 +42,8 @@ class FieldTest extends TestCase
         $field = new Field(1, 2, false, $this->board);
 
         $this->assertEquals($this->board, $field->parentBoard());
-        $this->assertEquals(1, $field->x());
-        $this->assertEquals(2, $field->y());
+        $this->assertEquals(1, $field->coordinate()->x());
+        $this->assertEquals(2, $field->coordinate()->y());
         $this->assertEquals(false, $field->value());
     }
 
@@ -52,31 +52,26 @@ class FieldTest extends TestCase
      *
      * @dataProvider setAttributesProvider()
      * @covers \GameOfLife\Field::setParentBoard()
-     * @covers \GameOfLife\Field::setX()
-     * @covers \GameOfLife\Field::setY()
+     * @covers \GameOfLife\Field::setCoordinate()
      * @covers \GameOfLife\Field::setValue()
      * @covers \GameOfLife\Field::parentBoard()
-     * @covers \GameOfLife\Field::x()
-     * @covers \GameOfLife\Field::y()
+     * @covers \GameOfLife\Field::coordinate()
      * @covers \GameOfLife\Field::value()
      *
      * @param Board $_parentBoard The parent board
-     * @param int $_x X-Coordinate of the field
-     * @param int $_y Y-Coordinate of the field
+     * @param Coordinate $_coordinate The coordinate of the field
      * @param bool $_value Status of the field (true = alive, false = dead)
      */
-    public function testCanSetAttributes(Board $_parentBoard, int $_x, int $_y, Bool $_value)
+    public function testCanSetAttributes(Board $_parentBoard, Coordinate $_coordinate, Bool $_value)
     {
         $field = new Field(1, 2, false, $this->board);
 
         $field->setParentBoard($_parentBoard);
-        $field->setX($_x);
-        $field->setY($_y);
+        $field->setCoordinate($_coordinate);
         $field->setValue($_value);
 
         $this->assertEquals($_parentBoard, $field->parentBoard());
-        $this->assertEquals($_x, $field->x());
-        $this->assertEquals($_y, $field->y());
+        $this->assertEquals($_coordinate, $field->coordinate());
         $this->assertEquals($_value, $field->value());
     }
 
@@ -88,9 +83,9 @@ class FieldTest extends TestCase
         $board = new Board(3, 4, false);
 
         return array(
-            array($board, 1, 2, true),
-            array($board, 2, 3, false),
-            array($board, 4, 5, true)
+            array($board, new Coordinate(1, 2), true),
+            array($board, new Coordinate(2, 3), false),
+            array($board, new Coordinate(4, 5), true)
         );
     }
 

@@ -49,7 +49,7 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 		    $border,
 		    new TextBorderGridBuilder($_board, $border, true),
 		    new BoardEditorOutputBoardFieldRenderer("o", " ", "x", " "),
-		    new TextCanvas()
+		    new TextCanvas(false)
 	    );
     }
 
