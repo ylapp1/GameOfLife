@@ -32,6 +32,7 @@ class BoardEditorOutputTest extends TestCase
         $testBoard->setFieldState(3, 2, true);
 
         $output = new BoardEditorOutput();
+        $this->expectOutputRegex("/\n*/");
         $output->startOutput(new Getopt(), $testBoard);
 
         // Without highlighting

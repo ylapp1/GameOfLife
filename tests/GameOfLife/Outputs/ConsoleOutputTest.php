@@ -26,6 +26,7 @@ class ConsoleOutputTest extends TestCase
         $this->output = new ConsoleOutput();
         $this->board = new Board(2, 2, true);
 
+        $this->expectOutputRegex("/GAME OF LIFE\n *CONSOLE OUTPUT/");
 	    $this->output->startOutput(new Getopt(), $this->board);
     }
 
