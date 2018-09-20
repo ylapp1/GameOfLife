@@ -144,7 +144,7 @@ abstract class TextBorderPart extends BaseBorderPart
 		        $collisionSymbol = $this->getCollisionSymbol($dominatingBorderPart, $collisionPosition);
 		        if (! $collisionSymbol)
 		        { // No collision symbol found, check the related border parts for a collision symbol
-		        	$collisionSymbol = $this->getCollisionSymbolFromRelatedBorderParts($collisionPosition);
+			        $collisionSymbol = $this->getCollisionSymbolFromRelatedBorderParts($collisionPosition);
 		        }
 		        if (! $collisionSymbol)
 		        { // Still no collision symbol found, use the default one
@@ -238,26 +238,37 @@ abstract class TextBorderPart extends BaseBorderPart
 	 */
     protected function getCollisionSymbolFromRelatedBorderParts(TextBorderPartCollisionPosition $_collisionPosition)
     {
+    	// Iterate over all border parts of the parent border
 	    /** @var TextBorderPart $relatedBorderPart */
 	    foreach ($this->parentBorderShape->parentBorder()->borderParts() as $relatedBorderPart)
 	    {
-		    if ($relatedBorderPart !== $this)
+	    	if ($relatedBorderPart !== $this)
 		    {
 			    foreach ($relatedBorderPart->ownCollisions() as $relatedBorderPartCollision)
 			    {
-			    	/** @var TextBorderPartCollisionPosition $relatedBorderPartCollisionPosition */
-				    foreach ($relatedBorderPartCollision->positions() as $relatedBorderPartCollisionPosition)
-			    	{
-			    		if ($relatedBorderPartCollisionPosition->equals($_collisionPosition))
-			    		{
-			    			if ($relatedBorderPart->isOuterBorderPart($relatedBorderPartCollision->with()))
+			    	/*
+			    	 * The collisions order is based on the order in which the border parts of all borders are placed in
+			    	 * the border grid.
+			    	 * The collisions with border parts that existed before this border part will be listed at the
+			    	 * beginning of the list of collisions
+			    	 */
+			    	if ($relatedBorderPartCollision->with() === $this) break;
+			    	else
+				    {
+					    /** @var TextBorderPartCollisionPosition $relatedBorderPartCollisionPosition */
+					    foreach ($relatedBorderPartCollision->positions() as $relatedBorderPartCollisionPosition)
+					    {
+						    if ($relatedBorderPartCollisionPosition->equals($_collisionPosition))
 						    {
-						    	$dominatingBorderPart = $relatedBorderPartCollision->with();
-						    }
-			    			else $dominatingBorderPart = $relatedBorderPart;
+						    	if ($relatedBorderPart->isOuterBorderPart($relatedBorderPartCollision->with()))
+							    {
+							    	$dominatingBorderPart = $relatedBorderPartCollision->with();
+							    }
+							    else $dominatingBorderPart = $relatedBorderPart;
 
-			    			$collisionSymbol = $relatedBorderPart->getCollisionSymbol($dominatingBorderPart, $relatedBorderPartCollisionPosition);
-			    			if ($collisionSymbol) return $collisionSymbol;
+							    $collisionSymbol = $relatedBorderPart->getCollisionSymbol($dominatingBorderPart, $relatedBorderPartCollisionPosition);
+							    if ($collisionSymbol) return $collisionSymbol;
+						    }
 					    }
 				    }
 			    }
