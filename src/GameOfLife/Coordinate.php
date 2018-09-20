@@ -16,14 +16,14 @@ class Coordinate
 	// Attributes
 
 	/**
-	 * The X-coordinate of the field
+	 * The X-coordinate
 	 *
 	 * @var int $x
 	 */
 	private $x;
 
 	/**
-	 * The Y-coordinate of the field
+	 * The Y-coordinate
 	 *
 	 * @var int $y
 	 */
@@ -64,9 +64,9 @@ class Coordinate
 	// Getters and Setters
 
 	/**
-	 * Returns the X-coordinate of the field.
+	 * Returns the X-coordinate.
 	 *
-	 * @return int The X-coordinate of the field
+	 * @return int The X-coordinate
 	 */
 	public function x(): int
 	{
@@ -74,9 +74,9 @@ class Coordinate
 	}
 
 	/**
-	 * Sets the X-coordinate of the field.
+	 * Sets the X-coordinate.
 	 *
-	 * @param int $_x The X-coordinate of the field
+	 * @param int $_x The X-coordinate
 	 */
 	public function setX(int $_x)
 	{
@@ -84,9 +84,9 @@ class Coordinate
 	}
 
 	/**
-	 * Returns the Y-coordinate of the field.
+	 * Returns the Y-coordinate.
 	 *
-	 * @return int The Y-coordinate of the field
+	 * @return int The Y-coordinate
 	 */
 	public function y(): int
 	{
@@ -94,9 +94,9 @@ class Coordinate
 	}
 
 	/**
-	 * Sets the Y-coordinate of the field.
+	 * Sets the Y-coordinate.
 	 *
-	 * @param int $_y The Y-coordinate of the field
+	 * @param int $_y The Y-coordinate
 	 */
 	public function setY(int $_y)
 	{

@@ -13,19 +13,21 @@ namespace GameOfLife;
  */
 class Rectangle
 {
+	// Attributes
+
 	/**
 	 * The top left corner coordinate
 	 *
 	 * @var Coordinate $topLeftCornerCoordinate
 	 */
-	protected $topLeftCornerCoordinate;
+	private $topLeftCornerCoordinate;
 
 	/**
 	 * The bottom right corner coordinate
 	 *
 	 * @var Coordinate $bottomRightCornerCoordinate
 	 */
-	protected $bottomRightCornerCoordinate;
+	private $bottomRightCornerCoordinate;
 
 
 	// Magic Methods
@@ -33,13 +35,37 @@ class Rectangle
 	/**
 	 * Rectangle constructor.
 	 *
-	 * @param Coordinate $_topLeftCornerCoordinate The top left corner coordinate
-	 * @param Coordinate $_bottomRightCornerCoordinate The bottom right corner coordinate
+	 * @param Coordinate $_cornerCoordinate The coordinate of one corner of the rectangle
+	 * @param Coordinate $_opposingCornerCoordinate The coordinate of the opposing corner of the rectangle
 	 */
-	public function __construct(Coordinate $_topLeftCornerCoordinate, Coordinate $_bottomRightCornerCoordinate)
+	public function __construct(Coordinate $_cornerCoordinate, Coordinate $_opposingCornerCoordinate)
 	{
-		$this->topLeftCornerCoordinate = $_topLeftCornerCoordinate;
-		$this->bottomRightCornerCoordinate = $_bottomRightCornerCoordinate;
+		// Fetch Y top and bottom
+		if ($_cornerCoordinate->y() < $_opposingCornerCoordinate->y())
+		{
+			$yTop = $_cornerCoordinate->y();
+			$yBottom = $_opposingCornerCoordinate->y();
+		}
+		else
+		{
+			$yTop = $_opposingCornerCoordinate->y();
+			$yBottom = $_cornerCoordinate->y();
+		}
+
+		// Fetch X left and right
+		if ($_cornerCoordinate->x() < $_opposingCornerCoordinate->x())
+		{
+			$xLeft = $_cornerCoordinate->x();
+			$xRight = $_opposingCornerCoordinate->x();
+		}
+		else
+		{
+			$xLeft = $_opposingCornerCoordinate->x();
+			$xRight = $_cornerCoordinate->x();
+		}
+
+		$this->topLeftCornerCoordinate = new Coordinate($xLeft, $yTop);
+		$this->bottomRightCornerCoordinate = new Coordinate($xRight, $yBottom);
 	}
 
 

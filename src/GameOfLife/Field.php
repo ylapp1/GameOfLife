@@ -14,6 +14,7 @@ namespace GameOfLife;
 class Field
 {
     // Attributes
+
 	/**
 	 * The X/Y position of this field on the board
 	 *
@@ -51,6 +52,7 @@ class Field
      */
     public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
     {
+    	// TODO: Change constructor arg x and y to coordinate $_coordinate
         $this->coordinate = new Coordinate($_x, $_y);
         $this->value = $_value;
         $this->parentBoard = $_parentBoard;
@@ -123,8 +125,7 @@ class Field
     /**
      * Returns whether the cell in the field is alive.
      *
-     * @return Bool True: The cell is alive
-     *              False: The cell is dead
+     * @return Bool True if the cell is alive, false otherwise
      */
     public function isAlive(): Bool
     {
@@ -134,8 +135,7 @@ class Field
     /**
      * Returns whether the cell in the field is dead.
      *
-     * @return Bool True: The cell is dead
-     *              False: The cell is alive
+     * @return Bool True if the cell is dead, false otherwise
      */
     public function isDead(): Bool
     {
@@ -143,7 +143,8 @@ class Field
     }
 
     /**
-     * Inverts the fields value.
+     * Inverts the state of the cell in the field.
+     * If the cell is alive its state will be changed to dead, if the cell is dead its state will be changed to alive.
      */
     public function invertValue()
     {
@@ -154,15 +155,15 @@ class Field
     // Class Methods
 
     /**
-     * Calculates the number of living neighbor cells.
+     * Calculates and returns the number of living neighbor cells.
      *
      * @return int The number of living neighbor cells
      */
     public function numberOfLivingNeighbors(): int
     {
         $neighborFields = $this->parentBoard->getNeighborsOfField($this);
-        $numberOfLivingNeighbors = 0;
 
+        $numberOfLivingNeighbors = 0;
         foreach ($neighborFields as $neighborField)
         {
             $numberOfLivingNeighbors += (int)$neighborField->isAlive();
@@ -172,15 +173,15 @@ class Field
     }
 
     /**
-     * Calculates the number of dead neighbor cells.
+     * Calculates and returns the number of dead neighbor cells.
      *
      * @return int The number of dead neighbor cells
      */
     public function numberOfDeadNeighbors(): int
     {
         $neighborFields = $this->parentBoard->getNeighborsOfField($this);
-        $numberOfDeadNeighbors = 0;
 
+        $numberOfDeadNeighbors = 0;
         foreach ($neighborFields as $neighborField)
         {
             $numberOfDeadNeighbors += (int)$neighborField->isDead();
@@ -190,10 +191,10 @@ class Field
     }
 
     /**
-     * Returns the number of neighbor border fields.
-     * If the board has no border this function will return 0.
+     * Calculates and returns the number of neighbor fields that are borders instead of cells.
+     * This function will return 0 if the board has a "passthrough" border
      *
-     * @return int The number of neighbor border fields
+     * @return int The number of neighbor fields that are borders instead of cells
      */
     public function numberOfNeighborBorderFields(): int
     {
