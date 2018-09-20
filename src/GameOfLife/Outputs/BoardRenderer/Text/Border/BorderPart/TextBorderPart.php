@@ -192,37 +192,15 @@ abstract class TextBorderPart extends BaseBorderPart
     protected function getCollisionSymbol(TextBorderPart $_dominatingBorderPart, TextBorderPartCollisionPosition $_collisionPosition)
     {
 	    $borderSymbolDefinition = $_dominatingBorderPart->borderSymbolDefinition();
-
-	    $isStartPosition = $_dominatingBorderPart->startsAt()->equals($_collisionPosition);
-	    $isEndPosition = $_dominatingBorderPart->endsAt()->equals($_collisionPosition);
-	    $isCenterPosition = (! $isStartPosition && ! $isEndPosition);
-
 	    $collisionSymbol = null;
 
 	    // Find direction specific collision symbol
 	    foreach ($borderSymbolDefinition->collisionSymbolDefinitions() as $collisionSymbolDefinition)
 	    {
-		    if ($isStartPosition && $collisionSymbolDefinition->isStartPosition() ||
-			    $isCenterPosition && $collisionSymbolDefinition->isCenterPosition() ||
-			    $isEndPosition && $collisionSymbolDefinition->isEndPosition())
-		    { // The collision position matches
-
-			    $collisionSymbolDefinitionMatches = false;
-
-			    foreach ($collisionSymbolDefinition->collisionDirections() as $collisionDirection)
-			    {
-				    if ($_collisionPosition->collisionDirection()->equals($collisionDirection))
-				    { // The collision direction matches
-					    $collisionSymbolDefinitionMatches = true;
-					    break;
-				    }
-			    }
-
-			    if ($collisionSymbolDefinitionMatches)
-			    {
-				    $collisionSymbol = $collisionSymbolDefinition->collisionSymbol();
-				    break;
-			    }
+	    	if ($collisionSymbolDefinition->matchesCollision($_dominatingBorderPart, $_collisionPosition))
+		    {
+			    $collisionSymbol = $collisionSymbolDefinition->collisionSymbol();
+			    break;
 		    }
 	    }
 

@@ -83,7 +83,9 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("left", "right"))
 				),
-				array("center")
+				array("center"),
+				true,
+				false
 			),
 
 			// End
@@ -131,7 +133,9 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("right")),
 					new CollisionDirection(array("left", "right"))
 				),
-				array("center")
+				array("center"),
+				true,
+				false
 			),
 
 			// End
@@ -179,7 +183,9 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("top", "bottom"))
 				),
-				array("center")
+				array("center"),
+				false,
+				true
 			),
 
 			// Right end
@@ -227,7 +233,9 @@ class TextBoardOuterBorder extends TextRectangleBorder
 					new CollisionDirection(array("bottom")),
 					new CollisionDirection(array("top", "bottom"))
 				),
-				array("center")
+				array("center"),
+				false,
+				true
 			),
 
 			// Left end

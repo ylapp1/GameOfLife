@@ -9,6 +9,8 @@
 namespace BoardRenderer\Text\Border\SymbolDefinition;
 
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
+use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
 
 /**
  * Defines one collision symbol for one border symbol position (start, center and end) of a text border part.
@@ -55,6 +57,20 @@ class CollisionSymbolDefinition
 	 */
 	private $isEndPosition;
 
+	/**
+	 * Defines whether the collision position must be inside a border row
+	 *
+	 * @var Bool $isInBorderRow
+	 */
+	private $isInBorderRow;
+
+	/**
+	 * Defines whether the collision position must be inside a border column
+	 *
+	 * @var Bool $isInBorderColumn
+	 */
+	private $isInBorderColumn;
+
 
 	// Magic Methods
 
@@ -64,8 +80,10 @@ class CollisionSymbolDefinition
 	 * @param String $_collisionSymbol The collision symbol
 	 * @param CollisionDirection[] $_collisionDirections The collision directions for which the collision symbol may be used
 	 * @param array $_positions The positions inside the border for which the collision symbol may be used ("start", "center" and/or "end")
+	 * @param Bool $_isInBorderRow Defines whether the collision position must be inside a border row
+	 * @param Bool $_isInBorderColumn Defines whether the collision position must be inside a border column
 	 */
-	public function __construct(String $_collisionSymbol, array $_collisionDirections, array $_positions)
+	public function __construct(String $_collisionSymbol, array $_collisionDirections, array $_positions, Bool $_isInBorderRow = true, Bool $_isInBorderColumn = true)
 	{
 		$this->collisionSymbol = $_collisionSymbol;
 		$this->collisionDirections = $_collisionDirections;
@@ -89,6 +107,9 @@ class CollisionSymbolDefinition
 					break;
 			}
 		}
+
+		$this->isInBorderRow = $_isInBorderRow;
+		$this->isInBorderColumn = $_isInBorderColumn;
 	}
 
 
@@ -142,5 +163,84 @@ class CollisionSymbolDefinition
 	public function isEndPosition(): Bool
 	{
 		return $this->isEndPosition;
+	}
+
+	/**
+	 * Returns whether the collision position must be inside a border row.
+	 *
+	 * @return Bool True if the collision position must be inside a border row, false otherwise
+	 */
+	public function isInBorderRow(): Bool
+	{
+		return $this->isInBorderRow;
+	}
+
+	/**
+	 * Returns whether the collision position must be inside a border column.
+	 *
+	 * @return Bool True if the collision position must be inside a border column, false otherwise
+	 */
+	public function isInBorderColumn(): Bool
+	{
+		return $this->isInBorderColumn;
+	}
+
+
+	// Class Methods
+
+	/**
+	 * Returns whether a specific collision matches this collision symbol definition.
+	 *
+	 * @param TextBorderPart $_dominatingBorderPart The dominating border part
+	 * @param TextBorderPartCollisionPosition $_collisionPosition The collision position
+	 *
+	 * @return Bool True if the collision matches this collision symbol definition, false otherwise
+	 */
+	public function matchesCollision(TextBorderPart $_dominatingBorderPart, TextBorderPartCollisionPosition $_collisionPosition): Bool
+	{
+		$collisionPositionMatches = false;
+
+		// Check whether the collision position is inside a border row
+		if ($this->isInBorderRow && $_collisionPosition->y() % 2 == 0 ||
+		    ! $this->isInBorderRow && $_collisionPosition->y() % 2 == 1)
+		{
+			// Check whether the collision position is inside a border column
+			if ($this->isInBorderColumn && $_collisionPosition->x() % 2 == 0 ||
+				! $this->isInBorderColumn && $_collisionPosition->x() % 2 == 1)
+			{
+				$collisionPositionMatches = true;
+			}
+		}
+
+		$collisionPositionInsideBorderMatches = false;
+		if ($collisionPositionMatches)
+		{ // Check whether the position inside the border matches
+
+			$isStartPosition = $_dominatingBorderPart->startsAt()->equals($_collisionPosition);
+			$isEndPosition = $_dominatingBorderPart->endsAt()->equals($_collisionPosition);
+			$isCenterPosition = (! $isStartPosition && ! $isEndPosition);
+
+			if ($isStartPosition && $this->isStartPosition ||
+				$isCenterPosition && $this->isCenterPosition ||
+				$isEndPosition && $this->isEndPosition)
+			{
+				$collisionPositionInsideBorderMatches = true;
+			}
+		}
+
+		$collisionDirectionMatches = false;
+		if ($collisionPositionInsideBorderMatches)
+		{
+			foreach ($this->collisionDirections as $collisionDirection)
+			{
+				if ($_collisionPosition->collisionDirection()->equals($collisionDirection))
+				{ // The collision direction matches
+					$collisionDirectionMatches = true;
+					break;
+				}
+			}
+		}
+
+		return $collisionDirectionMatches;
 	}
 }
