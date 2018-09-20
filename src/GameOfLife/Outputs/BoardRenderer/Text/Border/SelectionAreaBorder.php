@@ -66,7 +66,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 
 			// Bottom center
 			new CollisionSymbolDefinition(
-				"╤",
+				"┬",
 				array(
 					new CollisionDirection(array("bottom"))
 				),
@@ -104,7 +104,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 
 			// Top center
 			new CollisionSymbolDefinition(
-				"╧",
+				"┴",
 				array(
 					new CollisionDirection(array("top"))
 				),
@@ -142,7 +142,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 
 			// Right center
 			new CollisionSymbolDefinition(
-				"╟",
+				"├",
 				array(
 					new CollisionDirection(array("right"))
 				),
@@ -180,7 +180,7 @@ class SelectionAreaBorder extends TextRectangleBorder
 
 			// Left center
 			new CollisionSymbolDefinition(
-				"╢",
+				"┤",
 				array(
 					new CollisionDirection(array("left"))
 				),

@@ -51,7 +51,7 @@ class TextHorizontalBorderPartShape extends BaseHorizontalBorderPartShape implem
 	 */
 	public function getBorderSymbolPositionOf(Coordinate $_gridPosition)
 	{
-		if ($this->containsCoordinate($_gridPosition)) return $_gridPosition->x();
+		if ($this->containsCoordinate($_gridPosition)) return $_gridPosition->x() - $this->parentBorderPart->startsAt()->x();
 		else return null;
 	}
 

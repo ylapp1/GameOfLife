@@ -51,7 +51,7 @@ class TextVerticalBorderPartShape extends BaseVerticalBorderPartShape implements
 	 */
 	public function getBorderSymbolPositionOf(Coordinate $_gridPosition)
 	{
-		if ($this->containsCoordinate($_gridPosition)) return $_gridPosition->y();
+		if ($this->containsCoordinate($_gridPosition)) return $_gridPosition->y() - $this->parentBorderPart->startsAt()->y();
 		else return null;
 	}
 
