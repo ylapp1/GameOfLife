@@ -33,6 +33,13 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	 */
 	protected $boardFieldRenderer;
 
+	/**
+	 * The initial border
+	 *
+	 * @var BaseBorder $initialBorder
+	 */
+	private $initialBorder;
+
 
     // Magic Methods
 
@@ -51,6 +58,8 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 		    new BoardEditorOutputBoardFieldRenderer("o", " ", "x", " "),
 		    new TextCanvas(false)
 	    );
+
+	    $this->initialBorder = clone $this->border;
     }
 
 
@@ -80,7 +89,7 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	 */
 	public function renderBoard(Board $_board, Coordinate $_highLightFieldCoordinate = null, Rectangle $_selectionAreaRectangle = null): String
 	{
-		$this->border->resetInnerBorders();
+		$this->border = clone $this->initialBorder;
 		$this->boardFieldRenderer->reset();
 
 		if ($_highLightFieldCoordinate)
