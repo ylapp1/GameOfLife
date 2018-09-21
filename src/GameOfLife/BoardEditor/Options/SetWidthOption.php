@@ -10,7 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-use GameOfLife\Field;
+use Simulator\Field;
 
 /**
  * Sets the width of the edited board.

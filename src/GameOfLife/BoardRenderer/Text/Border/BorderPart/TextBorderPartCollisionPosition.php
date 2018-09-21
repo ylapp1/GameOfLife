@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Text\Border\BorderPart;
 
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Stores additional necessary information for text border part collision positions.

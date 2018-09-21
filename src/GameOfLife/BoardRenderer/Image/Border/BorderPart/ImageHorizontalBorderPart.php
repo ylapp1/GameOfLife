@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageHorizontalBorderPartShape;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Horizontal border part for images.

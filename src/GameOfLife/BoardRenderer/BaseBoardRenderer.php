@@ -12,7 +12,7 @@ use BoardRenderer\Base\BaseBoardFieldRenderer;
 use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Base\BaseCanvas;
 use BoardRenderer\Base\Border\BaseBorder;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * Renders a board.

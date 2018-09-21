@@ -10,7 +10,7 @@
 namespace Input;
 
 use BoardEditor\BoardEditor;
-use GameOfLife\Board;
+use Simulator\Board;
 use Ulrichsg\Getopt;
 
 /**

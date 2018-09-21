@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Simulator\GameLogic;
 use Output\Helpers\FfmpegHelper;
 use Output\VideoOutput;

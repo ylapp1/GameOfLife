@@ -15,9 +15,9 @@ use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\Border\TextHighLightFieldBorder;
 use BoardRenderer\Text\TextBorderGridBuilder;
 use BoardRenderer\Text\TextCanvas;
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Rectangle;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Utils\Geometry\Rectangle;
 
 /**
  * BoardRenderer for the BoardEditorOutput.

@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Field;
+use Simulator\Field;
 use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
 use Utils\FileSystem\FileSystemWriter;

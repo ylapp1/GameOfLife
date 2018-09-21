@@ -15,8 +15,8 @@ use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use GameOfLife\Coordinate;
-use GameOfLife\Rectangle;
+use Utils\Geometry\Coordinate;
+use Utils\Geometry\Rectangle;
 
 /**
  * Creates border parts that form a rectangle.

@@ -10,10 +10,10 @@ namespace Output;
 
 use BoardEditor\SelectionArea;
 use BoardRenderer\BoardEditorOutputBoardRenderer;
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Rectangle;
+use Simulator\Board;
 use Ulrichsg\Getopt;
+use Utils\Geometry\Coordinate;
+use Utils\Geometry\Rectangle;
 
 /**
  * Prints the BoardEditor to the console for UserInput.

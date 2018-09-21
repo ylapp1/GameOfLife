@@ -13,7 +13,7 @@ use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\Shapes\TextRectangleBorderShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
-use GameOfLife\Rectangle;
+use Utils\Geometry\Rectangle;
 
 /**
  * Parent class for text rectangle borders.

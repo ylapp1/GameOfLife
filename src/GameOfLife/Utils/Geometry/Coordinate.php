@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Utils\Geometry;
 
 /**
  * Stores one coordinate.

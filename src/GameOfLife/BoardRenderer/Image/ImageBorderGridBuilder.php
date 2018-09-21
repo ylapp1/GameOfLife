@@ -12,7 +12,7 @@ use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Image\Border\ImageBackgroundGridBorder;
 use BoardRenderer\Image\Border\ImageBorder;
 use BoardRenderer\Image\Utils\ImageColor;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * Fills and returns a border grid for ImageBoardRenderer classes.

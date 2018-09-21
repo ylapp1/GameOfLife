@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base\Border\BorderPart;
 
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Stores information about a rendered border part.

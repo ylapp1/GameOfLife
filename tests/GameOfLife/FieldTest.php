@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -32,10 +32,10 @@ class FieldTest extends TestCase
     /**
      * Checks whether the default values are applied when constructing a Field.
      *
-     * @covers \GameOfLife\Field::__construct()
-     * @covers \GameOfLife\Field::parentBoard()
-     * @covers \GameOfLife\Field::coordinate()
-     * @covers \GameOfLife\Field::value()
+     * @covers Simulator\Field::__construct()
+     * @covers Simulator\Field::parentBoard()
+     * @covers Simulator\Field::coordinate()
+     * @covers Simulator\Field::value()
      */
     public function testCanBeConstructed()
     {
@@ -51,12 +51,12 @@ class FieldTest extends TestCase
      * Checks whether getters and setters work as expected.
      *
      * @dataProvider setAttributesProvider()
-     * @covers \GameOfLife\Field::setParentBoard()
-     * @covers \GameOfLife\Field::setCoordinate()
-     * @covers \GameOfLife\Field::setValue()
-     * @covers \GameOfLife\Field::parentBoard()
-     * @covers \GameOfLife\Field::coordinate()
-     * @covers \GameOfLife\Field::value()
+     * @covers Simulator\Field::setParentBoard()
+     * @covers Simulator\Field::setCoordinate()
+     * @covers Simulator\Field::setValue()
+     * @covers Simulator\Field::parentBoard()
+     * @covers Simulator\Field::coordinate()
+     * @covers Simulator\Field::value()
      *
      * @param Board $_parentBoard The parent board
      * @param Coordinate $_coordinate The coordinate of the field
@@ -92,8 +92,8 @@ class FieldTest extends TestCase
     /**
      * Checks whether the Field correctly returns its status.
      *
-     * @covers \GameOfLife\Field::isAlive()
-     * @covers \GameOfLife\Field::isDead()
+     * @covers Simulator\Field::isAlive()
+     * @covers Simulator\Field::isDead()
      */
     public function testCanReturnStatus()
     {
@@ -111,8 +111,8 @@ class FieldTest extends TestCase
     /**
      * Checks whether the Field can calculate the amount of living and dead neighbor fields.
      *
-     * @covers \GameOfLife\Field::numberOfDeadNeighbors()
-     * @covers \GameOfLife\Field::numberOfLivingNeighbors()
+     * @covers Simulator\Field::numberOfDeadNeighbors()
+     * @covers Simulator\Field::numberOfLivingNeighbors()
      * @dataProvider sumNeighborStatusesProvider
      *
      * @param int[] $_fieldCoordinates Coordinates of the field whose neighbours will be checked
@@ -169,7 +169,7 @@ class FieldTest extends TestCase
      * @param bool $_hasBorder Sets whether the test board has a border or not
      * @param int $_expectedResult The expected number of border neighbors
      *
-     * @covers \GameOfLife\Field::numberOfNeighborBorderFields()
+     * @covers Simulator\Field::numberOfNeighborBorderFields()
      *
      * @dataProvider getNumberOfBorderNeighborsProvider
      */

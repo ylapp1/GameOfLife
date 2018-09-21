@@ -8,7 +8,7 @@
 
 namespace Output;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Output\Helpers\FfmpegHelper;
 use Ulrichsg\Getopt;
 
@@ -252,7 +252,7 @@ class VideoOutput extends ImageOutput
         unset($image);
 
         $this->frames[] = $filePath;
-        $this->fillPercentages[] = $_board->getPercentageOfAliveFields();
+        $this->fillPercentages[] = $_board->getPercentageOfLivingCells();
     }
 
     /**

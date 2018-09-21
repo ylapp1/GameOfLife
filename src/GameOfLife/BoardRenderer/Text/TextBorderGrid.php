@@ -11,8 +11,8 @@ namespace BoardRenderer\Text;
 use BoardRenderer\Base\BaseBorderGrid;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
 
 /**
  * Border grid for the TextBoardRenderer classes.

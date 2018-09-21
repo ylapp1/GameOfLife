@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
-use GameOfLife\Board;
+use Simulator\Board;
 use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
 use Utils\Shell\ShellInformationFetcher;
@@ -129,7 +129,7 @@ class BoardEditorTest extends TestCase
                              ->willReturn("exit");
         setPrivateAttribute($boardEditor, "shellInputReader", $shellInputReaderMock);
 
-        $boardHistorySaverMock = $this->getMockBuilder(GameOfLife\BoardHistory::class)
+        $boardHistorySaverMock = $this->getMockBuilder(Simulator\BoardHistory::class)
                                       ->disableOriginalConstructor()
                                       ->getMock();
         $boardHistorySaverMock->expects($this->exactly(1))

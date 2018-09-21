@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\ExitOption;
-use GameOfLife\Board;
+use Simulator\Board;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,13 +46,13 @@ class ExitOptionTest extends TestCase
     {
         $testBoard = new Board(4, 4, true);
         $testBoard->setFieldState(1, 1, true);
-        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(1, $testBoard->getNumberOfLivingCells());
 
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new ExitOption($boardEditor);
 
         $result = $option->exitBoardEditor();
         $this->assertTrue($result);
-        $this->assertEquals(0, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(0, $testBoard->getNumberOfLivingCells());
     }
 }

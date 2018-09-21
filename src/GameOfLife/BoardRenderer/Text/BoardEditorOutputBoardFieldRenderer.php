@@ -8,8 +8,8 @@
 
 namespace BoardRenderer\Text;
 
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Field;
+use Utils\Geometry\Coordinate;
 
 /**
  * Renders the board fields for the board editor output.

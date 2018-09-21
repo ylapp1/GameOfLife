@@ -9,7 +9,7 @@
 namespace Output;
 
 use BoardRenderer\BaseBoardRenderer;
-use GameOfLife\Board;
+use Simulator\Board;
 use Ulrichsg\Getopt;
 use Utils\Shell\ShellOutputHelper;
 

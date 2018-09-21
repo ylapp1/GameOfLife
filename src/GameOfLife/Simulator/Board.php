@@ -6,7 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Simulator;
+
+use Utils\Geometry\Coordinate;
 
 /**
  * Stores the board configuration and the fields for one game step.
@@ -27,7 +29,7 @@ class Board
      * Defines whether the board has a border
      *
      * True: The borders are treated like dead cells
-     * False: The borders link to the opposite side of the field
+     * False: The borders link to the opposite side of the board
      *
      * @var Bool $hasBorder
      */
@@ -55,9 +57,7 @@ class Board
      *
      * @param int $_width The board width
      * @param int $_height The board height
-     * @param Bool $_hasBorder The border type
-     *                         True: The borders are treated like dead cells
-     *                         False: The borders link to the opposite side of the field
+     * @param Bool $_hasBorder If true the borders are treated like dead cells, else the borders will link to the opposite side of the board
      */
     public function __construct(int $_width, int $_height, Bool $_hasBorder)
     {
@@ -91,20 +91,22 @@ class Board
      */
     public function __toString(): String
     {
-        $string = "";
+        $boardString = "";
+        $isFirstRow = true;
 
-        for ($y = 0; $y < $this->height; $y++)
-        {
-            for ($x = 0; $x < $this->width; $x++)
-            {
-                if ($this->getFieldState($x, $y)) $string .= "X";
-                else $string .= ".";
+	    foreach ($this->fields as $y => $rowFields)
+	    {
+		    if ($isFirstRow) $isFirstRow = false;
+		    else $boardString .= "\n";
+
+		    foreach ($rowFields as $x => $rowField)
+		    {
+                if ($rowField->isAlive()) $boardString .= "X";
+                else $boardString .= ".";
             }
-
-            if ($y != $this->height - 1) $string .= "\r\n";
         }
 
-        return $string;
+        return $boardString;
     }
 
     /**
@@ -112,7 +114,7 @@ class Board
      *
      * @param Board $_board The board that will be copied
      */
-    function copy(Board $_board)
+    public function copy(Board $_board)
     {
         $this->hasBorder = $_board->hasBorder();
         $this->height = $_board->height();
@@ -123,7 +125,7 @@ class Board
         {
             foreach ($rowFields as $x => $rowField)
             {
-                $this->fields[$y][$x]->setValue($rowField->value());
+            	$this->setFieldState($x, $y, $rowField->value());
             }
         }
     }
@@ -133,52 +135,59 @@ class Board
      *
      * @param Board $_compareBoard The board that will be compared
      *
-     * @return Bool True: The boards are equal
-     *              False: The boards are not equal
+     * @return Bool True if the boards are equal, false otherwise
      */
     public function equals(Board $_compareBoard): Bool
     {
+    	$boardAttributesAreEqual = false;
+
         // Check board attributes
-        if ($this->hasBorder != $_compareBoard->hasBorder() ||
-            $this->height != $_compareBoard->height() ||
-            $this->width != $_compareBoard->width())
+        if ($this->hasBorder == $_compareBoard->hasBorder() &&
+            $this->height == $_compareBoard->height() &&
+            $this->width == $_compareBoard->width())
         {
-            return false;
+	        $boardAttributesAreEqual = true;
         }
 
-        // Check fields
-
-        /*
-         * This check assumes that there is at least one row and
-         * that each row has the same number of columns
-         */
-        if (count($this->fields) != count($_compareBoard->fields()) ||
-            count($this->fields[0]) != count($_compareBoard->fields()[0]))
+        if ($boardAttributesAreEqual)
         {
-            return false;
+	        // Check fields
+	        if (($this->fields && $_compareBoard->fields()) || (! $this->fields && ! ($_compareBoard->fields)))
+	        {
+		        $fieldsAreEqual = true;
+
+		        // Check number of rows
+		        if (count($this->fields) != count($_compareBoard->fields())) $fieldsAreEqual = false;
+		        else
+		        {
+			        foreach ($_compareBoard->fields() as $y => $compareRowFields)
+			        {
+			        	// Check number of columns
+				        if (count($this->fields[$y]) != count($compareRowFields)) $fieldsAreEqual = false;
+				        else
+				        {
+				        	foreach ($compareRowFields as $x => $compareRowField)
+					        {
+						        $boardField = $this->fields[$y][$x];
+
+						        if ($boardField->value() != $compareRowField->value() ||
+							        ! $boardField->coordinate()->equals($compareRowField->coordinate()))
+						        {
+							        $fieldsAreEqual = false;
+							        break;
+						        }
+					        }
+				        }
+
+				        if (! $fieldsAreEqual) break;
+			        }
+		        }
+
+		        if ($fieldsAreEqual) return true;
+	        }
         }
 
-        $fieldsAreEqual = true;
-
-        foreach ($_compareBoard->fields() as $y => $rowFields)
-        {
-            foreach ($rowFields as $x => $rowField)
-            {
-                $boardField = $this->fields[$y][$x];
-
-                if ($rowField->value() != $boardField->value() ||
-                    $rowField->coordinate()->x() != $boardField->coordinate()->x() ||
-                    $rowField->coordinate()->y() != $boardField->coordinate()->y())
-                {
-                    $fieldsAreEqual = false;
-                    break;
-                }
-            }
-
-            if (! $fieldsAreEqual) break;
-        }
-
-        return $fieldsAreEqual;
+	    return false;
     }
 
 
@@ -207,9 +216,7 @@ class Board
     /**
      * Returns the border type.
      *
-     * @return Bool The border type
-     *              True: The borders are treated like dead cells
-     *              False: The borders link to the opposite side of the field
+     * @return Bool If true the borders are treated like dead cells, else the borders will link to the opposite side of the board
      */
     public function hasBorder(): Bool
     {
@@ -219,9 +226,7 @@ class Board
     /**
      * Sets the border type.
      *
-     * @param Bool $_hasBorder The border type
-     *                         True: The borders are treated like dead cells
-     *                         False: The borders link to the opposite side of the field
+     * @param Bool $_hasBorder If true the borders are treated like dead cells, else the borders will link to the opposite side of the board
      */
     public function setHasBorder(Bool $_hasBorder)
     {
@@ -279,9 +284,7 @@ class Board
      * @param int $_x The X-Coordinate of the field
      * @param int $_y The Y-Coordinate of the field
      *
-     * @return Bool The state of the cell in the field
-     *              True: The cell in the field is alive
-     *              False: The cell in the field is dead
+     * @return Bool True if the cell in the field is alive, false if it is dead
      */
     public function getFieldState(int $_x, int $_y): Bool
     {
@@ -345,35 +348,35 @@ class Board
     }
 
     /**
-     * Returns the number of alive cells.
+     * Returns the number of living cells.
      *
-     * @return int The number of alive cells
+     * @return int The number of living cells
      */
-    public function getNumberOfAliveFields(): int
+    public function getNumberOfLivingCells(): int
     {
-        $numberOfAliveFields = 0;
+        $numberOfLivingCells = 0;
         foreach ($this->fields as $rowFields)
         {
             foreach ($rowFields as $rowField)
             {
-                $numberOfAliveFields += $rowField->isAlive();
+                $numberOfLivingCells += $rowField->isAlive();
             }
         }
-        return $numberOfAliveFields;
+        return $numberOfLivingCells;
     }
 
     /**
-     * Returns the percentage of cells whose state is alive.
+     * Returns the percentage of living cells.
      *
-     * @return float The percentage of cells whose state is alive
+     * @return float The percentage of living cells
      */
-    public function getPercentageOfAliveFields(): float
+    public function getPercentageOfLivingCells(): float
     {
-        return (float)($this->getNumberOfAliveFields() / ($this->width * $this->height));
+        return (float)($this->getNumberOfLivingCells() / ($this->width * $this->height));
     }
 
 
-    // Manipulate fields
+    // Change fields
 
     /**
      * Generates an array of fields from the board width and height.
@@ -382,10 +385,9 @@ class Board
      *
      * @return Field[][] The list of fields
      */
-    public function generateFieldsList(Bool $_fieldsState): array
+    private function generateFieldsList(Bool $_fieldsState): array
     {
         $fields = array();
-
         for ($y = 0; $y < $this->height; $y++)
         {
             $fields[$y] = array();
@@ -425,9 +427,7 @@ class Board
      *
      * @param int $_x The X-Coordinate of the field
      * @param int $_y The Y-Coordinate of the field
-     * @param Bool $_isAlive The state to which the cell in the field will be set
-     *                       True: The cell in the field is alive
-     *                       False: The cell in the field is dead
+     * @param Bool $_isAlive If true the cell will be alive, else the cell will be dead
      */
     public function setFieldState(int $_x, int $_y, Bool $_isAlive)
     {

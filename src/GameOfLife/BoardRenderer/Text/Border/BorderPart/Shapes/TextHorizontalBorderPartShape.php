@@ -11,7 +11,7 @@ namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Shape for horizontal text border parts.

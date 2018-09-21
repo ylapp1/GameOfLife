@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\SetHeightOption;
-use GameOfLife\Board;
+use Simulator\Board;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,7 +46,7 @@ class SetHeightOptionTest extends TestCase
     {
         $testBoard = new Board(4, 4, true);
         $testBoard->setFieldState(1, 1, true);
-        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(1, $testBoard->getNumberOfLivingCells());
 
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new SetHeightOption($boardEditor);
@@ -69,13 +69,13 @@ class SetHeightOptionTest extends TestCase
 
         // Valid width, living cells still inside board
         $result = $option->setHeight(2);
-        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(1, $testBoard->getNumberOfLivingCells());
         $this->assertEquals(2, $testBoard->height());
         $this->assertFalse($result);
 
         // Valid width, living cells outside new board dimensions
         $result = $option->setHeight(1);
-        $this->assertEquals(0, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(0, $testBoard->getNumberOfLivingCells());
         $this->assertEquals(1, $testBoard->height());
         $this->assertFalse($result);
     }

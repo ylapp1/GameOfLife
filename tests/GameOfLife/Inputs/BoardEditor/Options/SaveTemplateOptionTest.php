@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\SaveTemplateOption;
-use GameOfLife\Board;
+use Simulator\Board;
 use TemplateHandler\TemplateSaver;
 use PHPUnit\Framework\TestCase;
 
@@ -89,7 +89,7 @@ class SaveTemplateOptionTest extends TestCase
     {
         $board = new Board(2, 2, true);
         $board->setFieldState(1, 1, true);
-        $this->assertEquals(1, $board->getNumberOfAliveFields());
+        $this->assertEquals(1, $board->getNumberOfLivingCells());
 
         $templateSaverMock = $this->getMockBuilder(TemplateSaver::class)
                                   ->setMethods(array("saveCustomTemplate"))

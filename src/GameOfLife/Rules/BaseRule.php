@@ -8,7 +8,7 @@
 
 namespace Rule;
 
-use GameofLife\Field;
+use Simulator\Field;
 use Ulrichsg\Getopt;
 
 /**

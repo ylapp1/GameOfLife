@@ -10,7 +10,7 @@ namespace BoardRenderer\Base;
 
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * Stores information about the grid positions that are covered by borders.

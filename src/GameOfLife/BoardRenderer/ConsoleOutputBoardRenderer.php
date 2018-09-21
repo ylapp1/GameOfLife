@@ -12,7 +12,7 @@ use BoardRenderer\Text\Border\TextBoardOuterBorder;
 use BoardRenderer\Text\TextBoardFieldRenderer;
 use BoardRenderer\Text\TextBorderGridBuilder;
 use BoardRenderer\Text\TextCanvas;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * The BoardRenderer for the ConsoleOutput.

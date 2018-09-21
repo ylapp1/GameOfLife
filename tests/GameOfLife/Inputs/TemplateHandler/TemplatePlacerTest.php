@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use TemplateHandler\FieldsPlacer;
 use PHPUnit\Framework\TestCase;
 
@@ -87,10 +87,10 @@ class TemplatePlacerTest extends TestCase
         if ($_expectedExceptionMessage) $this->assertTrue($exceptionOccurred);
         else $this->assertFalse($exceptionOccurred);
 
-        if ($_expectedExceptionMessage) $this->assertEquals(0, $this->board->getNumberOfAliveFields());
+        if ($_expectedExceptionMessage) $this->assertEquals(0, $this->board->getNumberOfLivingCells());
         else
         {
-            $this->assertEquals(5, $this->board->getNumberOfAliveFields());
+            $this->assertEquals(5, $this->board->getNumberOfLivingCells());
             $this->assertTrue($this->board->getFieldState(0, 0));
             $this->assertTrue($this->board->getFieldState(1, 0));
             $this->assertTrue($this->board->getFieldState(2, 0));
@@ -108,7 +108,7 @@ class TemplatePlacerTest extends TestCase
 
         // No dimensions adjustment, invalid position top left
         $board = new Board(10, 10, true);
-        $this->assertEquals(0, $board->getNumberOfAliveFields());
+        $this->assertEquals(0, $board->getNumberOfLivingCells());
     }
 
     public function placeTemplateProvider()

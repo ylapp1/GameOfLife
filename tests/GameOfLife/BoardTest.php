@@ -6,15 +6,15 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Checks whether \Simulator\Board works as expected.
  *
- * @covers \GameOfLife\Board
+ * @covers Simulator\Board
  */
 class BoardTest extends TestCase
 {
@@ -35,7 +35,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider constructionProvider()
-     * @covers \GameOfLife\Board::__construct()
+     * @covers Simulator\Board::__construct()
      *
      * @param int $_width       Board width
      * @param int $_height      Board height
@@ -61,10 +61,10 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\Board::fields()
-     * @covers \GameOfLife\Board::hasBorder()
-     * @covers \GameOfLife\Board::height()
-     * @covers \GameOfLife\Board::width()
+     * @covers Simulator\Board::fields()
+     * @covers Simulator\Board::hasBorder()
+     * @covers Simulator\Board::height()
+     * @covers Simulator\Board::width()
      */
     public function testCanGetAttributes()
     {
@@ -77,10 +77,10 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider setAttributesProvider
-     * @covers \GameOfLife\Board::setFields()
-     * @covers \GameOfLife\Board::setHasBorder()
-     * @covers \GameOfLife\Board::setHeight()
-     * @covers \GameOfLife\Board::setWidth()
+     * @covers Simulator\Board::setFields()
+     * @covers Simulator\Board::setHasBorder()
+     * @covers Simulator\Board::setHeight()
+     * @covers Simulator\Board::setWidth()
      *
      * @param array $_board             Current board
      * @param bool $_hasBorder          Border type
@@ -113,7 +113,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider setFieldsProvider
-     * @covers \GameOfLife\Board::setFieldState()
+     * @covers Simulator\Board::setFieldState()
      *
      * @param int $_x           X-Coordinate of test field
      * @param int $_y           Y-Coordinate of test field
@@ -138,16 +138,22 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider readFieldsProvider
-     * @covers \GameOfLife\Board::getFieldState()
+     * @covers Simulator\Board::getFieldState()
      *
      * @param int $_x           X-Coordinate of test field
      * @param int $_y           Y-Coordinate of test field
      * @param bool $_value      Value that the test field will be set to
      * @param bool $_expected   Expected value that is read with getField()
+     *
+     * @throws ReflectionException
      */
     public function testCanReadField(int $_x, int $_y, bool $_value = null, bool $_expected)
     {
-        $testBoard = $this->board->generateFieldsList(false);
+	    $reflectionClass = new ReflectionClass($this->board);
+	    $generateFieldsList = $reflectionClass->getMethod("generateFieldsList");
+	    $generateFieldsList->setAccessible(true);
+
+        $testBoard = $generateFieldsList->invoke($this->board, false);
         $field = $testBoard[$_y][$_x];
 
         if ($field instanceof Field) $field->setValue($_value);
@@ -167,11 +173,17 @@ class BoardTest extends TestCase
 
 
     /**
-     * @covers \GameOfLife\Board::generateFieldsList()
+     * @covers Simulator\Board::generateFieldsList()
+     *
+     * @throws ReflectionException
      */
     public function testCanInitializeEmptyBoard()
     {
-        $emptyBoard = $this->board->generateFieldsList(false);
+	    $reflectionClass = new ReflectionClass($this->board);
+	    $generateFieldsList = $reflectionClass->getMethod("generateFieldsList");
+	    $generateFieldsList->setAccessible(true);
+
+        $emptyBoard = $generateFieldsList->invoke($this->board, false);
 
         $amountCellsAlive = 0;
 
@@ -192,7 +204,7 @@ class BoardTest extends TestCase
 
     /**
      * @dataProvider amountCellsAliveProvider
-     * @covers \GameOfLife\Board::getNumberOfAliveFields()
+     * @covers Simulator\Board::getNumberOfLivingCells()
      *
      * @param array(array) $_cells      Coordinates of living cells ([[x, y], [x, y], ...])
      * @param int $_expected            Amount of set cells that are expected
@@ -204,7 +216,7 @@ class BoardTest extends TestCase
             $this->board->setFieldState($cell[0], $cell[1], true);
         }
 
-        $this->assertEquals($_expected, $this->board->getNumberOfAliveFields());
+        $this->assertEquals($_expected, $this->board->getNumberOfLivingCells());
     }
 
     public function amountCellsAliveProvider()
@@ -237,7 +249,7 @@ class BoardTest extends TestCase
 
 
     /**
-     * @covers \GameOfLife\Board::__tostring()
+     * @covers Simulator\Board::__tostring()
      */
     public function testCanBeConvertedToString()
     {
@@ -261,7 +273,7 @@ class BoardTest extends TestCase
             $this->board->setFieldState($cell[0],$cell[1], true);
         }
 
-        $this->assertEquals($_expected, $this->board->getPercentageOfAliveFields());
+        $this->assertEquals($_expected, $this->board->getPercentageOfLivingCells());
     }
 
     public function calculateFillPercentProvider()
@@ -274,24 +286,24 @@ class BoardTest extends TestCase
     }
 
     /**
-     * @covers \GameOfLife\Board::resetFields()
+     * @covers Simulator\Board::resetFields()
      */
     public function testCanResetCurrentBoard()
     {
         $this->board->setFieldState(1, 1, true);
         $this->board->setFieldState(0, 1, true);
 
-        $this->assertEquals(2, $this->board->getNumberOfAliveFields());
+        $this->assertEquals(2, $this->board->getNumberOfLivingCells());
 
         $this->board->resetFields();
-        $this->assertEquals(0, $this->board->getNumberOfAliveFields());
+        $this->assertEquals(0, $this->board->getNumberOfLivingCells());
     }
 
     /**
      * Checks whether the correct neighbors of a field are returned for both border types (solid and passthrough).
      *
      * @dataProvider neighborsOfFieldProvider
-     * @covers \GameOfLife\Board::getNeighborsOfField()
+     * @covers Simulator\Board::getNeighborsOfField()
      *
      * @param int[string] $_targetField Coordinates of the target field in the format array("x" => x, "y" => y)
      * @param bool $_hasBorder Defines whether the board has a border
@@ -379,7 +391,7 @@ class BoardTest extends TestCase
     /**
      * Checks whether the board can be inverted.
      *
-     * @covers \GameOfLife\Board::invertFields()
+     * @covers Simulator\Board::invertFields()
      */
     public function testCanInvertBoard()
     {

@@ -11,7 +11,6 @@ namespace
     $loader = require __DIR__ . "/../vendor/autoload.php";
     $loader->addPsr4("BoardEditor\\", __DIR__ . "/../src/GameOfLife/BoardEditor");
     $loader->addPsr4("BoardRenderer\\", __DIR__ . "/../src/GameOfLife/BoardRenderer");
-    $loader->addPsr4("GameOfLife\\", __DIR__ . "/../src/GameOfLife");
     $loader->addPsr4("Input\\", __DIR__ . "/../src/GameOfLife/Inputs");
     $loader->addPsr4("OptionHandler\\", __DIR__ . "/../src/GameOfLife/OptionHandler");
     $loader->addPsr4("Output\\", __DIR__ . "/../src/GameOfLife/Outputs");

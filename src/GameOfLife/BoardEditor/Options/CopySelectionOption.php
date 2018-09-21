@@ -10,7 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-use GameOfLife\Field;
+use Simulator\Field;
 
 /**
  * Copies the fields in the current selection area.

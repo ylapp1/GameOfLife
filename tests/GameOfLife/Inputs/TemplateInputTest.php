@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use Input\TemplateInput;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
@@ -291,13 +291,13 @@ class TemplateInputTest extends TestCase
 
         if ($_expectedString === null)
         {
-            $this->assertEquals(1, $this->board->getNumberOfAliveFields());
+            $this->assertEquals(1, $this->board->getNumberOfLivingCells());
             $this->assertTrue($this->board->getFieldState($_posX, $_posY));
             $this->assertFalse($exceptionOccurred);
         }
         else
         {
-            $this->assertEquals(0, $this->board->getNumberOfAliveFields());
+            $this->assertEquals(0, $this->board->getNumberOfLivingCells());
             $this->assertTrue($exceptionOccurred);
         }
     }
@@ -365,7 +365,7 @@ class TemplateInputTest extends TestCase
 
         if ($optionsMock instanceof \Ulrichsg\Getopt) $this->input->fillBoard($board, $optionsMock);
 
-        $this->assertGreaterThanOrEqual(0.15, $board->getPercentageOfAliveFields());
-        $this->assertLessThanOrEqual(0.70, $board->getPercentageOfAliveFields());
+        $this->assertGreaterThanOrEqual(0.15, $board->getPercentageOfLivingCells());
+        $this->assertLessThanOrEqual(0.70, $board->getPercentageOfLivingCells());
     }
 }

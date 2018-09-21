@@ -11,9 +11,9 @@ namespace BoardRenderer\Image\Border;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageRectangleBorderShape;
 use BoardRenderer\Image\Utils\ImageColor;
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
-use GameOfLife\Rectangle;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
+use Utils\Geometry\Rectangle;
 
 /**
  * The outer border of the board for images.

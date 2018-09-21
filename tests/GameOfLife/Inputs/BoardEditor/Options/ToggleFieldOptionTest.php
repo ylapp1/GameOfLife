@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\ToggleFieldOption;
-use GameOfLife\Board;
+use Simulator\Board;
 use PHPUnit\Framework\TestCase;
 
 /**

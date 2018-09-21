@@ -8,8 +8,8 @@
 
 namespace TemplateHandler;
 
-use GameOfLife\Board;
-use GameOfLife\Field;
+use Simulator\Board;
+use Simulator\Field;
 
 /**
  * Places template fields on a board.

@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base;
 
-use GameOfLife\Field;
+use Simulator\Field;
 
 /**
  * Renders a list of board fields.

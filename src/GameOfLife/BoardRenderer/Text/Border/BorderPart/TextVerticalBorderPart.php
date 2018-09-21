@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Vertical border part for TextBoardRenderer classes.

@@ -8,7 +8,7 @@
 
 use BoardEditor\BoardEditor;
 use BoardEditor\Options\SetWidthOption;
-use GameOfLife\Board;
+use Simulator\Board;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -46,7 +46,7 @@ class SetWidthOptionTest extends TestCase
     {
         $testBoard = new Board(4, 4, true);
         $testBoard->setFieldState(1, 1, true);
-        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(1, $testBoard->getNumberOfLivingCells());
 
         $boardEditor = new BoardEditor("test", $testBoard);
         $option = new SetWidthOption($boardEditor);
@@ -68,13 +68,13 @@ class SetWidthOptionTest extends TestCase
 
         // Valid width, living cells still inside board
         $result = $option->setWidth(2);
-        $this->assertEquals(1, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(1, $testBoard->getNumberOfLivingCells());
         $this->assertEquals(2, $testBoard->width());
         $this->assertFalse($result);
 
         // Valid width, living cells outside new board dimensions
         $result = $option->setWidth(1);
-        $this->assertEquals(0, $testBoard->getNumberOfAliveFields());
+        $this->assertEquals(0, $testBoard->getNumberOfLivingCells());
         $this->assertEquals(1, $testBoard->width());
         $this->assertFalse($result);
     }

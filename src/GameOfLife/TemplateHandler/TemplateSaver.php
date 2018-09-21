@@ -8,7 +8,7 @@
 
 namespace TemplateHandler;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Utils\FileSystem\FileSystemWriter;
 
 /**

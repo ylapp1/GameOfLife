@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\BorderPartCollision;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Additional methods for text border part shapes.

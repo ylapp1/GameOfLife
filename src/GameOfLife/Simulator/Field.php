@@ -6,7 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Simulator;
+
+use Utils\Geometry\Coordinate;
 
 /**
  * Stores a single field.

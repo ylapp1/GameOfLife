@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Simulator\GameLogic;
 use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
@@ -29,21 +29,21 @@ class GameLogicTest extends TestCase
         $board->setFieldState(1, 0, true);
         $board->setFieldState(1, 1, true);
         $board->setFieldState(1, 2, true);
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
 
         $gameLogic->calculateNextBoard($board);
 
         $this->assertTrue($board->getFieldState(0, 1));
         $this->assertTrue($board->getFieldState(1, 1));
         $this->assertTrue($board->getFieldState(2, 1));
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
 
         $gameLogic->calculateNextBoard($board);
 
         $this->assertTrue($board->getFieldState(1, 0));
         $this->assertTrue($board->getFieldState(1, 1));
         $this->assertTrue($board->getFieldState(1, 2));
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
     }
 
     /**
@@ -63,15 +63,15 @@ class GameLogicTest extends TestCase
         $board->setFieldState(9, 4, true);
         $board->setFieldState(9, 5, true);
         $board->setFieldState(9, 6, true);
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
         $gameLogic->calculateNextBoard($board);
 
-        $this->assertEquals(2, $board->getNumberOfAliveFields());
+        $this->assertEquals(2, $board->getNumberOfLivingCells());
         $this->assertTrue($board->getFieldState(9, 5));
         $this->assertTrue($board->getFieldState(8, 5));
 
         $gameLogic->calculateNextBoard($board);
-        $this->assertEquals(0, $board->getNumberOfAliveFields());
+        $this->assertEquals(0, $board->getNumberOfLivingCells());
 
 
         // passthrough border
@@ -81,16 +81,16 @@ class GameLogicTest extends TestCase
         $board->setFieldState(9, 4, true);
         $board->setFieldState(9, 5, true);
         $board->setFieldState(9, 6, true);
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
         $gameLogic->calculateNextBoard($board);
 
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
         $this->assertTrue($board->getFieldState(0, 5));
         $this->assertTrue($board->getFieldState(9, 5));
         $this->assertTrue($board->getFieldState(8, 5));
 
         $gameLogic->calculateNextBoard($board);
-        $this->assertEquals(3, $board->getNumberOfAliveFields());
+        $this->assertEquals(3, $board->getNumberOfLivingCells());
         $this->assertTrue($board->getFieldState(9, 4));
         $this->assertTrue($board->getFieldState(9, 5));
         $this->assertTrue($board->getFieldState(9, 6));

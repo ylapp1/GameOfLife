@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Defines additional necessary methods for TextBorderPartShape classes.

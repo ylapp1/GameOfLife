@@ -11,7 +11,7 @@ namespace BoardRenderer\Image\Border\Shapes;
 use BoardRenderer\Base\Border\Shapes\BaseGridBorderShape;
 use BoardRenderer\Image\Border\BorderPart\ImageHorizontalBorderPart;
 use BoardRenderer\Image\Border\BorderPart\ImageVerticalBorderPart;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Border shape for image background grids.

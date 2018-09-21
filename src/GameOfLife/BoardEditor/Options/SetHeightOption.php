@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 20172-108 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -10,7 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-use GameOfLife\Field;
+use Simulator\Field;
 
 /**
  * Sets the height of the edited board.

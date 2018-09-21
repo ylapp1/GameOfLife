@@ -12,13 +12,16 @@ use BoardRenderer\Image\Utils\ImageColor;
 
 /**
  * Parses color selections.
- *
- * Accepts either RGB values or predefined color names (e.g. "red", "green" or "blue")
- *
- * @package Output
+ * Accepts either RGB values or predefined color names (e.g. "red", "green" or "blue").
  */
 class ColorSelector
 {
+    /*
+     * TODO: Split color selector into color formats (like with custom rule)
+     *
+     * See https://en.wikipedia.org/wiki/Web_colors
+     */
+
     /**
      * Parses a user input color and returns the selected color as ImageColor object.
      *

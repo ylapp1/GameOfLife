@@ -10,7 +10,6 @@ use Output\Helpers\FfmpegHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Utils\OsInformationFetcher;
-use Utils\Shell\ShellInformationFetcher;
 
 /**
  * Checks whether \Output\Helpers\FfmpegHelper works as expected.

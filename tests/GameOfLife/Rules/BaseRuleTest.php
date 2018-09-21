@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Field;
+use Simulator\Field;
 use Rule\ConwayRule;
 use PHPUnit\Framework\TestCase;
 
@@ -71,7 +71,7 @@ class BaseRuleTest extends TestCase
      */
     public function testCanCalculateNewState(bool $_initialState, int $_amountLivingNeighbors, bool $_expectedState)
     {
-        $fieldMock = $this->getMockBuilder(\GameOfLife\Field::class)
+        $fieldMock = $this->getMockBuilder(Simulator\Field::class)
                           ->disableOriginalConstructor()
                           ->getMock();
 

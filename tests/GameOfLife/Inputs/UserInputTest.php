@@ -7,7 +7,7 @@
  */
 
 use BoardEditor\BoardEditor;
-use GameOfLife\Board;
+use Simulator\Board;
 use Input\UserInput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
@@ -135,7 +135,7 @@ class UserInputTest extends TestCase
 
         if ($this->optionsMock instanceof Getopt) $this->input->fillBoard($this->board, $this->optionsMock);
 
-        $this->assertEquals(1, $this->board->getNumberOfAliveFields());
+        $this->assertEquals(1, $this->board->getNumberOfLivingCells());
         $this->assertTrue($this->board->getFieldState(0, 0));
         $this->assertEquals(2, $this->board->width());
         $this->assertEquals(2, $this->board->height());

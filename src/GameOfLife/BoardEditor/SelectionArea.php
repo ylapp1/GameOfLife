@@ -8,10 +8,11 @@
 
 namespace BoardEditor;
 
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Stores information about a two dimensional selection area.
+ * TODO: Remove this class, use Rectangle instead
  */
 class SelectionArea
 {

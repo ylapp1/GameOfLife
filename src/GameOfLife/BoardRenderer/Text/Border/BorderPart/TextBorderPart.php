@@ -17,7 +17,7 @@ use BoardRenderer\Text\Border\BorderPart\Shapes\TextBorderPartGridPosition;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextHorizontalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\Shapes\TextVerticalBorderPartShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Container that stores the information about a part of a border.

@@ -11,7 +11,7 @@ namespace BoardRenderer\Base\Border\Shapes;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Base class for background grid border shapes.

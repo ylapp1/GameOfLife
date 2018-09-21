@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Input\RandomInput;
 use Ulrichsg\Getopt;
 use PHPUnit\Framework\TestCase;
@@ -66,7 +66,7 @@ class RandomInputTest extends TestCase
 
         $this->input->fillBoard($this->board, new Getopt());
 
-        $amountCellsAlive = $this->board->getNumberOfAliveFields();
+        $amountCellsAlive = $this->board->getNumberOfLivingCells();
         $this->assertGreaterThanOrEqual($minAmountCellsAlive, $amountCellsAlive);
         $this->assertLessThanOrEqual($maxAmountCellsAlive, $amountCellsAlive);
     }
@@ -107,12 +107,12 @@ class RandomInputTest extends TestCase
         if (! $_expectsError)
         {
             $expectedAmountCellsAlive = ceil($this->board->width() * $this->board->height() * $_fillPercentage / 100);
-            $this->assertEquals($expectedAmountCellsAlive, $this->board->getNumberOfAliveFields());
+            $this->assertEquals($expectedAmountCellsAlive, $this->board->getNumberOfLivingCells());
             $this->assertFalse($exceptionOccurred);
         }
         else
         {
-            $this->assertEquals(0, $this->board->getNumberOfAliveFields());
+            $this->assertEquals(0, $this->board->getNumberOfLivingCells());
             $this->assertTrue($exceptionOccurred);
         }
     }

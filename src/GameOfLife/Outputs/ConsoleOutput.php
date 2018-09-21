@@ -8,7 +8,7 @@
 
 namespace Output;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use BoardRenderer\ConsoleOutputBoardRenderer;
 use Ulrichsg\Getopt;
 

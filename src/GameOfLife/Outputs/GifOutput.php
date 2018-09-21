@@ -9,7 +9,7 @@
 
 namespace Output;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use GifCreator\GifCreator;
 use Ulrichsg\Getopt;
 

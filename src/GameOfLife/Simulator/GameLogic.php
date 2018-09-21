@@ -8,9 +8,6 @@
 
 namespace Simulator;
 
-use GameOfLife\Board;
-use GameOfLife\BoardHistory;
-use GameOfLife\Field;
 use Rule\BaseRule;
 
 /**
@@ -151,7 +148,7 @@ class GameLogic
      */
     public function isBoardEmpty(Board $_board): Bool
     {
-        if ($_board->getNumberOfAliveFields() == 0) return true;
+        if ($_board->getNumberOfLivingCells() == 0) return true;
         else return false;
     }
 

@@ -8,7 +8,7 @@
 
 namespace Input;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\FieldsPlacer;

@@ -11,7 +11,7 @@ namespace BoardRenderer\Text;
 use BoardRenderer\Base\BaseBorderGridBuilder;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Text\Border\TextBackgroundGridBorder;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * Fills and returns a border grid for TextBoardRenderer classes.

@@ -10,7 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-use GameOfLife\Field;
+use Simulator\Field;
 
 /**
  * Inverts the current selection or the whole board.

@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
-use GameOfLife\Rectangle;
+use Utils\Geometry\Rectangle;
 
 /**
  * Prints the borders for selection areas inside boards.

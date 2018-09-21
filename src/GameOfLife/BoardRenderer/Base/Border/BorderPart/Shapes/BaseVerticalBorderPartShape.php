@@ -9,7 +9,7 @@
 namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use GameOfLife\Coordinate;
+use Utils\Geometry\Coordinate;
 
 /**
  * Base class for vertical border part shapes.

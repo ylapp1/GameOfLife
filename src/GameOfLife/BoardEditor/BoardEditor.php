@@ -9,10 +9,10 @@
 namespace BoardEditor;
 
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
-use GameOfLife\Board;
-use GameOfLife\BoardHistory;
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Simulator\Board;
+use Simulator\BoardHistory;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
 use Utils\Shell\ShellInformationFetcher;

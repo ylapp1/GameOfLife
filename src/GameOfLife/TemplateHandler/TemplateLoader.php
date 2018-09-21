@@ -8,8 +8,8 @@
 
 namespace TemplateHandler;
 
-use GameOfLife\Coordinate;
-use GameOfLife\Field;
+use Utils\Geometry\Coordinate;
+use Simulator\Field;
 use Utils\FileSystem\FileSystemReader;
 
 /**

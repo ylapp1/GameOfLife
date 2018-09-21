@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
+use Simulator\Board;
 use TemplateHandler\TemplateSaver;
 use Utils\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +30,7 @@ class TemplateSaverTest extends TestCase
         $testBoard = new Board(2, 3, true);
         $testBoard->setFieldState(1, 1, true);
 
-        $boardString = "..\r\n.X\r\n..";
+        $boardString = "..\n.X\n..";
 
         $testDirectory = __DIR__ . "/test";
         $templateSaver = new TemplateSaver($testDirectory);

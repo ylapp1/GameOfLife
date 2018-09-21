@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace GameOfLife;
+namespace Simulator;
 
 /**
  * Stores a history of boards.
@@ -122,11 +122,12 @@ class BoardHistory
      *
      * @param int $_index The index of the board in the board history
      *
-     * @return String|Board The board from the board history
+     * @return String|Board|null The board from the board history or null if the index is not set
      */
     public function getBoard(int $_index)
     {
-        return $this->boards[$_index];
+    	if (isset($this->boards[$_index])) return $this->boards[$_index];
+    	else return null;
     }
 
     /**
@@ -143,7 +144,7 @@ class BoardHistory
     /**
      * Returns the previous board in the history.
      *
-     * @return String|Board|null The previous board or null if no previous board was found
+     * @return String|Board|null The previous board or null if no previous board exists
      */
     public function getPreviousBoard()
     {
@@ -158,7 +159,7 @@ class BoardHistory
     /**
      * Returns the next board in the history.
      *
-     * @return String|Board|null The next board or null if no next board was found
+     * @return String|Board|null The next board or null if no next board exists
      */
     public function getNextBoard()
     {

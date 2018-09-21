@@ -8,7 +8,7 @@
 
 namespace OptionHandler;
 
-use GameOfLife\Board;
+use Simulator\Board;
 use Input\BaseInput;
 use Input\TemplateInput;
 use Output\BaseOutput;

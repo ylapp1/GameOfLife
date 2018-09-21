@@ -14,7 +14,7 @@ use BoardRenderer\Image\ImageBoardFieldRenderer;
 use BoardRenderer\Image\ImageBorderGridBuilder;
 use BoardRenderer\Image\ImageCanvas;
 use BoardRenderer\Image\Utils\ImageColor;
-use GameOfLife\Board;
+use Simulator\Board;
 
 /**
  * Renders boards as images.

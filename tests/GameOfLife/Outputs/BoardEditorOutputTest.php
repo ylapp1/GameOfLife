@@ -6,8 +6,8 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use GameOfLife\Board;
-use GameOfLife\Coordinate;
+use Simulator\Board;
+use Utils\Geometry\Coordinate;
 use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;
