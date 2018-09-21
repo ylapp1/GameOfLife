@@ -89,7 +89,7 @@ class BoardEditorOutputBoardRenderer extends BaseBoardRenderer
 	 */
 	public function renderBoard(Board $_board, Coordinate $_highLightFieldCoordinate = null, Rectangle $_selectionAreaRectangle = null): String
 	{
-		$this->border = clone $this->initialBorder;
+		$this->border->setInnerBorders($this->initialBorder->innerBorders());
 		$this->boardFieldRenderer->reset();
 
 		if ($_highLightFieldCoordinate)

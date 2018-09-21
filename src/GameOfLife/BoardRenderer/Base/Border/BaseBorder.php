@@ -69,6 +69,26 @@ abstract class BaseBorder
 	// Getters and Setters
 
 	/**
+	 * Returns the inner borders of this border.
+	 *
+	 * @return BaseBorder[] The inner borders
+	 */
+	public function innerBorders(): array
+	{
+		return $this->innerBorders;
+	}
+
+	/**
+	 * Sets the inner borders of this border.
+	 *
+	 * @param BaseBorder[] $_innerBorders The inner borders
+	 */
+	public function setInnerBorders(array $_innerBorders)
+	{
+		$this->innerBorders = $_innerBorders;
+	}
+
+	/**
 	 * Returns the parent border of this border.
 	 *
 	 * @return BaseBorder|null The parent border of this border
