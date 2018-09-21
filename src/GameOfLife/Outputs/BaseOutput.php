@@ -11,7 +11,7 @@ namespace Output;
 use BoardRenderer\BaseBoardRenderer;
 use Simulator\Board;
 use Ulrichsg\Getopt;
-use Utils\Shell\ShellOutputHelper;
+use Util\Shell\ShellOutputHelper;
 
 /**
  * BaseOutput from which all other outputs must inherit.

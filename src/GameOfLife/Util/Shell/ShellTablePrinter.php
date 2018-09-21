@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\Shell;
+namespace Util\Shell;
 
 /**
  * Prints tables to the shell.

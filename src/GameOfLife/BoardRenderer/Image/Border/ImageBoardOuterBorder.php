@@ -12,8 +12,8 @@ use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Image\Border\Shapes\ImageRectangleBorderShape;
 use BoardRenderer\Image\Utils\ImageColor;
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
-use Utils\Geometry\Rectangle;
+use Util\Geometry\Coordinate;
+use Util\Geometry\Rectangle;
 
 /**
  * The outer border of the board for images.

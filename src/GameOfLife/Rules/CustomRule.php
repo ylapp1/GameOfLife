@@ -10,7 +10,7 @@ namespace Rule;
 
 use Rule\RuleFormat\BaseRuleFormat;
 use Ulrichsg\Getopt;
-use Utils\ClassLoader;
+use Util\ClassLoader;
 
 /**
  * Parses and uses a user inputted rule set.

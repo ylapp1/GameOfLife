@@ -9,7 +9,7 @@
 use Simulator\Field;
 use TemplateHandler\TemplateLoader;
 use PHPUnit\Framework\TestCase;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 
 /**
  * Checks whether \TemplateHandler\TemplateLoader works as expected.

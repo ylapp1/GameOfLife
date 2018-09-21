@@ -7,7 +7,7 @@
  */
 
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 use Simulator\Field;
 use TemplateHandler\FieldsPlacer;
 use PHPUnit\Framework\TestCase;

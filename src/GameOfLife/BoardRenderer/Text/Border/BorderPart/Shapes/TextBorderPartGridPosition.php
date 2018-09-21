@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Converts a board field coordinate to a text border positions grid coordinate.

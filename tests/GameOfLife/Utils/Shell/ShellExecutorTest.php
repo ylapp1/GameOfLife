@@ -7,11 +7,11 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use Utils\Shell\ShellExecutor;
+use Util\Shell\ShellExecutor;
 
 /**
  * Checks whether the ShellExecutor class works as expected.
- * This test works because exec() and system() were overridden in testboot.php for the Utils namespace.
+ * This test works because exec() and system() were overridden in testboot.php for the Util namespace.
  */
 /*class ShellExecutorTest extends TestCase
 {
@@ -19,8 +19,8 @@ use Utils\Shell\ShellExecutor;
      * Checks whether a command can be successfully executed.
      * See testboot.php for the overridden exec() function
      *
-     * @covers \Utils\ShellExecutor::__construct()
-     * @covers \Utils\ShellExecutor::executeCommand()
+     * @covers \Util\ShellExecutor::__construct()
+     * @covers \Util\ShellExecutor::executeCommand()
      /
     public function testCanExecuteCommand()
     {
@@ -38,9 +38,9 @@ use Utils\Shell\ShellExecutor;
      *
      * @dataProvider redirectOutputProvider()
      *
-     * @covers \Utils\ShellExecutor::__construct()
-     * @covers \Utils\ShellExecutor::executeCommand()
-     * @covers \Utils\ShellExecutor::getOutputHideRedirect()
+     * @covers \Util\ShellExecutor::__construct()
+     * @covers \Util\ShellExecutor::executeCommand()
+     * @covers \Util\ShellExecutor::getOutputHideRedirect()
      /
     public function testCanRedirectOutput(String $_command, String $_expectedCommand)
     {

@@ -53,10 +53,10 @@ class CopySelectionOption extends BoardEditorOption
             {
                 /** @var Field $field */
                 $field = clone $this->parentBoardEditor->board()->fields()[$y][$x];
-                $field->setX($x - $selectionCoordinates["A"]["x"]);
-                $field->setY($y - $selectionCoordinates["A"]["y"]);
+                $field->coordinate()->setX($x - $selectionCoordinates["A"]["x"]);
+                $field->coordinate()->setY($y - $selectionCoordinates["A"]["y"]);
 
-                $copiedFields[$field->y()][$field->x()] = $field;
+                $copiedFields[$field->coordinate()->y()][$field->coordinate()->x()] = $field;
             }
         }
 

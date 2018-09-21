@@ -15,7 +15,7 @@ use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Prints the highlight field border for TextBoardRenderer classes.

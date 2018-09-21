@@ -8,7 +8,7 @@
 
 namespace TemplateHandler;
 
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 
 /**
  * Prints a list of default and custom template names.

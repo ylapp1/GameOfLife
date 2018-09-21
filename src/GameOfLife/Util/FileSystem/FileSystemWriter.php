@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\FileSystem;
+namespace Util\FileSystem;
 
 /**
  * Provides methods to write files and directories to the file system.

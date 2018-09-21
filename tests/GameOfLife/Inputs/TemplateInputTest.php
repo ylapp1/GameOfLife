@@ -7,14 +7,14 @@
  */
 
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 use Simulator\Field;
 use Input\TemplateInput;
 use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**

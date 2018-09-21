@@ -13,7 +13,7 @@ use TemplateHandler\TemplateListPrinter;
 use TemplateHandler\TemplateLoader;
 use TemplateHandler\FieldsPlacer;
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 
 /**
  * Fills a board with fields that are loaded from a template file.

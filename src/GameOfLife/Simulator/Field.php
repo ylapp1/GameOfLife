@@ -8,7 +8,7 @@
 
 namespace Simulator;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Stores a single field.

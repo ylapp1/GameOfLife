@@ -12,8 +12,8 @@ use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
-use Utils\Geometry\Rectangle;
+use Util\Geometry\Coordinate;
+use Util\Geometry\Rectangle;
 
 /**
  * Generates border strings for boards.

@@ -10,7 +10,7 @@ namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\RenderedBorderPart;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Defines the shape of a border part.

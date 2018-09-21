@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\Geometry;
+namespace Util\Geometry;
 
 /**
  * Stores one coordinate.

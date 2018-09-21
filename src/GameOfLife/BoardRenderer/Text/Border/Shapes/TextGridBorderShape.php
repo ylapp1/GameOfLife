@@ -15,7 +15,7 @@ use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextHorizontalBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextVerticalBorderPart;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * The text border shape for background grids.

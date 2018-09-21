@@ -10,7 +10,7 @@ use Simulator\Board;
 use Output\JpgOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 
 /**
  * Checks whether \Output\ImageOutput works as expected.
@@ -138,10 +138,10 @@ class ImageOutputTest extends TestCase
      */
     public function testCanGetNewGameId()
     {
-        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystem\FileSystemReader::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(\Util\FileSystem\FileSystemReader::class)
                                       ->getMock();
 
-        if ($fileSystemHandlerMock instanceof \Utils\FileSystem\FileSystemReader)
+        if ($fileSystemHandlerMock instanceof \Util\FileSystem\FileSystemReader)
         {
             setPrivateAttribute($this->output, "fileSystemReader", $fileSystemHandlerMock);
         }

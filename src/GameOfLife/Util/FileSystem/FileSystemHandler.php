@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\FileSystem;
+namespace Util\FileSystem;
 
-use Utils\OsInformationFetcher;
+use Util\OsInformationFetcher;
 
 /**
  * Parent class for FileSystemWriter and FileSystemReader.

@@ -9,7 +9,7 @@
 namespace OptionHandler;
 
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 
 /**
  * Handles listing and parsing of command line options.

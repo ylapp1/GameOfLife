@@ -13,7 +13,7 @@ use BoardRenderer\Text\Border\BorderPart\CollisionDirection;
 use BoardRenderer\Text\Border\Shapes\TextHighLightFieldBorderShape;
 use BoardRenderer\Text\Border\SymbolDefinition\BorderSymbolDefinition;
 use BoardRenderer\Text\Border\SymbolDefinition\CollisionSymbolDefinition;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Creates border parts that highlight a single field.

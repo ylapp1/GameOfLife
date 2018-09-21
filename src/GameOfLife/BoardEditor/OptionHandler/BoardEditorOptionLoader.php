@@ -9,7 +9,7 @@
 namespace BoardEditor\OptionHandler;
 
 use BoardEditor\BoardEditorOption;
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 
 /**
  * Loads the board editor options and returns a list of options.

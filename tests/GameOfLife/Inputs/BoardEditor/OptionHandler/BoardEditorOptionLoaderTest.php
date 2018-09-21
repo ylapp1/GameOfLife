@@ -11,7 +11,7 @@ use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use BoardEditor\OptionHandler\BoardEditorOptionLoader;
 use BoardEditor\Options\StartOption;
 use BoardEditor\Options\ExitOption;
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 use PHPUnit\Framework\TestCase;
 
 /**

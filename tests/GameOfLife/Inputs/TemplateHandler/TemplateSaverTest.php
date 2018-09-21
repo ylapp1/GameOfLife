@@ -8,7 +8,7 @@
 
 use Simulator\Board;
 use TemplateHandler\TemplateSaver;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**

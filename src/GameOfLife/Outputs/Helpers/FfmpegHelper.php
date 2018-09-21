@@ -8,10 +8,10 @@
 
 namespace Output\Helpers;
 
-use Utils\FileSystem\FileSystemReader;
-use Utils\FileSystem\FileSystemWriter;
-use Utils\OsInformationFetcher;
-use Utils\Shell\ShellExecutor;
+use Util\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemWriter;
+use Util\OsInformationFetcher;
+use Util\Shell\ShellExecutor;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.

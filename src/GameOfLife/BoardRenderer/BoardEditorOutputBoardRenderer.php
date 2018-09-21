@@ -16,8 +16,8 @@ use BoardRenderer\Text\Border\TextHighLightFieldBorder;
 use BoardRenderer\Text\TextBorderGridBuilder;
 use BoardRenderer\Text\TextCanvas;
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
-use Utils\Geometry\Rectangle;
+use Util\Geometry\Coordinate;
+use Util\Geometry\Rectangle;
 
 /**
  * BoardRenderer for the BoardEditorOutput.

@@ -11,7 +11,7 @@ namespace BoardRenderer\Image\Border\Shapes;
 use BoardRenderer\Base\Border\Shapes\RectangleBorderShape;
 use BoardRenderer\Image\Border\BorderPart\ImageHorizontalBorderPart;
 use BoardRenderer\Image\Border\BorderPart\ImageVerticalBorderPart;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Border shape for rectangle image borders.

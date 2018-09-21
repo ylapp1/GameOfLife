@@ -6,12 +6,12 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-use Utils\FileSystem\FileSystemReader;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Checks whether \Utils\FileSystemHandler works as expected.
+ * Checks whether \Util\FileSystemHandler works as expected.
  */
 class FileSystemHandlerTest extends TestCase
 {
@@ -41,8 +41,8 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider createDirectoryProvider()
-     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
-     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
+     * @covers Util\FileSystem\FileSystemWriter::createDirectory()
+     * @covers Util\FileSystem\FileSystemWriter::deleteDirectory()
      *
      * @param string $_directoryName    Test directory name
      * @param array $_subDirectories    Sub directories that shall be created
@@ -108,8 +108,8 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystem\FileSystemWriter::createDirectory()
-     * @covers \Utils\FileSystem\FileSystemWriter::deleteDirectory()
+     * @covers Util\FileSystem\FileSystemWriter::createDirectory()
+     * @covers Util\FileSystem\FileSystemWriter::deleteDirectory()
      */
     public function testCanDetectExistingDirectory()
     {
@@ -156,9 +156,9 @@ class FileSystemHandlerTest extends TestCase
 
     /**
      * @dataProvider writeFileProvider
-     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
-     * @covers \Utils\FileSystem\FileSystemReader::readFile()
-     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
+     * @covers Util\FileSystem\FileSystemWriter::writeFile()
+     * @covers Util\FileSystem\FileSystemReader::readFile()
+     * @covers Util\FileSystem\FileSystemWriter::deleteFile()
      *
      * @param string $_fileName         File name of the test file
      * @param string $_content          Content of the test file
@@ -232,9 +232,9 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystem\FileSystemWriter::writeFile()
-     * @covers \Utils\FileSystem\FileSystemReader::readFile()
-     * @covers \Utils\FileSystem\FileSystemWriter::deleteFile()
+     * @covers Util\FileSystem\FileSystemWriter::writeFile()
+     * @covers Util\FileSystem\FileSystemReader::readFile()
+     * @covers Util\FileSystem\FileSystemWriter::deleteFile()
      */
     public function testCanDetectExistingFile()
     {
@@ -324,7 +324,7 @@ class FileSystemHandlerTest extends TestCase
     }
 
     /**
-     * @covers \Utils\FileSystem\FileSystemReader::getFileList()
+     * @covers Util\FileSystem\FileSystemReader::getFileList()
      */
     public function testCanGetFileList()
     {
@@ -369,7 +369,7 @@ class FileSystemHandlerTest extends TestCase
      *
      * @dataProvider findFileRecursiveProvider()
      *
-     * @covers \Utils\FileSystem\FileSystemReader::findFileRecursive()
+     * @covers Util\FileSystem\FileSystemReader::findFileRecursive()
      */
     public function testCanFindFileRecursive(String $_directories, String $_filePath, String $_searchFilename, Bool $_expectsFilePath = true)
     {

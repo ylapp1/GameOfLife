@@ -8,7 +8,7 @@
 
 namespace BoardRenderer\Base\Border\BorderPart;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Stores information about a rendered border part.

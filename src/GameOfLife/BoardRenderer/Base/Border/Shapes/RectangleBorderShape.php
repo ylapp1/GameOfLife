@@ -11,7 +11,7 @@ namespace BoardRenderer\Base\Border\Shapes;
 use BoardRenderer\Base\Border\BaseBorder;
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
-use Utils\Geometry\Rectangle;
+use Util\Geometry\Rectangle;
 
 /**
  * Creates border parts that form a rectangle.

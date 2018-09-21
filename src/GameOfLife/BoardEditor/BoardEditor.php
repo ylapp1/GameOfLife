@@ -11,13 +11,13 @@ namespace BoardEditor;
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use Simulator\Board;
 use Simulator\BoardHistory;
-use Utils\Geometry\Coordinate;
 use Simulator\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
-use Utils\Shell\ShellInformationFetcher;
-use Utils\Shell\ShellInputReader;
-use Utils\Shell\ShellOutputHelper;
+use Util\Geometry\Coordinate;
+use Util\Shell\ShellInformationFetcher;
+use Util\Shell\ShellInputReader;
+use Util\Shell\ShellOutputHelper;
 
 /**
  * Lets the user edit a board by using options or toggling cells.

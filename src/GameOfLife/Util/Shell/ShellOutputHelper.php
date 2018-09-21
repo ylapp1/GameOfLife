@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\Shell;
+namespace Util\Shell;
 
-use Utils\OsInformationFetcher;
+use Util\OsInformationFetcher;
 
 /**
  * Provides methods to format shell outputs and to move the console cursor.

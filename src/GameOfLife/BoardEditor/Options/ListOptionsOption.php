@@ -10,7 +10,7 @@ namespace BoardEditor\Options;
 
 use BoardEditor\BoardEditor;
 use BoardEditor\BoardEditorOption;
-use Utils\Shell\ShellTablePrinter;
+use Util\Shell\ShellTablePrinter;
 
 /**
  * Lists all available board editor options.

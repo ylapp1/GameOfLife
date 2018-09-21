@@ -9,7 +9,7 @@
 use Output\Helpers\FfmpegHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Utils\OsInformationFetcher;
+use Util\OsInformationFetcher;
 
 /**
  * Checks whether \Output\Helpers\FfmpegHelper works as expected.
@@ -51,7 +51,7 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanFindFfmpegBinaryForWindows()
     {
-        $fileSystemHandlerMock = $this->getMockBuilder(\Utils\FileSystem\FileSystemReader::class)
+        $fileSystemHandlerMock = $this->getMockBuilder(\Util\FileSystem\FileSystemReader::class)
                                       ->getMock();
         $fileSystemHandlerMock->expects($this->exactly(1))
                               ->method("findFileRecursive")
@@ -80,7 +80,7 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanFindFfmpegBinaryForLinux()
     {
-        $shellExecutorMock = $this->getMockBuilder(\Utils\Shell\ShellExecutor::class)
+        $shellExecutorMock = $this->getMockBuilder(\Util\Shell\ShellExecutor::class)
                                   ->getMock();
         $shellExecutorMock->expects($this->exactly(1))
                           ->method("executeCommand")
@@ -167,7 +167,7 @@ class FfmpegHelperTest extends TestCase
      */
     public function testCanExecuteCommand(int $_shellExecutorReturnValue)
     {
-        $shellExecutorMock = $this->getMockBuilder(\Utils\Shell\ShellExecutor::class)
+        $shellExecutorMock = $this->getMockBuilder(\Util\Shell\ShellExecutor::class)
                                   ->disableOriginalConstructor()
                                   ->getMock();
 
@@ -175,7 +175,7 @@ class FfmpegHelperTest extends TestCase
                           ->method("executeCommand")
                           ->willReturn($_shellExecutorReturnValue);
 
-        if ($shellExecutorMock instanceof \Utils\Shell\ShellExecutor)
+        if ($shellExecutorMock instanceof \Util\Shell\ShellExecutor)
         {
             setPrivateAttribute($this->ffmpegHelper, "shellExecutor", $shellExecutorMock);
 

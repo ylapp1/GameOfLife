@@ -8,9 +8,9 @@
 
 namespace TemplateHandler;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 use Simulator\Field;
-use Utils\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemReader;
 
 /**
  * Loads template fields from a file.

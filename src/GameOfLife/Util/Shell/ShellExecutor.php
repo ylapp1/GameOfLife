@@ -6,9 +6,9 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils\Shell;
+namespace Util\Shell;
 
-use Utils\OsInformationFetcher;
+use Util\OsInformationFetcher;
 
 /**
  * Handles executing of shell commands.

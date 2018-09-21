@@ -12,8 +12,8 @@ use Simulator\Board;
 use BoardRenderer\ImageOutputBoardRenderer;
 use Output\Helpers\ColorSelector;
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemReader;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemReader;
+use Util\FileSystem\FileSystemWriter;
 
 /**
  * Parent class for all classes that output images or process temporary output images.

@@ -12,7 +12,7 @@ use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
 use BoardRenderer\Base\Border\BorderPart\BorderPartThickness;
 use BoardRenderer\Base\Border\Shapes\BaseBorderShape;
 use BoardRenderer\Image\Border\BorderPart\Shapes\ImageVerticalBorderPartShape;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Vertical border part for images.

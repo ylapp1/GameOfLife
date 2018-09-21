@@ -11,7 +11,7 @@ use Simulator\GameLogic;
 use Output\PngOutput;
 use Rule\ConwayRule;
 use Ulrichsg\Getopt;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -9,7 +9,7 @@
 namespace TemplateHandler;
 
 use Simulator\Board;
-use Utils\FileSystem\FileSystemWriter;
+use Util\FileSystem\FileSystemWriter;
 
 /**
  * Saves a custom template to the custom templates directory.

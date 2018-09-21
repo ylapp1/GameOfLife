@@ -17,7 +17,7 @@ namespace
     $loader->addPsr4("Rule\\", __DIR__ . "/../src/GameOfLife/Rules");
     $loader->addPsr4("Simulator\\", __DIR__ . "/../src/GameOfLife/Simulator");
     $loader->addPsr4("TemplateHandler\\", __DIR__ . "/../src/GameOfLife/TemplateHandler");
-    $loader->addPsr4("Utils\\", __DIR__ . "/../src/GameOfLife/Utils");
+    $loader->addPsr4("Util\\", __DIR__ . "/../src/GameOfLife/Util");
 
     /**
      * Returns a ReflectionProperty for the class of $_object.

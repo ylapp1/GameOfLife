@@ -7,7 +7,7 @@
  */
 
 use Simulator\Board;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;

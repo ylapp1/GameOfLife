@@ -6,7 +6,7 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
-namespace Utils;
+namespace Util;
 
 /**
  * Fetches information about the operating system on that php currently runs.

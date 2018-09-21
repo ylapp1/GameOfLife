@@ -9,7 +9,7 @@
 namespace BoardRenderer\Text;
 
 use Simulator\Field;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Renders the board fields for the board editor output.

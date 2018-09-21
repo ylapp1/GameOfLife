@@ -9,7 +9,7 @@
 namespace BoardRenderer\Base\Border\BorderPart\Shapes;
 
 use BoardRenderer\Base\Border\BorderPart\BaseBorderPart;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Base class for horizontal border part shapes.

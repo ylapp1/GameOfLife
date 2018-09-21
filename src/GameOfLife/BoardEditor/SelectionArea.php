@@ -8,7 +8,7 @@
 
 namespace BoardEditor;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Stores information about a two dimensional selection area.

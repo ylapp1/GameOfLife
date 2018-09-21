@@ -11,7 +11,7 @@ use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use Simulator\Board;
 use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
-use Utils\Shell\ShellInformationFetcher;
+use Util\Shell\ShellInformationFetcher;
 
 /**
  * Checks whether BoardEditor\BoardEditor works as expected.
@@ -122,7 +122,7 @@ class BoardEditorTest extends TestCase
         $boardEditor = new BoardEditor("");
         $boardEditor->setBoard($this->testBoard);
 
-        $shellInputReaderMock = $this->getMockBuilder(Utils\Shell\ShellInputReader::class)
+        $shellInputReaderMock = $this->getMockBuilder(Util\Shell\ShellInputReader::class)
                                      ->getMock();
         $shellInputReaderMock->expects($this->exactly(1))
                              ->method("readInput")

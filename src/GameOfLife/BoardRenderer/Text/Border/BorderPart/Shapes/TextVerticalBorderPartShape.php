@@ -11,7 +11,7 @@ namespace BoardRenderer\Text\Border\BorderPart\Shapes;
 use BoardRenderer\Base\Border\BorderPart\Shapes\BaseVerticalBorderPartShape;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPart;
 use BoardRenderer\Text\Border\BorderPart\TextBorderPartCollisionPosition;
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Shape for vertical text border parts.

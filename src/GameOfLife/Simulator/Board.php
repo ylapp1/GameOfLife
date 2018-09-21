@@ -8,7 +8,7 @@
 
 namespace Simulator;
 
-use Utils\Geometry\Coordinate;
+use Util\Geometry\Coordinate;
 
 /**
  * Stores the board configuration and the fields for one game step.

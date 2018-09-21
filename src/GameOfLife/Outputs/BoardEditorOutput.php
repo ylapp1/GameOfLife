@@ -12,8 +12,8 @@ use BoardEditor\SelectionArea;
 use BoardRenderer\BoardEditorOutputBoardRenderer;
 use Simulator\Board;
 use Ulrichsg\Getopt;
-use Utils\Geometry\Coordinate;
-use Utils\Geometry\Rectangle;
+use Util\Geometry\Coordinate;
+use Util\Geometry\Rectangle;
 
 /**
  * Prints the BoardEditor to the console for UserInput.
