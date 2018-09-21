@@ -7,6 +7,7 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use TemplateHandler\FieldsPlacer;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +43,7 @@ class TemplatePlacerTest extends TestCase
             $this->fields[] = array();
             for ($x = 0; $x < 3; $x++)
             {
-                $field = new Field($x, $y, false);
+                $field = new Field(new Coordinate($x, $y), false);
 
                 if ($counter < 5) $field->setValue(true);
                 $counter++;

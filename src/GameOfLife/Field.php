@@ -45,15 +45,13 @@ class Field
     /**
      * Field constructor.
      *
-     * @param int $_x The X-coordinate of the field
-     * @param int $_y The Y-coordinate of the field
+     * @param Coordinate $_coordinate The X/Y position of the field on the board
      * @param Bool $_value The state of the cell in the field
      * @param Board $_parentBoard The board to which the field belongs
      */
-    public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
+    public function __construct(Coordinate $_coordinate, Bool $_value, Board $_parentBoard = null)
     {
-    	// TODO: Change constructor arg x and y to coordinate $_coordinate
-        $this->coordinate = new Coordinate($_x, $_y);
+        $this->coordinate = $_coordinate;
         $this->value = $_value;
         $this->parentBoard = $_parentBoard;
     }

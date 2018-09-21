@@ -7,6 +7,7 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use PHPUnit\Framework\TestCase;
 
@@ -315,7 +316,7 @@ class BoardTest extends TestCase
                 {
                     if ($y != $field->coordinate()->y() || $x != $field->coordinate()->x())
                     {
-                        $tmpField = new Field($x, $y, false, $board);
+                        $tmpField = new Field(new Coordinate($x, $y), false, $board);
 
                         $this->assertNotFalse(array_search($tmpField, $neighbors));
                     }
@@ -385,10 +386,10 @@ class BoardTest extends TestCase
         $board = new Board(2, 2, true);
         $board->setFieldState(1, 1, true);
 
-        $fieldZeroZero = new Field(0, 0, true, $board);
-        $fieldOneZero = new Field(1, 0, true, $board);
-        $fieldZeroOne = new Field(0, 1, true, $board);
-        $fieldOneOne = new Field(1, 1, false, $board);
+        $fieldZeroZero = new Field(new Coordinate(0, 0), true, $board);
+        $fieldOneZero = new Field(new Coordinate(1, 0), true, $board);
+        $fieldZeroOne = new Field(new Coordinate(0, 1), true, $board);
+        $fieldOneOne = new Field(new Coordinate(1, 1), false, $board);
 
         $expectedFields = array(
             array($fieldZeroZero, $fieldOneZero),

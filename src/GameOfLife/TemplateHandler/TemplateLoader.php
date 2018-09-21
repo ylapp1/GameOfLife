@@ -8,6 +8,7 @@
 
 namespace TemplateHandler;
 
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use Utils\FileSystem\FileSystemReader;
 
@@ -76,7 +77,7 @@ class TemplateLoader extends TemplateHandler
                 if ($lineCharacter == "X") $cellState = true;
                 else $cellState = false;
 
-                $fields[$y][$x] = new Field($x, $y, $cellState);
+                $fields[$y][$x] = new Field(new Coordinate($x, $y), $cellState);
             }
         }
 

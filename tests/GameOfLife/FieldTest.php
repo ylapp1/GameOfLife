@@ -39,7 +39,7 @@ class FieldTest extends TestCase
      */
     public function testCanBeConstructed()
     {
-        $field = new Field(1, 2, false, $this->board);
+        $field = new Field(new Coordinate(1, 2), false, $this->board);
 
         $this->assertEquals($this->board, $field->parentBoard());
         $this->assertEquals(1, $field->coordinate()->x());
@@ -64,7 +64,7 @@ class FieldTest extends TestCase
      */
     public function testCanSetAttributes(Board $_parentBoard, Coordinate $_coordinate, Bool $_value)
     {
-        $field = new Field(1, 2, false, $this->board);
+        $field = new Field(new Coordinate(1, 2), false, $this->board);
 
         $field->setParentBoard($_parentBoard);
         $field->setCoordinate($_coordinate);
@@ -97,7 +97,7 @@ class FieldTest extends TestCase
      */
     public function testCanReturnStatus()
     {
-        $field = new Field(0, 0, false, $this->board);
+        $field = new Field(new Coordinate(0, 0), false, $this->board);
 
         $field->setValue(true);
         $this->assertTrue($field->isAlive());
@@ -122,7 +122,7 @@ class FieldTest extends TestCase
      */
     public function testCanSumNeighborStatuses(array $_fieldCoordinates, array $_livingNeighborsCoordinates, int $_amountLivingNeighbors, int $_amountDeadNeighbors)
     {
-        $field = new Field($_fieldCoordinates["x"], $_fieldCoordinates["y"], false, $this->board);
+        $field = new Field(new Coordinate($_fieldCoordinates["x"], $_fieldCoordinates["y"]), false, $this->board);
 
         foreach ($_livingNeighborsCoordinates as $livingNeighborCoordinates)
         {
