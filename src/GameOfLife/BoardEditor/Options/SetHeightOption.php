@@ -75,9 +75,13 @@ class SetHeightOption extends BoardEditorOption
                 /** @var Field $field */
                 foreach ($row as $field)
                 {
-                    if ($field->y() < $this->parentBoardEditor()->board()->height())
+                    if ($field->coordinate()->y() < $this->parentBoardEditor()->board()->height())
                     {
-                        $this->parentBoardEditor()->board()->setFieldState($field->x(), $field->y(), $field->isAlive());
+                        $this->parentBoardEditor()->board()->setFieldState(
+                        	$field->coordinate()->x(),
+	                        $field->coordinate()->y(),
+	                        $field->isAlive()
+                        );
                     }
                 }
             }

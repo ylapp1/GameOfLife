@@ -2,6 +2,10 @@
 <phpunit bootstrap="testboot.php"
          verbose="true">
 
+    <testsuite name="GameOfLife">
+        <directory>GameOfLife</directory>
+    </testsuite>
+
     <filter>
         <whitelist>
             <directory>../src/GameOfLife</directory>

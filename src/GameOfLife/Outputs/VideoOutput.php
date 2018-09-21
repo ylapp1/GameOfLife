@@ -243,7 +243,7 @@ class VideoOutput extends ImageOutput
     {
         echo "\rGamestep: " . $_gameStep;
 
-        $image = $this->imageCreator->createImage($_board);
+	    $image = $this->boardRenderer->renderBoard($_board);
 
         $fileName = $_gameStep . ".png";
         $filePath = $this->imageOutputDirectory . "/" . $fileName;
@@ -269,7 +269,6 @@ class VideoOutput extends ImageOutput
 
         $this->generateVideoFile();
 
-        unset($this->imageCreator);
         $this->fileSystemWriter->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
     }
 
@@ -303,7 +302,13 @@ class VideoOutput extends ImageOutput
         // Input images
         $this->ffmpegHelper->addOption("-i \"" . $this->baseOutputDirectory . "/tmp/Frames/%d.png\"");
         $this->ffmpegHelper->addOption("-pix_fmt yuv420p");
-        $this->ffmpegHelper->addOption("-vcodec mpeg4");
+
+        /*
+         * The scale option is in the format width:height
+         * You can set one of the two values to -n to set it to a multiple of n while keeping the aspect ratio
+         */
+        $this->ffmpegHelper->addOption("-vf scale=2000:-2");
+        $this->ffmpegHelper->addOption("-vcodec libx264");
 
         if (stristr(PHP_OS, "linux"))
         {

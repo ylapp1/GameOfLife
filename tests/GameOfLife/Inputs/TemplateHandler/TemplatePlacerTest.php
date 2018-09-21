@@ -8,7 +8,6 @@
 
 use GameOfLife\Board;
 use GameOfLife\Field;
-use TemplateHandler\Template;
 use TemplateHandler\FieldsPlacer;
 use PHPUnit\Framework\TestCase;
 

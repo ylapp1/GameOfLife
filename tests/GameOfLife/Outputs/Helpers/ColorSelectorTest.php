@@ -6,8 +6,8 @@
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
+use BoardRenderer\Image\Utils\ImageColor;
 use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
 use PHPUnit\Framework\TestCase;
 
 /**

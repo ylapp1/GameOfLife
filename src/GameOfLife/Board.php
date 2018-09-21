@@ -167,8 +167,8 @@ class Board
                 $boardField = $this->fields[$y][$x];
 
                 if ($rowField->value() != $boardField->value() ||
-                    $rowField->x() != $boardField->x() ||
-                    $rowField->y() != $boardField->y())
+                    $rowField->coordinate()->x() != $boardField->coordinate()->x() ||
+                    $rowField->coordinate()->y() != $boardField->coordinate()->y())
                 {
                     $fieldsAreEqual = false;
                     break;
@@ -297,8 +297,8 @@ class Board
      */
     public function getNeighborsOfField(Field $_field): array
     {
-        $x = $_field->x();
-        $y = $_field->y();
+        $x = $_field->coordinate()->x();
+        $y = $_field->coordinate()->y();
 
         $columns = array($x);
         $rows = array($y);
@@ -337,7 +337,7 @@ class Board
         {
             foreach ($columns as $x)
             {
-                if ($y != $_field->y() || $x != $_field->x()) $neighborFields[] = $this->fields[$y][$x];
+                if ($y != $_field->coordinate()->y() || $x != $_field->coordinate()->x()) $neighborFields[] = $this->fields[$y][$x];
             }
         }
 

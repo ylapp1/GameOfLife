@@ -9,6 +9,7 @@
 use GameOfLife\Board;
 use Output\ConsoleOutput;
 use PHPUnit\Framework\TestCase;
+use Ulrichsg\Getopt;
 
 /**
  * Checks whether \Output\ConsoleOutput works as expected.
@@ -23,8 +24,10 @@ class ConsoleOutputTest extends TestCase
     protected function setUp()
     {
         $this->output = new ConsoleOutput();
-
         $this->board = new Board(2, 2, true);
+
+        $this->expectOutputRegex("/GAME OF LIFE\n *CONSOLE OUTPUT/");
+	    $this->output->startOutput(new Getopt(), $this->board);
     }
 
     protected function tearDown()
@@ -54,27 +57,16 @@ class ConsoleOutputTest extends TestCase
 
     /**
      * @covers \Output\ConsoleOutput::outputBoard()
-     * @covers \Output\ConsoleOutput::getBoardContentString()
-     * @covers \Output\ConsoleOutput::getRowOutputString()
-     * @covers \Output\ConsoleOutput::getHorizontalLineString()
      */
     public function testCanOutputBoard()
     {
         $gameStepString = "Game step: 1";
 
-        $padding = ceil(($this->board->width() - strlen($gameStepString)) / 2) + 1;
-        $expectedPadding = "";
-
-        for ($i = 0; $i < $padding; $i++)
-        {
-            $expectedPadding .= " ";
-        }
-
-        $board = "\n *╔══╗" .
+        $boardString = "\n *╔══╗" .
                  "\n *║  ║" .
                  "\n *║  ║" .
                  "\n *╚══╝";
-        $outputString = "/ *" . $expectedPadding . $gameStepString . ".*" . $board . "/";
+        $outputString = "/ *" . $gameStepString . "\n*" . $boardString . "/";
 
         $this->expectOutputRegex($outputString);
         $this->output->outputBoard($this->board, 1);

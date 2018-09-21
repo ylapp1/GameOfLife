@@ -7,8 +7,6 @@
  */
 
 use GameOfLife\Board;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Output\JpgOutput;
 use PHPUnit\Framework\TestCase;
 use Ulrichsg\Getopt;
@@ -62,8 +60,6 @@ class ImageOutputTest extends TestCase
      * @covers \Output\ImageOutput::baseOutputDirectory()
      * @covers \Output\ImageOutput::fileSystemHandler()
      * @covers \Output\ImageOutput::setFileSystemHandler()
-     * @covers \Output\ImageOutput::imageCreator()
-     * @covers \Output\ImageOutput::setImageCreator()
      * @covers \Output\ImageOutput::imageOutputDirectory()
      * @covers \Output\ImageOutput::setImageOutputDirectory()
      * @covers \Output\ImageOutput::optionPrefix()
@@ -75,18 +71,14 @@ class ImageOutputTest extends TestCase
     public function testCanSetAttributes($_imageOutputDirectory, $_optionPrefix)
     {
         $fileSystemHandler = new FileSystemWriter();
-        $colorBlack = new ImageColor(0, 0, 0);
-        $imageCreator = new ImageCreator(1,2,1, $colorBlack, $colorBlack, $colorBlack);
 
         $this->output->setBaseOutputDirectory("hello");
         $this->output->setFileSystemHandler($fileSystemHandler);
-        $this->output->setImageCreator($imageCreator);
         $this->output->setImageOutputDirectory($_imageOutputDirectory);
         $this->output->setOptionPrefix($_optionPrefix);
 
         $this->assertEquals("hello", $this->output->baseOutputDirectory());
         $this->assertEquals($fileSystemHandler, $this->output->fileSystemHandler());
-        $this->assertEquals($imageCreator, $this->output->imageCreator());
         $this->assertEquals($_imageOutputDirectory, $this->output->imageOutputDirectory());
         $this->assertEquals($_optionPrefix, $this->output->optionPrefix());
     }
@@ -94,7 +86,6 @@ class ImageOutputTest extends TestCase
     /**
      * @covers \Output\ImageOutput::startOutput()
      *
-     * @throws \ReflectionException
      * @throws \Exception
      */
     public function testCanInitializeImageCreator()
@@ -112,13 +103,6 @@ class ImageOutputTest extends TestCase
         // Hide output
         $this->expectOutputRegex("/.*/");
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
-
-        $imageCreator = $this->output->imageCreator();
-        $baseImage = \getPrivateAttribute($imageCreator, "baseImage");
-
-        $this->assertEquals(10, imagesx($baseImage));
-        $this->assertEquals(10, imagesy($baseImage));
-        $this->assertEquals(10, \getPrivateAttribute($imageCreator, "cellSize"));
     }
 
     /**
@@ -126,7 +110,6 @@ class ImageOutputTest extends TestCase
      *
      * @covers \Output\ImageOutput::startOutput()
      *
-     * @throws \ReflectionException
      * @throws \Exception
      */
     public function testCanSetDefaultValues()
@@ -144,10 +127,6 @@ class ImageOutputTest extends TestCase
         // Hide output
         $this->expectOutputRegex("/.*/");
         if ($optionsMock instanceof Getopt) $this->output->startOutput($optionsMock, $board);
-
-        $imageCreator = $this->output->imageCreator();
-
-        $this->assertEquals(100, \getPrivateAttribute($imageCreator, "cellSize"));
     }
 
     /**

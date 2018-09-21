@@ -75,9 +75,13 @@ class SetWidthOption extends BoardEditorOption
                 /** @var Field $field */
                 foreach ($row as $field)
                 {
-                    if ($field->x() < $this->parentBoardEditor()->board()->width())
+                    if ($field->coordinate()->x() < $this->parentBoardEditor()->board()->width())
                     {
-                        $this->parentBoardEditor()->board()->setFieldState($field->x(), $field->y(), $field->isAlive());
+                        $this->parentBoardEditor()->board()->setFieldState(
+                        	$field->coordinate()->x(),
+	                        $field->coordinate()->y(),
+	                        $field->isAlive()
+                        );
                     }
                 }
             }

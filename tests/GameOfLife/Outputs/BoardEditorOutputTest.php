@@ -7,8 +7,10 @@
  */
 
 use GameOfLife\Board;
+use GameOfLife\Coordinate;
 use Output\BoardEditorOutput;
 use PHPUnit\Framework\TestCase;
+use Ulrichsg\Getopt;
 
 /**
  * Checks whether the BoardEditor output works as expected.
@@ -19,8 +21,6 @@ class BoardEditorOutputTest extends TestCase
      * Checks whether the output looks like expected.
      *
      * @covers \Output\BoardEditorOutput::outputBoard()
-     * @covers \Output\BoardEditorOutput::getBoardContentString()
-     * @covers \Output\BoardEditorOutput::getRowOutputString()
      */
     public function testCanOutputBoard()
     {
@@ -31,7 +31,9 @@ class BoardEditorOutputTest extends TestCase
         $testBoard->setFieldState(2, 3, true);
         $testBoard->setFieldState(3, 2, true);
 
-        $output = new BoardEditorOutput;
+        $output = new BoardEditorOutput();
+        $this->expectOutputRegex("/\n*/");
+        $output->startOutput(new Getopt(), $testBoard);
 
         // Without highlighting
         $expectedOutput = " *╔═════╗\n"
@@ -42,22 +44,22 @@ class BoardEditorOutputTest extends TestCase
                         . " *║     ║\n"
                         . " *╚═════╝\n";
 
-        $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
+        $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
         $output->outputBoard($testBoard, 1);
 
         // With x/y highlighting
-        $expectedOutput = " *    2   \n"
-                        . " *╔══╤═╤══╗\n"
-                        . " *║  │ │  ║\n"
-                        . " *║  │o│  ║\n"
-                        . " *║ o│o│o ║\n"
-                        . " *╟──┼─┼──╢\n"
-                        . " *║  │X│  ║ 3\n"
-                        . " *╟──┼─┼──╢\n"
-                        . " *║  │ │  ║\n"
-                        . " *╚══╧═╧══╝\n";
+        $expectedOutput = " *    2     \n"
+                        . " *╔══╤═╤══╗ \n"
+                        . " *║  │ │  ║ \n"
+	                    . " *║  │o│  ║ \n"
+                        . " *║ o│o│o ║ \n"
+                        . " *╟──┼─┼──╢ \n"
+                        . " *║  │x│  ║3\n"
+                        . " *╟──┼─┼──╢ \n"
+                        . " *║  │ │  ║ \n"
+                        . " *╚══╧═╧══╝ \n";
 
-        $this->expectOutputRegex("~.*" . $expectedOutput . ".*~");
-        $output->outputBoard($testBoard,1,2, 3);
+        $this->expectOutputRegex("/.*" . $expectedOutput . ".*/");
+        $output->outputBoard($testBoard, 1, new Coordinate(2, 3));
     }
 }

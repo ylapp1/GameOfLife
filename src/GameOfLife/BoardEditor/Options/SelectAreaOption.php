@@ -56,11 +56,11 @@ class SelectAreaOption extends BoardEditorOption
         $this->parentBoardEditor->checkCoordinate($_posYTop, "Y", 0, $this->parentBoardEditor->board()->height() - 1);
 
         if ($_width == 0) throw new \Exception("The width of the selection may not be 0.");
-        $posXRight = $_posXLeft + $_width;
+        $posXRight = $_posXLeft + $_width - 1;
         $this->parentBoardEditor->checkCoordinate($posXRight, "X", 0, $this->parentBoardEditor->board()->width() - 1);
 
         if ($_height == 0) throw new \Exception("The height of the selection may not be 0.");
-        $posYBottom = $_posYTop + $_height;
+        $posYBottom = $_posYTop + $_height - 1;
         $this->parentBoardEditor->checkCoordinate($posYBottom, "Y", 0, $this->parentBoardEditor->board()->height() - 1);
 
         $this->parentBoardEditor->selectArea($_posXLeft, $_posYTop, $posXRight, $posYBottom);

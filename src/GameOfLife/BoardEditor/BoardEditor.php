@@ -11,6 +11,7 @@ namespace BoardEditor;
 use BoardEditor\OptionHandler\BoardEditorOptionHandler;
 use GameOfLife\Board;
 use GameOfLife\BoardHistory;
+use GameOfLife\Coordinate;
 use GameOfLife\Field;
 use Output\BoardEditorOutput;
 use Ulrichsg\Getopt;
@@ -345,15 +346,27 @@ class BoardEditor
      */
     public function outputBoard(String $_message = "")
     {
-        $this->output->startOutput(new Getopt(), new Board(0, 0, true));
+        $this->output->startOutput(new Getopt(), $this->board);
         $numberOfNewLines = $this->shellInformationFetcher->getNumberOfShellLines() - $this->getNumberOfUsedLines();
 
-        if ($this->highLightField != array())
+        if ($this->highLightField)
         {
-            $this->output->outputBoard($this->board, 1, $this->highLightField["x"], $this->highLightField["y"]);
+            $highLightFieldCoordinate = new Coordinate(
+                $this->highLightField["x"], $this->highLightField["y"]
+            );
+            $this->output->outputBoard($this->board, 1, $highLightFieldCoordinate);
             $this->highLightField = array();
         }
-        else $this->output->outputBoard($this->board,1, null, null, $this->selectionCoordinates);
+        elseif ($this->selectionCoordinates)
+        {
+            $selectionCoordinates = $this->selectionCoordinates;
+            $selectionCoordinateTopLeft = new Coordinate($selectionCoordinates["A"]["x"], $selectionCoordinates["A"]["y"]);
+            $selectionCoordinateBottomRight = new Coordinate($selectionCoordinates["B"]["x"], $selectionCoordinates["B"]["y"]);
+            $selectionArea = new SelectionArea($selectionCoordinateTopLeft, $selectionCoordinateBottomRight);
+
+            $this->output->outputBoard($this->board,1, null, $selectionArea);
+        }
+        else $this->output->outputBoard($this->board, 1);
 
         if ($numberOfNewLines < 0) $numberOfNewLines = 0;
 

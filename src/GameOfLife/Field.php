@@ -15,19 +15,12 @@ class Field
 {
     // Attributes
 
-    /**
-     * The X-coordinate of the field
-     *
-     * @var int $x
-     */
-    private $x;
-
-    /**
-     * The Y-coordinate of the field
-     *
-     * @var int $y
-     */
-    private $y;
+	/**
+	 * The X/Y position of this field on the board
+	 *
+	 * @var Coordinate $coordinate
+	 */
+	private $coordinate;
 
     /**
      * The state of the cell in the field
@@ -59,8 +52,8 @@ class Field
      */
     public function __construct(int $_x, int $_y, Bool $_value, Board $_parentBoard = null)
     {
-        $this->x = $_x;
-        $this->y = $_y;
+    	// TODO: Change constructor arg x and y to coordinate $_coordinate
+        $this->coordinate = new Coordinate($_x, $_y);
         $this->value = $_value;
         $this->parentBoard = $_parentBoard;
     }
@@ -68,45 +61,25 @@ class Field
 
     // Getters and Setters
 
-    /**
-     * Returns the X-coordinate of the field.
-     *
-     * @return int The X-coordinate of the field
-     */
-    public function x(): int
-    {
-        return $this->x;
-    }
+	/**
+	 * Returns the X/Y position of this field on the board.
+	 *
+	 * @return Coordinate The X/Y position of this field on the board
+	 */
+	public function coordinate(): Coordinate
+	{
+		return $this->coordinate;
+	}
 
-    /**
-     * Sets the X-coordinate of the field.
-     *
-     * @param int $_x The X-coordinate of the field
-     */
-    public function setX(int $_x)
-    {
-        $this->x = $_x;
-    }
-
-    /**
-     * Returns the Y-coordinate of the field.
-     *
-     * @return int The Y-coordinate of the field
-     */
-    public function y(): int
-    {
-        return $this->y;
-    }
-
-    /**
-     * Sets the Y-coordinate of the field.
-     *
-     * @param int $_y The Y-coordinate of the field
-     */
-    public function setY(int $_y)
-    {
-        $this->y = $_y;
-    }
+	/**
+	 * Sets the X/Y position of this field on the board.
+	 *
+	 * @param Coordinate $_coordinate The X/Y position of this field on the board
+	 */
+	public function setCoordinate(Coordinate $_coordinate)
+	{
+		$this->coordinate = $_coordinate;
+	}
 
     /**
      * Returns the state of the cell in the field.
@@ -152,8 +125,7 @@ class Field
     /**
      * Returns whether the cell in the field is alive.
      *
-     * @return Bool True: The cell is alive
-     *              False: The cell is dead
+     * @return Bool True if the cell is alive, false otherwise
      */
     public function isAlive(): Bool
     {
@@ -163,8 +135,7 @@ class Field
     /**
      * Returns whether the cell in the field is dead.
      *
-     * @return Bool True: The cell is dead
-     *              False: The cell is alive
+     * @return Bool True if the cell is dead, false otherwise
      */
     public function isDead(): Bool
     {
@@ -172,7 +143,8 @@ class Field
     }
 
     /**
-     * Inverts the fields value.
+     * Inverts the state of the cell in the field.
+     * If the cell is alive its state will be changed to dead, if the cell is dead its state will be changed to alive.
      */
     public function invertValue()
     {
@@ -183,46 +155,46 @@ class Field
     // Class Methods
 
     /**
-     * Calculates the number of living neighbor cells.
+     * Calculates and returns the number of living neighbor cells.
      *
      * @return int The number of living neighbor cells
      */
     public function numberOfLivingNeighbors(): int
     {
         $neighborFields = $this->parentBoard->getNeighborsOfField($this);
-        $numberOfLivingNeighbors = 0;
 
+        $numberOfLivingNeighbors = 0;
         foreach ($neighborFields as $neighborField)
         {
-            if ($neighborField->isAlive()) $numberOfLivingNeighbors++;
+            $numberOfLivingNeighbors += (int)$neighborField->isAlive();
         }
 
         return $numberOfLivingNeighbors;
     }
 
     /**
-     * Calculates the number of dead neighbor cells.
+     * Calculates and returns the number of dead neighbor cells.
      *
      * @return int The number of dead neighbor cells
      */
     public function numberOfDeadNeighbors(): int
     {
         $neighborFields = $this->parentBoard->getNeighborsOfField($this);
-        $numberOfDeadNeighbors = 0;
 
+        $numberOfDeadNeighbors = 0;
         foreach ($neighborFields as $neighborField)
         {
-            if ($neighborField->isDead()) $numberOfDeadNeighbors++;
+            $numberOfDeadNeighbors += (int)$neighborField->isDead();
         }
 
         return $numberOfDeadNeighbors;
     }
 
     /**
-     * Returns the number of neighbor border fields.
-     * If the board has no border this function will return 0.
+     * Calculates and returns the number of neighbor fields that are borders instead of cells.
+     * This function will return 0 if the board has a "passthrough" border
      *
-     * @return int The number of neighbor border fields
+     * @return int The number of neighbor fields that are borders instead of cells
      */
     public function numberOfNeighborBorderFields(): int
     {
