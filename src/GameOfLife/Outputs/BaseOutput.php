@@ -11,7 +11,7 @@ namespace Output;
 use BoardRenderer\BaseBoardRenderer;
 use Simulator\Board;
 use Ulrichsg\Getopt;
-use Util\Shell\ShellOutputHelper;
+use Util\Shell\ShellOutputFormatter;
 
 /**
  * BaseOutput from which all other outputs must inherit.
@@ -33,11 +33,11 @@ abstract class BaseOutput
     protected $outputTitle;
 
     /**
-     * The shell output helper
+     * The shell output formatter
      *
-     * @var ShellOutputHelper $shellOutputHelper
+     * @var ShellOutputFormatter $shellOutputFormatter
      */
-    protected $shellOutputHelper;
+    protected $shellOutputFormatter;
 
 	/**
 	 * The board renderer
@@ -57,7 +57,7 @@ abstract class BaseOutput
     protected function __construct(String $_outputTitle)
     {
         $this->outputTitle = $_outputTitle;
-        $this->shellOutputHelper = new ShellOutputHelper();
+        $this->shellOutputFormatter = new ShellOutputFormatter();
     }
 
 
@@ -71,7 +71,7 @@ abstract class BaseOutput
         $mainTitle = "GAME OF LIFE";
         $titleString = "\n" . $mainTitle . "\n" . $this->outputTitle . "\n\n";
 
-        $this->shellOutputHelper->printCenteredOutputString($titleString);
+        $this->shellOutputFormatter->printCenteredOutputString($titleString);
     }
 
     /**
@@ -89,7 +89,7 @@ abstract class BaseOutput
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
-        $this->shellOutputHelper->clearScreen();
+        $this->shellOutputFormatter->clearScreen();
         $this->printTitle();
     }
 

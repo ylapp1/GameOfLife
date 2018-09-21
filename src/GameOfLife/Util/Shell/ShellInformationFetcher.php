@@ -49,7 +49,7 @@ class ShellInformationFetcher
     /**
      * Returns the number of shell lines.
      *
-     * @return int The number of shell ines
+     * @return int The number of shell lines
      */
     public function getNumberOfShellLines(): int
     {

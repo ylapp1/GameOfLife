@@ -46,9 +46,9 @@ class ClassLoader
      * @param String[] $_excludedClassNames The list of class names that will not be loaded
      * @param String $_nameSpace The namespace for all of the classes
      *
-     * @return mixed The instances of the loaded classes
+     * @return mixed[] The instances of the loaded classes
      */
-    public function loadClasses(String $_directoryPath, String $_searchPattern, array $_excludedClassNames, String $_nameSpace)
+    public function loadClasses(String $_directoryPath, String $_searchPattern, array $_excludedClassNames, String $_nameSpace): array
     {
         try
         {

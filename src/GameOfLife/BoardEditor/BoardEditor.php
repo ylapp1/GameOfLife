@@ -17,7 +17,7 @@ use Ulrichsg\Getopt;
 use Util\Geometry\Coordinate;
 use Util\Shell\ShellInformationFetcher;
 use Util\Shell\ShellInputReader;
-use Util\Shell\ShellOutputHelper;
+use Util\Shell\ShellOutputFormatter;
 
 /**
  * Lets the user edit a board by using options or toggling cells.
@@ -67,9 +67,9 @@ class BoardEditor
     /**
      * The shell output helper
      *
-     * @var ShellOutputHelper $shellOutputHelper
+     * @var ShellOutputFormatter $shellOutputFormatter
      */
-    private $shellOutputHelper;
+    private $shellOutputFormatter;
 
     /**
      * Template directory which will be used in this board editor session
@@ -137,7 +137,7 @@ class BoardEditor
 
         $this->shellInformationFetcher = new ShellInformationFetcher();
         $this->shellInputReader = new ShellInputReader();
-        $this->shellOutputHelper = new ShellOutputHelper();
+        $this->shellOutputFormatter = new ShellOutputFormatter();
 
         $this->highLightField = array();
         $this->boardHistory = new BoardHistory(15, true);
@@ -277,11 +277,11 @@ class BoardEditor
     /**
      * Returns the shell output helper.
      *
-     * @return ShellOutputHelper
+     * @return ShellOutputFormatter
      */
     public function shellOutputHelper()
     {
-        return $this->shellOutputHelper;
+        return $this->shellOutputFormatter;
     }
 
     public function setShellInformationFetcher(ShellInformationFetcher $_shellInformationFetcher)

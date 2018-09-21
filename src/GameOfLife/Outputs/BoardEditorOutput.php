@@ -79,6 +79,6 @@ class BoardEditorOutput extends BaseOutput
 	    }
 
 	    $boardContentString = $this->boardRenderer->renderBoard($_board, $_highLightFieldCoordinate, $selectionAreaRectangle);
-        $this->shellOutputHelper->printCenteredOutputString($boardContentString);
+        $this->shellOutputFormatter->printCenteredOutputString($boardContentString);
     }
 }

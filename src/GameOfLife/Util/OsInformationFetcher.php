@@ -65,8 +65,7 @@ class OsInformationFetcher
     /**
      * Returns whether the current operating system is Linux.
      *
-     * @return Bool True: The current operating system is Linux
-     *              False: The current operating system is not Linux
+     * @return Bool True if the current operating system is Linux, false otherwise
      */
     public function isLinux(): Bool
     {
@@ -76,8 +75,7 @@ class OsInformationFetcher
     /**
      * Returns whether the current operating system is Windows.
      *
-     * @return Bool True: The current operating system is Windows
-     *              False: The current operating system is not Windows
+     * @return Bool True if the current operating system is Windows, false otherwise
      */
     public function isWindows(): Bool
     {

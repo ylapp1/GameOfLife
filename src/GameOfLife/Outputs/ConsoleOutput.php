@@ -11,6 +11,7 @@ namespace Output;
 use Simulator\Board;
 use BoardRenderer\ConsoleOutputBoardRenderer;
 use Ulrichsg\Getopt;
+use Util\Shell\ShellCursorMover;
 
 /**
  * Prints boards to the console.
@@ -18,6 +19,13 @@ use Ulrichsg\Getopt;
 class ConsoleOutput extends BaseOutput
 {
     // Attributes
+
+	/**
+	 * The shell cursor mover
+	 *
+	 * @var ShellCursorMover $shellCursorMover
+	 */
+	private $shellCursorMover;
 
     /**
      * The time for that one game step will be displayed in the console in microseconds
@@ -35,6 +43,8 @@ class ConsoleOutput extends BaseOutput
     public function __construct()
     {
         parent::__construct("CONSOLE OUTPUT");
+
+        $this->shellCursorMover = new ShellCursorMover();
         $this->stepDisplayTimeInMicroseconds = 50 * 1000;
     }
 
@@ -80,13 +90,13 @@ class ConsoleOutput extends BaseOutput
      */
     public function outputBoard(Board $_board, int $_gameStep)
     {
-        $this->shellOutputHelper->moveCursorToTopLeftCorner();
+        $this->shellCursorMover->moveCursorToTopLeftCorner();
         $this->printTitle();
 
         $gameStepString = "Game step: " . $_gameStep . "\n";
         $boardContentString = $this->boardRenderer->renderBoard($_board);
-        $this->shellOutputHelper->printCenteredOutputString($gameStepString);
-        $this->shellOutputHelper->printCenteredOutputString($boardContentString);
+        $this->shellOutputFormatter->printCenteredOutputString($gameStepString);
+        $this->shellOutputFormatter->printCenteredOutputString($boardContentString);
 
         if ($this->stepDisplayTimeInMicroseconds > 0) usleep($this->stepDisplayTimeInMicroseconds);
     }
@@ -100,6 +110,6 @@ class ConsoleOutput extends BaseOutput
     public function finishOutput(String $_simulationEndReason)
     {
         parent::finishOutput($_simulationEndReason);
-        $this->shellOutputHelper->moveCursorToBottomLeftCorner();
+        $this->shellCursorMover->moveCursorToBottomLeftCorner();
     }
 }

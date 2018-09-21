@@ -47,7 +47,7 @@ class ShellInputReader
     // Class Methods
 
     /**
-     * Reads input from the shell.
+     * Reads single line inputs from the shell.
      *
      * @param String $_prompt The prompt that will be displayed in front of the input area
      *
@@ -63,15 +63,14 @@ class ShellInputReader
     }
 
     /**
-     * Adds an input line to the history in order to be able to use the ARROW UP and
-     * ARROW DOWN keys to navigate to previously used commands.
+     * Adds an input line to the readline history.
+     * This is done in order to be able to use the ARROW UP and ARROW DOWN keys to navigate to previous inputs.
      *
      * @param String $_inputLine The input line
      */
     private function addLineToHistory(String $_inputLine)
     {
-        if ($_inputLine && $_inputLine != $this->lastHistoryLine ||
-            $this->osInformationFetcher->isWindows())
+        if ($_inputLine && $_inputLine != $this->lastHistoryLine || $this->osInformationFetcher->isWindows())
         {
             /*
              * In Windows the readline_add_history method must be called after every readline call,
