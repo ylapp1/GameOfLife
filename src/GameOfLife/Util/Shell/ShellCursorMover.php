@@ -67,7 +67,8 @@ class ShellCursorMover
 		if ($this->osInformationFetcher->isLinux()) echo "\e[" . $_y . ";" . $_x . "H";
 		elseif ($this->osInformationFetcher->isWindows())
 		{
-			$this->shellExecutor->executeCommand(__DIR__ . "\\ConsoleHelper.exe setCursor " . $_x . " " . $_y);
+			// This worked in Windows 10, it might be possible that another method is needed for older Windows versions
+			echo "\e[" . $_y . ";" . $_x . "H";
 		}
 	}
 
