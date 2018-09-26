@@ -57,21 +57,15 @@ class ShellOutputFormatter
 	/**
 	 * Clears the console screen.
 	 * This is achieved by filling the current window with empty lines and moving the cursor back to the top left corner.
+	 *
+	 * Another way to clear the screen would be to add 10000 new lines at the beginning of the simulation in order to
+	 * move the scroll bar of the terminal to the bottom. Then with each clear screen call one screen would be
+	 * filled with empty lines in order to move the previous board away from the visible output.
 	 */
 	public function clearScreen()
 	{
 		echo str_repeat("\n", $this->cachedNumberOfShellLines);
 		$this->shellCursorMover->moveCursorToTopLeftCorner();
-
-		/*
-		 * A pure php way to clear the screen in Windows would be to add 10000 new lines at the beginning of
-		 * the simulation in order to move the scroll bar in cmd to the bottom.
-		 * Then with each clear screen call one screen would be filled with empty lines in order to
-		 * move the previous board away from the visible output.
-		 *
-		 * This variant however behaves exactly like the Linux version and does not fill the output buffer with
-		 * unnecessary lines.
-		 */
 	}
 
 
