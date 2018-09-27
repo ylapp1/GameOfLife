@@ -95,8 +95,8 @@ class ConsoleOutput extends BaseOutput
 
         $gameStepString = "Game step: " . $_gameStep . "\n";
         $boardContentString = $this->boardRenderer->renderBoard($_board);
-        $this->shellOutputFormatter->printCenteredOutputString($gameStepString);
-        $this->shellOutputFormatter->printCenteredOutputString($boardContentString);
+        echo $this->shellOutputFormatter->getCenteredOutputString($gameStepString);
+        echo $this->shellOutputFormatter->getCenteredOutputString($boardContentString);
 
         if ($this->stepDisplayTimeInMicroseconds > 0) usleep($this->stepDisplayTimeInMicroseconds);
     }

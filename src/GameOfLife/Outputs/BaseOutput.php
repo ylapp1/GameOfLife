@@ -71,7 +71,7 @@ abstract class BaseOutput
         $mainTitle = "GAME OF LIFE";
         $titleString = "\n" . $mainTitle . "\n" . $this->outputTitle . "\n\n";
 
-        $this->shellOutputFormatter->printCenteredOutputString($titleString);
+        echo $this->shellOutputFormatter->getCenteredOutputString($titleString);
     }
 
     /**

@@ -16,18 +16,11 @@ class ShellOutputFormatter
 	// Attributes
 
 	/**
-	 * The cached number of shell columns
+	 * The shell information fetcher
 	 *
-	 * @var int $cachedNumberOfShellColumns
+	 * @var ShellInformationFetcher $shellInformationFetcher
 	 */
-	private $cachedNumberOfShellColumns;
-
-	/**
-	 * The cached number of shell lines
-	 *
-	 * @var int $cachedNumberOfShellLines
-	 */
-	private $cachedNumberOfShellLines;
+	private $shellInformationFetcher;
 
 	/**
 	 * The shell cursor mover
@@ -44,10 +37,7 @@ class ShellOutputFormatter
 	 */
 	public function __construct()
 	{
-		$shellInformationFetcher = new ShellInformationFetcher();
-		$this->cachedNumberOfShellColumns = $shellInformationFetcher->getNumberOfShellColumns();
-		$this->cachedNumberOfShellLines = $shellInformationFetcher->getNumberOfShellLines();
-
+		$this->shellInformationFetcher = new ShellInformationFetcher();
 		$this->shellCursorMover = new ShellCursorMover();
 	}
 
@@ -64,7 +54,7 @@ class ShellOutputFormatter
 	 */
 	public function clearScreen()
 	{
-		echo str_repeat("\n", $this->cachedNumberOfShellLines);
+		echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
 		$this->shellCursorMover->moveCursorToTopLeftCorner();
 	}
 
@@ -77,31 +67,37 @@ class ShellOutputFormatter
 	 *
 	 * @param String $_rowOutputString The row output string
 	 *
-	 * @return String The centered output row string
+	 * @return String The centered row output string
 	 */
-	private function getCenteredOutputString(String $_rowOutputString): String
+	private function getCenteredOutputLine(String $_rowOutputString): String
 	{
-		$paddingLeft = floor(($this->cachedNumberOfShellColumns - mb_strlen($_rowOutputString)) / 2) + 1;
+		$paddingLeft = floor(($this->shellInformationFetcher->getNumberOfShellColumns() - mb_strlen($_rowOutputString)) / 2) + 1;
 
-		$rowOutputString = $_rowOutputString;
-		if ($paddingLeft > 0) $rowOutputString = str_repeat(" ", $paddingLeft) . $rowOutputString;
+		if ($paddingLeft > 0) $rowOutputString = str_repeat(" ", $paddingLeft) . $_rowOutputString;
+		else $rowOutputString = $_rowOutputString;
 
 		return $rowOutputString;
 	}
 
 	/**
-	 * Prints a centered output string.
+	 * Creates and returns a centered output string.
 	 * If the output string contains line breaks, each line will be centered separately.
 	 *
 	 * @param String $_outputString The output string
+	 *
+	 * @return String The centered output string
 	 */
-	public function printCenteredOutputString(String $_outputString)
+	public function getCenteredOutputString(String $_outputString): String
 	{
 		$lines = explode("\n", $_outputString);
+
+		$centeredOutputString = "";
 		foreach ($lines as $line)
 		{
-			if ($line) echo $this->getCenteredOutputString($line) . "\n";
-			else echo "\n";
+			if ($line) $centeredOutputString .= $this->getCenteredOutputLine($line);
+			$centeredOutputString .= "\n";
 		}
+
+		return $centeredOutputString;
 	}
 }

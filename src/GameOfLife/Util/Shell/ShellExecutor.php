@@ -18,27 +18,6 @@ class ShellExecutor
     // Attributes
 
     /**
-     * The path to which you can redirect standard output without saving it in Linux
-     *
-     * @var String $outputHideRedirectLinux
-     */
-    private $outputHideRedirectLinux = "/dev/null";
-
-    /**
-     * The path to which you can redirect standard output without saving it in Windows
-     *
-     * @var String $outputHideRedirectWindows
-     */
-    private $outputHideRedirectWindows = "NUL";
-
-    /**
-     * The path for output redirects for other operating systems
-     *
-     * @var String $outputHideRedirectOther
-     */
-    private $outputHideRedirectOther = "output.txt";
-
-    /**
      * The output of the last executed command
      *
      * @var String[] $output
@@ -114,8 +93,8 @@ class ShellExecutor
      */
     private function getOutputHideRedirect(): String
     {
-        if ($this->osInformationFetcher->isWindows()) return $this->outputHideRedirectWindows;
-        elseif ($this->osInformationFetcher->isLinux()) return $this->outputHideRedirectLinux;
-        else return $this->outputHideRedirectOther;
+        if ($this->osInformationFetcher->isWindows()) return "NUL";
+        elseif ($this->osInformationFetcher->isLinux()) return "/dev/null";
+        else return "output.txt";
     }
 }
