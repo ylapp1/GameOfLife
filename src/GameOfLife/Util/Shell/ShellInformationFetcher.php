@@ -64,11 +64,13 @@ class ShellInformationFetcher
      * Returns the number of shell lines.
      * The number of shell lines is only fetched once, after that the cached number of shell lines will be returned.
      *
+     * @param Bool $_alwaysFetchData If true, the number of shell lines will be fetched even if the cached number of shell lines is set
+     *
      * @return int The number of shell lines
      */
-    public function getNumberOfShellLines(): int
+    public function getNumberOfShellLines(Bool $_alwaysFetchData = false): int
     {
-    	if (! $this::$cachedNumberOfShellLines)
+    	if (! $this::$cachedNumberOfShellLines || $_alwaysFetchData)
 	    {
 		    /*
 		     * 29 lines is the default number of lines in cmd
@@ -106,11 +108,13 @@ class ShellInformationFetcher
      * Returns the number of shell columns.
      * The number of shell columns is only fetched once, after that the cached number of shell columns will be returned.
      *
+     * @param Bool $_alwaysFetchData If true the number of shell columns will be fetched even if the cached number of shell columns is set
+     *
      * @return int The number of shell columns
      */
-    public function getNumberOfShellColumns(): int
+    public function getNumberOfShellColumns(Bool $_alwaysFetchData = false): int
     {
-    	if (! $this::$cachedNumberOfShellColumns)
+    	if (! $this::$cachedNumberOfShellColumns || $_alwaysFetchData)
 	    {
 		    // 120 is the default number of columns in cmd and PowerShell
 		    $numberOfColumns = 120;
