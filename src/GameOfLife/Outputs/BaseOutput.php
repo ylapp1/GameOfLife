@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -10,6 +10,8 @@ namespace Output;
 
 use GameOfLife\Board;
 use Ulrichsg\Getopt;
+use Utils\Shell\ShellInformationFetcher;
+use Utils\Shell\ShellOutputHelper;
 
 /**
  * BaseOutput from which all other outputs must inherit.
@@ -18,37 +20,59 @@ use Ulrichsg\Getopt;
  * startOutput() initializes variables that are necessary for the output
  * outputBoard() outputs a single board
  * finishOutput() processes the output boards to create the final file
- *
- * @package Output
  */
 class BaseOutput
 {
-    protected $outputDirectory = __DIR__ . "/../../../Output/";
+    /**
+     * The title of the output that will be printed when the output is started
+     *
+     * @var String $outputTitle
+     */
+    protected $outputTitle;
 
     /**
-     * Returns the output directory of the output.
+     * The shell information fetcher
      *
-     * @return string   Output directory of the output
+     * @var ShellInformationFetcher $shellInformationFetcher
      */
-    public function outputDirectory(): string
+    protected $shellInformationFetcher;
+
+    /**
+     * The shell output helper
+     *
+     * @var ShellOutputHelper $shellOutputHelper
+     */
+    protected $shellOutputHelper;
+
+
+    /**
+     * BaseOutput constructor.
+     *
+     * @param String $_outputTitle The title of the output that will be printed when the output is started
+     */
+    protected function __construct(String $_outputTitle)
     {
-        return $this->outputDirectory;
+        $this->outputTitle = $_outputTitle;
+        $this->shellInformationFetcher = new ShellInformationFetcher();
+        $this->shellOutputHelper = new ShellOutputHelper();
     }
 
+
     /**
-     * Sets the output directory of the output.
-     *
-     * @param string $_outputDirectory      Output directory of the output
+     * Prints the title of the output to the screen.
      */
-    public function setOutputDirectory(string $_outputDirectory)
+    protected function printTitle()
     {
-        $this->outputDirectory = $_outputDirectory;
+        $mainTitle = "GAME OF LIFE";
+
+        echo $this->shellOutputHelper->getCenteredOutputString($mainTitle);
+        echo "\n" . $this->shellOutputHelper->getCenteredOutputString($this->outputTitle) . "\n\n";
     }
 
     /**
      * Adds output specific options to the option list.
      *
-     * @param Getopt $_options     Current option list
+     * @param Getopt $_options Current option list
      *
      * @codeCoverageIgnore
      */
@@ -59,60 +83,35 @@ class BaseOutput
     /**
      * Start output.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
-     *
-     * @codeCoverageIgnore
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
+        if (stristr(PHP_OS, "linux")) echo str_repeat("\n", $this->shellInformationFetcher->getNumberOfShellLines());
+        $this->shellOutputHelper->clearScreen();
+        $this->printTitle();
     }
 
     /**
      * Output one game step.
      *
-     * @param Board $_board     Current board
+     * @param Board $_board Current board
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      *
      * @codeCoverageIgnore
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
     }
 
     /**
      * Finish output (Display that simulation is finished, write files and delete temporary files).
      *
-     * @codeCoverageIgnore
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
-    }
-
-    /**
-     * Returns a new game id.
-     *
-     * @param string $_outputType    Output Type (PNG, Gif, Video)
-     *
-     * @return int      New Game id
-     */
-    public function getNewGameId(string $_outputType): int
-    {
-        $fileNames = glob($this->outputDirectory . "/" . $_outputType . "/Game_*");
-
-        if (count($fileNames) == 0) $newGameId = 1;
-        else
-        {
-            $fileIds = array();
-            foreach ($fileNames as $fileName)
-            {
-                $fileData = explode("_", basename($fileName));
-                $fileIds[] = intval($fileData[1]);
-            }
-
-            sort($fileIds, SORT_NUMERIC);
-            $newGameId = $fileIds[count($fileIds) - 1] + 1;
-        }
-
-        return $newGameId;
+        echo "\nSimulation finished: " . $_simulationEndReason . ".\n\n";
     }
 }

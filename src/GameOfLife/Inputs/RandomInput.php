@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
@@ -19,14 +19,13 @@ class RandomInput extends BaseInput
     /**
      * Adds RandomInputs specific options to the option list.
      *
-     * @param Getopt $_options  Option list to which the objects options are added
+     * @param Getopt $_options Option list to which the objects options are added
      */
     public function addOptions(Getopt $_options)
     {
         $_options->addOptions(
-            array
-            (
-                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "Percentage of living cells on a random board")
+            array(
+                array(null, "fillPercent", Getopt::REQUIRED_ARGUMENT, "RandomInput - Percentage of living cells on a random board\n")
             )
         );
     }
@@ -34,8 +33,10 @@ class RandomInput extends BaseInput
     /**
      * Fills the board with random cells until a specific percentage of the field is filled.
      *
-     * @param Board $_board     The Board
-     * @param Getopt $_options  Options (fillPercent)
+     * @param Board $_board The Board which will be filled
+     * @param Getopt $_options The option list
+     *
+     * @throws \Exception The exception when the fill percentage is invalid
      */
     public function fillBoard(Board $_board, Getopt $_options)
     {
@@ -44,28 +45,26 @@ class RandomInput extends BaseInput
 
         if ($fillPercent > 100)
         {
-            echo "Error: There can't be more living cells than 100% of the fields.\n";
-            return;
+            throw new \Exception("There can't be more living cells than 100% of the fields.");
         }
         elseif ($fillPercent < 0)
         {
-            echo "Error: There can't be less living cells than 0% of the fields.\n";
-            return;
+            throw new \Exception("There can't be less living cells than 0% of the fields.");
         }
 
-        // Fill random cells
-        $amountSetCells = 0;
-        $amountFields = $_board->width() * $_board->height();
+        // Fill the board with random set cells
+        $numberOfSetCells = 0;
+        $numberOfFields = $_board->width() * $_board->height();
 
-        while (($amountSetCells / $amountFields) * 100 < $fillPercent)
+        while (($numberOfSetCells / $numberOfFields) * 100 < $fillPercent)
         {
             $x = rand(0, $_board->width() - 1);
             $y = rand(0, $_board->height() - 1);
 
-            if ($_board->getField($x, $y) == false)
+            if ($_board->getFieldStatus($x, $y) == false)
             {
                 $_board->setField($x, $y, true);
-                $amountSetCells++;
+                $numberOfSetCells++;
             }
         }
     }

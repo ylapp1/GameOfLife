@@ -4,5 +4,11 @@ php:
   - 7.1.8
   - 7.1.9
   - nightly
-install: composer install
+os: linux
+dist: xenial
+sudo: required
+install:
+  - composer install
+  - sudo apt-get update
+  - sudo apt-get install -y ffmpeg
 script: phpunit --configuration tests/phpunit.xml tests --coverage-text

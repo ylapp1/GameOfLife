@@ -2,11 +2,15 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
 namespace Output\Helpers;
+
+use Utils\FileSystem\FileSystemReader;
+use Utils\FileSystem\FileSystemWriter;
+use Utils\Shell\ShellExecutor;
 
 /**
  * Stores ffmpeg configuration and generates a usable command.
@@ -16,17 +20,28 @@ namespace Output\Helpers;
 class FfmpegHelper
 {
     private $binaryPath;
+    private $fileSystemReader;
+    private $fileSystemWriter;
     private $options = array();
+    private $osName;
+    private $shellExecutor;
 
 
     /**
      * FfmpegHelper constructor.
      *
-     * @param string $_binaryPath   Path to the ffmpeg binary file
+     * @param String $_osName The name of the operating system
+     *
+     * @throws \Exception The exception when the ffmpeg binary could not be found
      */
-    public function __construct(string $_binaryPath)
+    public function __construct(String $_osName)
     {
-        $this->binaryPath = $_binaryPath;
+        $this->osName = strtolower($_osName);
+        $this->fileSystemReader = new FileSystemReader();
+        $this->fileSystemWriter = new FileSystemWriter();
+        $this->shellExecutor = new ShellExecutor();
+
+        $this->binaryPath = $this->findFFmpegBinary();
     }
 
 
@@ -50,6 +65,16 @@ class FfmpegHelper
         $this->binaryPath = $_binaryPath;
     }
 
+    public function fileSystemHandler(): FileSystemReader
+    {
+        return $this->fileSystemReader;
+    }
+
+    public function setFileSystemHandler(FileSystemReader $_fileSystemReader)
+    {
+        $this->fileSystemReader = $_fileSystemReader;
+    }
+
     /**
      * Returns the ffmpeg option list.
      *
@@ -70,6 +95,43 @@ class FfmpegHelper
         $this->options = $_options;
     }
 
+    public function shellExecutor()
+    {
+        return $this->shellExecutor;
+    }
+
+    public function setShellExecutor(ShellExecutor $_shellExecutor)
+    {
+        $this->shellExecutor = $_shellExecutor;
+    }
+
+
+    /**
+     * Finds and returns the path to the ffmpeg binary file.
+     *
+     * @return String The path to the ffmpeg binary file
+     *
+     * @throws \Exception The exception when the ffmpeg binary could not be found
+     */
+    private function findFFmpegBinary()
+    {
+        $binaryPath = false;
+
+        if (stristr($this->osName, "win"))
+        { // If OS is Windows search the Tools directory for the ffmpeg.exe file
+            $searchDirectory = __DIR__ . "/../../../../Tools";
+            $binaryPath = $this->fileSystemReader->findFileRecursive($searchDirectory, "ffmpeg.exe");
+
+            if (! $binaryPath) throw new \Exception("The ffmpeg.exe file could not be found in \"" . $searchDirectory . "\".");
+        }
+        elseif (stristr($this->osName, "linux"))
+        { // If OS is Linux check whether the ffmpeg command returns true
+            $returnValue = $this->shellExecutor->executeCommand("ffmpeg", true);
+            if ($returnValue == 1) $binaryPath = "ffmpeg";
+        }
+
+        return $binaryPath;
+    }
 
     /**
      * Add an option to the option list.
@@ -92,21 +154,51 @@ class FfmpegHelper
     /**
      * Generates a ffmpeg command that can be executed by using exec.
      *
-     * @param string $_outputPath   Ffmpeg output path
+     * @param String $_outputPath The Ffmpeg output path
      *
-     * @return string               The ffmpeg command
+     * @return String The ffmpeg command
      */
-    public function generateCommand(string $_outputPath): string
+    public function generateCommand(String $_outputPath): String
     {
-        $command = "\"" . $this->binaryPath . "\"";
+        $command = "";
+
+        if (stristr($this->osName, "win")) $command .= "\"";
+        $command .= $this->binaryPath;
+        if (stristr($this->osName, "win")) $command .= "\"";
+
         foreach ($this->options as $option)
         {
             $command .= " " . $option;
         }
         $command .= " \"" . $_outputPath . "\"";
-        // hide output by redirecting it to NUL
-        $command .= " 2>NUL";
 
         return $command;
+    }
+
+    /**
+     * Executes the ffmpeg command.
+     *
+     * @param String $_outputPath The Ffmpeg output path
+     *
+     * @throws \Exception The exception when the ffmpeg command returns an error
+     */
+    public function executeCommand(String $_outputPath)
+    {
+        $error = $this->shellExecutor->executeCommand($this->generateCommand($_outputPath), true);
+
+        if ($error)
+        {
+            try
+            {
+                // Delete the damaged video file (if one was created)
+                $this->fileSystemWriter->deleteFile($_outputPath);
+            }
+            catch (\Exception $_exception)
+            {
+                // Ignore the exception
+            }
+
+            throw new \Exception("Ffmpeg returned the error code \"" . $error . "\".");
+        }
     }
 }

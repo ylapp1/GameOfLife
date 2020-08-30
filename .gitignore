@@ -1,4 +1,6 @@
 .idea
+.vagrant
+docs
 Input/Templates/Custom
 Output
 Tools

@@ -2,7 +2,7 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Tim Schreindl <tim.schreindl@cn-consult.eu>
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
@@ -10,21 +10,26 @@
 namespace Output;
 
 use GameOfLife\Board;
-use GIFEncoder\GIFEncoder;
-use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
+use GifCreator\GifCreator;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
 
 /**
  * Saves the boards in an animated gif file.
- *
- * @package Output
  */
 class GifOutput extends ImageOutput
 {
+    /**
+     * File paths of the gif frames
+     *
+     * @var array $frames
+     */
     private $frames = array();
+
+    /**
+     * Time for which a frame is displayed
+     *
+     * @var int $frameTime
+     */
     private $frameTime;
 
 
@@ -33,15 +38,14 @@ class GifOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->outputDirectory . "/tmp/Frames";
-        parent::__construct("gif", $outputDirectory);
+        parent::__construct("GIF OUTPUT", "gif", "/tmp/Frames");
     }
 
 
     /**
      * Returns the frame save paths.
      *
-     * @return array    Frame save paths
+     * @return array Frame save paths
      */
     public function frames(): array
     {
@@ -51,7 +55,7 @@ class GifOutput extends ImageOutput
     /**
      * Sets the frame save paths.
      *
-     * @param array $_frames    Frame save paths
+     * @param array $_frames Frame save paths
      */
     public function setFrames(array $_frames)
     {
@@ -61,7 +65,7 @@ class GifOutput extends ImageOutput
     /**
      * Returns the time per frame.
      *
-     * @return int      Time per frame
+     * @return int Time per frame
      */
     public function frameTime(): int
     {
@@ -71,7 +75,7 @@ class GifOutput extends ImageOutput
     /**
      * Sets the time per frame.
      *
-     * @param int $_frameTime   Time per frame
+     * @param int $_frameTime Time per frame
      */
     public function setFrameTime(int $_frameTime)
     {
@@ -82,29 +86,38 @@ class GifOutput extends ImageOutput
     /**
      * Adds GIFOutputs specific options to a Getopt object.
      *
-     * @param Getopt $_options      The option list to which the options are added
+     * @param Getopt $_options The option list to which the options are added
      */
     public function addOptions(Getopt $_options)
     {
-        parent::addOptions($_options);
         $_options->addOptions(array(
-                                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "Frame time of gif (in milliseconds * 10)")
-                              )
+                array(null, "gifOutputFrameTime", Getopt::REQUIRED_ARGUMENT, "GifOutput - Frame time of gif (in milliseconds * 10)")
+            )
         );
+        parent::addOptions($_options);
     }
 
     /**
      * Initializes the output.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
+     *
+     * @throws \Exception The exception when one of the input colors is invalid
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
         parent::startOutput($_options, $_board);
         echo "Starting GIF Output...\n\n";
 
-        $this->fileSystemHandler->createDirectory($this->outputDirectory . "/Gif");
+        try
+        {
+            $this->fileSystemWriter->createDirectory($this->baseOutputDirectory . "/Gif");
+        }
+        catch (\Exception $_exception)
+        {
+            // Ignore the exception
+        }
 
         // fetch options
         $frameTime = $_options->getOption("gifOutputFrameTime");
@@ -115,30 +128,41 @@ class GifOutput extends ImageOutput
     /**
      * Creates a single Gif file for the current game step.
      *
-     * @param Board $_board     The board which will be output
+     * @param Board $_board The board which will be output
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
-        $this->frames[] = $this->imageCreator->createImage($_board, "gif");
+
+        $image = $this->imageCreator->createImage($_board);
+
+        $fileName = $_board->gameStep() . ".gif";
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
+
+        imagegif($image, $filePath);
+        unset($image);
+
+        $this->frames[] = $filePath;
     }
 
     /**
      * Creates an animated Gif from the gif files that were created by outputBoard().
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
+     *
+     * @throws \Exception The exception when the frames folder is empty or the gif file could not be written
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
-        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
+        parent::finishOutput($_simulationEndReason);
+
+        unset($this->imageCreator);
         echo "\nStarting GIF creation. One moment please...";
 
-        if (count($this->frames) == 0)
-        {
-            echo "Error: No frames in frames folder found!\n";
-            return;
-        }
+        if (count($this->frames) == 0) throw new \Exception("No frames in frames folder found.");
 
         $frameDurations = array();
-
         for ($i = 0; $i < count($this->frames) - 1; $i++)
         {
             $frameDurations[] = $this->frameTime;
@@ -146,18 +170,15 @@ class GifOutput extends ImageOutput
 
         $frameDurations[] = $this->frameTime + 200;
 
-        $gif = new GIFEncoder($this->frames, $frameDurations, 0, 2, 1, 0, 0, "url");
+        $gifCreator = new GifCreator();
+        $gifCreator->create($this->frames, $frameDurations, 0);
+
         $fileName = "Game_" . $this->getNewGameId("Gif") . ".gif";
 
-        if (fwrite(fopen($this->outputDirectory . "Gif/" . $fileName, "wb"), $gif->GetAnimation()) == false)
-        {
-            echo "An error occurred during the gif creation. Stopping...";
-            return;
-        }
+        $this->fileSystemWriter->writeFile($this->baseOutputDirectory . "/Gif/" . $fileName, $gifCreator->getGif());
+        $this->fileSystemWriter->deleteDirectory($this->baseOutputDirectory . "/tmp", true);
 
-        unset($this->imageCreator);
-        $this->fileSystemHandler->deleteDirectory($this->outputDirectory . "/tmp", true);
-
-        echo "\nGIF creation complete.";
+        echo "\nGIF creation complete.\n\n";
+        unset ($this->fileSystemHandler);
     }
 }

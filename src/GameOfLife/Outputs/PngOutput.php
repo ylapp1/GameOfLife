@@ -2,23 +2,17 @@
 /**
  * @file
  * @version 0.1
- * @copyright 2017 CN-Consult GmbH
+ * @copyright 2017-2018 CN-Consult GmbH
  * @author Yannick Lapp <yannick.lapp@cn-consult.eu>
  */
 
 namespace Output;
 
 use GameOfLife\Board;
-use Output\Helpers\ColorSelector;
-use Output\Helpers\ImageColor;
-use Output\Helpers\ImageCreator;
 use Ulrichsg\Getopt;
-use Utils\FileSystemHandler;
 
 /**
  * Saves the boards as .png files.
- *
- * @package Output
  */
 class PngOutput extends ImageOutput
 {
@@ -27,16 +21,18 @@ class PngOutput extends ImageOutput
      */
     public function __construct()
     {
-        $outputDirectory = $this->outputDirectory . "/PNG/Game_" . $this->getNewGameId("PNG");
-        parent::__construct("png", $outputDirectory);
+        parent::__construct("PNG OUTPUT", "png", "/PNG");
+        $this->imageOutputDirectory .=  "/Game_" . $this->getNewGameId("PNG");
     }
 
 
     /**
-     * Displays a text to the user that the simulation now starts.
+     * Displays a text to the user wihch tells the user that the simulation starts.
      *
-     * @param Getopt $_options  User inputted option list
-     * @param Board $_board     Initial board
+     * @param Getopt $_options User inputted option list
+     * @param Board $_board Initial board
+     *
+     * @throws \Exception The exception when one of the input colors is invalid
      */
     public function startOutput(Getopt $_options, Board $_board)
     {
@@ -47,20 +43,29 @@ class PngOutput extends ImageOutput
     /**
      * Outputs one game step.
      *
-     * @param Board $_board     Current board
+     * @param Board $_board Current board
+     * @param Bool $_isFinalBoard Indicates whether the simulation ends after this output
      */
-    public function outputBoard(Board $_board)
+    public function outputBoard(Board $_board, Bool $_isFinalBoard)
     {
         echo "\rGamestep: " . ($_board->gameStep() + 1);
-        $this->imageCreator->createImage($_board, "png");
+        $image = $this->imageCreator->createImage($_board);
+
+        $fileName = $_board->gameStep() . ".png";
+        $filePath = $this->imageOutputDirectory . "/" . $fileName;
+
+        imagepng($image, $filePath);
+        unset($image);
     }
 
     /**
      * Displays a text which tells the user that the simulation is finished.
+     *
+     * @param String $_simulationEndReason The reason why the simulation ended
      */
-    public function finishOutput()
+    public function finishOutput(String $_simulationEndReason)
     {
+        parent::finishOutput($_simulationEndReason);
         unset($this->imageCreator);
-        echo "\n\nSimulation finished. All cells are dead, a repeating pattern was detected or maxSteps was reached.\n\n";
     }
 }
